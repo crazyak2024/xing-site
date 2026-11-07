@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共114条",
+  "generated_note": "判定=合格的候选，共118条",
   "topics": [
     "概念原理",
     "方法实操",
@@ -2691,6 +2691,105 @@
       "topic": "概念原理",
       "node": "LLM预训练与监督微调原理",
       "category": "(地图缺口)LLM预训练与监督微调原理"
+    },
+    {
+      "id": "douyin:7679815336169884966",
+      "video_id": "7679815336169884966",
+      "title": "MHS：AI与物理设备的通用连接标准",
+      "original_title": "物理AI的第一步：MHS 两年前，MCP 让 AI 接上了软件世界，如今它已经是事实标准。\n这一次，Anthropic 悄悄发布了 MHS——模型硬件标准，把同",
+      "author": "",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7679815336169884966",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "MHS是物理版MCP，AI和硬件通用接口，设备自动发现无需翻译程序",
+        "标准化读写原语打破设备孤岛，集成时间从月级压到小时级",
+        "卡梅、华大、泰克三高难度用例验证可行，含无编程接口设备",
+        "边界明确：无编程接口硬件暂无法接入，AI无法排查故障，需人工批准"
+      ],
+      "duration_s": 154.834,
+      "likes": 97,
+      "summary": "讲Anthropic发布的MHS（模型硬件标准），通过标准化驱动原语让AI自动控制物理实验设备，集成时间从月级压至小时级，成功率从58%提升到99.3%。",
+      "reason": "内容系统讲解MHS设计原理和应用案例，口播完整自足，用具体数据证实效果。原文：'把同一个问题交给Cloud一页之后6秒盲测700次成功695次99.3%'。 | 引用:「把同一个问题交给Cloud一页之后6秒盲测700次成功695次99.3%」",
+      "topic": "概念原理",
+      "node": "MHS与硬件集成标准",
+      "category": "(地图缺口)MHS与硬件集成标准"
+    },
+    {
+      "id": "douyin:7676700398304627365",
+      "video_id": "7676700398304627365",
+      "title": "Transformer：从RNN到注意力机制的演进",
+      "original_title": "《Attention Is All You Need》 AI历史上里程碑式的论文，读懂它就读懂了AI时代的底座。#AI #抖音科研人请集合 #在抖音辅修前沿专业",
+      "author": "",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7676700398304627365",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "RNN逐字读速度慢长依赖衰减，CNN并行感受野受限，注意力同时解决两个问题",
+        "注意力分配权重给相关信息，权重求和100%，按比例加权混合信息",
+        "自注意力三步：Q碰K得分→转百分比→加权取V，每字看全句选相关部分",
+        "多头设计8套QKV并行，同句话八种眼光，每头学语法、情绪、邻域等不同关系",
+        "位置编码用快慢波为位置编号，补偿Transformer无顺序感，使模型能区分词序"
+      ],
+      "duration_s": 537.821,
+      "likes": 8135,
+      "summary": "讲2017年Google论文《Attention is all you need》的核心思想，从RNN、CNN的问题引出注意力机制，详解多头自注意力和Transformer架构工作原理。",
+      "reason": "系统讲解Transformer的演进动机、核心机制和具体计算步骤，用通俗类比辅助理解，口播自足。原文：'每个字都去看一遍句子里其他所有字谁跟我有关就把谁的信息拿一点过来'。 | 引用:「注意力只干一件事分配权重，谁跟我有关就多给分，没关就少给分，所有分加起来100%」",
+      "topic": "概念原理",
+      "node": "Transformer的注意力机制在算什么",
+      "category": "02.Transformer的注意力机制在算什么"
+    },
+    {
+      "id": "douyin:7674429876854487217",
+      "video_id": "7674429876854487217",
+      "title": "CPO：从板外到片上光学的突破",
+      "original_title": "光模块与CPO：不是光变强了，是路变短了 一台 AI 交换机的面板上插着 64 个小盒子，它们不参与任何计算，只负责把电变成光——可这 64 个盒子加起来，比中",
+      "author": "",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7674429876854487217",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "25cm铜线22分贝损耗迫使DSP消耗50%功耗纠错，64个模块近千瓦功耗浪费",
+        "LPAO去DSP降4-5成功耗，但需一对一调试、距离敏感，通用性差",
+        "CPO把光源集成芯片内，光路从25cm缩毫米，损耗从22分贝降到4分贝",
+        "800G端口功耗15W→5.5W，可靠性因故障源减少提升一个数量级",
+        "博通三代Humbolt→Bayley→Davidson（2021-2025）商用，英伟达Quantum X已出货"
+      ],
+      "duration_s": 464.376,
+      "likes": 541,
+      "summary": "讲AI交换机光模块的演进困局与CPO方案，从铜线损耗导致功耗浪费问题出发，解释LPAO、NPO、CPO三代方案如何逐步缩短光信号路程、降低功耗和提升可靠性。",
+      "reason": "详细讲解光模块演进的工程困局与解决思路，每个方案的权衡清晰具体，涉及真实产品数据与性能指标。原文：'路一短链路损耗从22分贝掉到4分贝左右'。 | 引用:「不是光变强了是路变短了，路一短链路损耗从22分贝掉到4分贝」",
+      "topic": "概念原理",
+      "node": "AI光互联与网络加速",
+      "category": "(地图缺口)AI光互联与网络加速"
+    },
+    {
+      "id": "douyin:7667510060243967665",
+      "video_id": "7667510060243967665",
+      "title": "VeraRubin机柜：AI系统的硬件完整链路",
+      "original_title": "拆解一个AI服务器 NVIDIA的Vera Rubin机柜 #ai #英伟达 #ai服务器机箱 #GPU #CPU",
+      "author": "",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7667510060243967665",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "机柜三层：上部GPU计算、中部NVLink交换存储、下部电源散热，形成一体化AI平台",
+        "HBM紧贴GPU高带宽同封装，SSD独立层大容量持久化，分工明确优化传输路径",
+        "CPU数据预处理排序，GPU矩阵计算，NVLink C2C 1.8TB/s直连协调两者",
+        "NVLink 6纵向扩展72GPU机柜内互联，ConnectX 9横向扩展跨机柜RDMA通信",
+        "计算托盘模块化设计最小可维护单元，故障部分抽出更换无需重装整柜"
+      ],
+      "duration_s": 484.787,
+      "likes": 2279,
+      "summary": "讲NVIDIA VeraRubin NVL72机柜级AI计算系统的架构分解，包括72颗GPU、36颗CPU的配置、HBM内存、NVLink互联、ConnectX网络等各部分的职责与协作机制。",
+      "reason": "系统拆解机柜级系统架构，从外到内逐层讲解，每个部分的设计目的和职责清晰，对应具体硬件组件。原文：'CPU决定任务怎么做GPU负责真的把它做完'。 | 引用:「CPU决定任务怎么做，GPU负责真的把它做完；NVLink是机柜内部的高速公路，ConnectX是连接不同机柜的高速」",
+      "topic": "概念原理",
+      "node": "AI服务器与机柜系统架构",
+      "category": "(地图缺口)AI服务器与机柜系统架构"
     }
   ]
 }
