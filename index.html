@@ -17,8 +17,11 @@ button{font-family:inherit}
 /* 品牌面板：CY 要求"三句短话，不解释" */
 .brand-panel{padding:14px 16px 6px;flex-shrink:0}
 @media (min-width:900px){.brand-panel{width:190px;position:sticky;top:0;padding:26px 18px}}
-.brand-panel h1{font-size:24px;margin:0 0 2px;letter-spacing:2px}
-.brand-panel .tagline{color:var(--sub);font-size:12.5px;margin:0 0 12px}
+.brand-panel h1{font-size:24px;margin:0 0 6px;letter-spacing:2px}
+/* slogan 是面板上第二大的字，仅次于站名——它是这个站的主张，不是装饰 */
+.brand-panel .slogan{font-size:15px;line-height:1.45;color:#1a1a1a;font-weight:600;margin:0 0 7px}
+.brand-panel .tagline{color:#aaa;font-size:11.5px;margin:0 0 12px}
+@media (max-width:899px){.brand-panel .slogan{font-size:14px}.brand-panel .slogan br{display:none}}
 .creed{list-style:none;padding:0;margin:0;font-size:12.5px;color:#555}
 .creed li{margin-bottom:5px}
 @media (max-width:899px){.creed{display:flex;gap:10px;margin:0;font-size:11.5px}.creed li{margin:0}}
@@ -152,6 +155,12 @@ a.src:after{content:" →"}
 <div class="layout">
   <aside class="brand-panel">
     <h1>醒</h1>
+    <!-- 主 slogan（CY 2026-11-07 08:0x 要的那句"我们不做迎合你口味的信息流推送"）。
+         选这句的理由：它把差异钉在**两个动词**上——推荐算法做的事是"猜你爱看"，
+         我们做的事是"答你想弄明白"。「爱看」和「想弄明白」的距离，就是娱乐信息流
+         和知识索引的全部距离，不用解释一个字。而且它和搜索框那句
+         「你想弄明白什么？」是同一个词，一眼看出这不是口号而是这个站真的在干的事。 -->
+    <p class="slogan">不猜你爱看什么，<br>只答你想弄明白什么。</p>
     <p class="tagline">知识视频地图</p>
     <ul class="creed">
       <li>质量优先</li>
