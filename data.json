@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共474条",
+  "generated_note": "判定=合格的候选，共477条",
   "topics": [
     "概念原理",
     "方法实操",
@@ -10889,6 +10889,30 @@
       "category": "(地图缺口)大模型版本与选型指南"
     },
     {
+      "id": "bilibili:BV1QBSRYuEvN",
+      "video_id": "BV1QBSRYuEvN",
+      "title": "AI写作中消除AI味的提示词指令",
+      "original_title": "用AI写文章必看！一条指令彻底去除AI味！轻松写出爆款！【全网独家】深层解析AI底层原理！",
+      "author": "",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1QBSRYuEvN",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "AI生成本质是概率预测，倾向概率最大的词导致文本平庸套路化",
+        "优质内容源于概率小的稀缺表达，而非概率大的普通平凡",
+        "多样性和节奏感是消除AI味的关键，可通过特定指令完成",
+        "实测验证：同一AI加指令后文本画面感、用词表达明显更有人味"
+      ],
+      "duration_s": 157.0,
+      "likes": 18287,
+      "summary": "AI文本易被识别为AI写的原因是倾向概率最大的平庸表达；通过增加多样性和节奏感的特定提示词指令，能显著提升文本的人类质感和表现力。",
+      "reason": "视频指出AI味产生根本原因是概率预测，解决方案是'避免这种概率最大的生成方式'，通过NBA故事和心灵鸡汤案例对比验证指令效果。 | 引用:「为什么你用AI写的内容总有一股AI味...AI生成的底层逻辑说白了就是概率预测...所以想要去除AI味关键在于避免这种概率最大的生成方式」",
+      "topic": "方法实操",
+      "node": "怎么写提示词才能少踩坑",
+      "category": "07.怎么写提示词才能少踩坑"
+    },
+    {
       "id": "bilibili:BV1eH4y1c7Jn",
       "video_id": "BV1eH4y1c7Jn",
       "title": "用示例法彻底消除AI写作的机械味",
@@ -11007,6 +11031,30 @@
       "topic": "误区纠正",
       "node": "AI替代某职业的说法靠谱吗",
       "category": "12.AI替代某职业的说法靠谱吗"
+    },
+    {
+      "id": "bilibili:BV154426xEha",
+      "video_id": "BV154426xEha",
+      "title": "AI编程的完整工作流：项目初始化到版本管理",
+      "original_title": "我的 AI 编程全流程：如何使用 AI 稳定交付一个高质量的产品",
+      "author": "",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV154426xEha",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "选择支持多种模型格式、API兼容性强的编程Agent工具是前置",
+        "环境搭建和Git版本控制是必需步骤，每个功能完成都要保存快照",
+        "Git让代码出错时能一键回滚到之前的可用版本，防止劳动成果丢失",
+        "完整的多步工程流程比单次AI指令更能确保最终交付质量"
+      ],
+      "duration_s": 1495.0,
+      "likes": 14193,
+      "summary": "用AI写代码不能简单给条指令就完事，需要完整工程流程。讲解选择工具、环境搭建、Git版本管理等步骤，展示如何通过系统化方法确保AI辅助编程质量和可控性。",
+      "reason": "视频强调AI做出的效果未必符合预期，强调'不是给AI发条指令就完事了...要经历好几个步骤'，通过电子书阅读器案例演示了项目初始化、Git版本管理的关键环节。 | 引用:「这不是给AI发条指令就完事了...中间要经历好几个步骤...每一步到底解决了什么问题」",
+      "topic": "方法实操",
+      "node": "AI写代码怎么用才不越帮越乱",
+      "category": "09.AI写代码怎么用才不越帮越乱"
     },
     {
       "id": "bilibili:BV1nWGX6DEy9",
@@ -11221,6 +11269,30 @@
       "topic": "时效选择",
       "node": "大模型版本与选型指南",
       "category": "(地图缺口)大模型版本与选型指南"
+    },
+    {
+      "id": "bilibili:BV1LXDPBcE5N",
+      "video_id": "BV1LXDPBcE5N",
+      "title": "14款本地大模型运行工具对比指南",
+      "original_title": "14款本地大模型工具全面对比！Ollama/LM Studio/vLLM/SGLang谁是王者？【2026最新】",
+      "author": "",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1LXDPBcE5N",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "本地工具分4层次：推理引擎（Llama.cpp、Ollama）→桌面GUI→高性能服务→综合管理平台",
+        "Ollama月下载5200万次最流行，基于Llama.cpp，Mac上MLX集成提升57%速度",
+        "LM Studio和Gen是开发者首选，支持多模型格式和MCP；GPT4All易上手但12个月未更新",
+        "vLLM、SGLang面向生产部署，OpenWeb UI等平台支持Agent和RAG一体化应用"
+      ],
+      "duration_s": 549.0,
+      "likes": 727,
+      "summary": "2026年本地运行大模型工具生态已成熟，从底层推理引擎到高性能服务和综合平台，按4层架构介绍13款工具的性能指标、功能特性和应用场景，帮助用户按需选择。",
+      "reason": "视频以4层架构系统梳理本地大模型工具生态，给出具体项目数据（'Ollama 16万7千颗星''月下载量5200万次''MLX性能提升百分比'）和各工具定位。 | 引用:「这14款工具可以分成4个层次...最底层是推理引擎...第二层是桌面GUI工具...第三层是高性能推理服务...第四层是综合管理平台」",
+      "topic": "时效选择",
+      "node": "本地大模型运行工具对比与选型",
+      "category": "(地图缺口)本地大模型运行工具对比与选型"
     },
     {
       "id": "bilibili:BV1SaGg65EFk",
