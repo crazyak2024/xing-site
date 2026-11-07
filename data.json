@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共326条",
+  "generated_note": "判定=合格的候选，共332条",
   "topics": [
     "概念原理",
     "方法实操",
@@ -7760,6 +7760,150 @@
       "topic": "误区纠正",
       "node": "AI学习中的常见误区与反思",
       "category": "(地图缺口)AI学习中的常见误区与反思"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxM-uTGN-L0X5k8zT4DCKrydde2DhzwBZJYrpBaPpIQ",
+      "video_id": "export/UzFfBgAAxM-uTGN-L0X5k8zT4DCKrydde2DhzwBZJYrpBaPpIQ",
+      "title": "自学AI的7个常见坑与解决方向",
+      "original_title": "学AI容易踩哪些坑?这7个坑帮你提前避开\n#学AI容易踩哪些坑 #AI培训 #AI搞学习howto #人工智能 #北大青鸟 #职业教育 #北大青鸟佳音校区 #人工智能就业 #AI人工智能 #学技术",
+      "author": "北大青鸟佳音校区谈教育",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/AcVx0UllRD",
+      "cover_url": "https://wxapp.tc.qq.com/251/20304/stodownload?encfilekey=KGDRibp2wkicLSlHrYHU2iaDU3icjoyllM3oiadSFeMKCMj0vxic0ytjgsh8JnyAMjNAJOYe4FELjheBsfCwibXgWecQQ&hy=SZ&idx=1&m=&scene=2&uzid=1&picformat=200&wxampicformat=503",
+      "published_at": "2026-09-05T09:52:54+00:00",
+      "key_points": [
+        "AI是能力放大工具需要自身基础，不是入局就能躺赚的风口",
+        "应用层优先于理论：先用工具解决问题建立反馈，再按需补理论",
+        "质量优于数量：深耕一款工具吃透场景往往覆盖80%工作需求",
+        "事实核查第一：AI会胡说八道，数据法律医疗高风险信息必须交叉验证",
+        "拒绝培训诱饵：核查机构资质，避免私欲转账、分期、网贷陷阱"
+      ],
+      "duration_s": 221.0,
+      "likes": null,
+      "summary": "分析学AI常踩的7个坑（盲目追风、啃理论、囤资料、工具贪多、过度依赖、急于变现、轻信输出），给出入门路径：明确目标→上手工具→理解概念→完成项目→自主排查",
+      "reason": "系统梳理普遍存在的学习误区并给出实践建议。视频强调'质量永远大于数量，实操永远大于收藏。认真学完一套课程并动手做一遍，比收藏100个资源有用得多'，提供了具体的入门阶段划分 | 引用:「质量永远大于数量，实操永远大于收藏。认真学完一套课程并动手做一遍，比收藏100个资源有用得多」",
+      "topic": "误区纠正",
+      "node": "AI学习中的常见误区与反思",
+      "category": "(地图缺口)AI学习中的常见误区与反思"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxMOgDB8wJxuJjMzT4DCKYoAlGFr4sSrBIHMQQAyk9A",
+      "video_id": "export/UzFfBgAAxMOgDB8wJxuJjMzT4DCKYoAlGFr4sSrBIHMQQAyk9A",
+      "title": "AI自学的7个误区与正确学习路线",
+      "original_title": "90%的人自学AI踩的7个坑，你中招了吗？#ai #agent #大模型 #人工智能 #转行 #计算机 #编程 #程序员 #避坑经验 #ai学习路线",
+      "author": "AI大模型海文-资料在主页简介",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/AtC2WGa2EP",
+      "cover_url": "https://wxapp.tc.qq.com/251/20304/stodownload?encfilekey=KGDRibp2wkicIXVSS3RqBtSCFjwan0C6oeNicrHeQfDqyq4akweyECrWRFcuiaSCeg9XzjYurdnhMhy9GictI1yKL5Q&hy=SZ&idx=1&m=&scene=2&uzid=1&picformat=200&wxampicformat=503",
+      "published_at": "2026-07-30T08:03:24+00:00",
+      "key_points": [
+        "应用优先理论：学AI应用非算法专家，先掌握API和Agent再补理论更有效",
+        "手脑并用第一天开始：每学完知识点立即实践搭应用，不是被动接收知识",
+        "避免分散精力：按固定路线（提示词→RAG→智能体→项目实践）学习不绕路",
+        "工具服务问题解决：重要的是发现问题设计流程，工具只是手段",
+        "边学边输出最有效：实战项目记录成果比闭门学习加速学习进程"
+      ],
+      "duration_s": 93.0,
+      "likes": null,
+      "summary": "指出自学者的7个误区（复杂理论开篇、只看不实践、什么都学、沉迷工具、只学不输出），提出按路线学习（提示词→RAG→智能体→项目）并边学边输出的正确方法",
+      "reason": "强调'学AI真正难的不是坚持而是找到正确路径'，明确给出了提示词→RAG→Agent→项目的阶段划分，强调边做边学的实操优先 | 引用:「学AI真正难的不是坚持而是找到正确路径，按照路线学习提示词→RAG→Agent→项目实践」",
+      "topic": "误区纠正",
+      "node": "AI学习中的常见误区与反思",
+      "category": "(地图缺口)AI学习中的常见误区与反思"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxLOAQBQFExOQjMzT4DCK9g7HAoX8ILJsjOxTas3S3g",
+      "video_id": "export/UzFfBgAAxLOAQBQFExOQjMzT4DCK9g7HAoX8ILJsjOxTas3S3g",
+      "title": "学AI的3个核心误区与零基础入门路径",
+      "original_title": "学AI，90%的人第一步就走错了#AI#踩坑#人工智能#转型",
+      "author": "药代新出路",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/AoSoFOz1Q9",
+      "cover_url": "https://wxapp.tc.qq.com/251/20304/stodownload?encfilekey=2fG3V4WwQPn03GzQdkS8Mqicy8h1QxPLzoILGL6fda9ChoysjPAoYGGiaYQG91FXW1CpD6KsUp7vEKdmrwwon3HibEIKMeic3ntXG9WU1DEGZ3w&hy=SZ&idx=1&m=558ca15fe1c0bc04cad802c06147b010&uzid=1&picformat=200&wxampicformat=503",
+      "published_at": "2026-08-06T09:03:11+00:00",
+      "key_points": [
+        "工具优先编程：不是做程序员而是用工具提升效率，搞清目标再选工具无需学编程",
+        "第一天就要下场：不要只看教程，亲自操作是学习的必要条件和最高效方式",
+        "AI已无处不在：抖音推荐、语音助手全是AI，这不是奢侈品而是必需品现在学还来得及",
+        "明确身份和目标：讲师为北大AIGC认证师，强调科学的学习导向而非技术细节"
+      ],
+      "duration_s": 61.0,
+      "likes": null,
+      "summary": "纠正学AI的3个关键误区（不要先学编程而要先用工具、要立即动手操作、AI非高大上已无处不在），强调搞清目标再选工具、第一天就亲自操作",
+      "reason": "讲师身份明确（北大AIGC认证、工信部认证工程师），视频强调'第一天就得亲自下场操作'和'目标决定工具选择'的核心原则，提供明确的学习导向 | 引用:「第一个坑一上来就学编程你不是要做程序员你是要用AI工具提效搞清楚目标再选工具」",
+      "topic": "误区纠正",
+      "node": "AI学习中的常见误区与反思",
+      "category": "(地图缺口)AI学习中的常见误区与反思"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxPyDMEMTdQ7ujMzT4DCK5U0hcUjJaN80UpETQIVU3w",
+      "video_id": "export/UzFfBgAAxPyDMEMTdQ7ujMzT4DCK5U0hcUjJaN80UpETQIVU3w",
+      "title": "AI应用的核心：学会提问而非掌握工具",
+      "original_title": "新手玩转AI的正确打开方式#ai提示词#豆包",
+      "author": "中画沐恩说",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/AHQlcHvWD6",
+      "cover_url": "https://wxapp.tc.qq.com/251/20304/stodownload?encfilekey=oibeqyX228riaCwo9STVsGLPj9UYCicgttvaAnVeVjrAWwmoD5RTlt9MHYoyGPE3sFxegtZtagUqIibU2quOHm2FDY667sBEIMt0aWrYGWRGotGicP425KMHdCuEUOBQFRTEaqAicWiatDzHib0&hy=SH&idx=1&m=8bbd716aab165309591bd30aff80c1b2&uzid=1&picformat=200&wxampicformat=503",
+      "published_at": "2026-05-16T02:33:20+00:00",
+      "key_points": [
+        "提问是唯一核心能力：把需求说清说明白比学工具和术语更重要，AI就能为你所用",
+        "无专业门槛：不需懂代码不需专业知识，普通人清晰表达需求就能用好AI",
+        "化繁为简的本质：AI能把复杂问题简单化、把模糊需求精准化，这就是提问的力量"
+      ],
+      "duration_s": 34.0,
+      "likes": null,
+      "summary": "强调AI核心逻辑是学会提问，不需懂代码和专业知识，只需把需求说清楚，AI就能化繁为简、将模糊需求精准化，这是普通人玩转AI的正确打开方式",
+      "reason": "视频直击AI应用的本质，强调'学会好好提问'是普通人玩转AI的关键，表述精炼而核心观点清晰 | 引用:「只要你能把需求说清楚把需求说明白AI就能为你所用能把复杂的问题简单化」",
+      "topic": "方法实操",
+      "node": "怎么写提示词才能少踩坑",
+      "category": "07.怎么写提示词才能少踩坑"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxIOhJD8tEV-PjczT4DCKxa3Dd2SPjlKfBXQ8qV6naQ",
+      "video_id": "export/UzFfBgAAxIOhJD8tEV-PjczT4DCKxa3Dd2SPjlKfBXQ8qV6naQ",
+      "title": "数据投毒对AI模型的影响机制解析",
+      "original_title": "数据投毒有多狠？AI 直接被带偏#AI 造假 #AI 幻觉 #大模型 #人工智能 #科普干货 #冷知识 #科技揭秘 #数据投毒",
+      "author": "尖峰解构切片号",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/A7OU2x0Ryo",
+      "cover_url": "https://wxapp.tc.qq.com/251/20304/stodownload?encfilekey=rjD5jyTuFrIpZ2ibE8T7Ym3K77SEULgkiaVVAwxiciaK6Bpl854Hbd4Qm0BicRGk9dEbqnP9kqGf9BefjU0DOq2f0uDWV3GN4fDWBpEcw4bibibFicwDhClqqlv1Lg&hy=SZ&idx=1&m=&scene=2&uzid=1&picformat=200&wxampicformat=503",
+      "published_at": "2026-04-20T00:00:00+00:00",
+      "key_points": [
+        "投毒在源头起效：只要训练语料被大规模污染，输出答案就会被影响，这是系统性操控",
+        "软文伪测评直接改向：批量发软文伪造测评分可操控AI推荐结果和答案倾向",
+        "虚假产品也能推荐：精心设计的软广即使针对根本不存在的产品也能被模型当作值得推荐"
+      ],
+      "duration_s": 34.0,
+      "likes": null,
+      "summary": "解析数据投毒这类系统性造假的核心机制——通过人为污染训练数据源头来影响模型输出，用315晚会曝光的案例说明服务商如何通过软文伪测评操控AI推荐，甚至虚假产品也能被包装成推荐答案",
+      "reason": "用315晚会真实曝光的案例说明数据投毒机制，具体引述'通过大批量的发软文伪造测评分发内容去影响AI的推荐结果'，将抽象概念具体化 | 引用:「一些服务商通过大批量的发软文伪造测评分发内容去影响AI的推荐结果和答案方向」",
+      "topic": "误区纠正",
+      "node": "AI数据隐私与安全保护",
+      "category": "(地图缺口)AI数据隐私与安全保护"
+    },
+    {
+      "id": "douyin:7640062051326557669",
+      "video_id": "7640062051326557669",
+      "title": "未来五年各行业AI替代程度分层评估",
+      "original_title": "未来五年，机器人能替代vs不能替代的岗位 #机器人 #人工智能 #AI #ai替代人类 #智能机器人",
+      "author": "Ai司马懿",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7640062051326557669",
+      "cover_url": "https://p3-sign.douyinpic.com/tos-cn-i-0813c000-ce/oIYfIg8tpGAf5QARA8LKT2oAAD4AvKYGQeeRNI~tplv-dy-resize-walign-adapt-aq:540:q75.webp?lk3s=138a59ce&x-expires=1795284000&x-signature=GBokiyIshApAziL91CrDWR98210%3D&from=327834062&s=PackSourceEnum_AWEME_DETAIL&se=false&sc=cover&biz_tag=aweme_video&l=20261108021232F458A1957B3649D99B72",
+      "published_at": "2026-05-15T10:22:45+00:00",
+      "key_points": [
+        "替代程度分层而非绝对：会被替代、大部分替代、部分替代各不相同，80%道路无人驾驶但仍需人处理特殊情况",
+        "技术成熟度决定替代进度：无人驾驶、无人配送已成熟快速推进；高空清洁、复杂工序仍需人工",
+        "机械重复岗位优先被替：流水线工人、搬运工这种单调高重复的工作被替代最快最彻底",
+        "专业创意岗位保留人工：炒菜机器人胜任家常菜，高端菜研发创意需人类厨师"
+      ],
+      "duration_s": 39.4,
+      "likes": 1663,
+      "summary": "相对客观地分析会被完全替代、大部分替代、部分替代、不会被替代的各类岗位，如外卖员（无人机已现）、清洁工（复杂角落需人工部分替代）、农民（无人农场已有）等，给出具体技术现状和替代限制条件",
+      "reason": "相对平衡地分析各职业被替代的实际程度，给出'80%的道路会实现无人驾驶''部分替代清洁工'等具体条件而非绝对论，区分不同替代程度避免单一恐惧论调 | 引用:「大部分会被替代80%的道路会实现无人驾驶；部分替代现在简单的菜已经可以用炒菜机器人来完成」",
+      "topic": "时效选择",
+      "node": "AI替代某职业的说法靠谱吗",
+      "category": "12.AI替代某职业的说法靠谱吗"
     }
   ]
 }
