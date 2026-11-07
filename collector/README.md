@@ -1,8 +1,16 @@
 # 醒 · BI 收集端点
 
-**状态：代码已就绪，未部署。** 部署需要 Cloudflare 登录态（`wrangler login` 走浏览器
-OAuth），这一步只能 CY 本人做；而且在他的 Cloudflare 账号上创建一个公网端点属于
-红线动作，不自行执行。
+**状态：已上线（2026-11-07）。端点 `https://bi.vectorherd.com`，已端到端验过（写入+读回）。**
+
+- Worker `xing-bi` / D1 `xing-bi`（uuid `9f61e002-bda1-4641-a658-44626405c95f`）
+- CF account id `13480f1d3136407bc424f6639391a335`
+- 前端 `site/app.js` 的 `COLLECT_URL` 已填
+- **为什么是自定义域不是 workers.dev**：这个账号还没注册 workers.dev 子域（账号级
+  一次性设置，要去 dashboard 点），而 vectorherd.com 整域已在同一账号下，
+  `custom_domain = true` 会自动建 DNS 记录，一条命令完事。
+- **迁站待办**：CY 2026-11-07 定了以后整体迁 `live.vozo.ai` 时 BI 一起迁。
+  `worker.js` 的 `ALLOWED` 里已经预放了 `https://live.vozo.ai`，迁站当天不会撞 CORS。
+  要改的只有：wrangler.toml 的 `routes` 和 app.js 的 `COLLECT_URL`。
 
 ## 为什么用 Cloudflare Worker + D1
 - **第一方**：我们自己的代码、自己的域。站上明写「没有第三方脚本」，接 GA 那类东西

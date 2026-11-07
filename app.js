@@ -358,7 +358,7 @@ function closeModal() {
  * "偷偷发出去"这回事）。填上我们自己的 Worker 地址后，队列会随下次事件一起补发。
  * 刻意不接任何第三方统计脚本——那会直接作废墙上那行"没有第三方脚本"。
  */
-const COLLECT_URL = "";  // 部署自己的收集端点后填这里（见 site/collector/README.md）
+const COLLECT_URL = "https://bi.vectorherd.com";  // 2026-11-07 已部署并端到端验过(写入+读回)
 
 function visitorId() {
   try {

@@ -2,7 +2,13 @@ name = "xing-bi"
 main = "worker.js"
 compatibility_date = "2026-11-01"
 
+# 自定义域而不是 workers.dev：这个账号还没注册 workers.dev 子域（账号级一次性设置，
+# 要在 dashboard 点），而 vectorherd.com 整域已在本账号的 Cloudflare 上，custom_domain
+# 会自动建 DNS 记录，一条命令完事。CY 2026-11-07 08:2x 拍的：站点本来就是临时站，
+# 以后整体迁 live.vozo.ai 时 BI 一起迁。
+routes = [{ pattern = "bi.vectorherd.com", custom_domain = true }]
+
 [[d1_databases]]
 binding = "DB"
 database_name = "xing-bi"
-database_id = "TODO-wrangler-d1-create-后把返回的-id-填这里"
+database_id = "9f61e002-bda1-4641-a658-44626405c95f"

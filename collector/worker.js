@@ -27,25 +27,36 @@
  *   ↑ 第二条就是**内容缺口清单**：用户搜了、我们一条都没有的词。
  */
 
-const CORS = {
-  // GitHub Pages 是站点的真实来源；只放行它，别开 *
-  "Access-Control-Allow-Origin": "https://crazyak2024.github.io",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-  "Access-Control-Max-Age": "86400",
-};
+// 只放行我们自己的来源，不开 `*`。现在站点在 GitHub Pages；live.vozo.ai 先放进来，
+// 迁站那天少一步（多一个允许的来源不增加风险，少一个会在迁站当天静默报 CORS 错）。
+const ALLOWED = new Set([
+  "https://crazyak2024.github.io",
+  "https://live.vozo.ai",
+]);
+
+function cors(request) {
+  const o = request.headers.get("Origin") || "";
+  return {
+    "Access-Control-Allow-Origin": ALLOWED.has(o) ? o : "https://crazyak2024.github.io",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Max-Age": "86400",
+    "Vary": "Origin",
+  };
+}
 
 const KINDS = new Set(["found", "not_found", "gap_wish", "search", "pick", "open"]);
 
 export default {
   async fetch(request, env) {
+    const CORS = cors(request);
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
     if (request.method !== "POST") return new Response("POST only", { status: 405, headers: CORS });
 
     let body;
-    try { body = await request.json(); } catch (e) { return json({ ok: false, err: "bad json" }, 400); }
+    try { body = await request.json(); } catch (e) { return json(CORS, { ok: false, err: "bad json" }, 400); }
     const events = Array.isArray(body?.events) ? body.events.slice(0, 200) : [];
-    if (!events.length) return json({ ok: true, n: 0 });
+    if (!events.length) return json(CORS, { ok: true, n: 0 });
 
     // 服务端时间戳独立记一列：客户端的钟不可信（时区/手动改过都见过）
     const now = new Date().toISOString();
@@ -63,13 +74,13 @@ export default {
         str(e.note, 200), str(e.item, 80),
         str(e.at, 40), now));
     }
-    if (!rows.length) return json({ ok: true, n: 0 });
-    try { await env.DB.batch(rows); } catch (e) { return json({ ok: false, err: "db" }, 500); }
-    return json({ ok: true, n: rows.length });
+    if (!rows.length) return json(CORS, { ok: true, n: 0 });
+    try { await env.DB.batch(rows); } catch (e) { return json(CORS, { ok: false, err: "db" }, 500); }
+    return json(CORS, { ok: true, n: rows.length });
   },
 };
 
 const str = (v, max) => (typeof v === "string" ? v.slice(0, max) : null);
 const num = v => (Number.isFinite(v) ? Math.trunc(v) : null);
-const json = (o, status = 200) =>
+const json = (CORS, o, status = 200) =>
   new Response(JSON.stringify(o), { status, headers: { ...CORS, "Content-Type": "application/json" } });

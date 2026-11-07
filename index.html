@@ -6,7 +6,14 @@
 <title>醒 · 知识视频地图</title>
 <meta name="description" content="一张可点击的中文知识视频地图：按问题组织，经过质量筛选，找到就走。">
 <style>
-:root{--ink:#1a1a1a;--sub:#666;--line:#e5e5e5;--bg:#fafafa;--accent:#2b6cb0;}
+:root{
+  --ink:#1a1a1a;--sub:#666;--mute:#999;--faint:#bbb;
+  --line:#e6e4df;--bg:#faf9f7;--card:#fff;--accent:#2b6cb0;
+  /* 字号就这五档，别再临时加 13.5/12.5 这种一次性数字——尺寸杂乱本身就是"看花眼" */
+  --fs-xs:11px;--fs-sm:12px;--fs-md:13px;--fs-lg:14px;--fs-xl:15px;
+  /* 间距同理，四档 */
+  --sp-1:4px;--sp-2:8px;--sp-3:14px;--sp-4:22px;
+}
 *{box-sizing:border-box}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
 button{font-family:inherit}
@@ -14,89 +21,103 @@ button{font-family:inherit}
 .layout{display:flex;flex-direction:column;max-width:1180px;margin:0 auto}
 @media (min-width:900px){.layout{flex-direction:row;align-items:flex-start}}
 
-/* 品牌面板：CY 要求"三句短话，不解释" */
-.brand-panel{padding:14px 16px 6px;flex-shrink:0}
-@media (min-width:900px){.brand-panel{width:190px;position:sticky;top:0;padding:26px 18px}}
-.brand-panel h1{font-size:24px;margin:0 0 6px;letter-spacing:2px}
-/* slogan 是面板上第二大的字，仅次于站名——它是这个站的主张，不是装饰 */
-.brand-panel .slogan{font-size:15px;line-height:1.45;color:#1a1a1a;font-weight:600;margin:0 0 7px}
-.brand-panel .tagline{color:#aaa;font-size:11.5px;margin:0 0 12px}
-@media (max-width:899px){.brand-panel .slogan{font-size:14px}.brand-panel .slogan br{display:none}}
-.creed{list-style:none;padding:0;margin:0;font-size:12.5px;color:#555}
-.creed li{margin-bottom:5px}
-@media (max-width:899px){.creed{display:flex;gap:10px;margin:0;font-size:11.5px}.creed li{margin:0}}
+/* 品牌面板：站名 → 功能说明小字 → 三行宣言（主视觉）→ 一行正面收口 → 两颗离开按钮 → 纯净度声明 */
+.brand-panel{padding:var(--sp-3) 16px var(--sp-2);flex-shrink:0}
+@media (min-width:900px){.brand-panel{width:200px;position:sticky;top:0;padding:26px 20px}}
+.brand-panel h1{font-size:22px;margin:0;letter-spacing:3px;line-height:1}
+.brand-panel .tagline{color:var(--faint);font-size:var(--fs-xs);margin:var(--sp-1) 0 0}
+
+/* 宣言：三行否定堆叠，是面板的主视觉。
+   窄栏（200px）正好一行一句，竖排的节奏让它像钉在墙上的三条，而不是一句长标语。
+   它取代了原来的「质量优先/反沉迷/找到就走」——那三条是同一件事的正面说法，
+   同时摆两份只是把面板填满，不是把话说清。 */
+.manifesto{margin:var(--sp-4) 0 0;padding:0;list-style:none}
+.manifesto li{font-size:19px;font-weight:700;line-height:1.3;color:var(--ink);letter-spacing:1px}
+/* 三条全是"不做什么"，所以紧跟一行"做什么"收口——否定负责立场，这一行负责说明白 */
+.manifesto-positive{font-size:var(--fs-sm);color:var(--sub);margin:var(--sp-2) 0 0;line-height:1.5}
+@media (max-width:899px){
+  .manifesto{display:flex;gap:10px;margin-top:var(--sp-3)}
+  .manifesto li{font-size:15px;letter-spacing:0}
+  .manifesto-positive{margin-top:var(--sp-1);font-size:var(--fs-xs)}
+}
 /* 离开按钮区：面板上最响的一块，但只有两颗按钮和两行字——"极其简洁"是硬约束 */
 .exit{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
-.exit-lead{font-size:12.5px;color:#777;margin:0 0 9px;line-height:1.55}
-.exit-lead b{color:#1a1a1a;font-size:13.5px}
+.exit-lead{font-size:var(--fs-sm);color:#777;margin:0 0 9px;line-height:1.55}
+.exit-lead b{color:#1a1a1a;font-size:var(--fs-md)}
 .exit-btns{display:flex;flex-direction:column;gap:6px}
-.exit-btn{padding:8px 10px;font-size:12.5px;border-radius:7px;cursor:pointer;text-align:left;border:1px solid var(--line);background:#fff;color:#444}
+.exit-btn{padding:8px 10px;font-size:var(--fs-sm);border-radius:7px;cursor:pointer;text-align:left;border:1px solid var(--line);background:#fff;color:#444}
 .exit-btn.ok{border-color:#38a169;color:#276749;font-weight:600}
 .exit-btn.ok:hover{background:#38a169;color:#fff}
 .exit-btn.no:hover{background:#f3f3f3;border-color:#bbb}
-.exit-note{font-size:10.5px;color:#aaa;margin:7px 0 0;line-height:1.5}
-.exit-said{font-size:12.5px;color:#444;line-height:1.6;margin:0}
+.exit-note{font-size:var(--fs-xs);color:#aaa;margin:7px 0 0;line-height:1.5}
+.exit-said{font-size:var(--fs-sm);color:#444;line-height:1.6;margin:0}
 .exit-said b{color:#276749}
 .exit-said.bad b{color:#b7791f}
 .exit-ask{display:flex;gap:5px;margin-top:8px}
-.exit-ask input{flex:1;min-width:0;padding:6px 8px;font-size:12px;border:1px solid var(--line);border-radius:6px}
-.exit-ask button{padding:6px 9px;font-size:12px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer}
-@media (min-width:900px) and (max-width:1100px){.exit-btn{font-size:12px}}
+.exit-ask input{flex:1;min-width:0;padding:6px 8px;font-size:var(--fs-sm);border:1px solid var(--line);border-radius:6px}
+.exit-ask button{padding:6px 9px;font-size:var(--fs-sm);border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer}
+@media (min-width:900px) and (max-width:1100px){.exit-btn{font-size:var(--fs-sm)}}
 
-.purity{font-size:10.5px;color:#bbb;margin-top:16px;line-height:1.6}
-.libnote{font-size:11px;color:#aaa;margin-top:6px}
+.purity{font-size:var(--fs-xs);color:#bbb;margin-top:16px;line-height:1.6}
+.libnote{font-size:var(--fs-xs);color:#aaa;margin-top:6px}
 @media (max-width:899px){.libnote{display:none}.purity{margin-top:12px}}
 
 .content-panel{flex:1;min-width:0;padding:0 14px 40px}
 @media (min-width:900px){.content-panel{padding:20px 20px 40px;border-left:1px solid var(--line)}}
 
-.searchbar input{width:100%;padding:11px 13px;font-size:15.5px;border:1px solid #d8d8d8;border-radius:9px;background:#fff}
-.searchbar input:focus{outline:none;border-color:var(--accent)}
-.hint{font-size:11px;color:#aaa;margin:5px 0 0}
-#scope-hint{font-size:11.5px;color:#b7791f;margin-top:5px;min-height:0}
+/* 搜索框是内容区唯一的"大件"：地图是浏览入口，它是提问入口，两者都该一眼看到 */
+.searchbar input{width:100%;padding:12px 14px;font-size:16px;border:1px solid #d6d3cc;border-radius:10px;background:var(--card);color:var(--ink)}
+.searchbar input::placeholder{color:#b4b0a8}
+.searchbar input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(43,108,176,.1)}
+.hint{font-size:var(--fs-xs);color:var(--faint);margin:var(--sp-1) 0 0;line-height:1.6}
+.hint a{color:var(--mute)}
+#scope-hint{font-size:var(--fs-xs);color:#b7791f;margin-top:var(--sp-1)}
 
 /* 面包屑 */
-#crumbs{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-top:10px;font-size:12.5px}
+#crumbs{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-top:10px;font-size:var(--fs-sm)}
 #crumbs:empty{margin:0}
-.crumb{border:none;background:none;padding:0;cursor:pointer;color:var(--accent);font-size:12.5px}
+.crumb{border:none;background:none;padding:0;cursor:pointer;color:var(--accent);font-size:var(--fs-sm)}
 .crumb.current{color:#333;font-weight:600;cursor:default}
 .crumb.q{color:#777;cursor:default}
-.crumb-x{border:none;background:#e8e8e8;color:#666;border-radius:50%;width:15px;height:15px;font-size:11px;line-height:1;cursor:pointer;margin-left:3px;padding:0}
+.crumb-x{border:none;background:#e8e8e8;color:#666;border-radius:50%;width:15px;height:15px;font-size:var(--fs-xs);line-height:1;cursor:pointer;margin-left:3px;padding:0}
 #crumbs .sep{color:#bbb}
 
 /* 地图区 */
 #map{margin:12px 0 14px}
-.map-intro,.map-label{font-size:11.5px;color:#999;margin-bottom:8px}
+.map-intro,.map-label{font-size:var(--fs-xs);color:#999;margin-bottom:8px}
 .topic-grid{display:grid;grid-template-columns:1fr;gap:9px}
 @media (min-width:620px){.topic-grid{grid-template-columns:1fr 1fr}}
 .topic-card{background:#fff;border:1px solid var(--line);border-top:3px solid var(--c);border-radius:9px;padding:10px 11px}
 .topic-head{border:none;background:none;padding:0;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:#222}
 .topic-head .dot{width:8px;height:8px;border-radius:50%;background:var(--c);flex-shrink:0}
-.topic-head .tn{font-size:11px;font-weight:400;color:#aaa}
-.thint{font-size:11px;color:#999;margin:2px 0 7px;padding-left:14px}
+.topic-head .tn{font-size:var(--fs-xs);font-weight:400;color:#aaa}
+.thint{font-size:var(--fs-xs);color:#999;margin:2px 0 7px;padding-left:14px}
 .chips{display:flex;flex-wrap:wrap;gap:5px}
-.chip{font-size:12px;padding:4px 9px;border-radius:13px;border:1px solid var(--line);background:#fff;color:#444;cursor:pointer;text-align:left}
+.chip{font-size:var(--fs-sm);padding:4px 9px;border-radius:13px;border:1px solid var(--line);background:#fff;color:#444;cursor:pointer;text-align:left}
 .chip:hover{border-color:var(--c);color:var(--c)}
 .chip.current{background:var(--c);border-color:var(--c);color:#fff}
 .chip.more{color:#999;border-style:dashed}
-.chip .n{font-size:10.5px;color:#aaa;margin-left:4px}
+.chip .n{font-size:var(--fs-xs);color:#aaa;margin-left:4px}
 .chip.current .n{color:rgba(255,255,255,.75)}
 
 .map-row{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-top:1px solid #efefef}
 .map-row:first-of-type{border-top:none}
-.row-topic{flex-shrink:0;width:92px;border:none;background:none;padding:2px 0;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--c);display:flex;align-items:center;gap:5px;text-align:left}
+.row-topic{flex-shrink:0;width:92px;border:none;background:none;padding:2px 0;cursor:pointer;font-size:var(--fs-sm);font-weight:600;color:var(--c);display:flex;align-items:center;gap:5px;text-align:left}
 .row-topic .dot{width:7px;height:7px;border-radius:50%;background:var(--c);flex-shrink:0}
-.row-topic .n{font-size:10.5px;font-weight:400;color:#bbb}
+.row-topic .n{font-size:var(--fs-xs);font-weight:400;color:#bbb}
 @media (max-width:620px){.map-row{flex-direction:column;gap:4px}.row-topic{width:auto}}
 
-.toolbar{display:flex;justify-content:flex-end;font-size:11px;color:#aaa;margin-bottom:6px}
+.toolbar{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:var(--fs-xs);color:var(--faint);margin:0 0 var(--sp-2);padding-top:var(--sp-1);border-top:1px solid var(--line)}
+.sort-note{flex:1;min-width:0;line-height:1.5}
+#result-count{flex-shrink:0;font-variant-numeric:tabular-nums}
+@media (max-width:620px){.sort-note{display:none}}
 
 .section{margin-bottom:16px}
 .section-head{display:flex;align-items:center;gap:6px;margin-bottom:6px}
 .section-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.section-title{border:none;background:none;padding:0;cursor:pointer;font-size:13px;font-weight:600;color:#333}
+.section-title{border:none;background:none;padding:0;cursor:pointer;font-size:var(--fs-md);font-weight:600;color:#333}
 .section-title:hover{text-decoration:underline}
-.section-count{font-size:11px;color:#aaa}
+.section-count{font-size:var(--fs-xs);color:#aaa}
 .grid{display:grid;grid-template-columns:1fr;gap:8px}
 @media (min-width:640px){.grid{grid-template-columns:1fr 1fr}}
 @media (min-width:1080px){.grid{grid-template-columns:1fr 1fr 1fr}}
@@ -106,19 +127,19 @@ button{font-family:inherit}
 .card{background:#fff;border:1px solid var(--line);border-left:3px solid var(--c);border-radius:8px;padding:10px 11px;cursor:pointer}
 .card:hover{border-color:#bbb;background:#fffefb}
 .card h3{font-size:14px;margin:0 0 5px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.meta{font-size:11px;color:var(--sub);margin-bottom:5px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.meta{font-size:var(--fs-xs);color:var(--sub);margin-bottom:5px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
 .meta .plat{padding:1px 5px;border-radius:4px;background:#eef2f7}
 /* 时长是列表里唯一的"数字"：反沉迷产品该先告诉你这会花掉多少时间 */
 .meta .dur{padding:1px 5px;border-radius:4px;background:#f3f0e8;color:#8a7a52;font-variant-numeric:tabular-nums}
 .meta .author{color:#555;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:48%}
-.summary{font-size:12.5px;color:#333;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.summary{font-size:var(--fs-sm);color:#333;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
-.empty{color:var(--sub);text-align:center;padding:34px 0;font-size:13.5px}
-.empty-note{font-size:11.5px;color:#aaa;margin-top:8px}
+.empty{color:var(--sub);text-align:center;padding:34px 0;font-size:var(--fs-md)}
+.empty-note{font-size:var(--fs-xs);color:#aaa;margin-top:8px}
 .linklike{border:none;background:none;padding:0;cursor:pointer;color:var(--accent);font-size:inherit;text-decoration:underline}
 
-footer{padding:14px 16px 30px;color:var(--sub);font-size:12px;border-top:1px solid var(--line)}
-.about{font-size:12px;color:#888;line-height:1.6;max-width:720px;margin:0 auto}
+footer{padding:14px 16px 30px;color:var(--sub);font-size:var(--fs-sm);border-top:1px solid var(--line)}
+.about{font-size:var(--fs-sm);color:#888;line-height:1.6;max-width:720px;margin:0 auto}
 
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:flex-start;justify-content:center;z-index:100;overflow-y:auto}
 .modal-overlay.open{display:flex}
@@ -127,27 +148,27 @@ footer{padding:14px 16px 30px;color:var(--sub);font-size:12px;border-top:1px sol
 .modal.nolink-mode{max-width:520px}
 @keyframes slideDown{from{transform:translateY(-16px);opacity:.6}to{transform:translateY(0);opacity:1}}
 .modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line)}
-.modal-head h2{font-size:14.5px;margin:0;line-height:1.4}
+.modal-head h2{font-size:var(--fs-lg);margin:0;line-height:1.4}
 .modal-close{border:none;background:#2d3748;color:#fff;border-radius:50%;width:30px;height:30px;font-size:18px;cursor:pointer;line-height:1;flex-shrink:0}
 .modal-body{padding:12px 14px}
 .modal-embed{width:100%;aspect-ratio:9/16;border:none;border-radius:8px;background:#000;display:block}
 .modal-cover-wrap{text-align:center}
 .modal-cover{max-width:100%;max-height:50vh;border-radius:8px}
 .modal-openlink{display:inline-block;margin-top:14px;padding:10px 20px;background:var(--accent);color:#fff;border-radius:8px;text-decoration:none;font-size:14px}
-.modal-where{font-size:12px;margin:10px 0 4px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.modal-where{font-size:var(--fs-sm);margin:10px 0 4px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
 .modal-where .sep{color:#bbb}
-.modal-meta{font-size:11.5px;color:var(--sub);margin:4px 0 8px}
-.modal-summary{font-size:13px;color:#333;margin:8px 0}
-.modal-reason{font-size:11.5px;color:#888;background:#f7f7f7;border-radius:6px;padding:7px 9px;margin:8px 0}
-.modal-tip{font-size:11px;color:#999;margin-top:6px}
-.no-next{font-size:11.5px;color:#aaa;margin:14px 0 2px;padding-top:9px;border-top:1px dashed var(--line)}
+.modal-meta{font-size:var(--fs-xs);color:var(--sub);margin:4px 0 8px}
+.modal-summary{font-size:var(--fs-md);color:#333;margin:8px 0}
+.modal-reason{font-size:var(--fs-xs);color:#888;background:#f7f7f7;border-radius:6px;padding:7px 9px;margin:8px 0}
+.modal-tip{font-size:var(--fs-xs);color:#999;margin-top:6px}
+.no-next{font-size:var(--fs-xs);color:#aaa;margin:14px 0 2px;padding-top:9px;border-top:1px dashed var(--line)}
 /* 要点区：弹窗里的主体，默认展开。取代了原来折叠的「转写全文」。 */
 .kp{background:#fbfaf7;border:1px solid #efece3;border-radius:8px;padding:10px 12px;margin:10px 0}
-.kp-head{font-size:11.5px;color:#8a7a52;font-weight:600;margin-bottom:6px}
+.kp-head{font-size:var(--fs-xs);color:#8a7a52;font-weight:600;margin-bottom:6px}
 .kp ul{margin:0;padding-left:17px}
-.kp li{font-size:13px;color:#2d2d2d;line-height:1.55;margin-bottom:4px}
-.kp-note{font-size:10.5px;color:#aaa;margin-top:7px;line-height:1.5}
-a.src{font-size:13px;color:var(--accent);text-decoration:none}
+.kp li{font-size:var(--fs-md);color:#2d2d2d;line-height:1.55;margin-bottom:4px}
+.kp-note{font-size:var(--fs-xs);color:#aaa;margin-top:7px;line-height:1.5}
+a.src{font-size:var(--fs-md);color:var(--accent);text-decoration:none}
 a.src:after{content:" →"}
 </style>
 </head>
@@ -155,18 +176,16 @@ a.src:after{content:" →"}
 <div class="layout">
   <aside class="brand-panel">
     <h1>醒</h1>
-    <!-- 主 slogan（CY 2026-11-07 08:0x 要的那句"我们不做迎合你口味的信息流推送"）。
-         选这句的理由：它把差异钉在**两个动词**上——推荐算法做的事是"猜你爱看"，
-         我们做的事是"答你想弄明白"。「爱看」和「想弄明白」的距离，就是娱乐信息流
-         和知识索引的全部距离，不用解释一个字。而且它和搜索框那句
-         「你想弄明白什么？」是同一个词，一眼看出这不是口号而是这个站真的在干的事。 -->
-    <p class="slogan">不猜你爱看什么，<br>只答你想弄明白什么。</p>
     <p class="tagline">知识视频地图</p>
-    <ul class="creed">
-      <li>质量优先</li>
-      <li>反沉迷</li>
-      <li>找到就走</li>
+    <!-- 主 slogan（CY 2026-11-07 08:1x 从四个候选里挑的这句）。
+         三行堆叠排版是为了解决它唯一的弱点：三条全是否定、不说我们做什么。
+         所以紧跟一行 manifesto-positive 收口。否定负责立场，那一行负责说明白。 -->
+    <ul class="manifesto">
+      <li>不投喂</li>
+      <li>不迎合</li>
+      <li>不留你</li>
     </ul>
+    <p class="manifesto-positive">你问，我们答，你走。</p>
 
     <!-- 两个离开按钮：这是整个产品的成绩单，也是价值观最响的一句话。
          两种离开都以关窗结束，传统网站分不出来、也不在乎（它们数的是停留时长）。
@@ -188,11 +207,16 @@ a.src:after{content:" →"}
     <div class="searchbar">
       <input id="q" type="text" placeholder="你想弄明白什么？比如：大模型为什么会幻觉">
     </div>
-    <p class="hint">关键词包含匹配（标题/总结/问题名/作者），不是语义搜索。同一问题下按标题排序；有搜索词时标题命中的排前面。<br>搜不到是我们的问题 —— 点左边那颗「没找到」告诉我们。</p>
+    <p class="hint">关键词匹配，不是语义搜索。搜不到是我们的问题——点左边那颗「没找到」告诉我们。</p>
     <div id="scope-hint"></div>
     <div id="crumbs"></div>
     <div id="map"></div>
-    <div class="toolbar"><span id="result-count"></span></div>
+    <!-- 排序规则就写在结果列表上方（CY 之前提过"搜索/排序机制不透明"）。
+         放这里而不是搜索框下面：它说明的是下面这个列表怎么排的。 -->
+    <div class="toolbar">
+      <span class="sort-note">同一问题内按标题排序；有搜索词时标题命中的排前面。没有热度排序，也没有推荐算法。</span>
+      <span id="result-count"></span>
+    </div>
     <div id="results"></div>
   </div>
 </div>
