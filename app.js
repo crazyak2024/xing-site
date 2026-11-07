@@ -335,9 +335,24 @@ document.getElementById("q").addEventListener("input", e => {
   qTimer = setTimeout(() => { state.q = v; render(); }, 160);
 });
 
-fetch("data.json").then(r => r.json()).then(d => {
-  DATA = d.items || [];
-  TOPICS = d.topics || [...new Set(DATA.map(i => i.topic))];
-  document.getElementById("lib-count").textContent = DATA.length;
-  render();
-});
+/* data.json 已经 ~800KB（转写全文都在里面），实测网络不稳时会**半截下载却仍回 200**，
+   JSON.parse 直接抛 → 页面全白。宁可给一句能看懂的话加一个重试按钮，
+   也不要让人对着空白页猜。（根治是把 asr_text 拆成按需加载，见 ledger 下一步） */
+function loadData(attempt = 1) {
+  fetch("data.json", { cache: "no-cache" })
+    .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(d => {
+      DATA = d.items || [];
+      TOPICS = d.topics || [...new Set(DATA.map(i => i.topic))];
+      document.getElementById("lib-count").textContent = DATA.length;
+      render();
+    })
+    .catch(err => {
+      if (attempt < 3) return setTimeout(() => loadData(attempt + 1), 800 * attempt);
+      document.getElementById("results").innerHTML =
+        `<div class="empty">内容没加载出来（${esc(String(err.message || err))}）。<br>
+         <button class="linklike" onclick="location.reload()">重新加载</button>
+         <div class="empty-note">多半是网络半途断了。内容本身没事，刷一下就好。</div></div>`;
+    });
+}
+loadData();
