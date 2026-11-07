@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共101条",
+  "generated_note": "判定=合格的候选，共111条",
   "topics": [
     "概念原理",
     "方法实操",
@@ -585,7 +585,11 @@
       "link": "https://www.douyin.com/video/7683176758716609137",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "RAG临时检索文档，Wiki在录入时深度阅读持续编译知识图谱",
+        "大模型充当知识库编辑，自动提取观点、创建新概念、标注信息冲突",
+        "Wiki呈现标准网页形式人可直读，RAG仅向量切片对人不可见"
+      ],
       "duration_s": 259.767,
       "likes": 5037,
       "summary": "讲解LLM Wiki三层架构与运行机制，对比RAG在处理时机、信息形态、知识交互、可读性四个维度的差异，应用于个人知识库、团队知识沉淀、复杂情报分析。",
@@ -604,7 +608,11 @@
       "link": "https://www.douyin.com/video/7346515243994058003",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "给大模型外挂业务知识库，提问时检索相关条目组装回答",
+        "解决模型知识边界与幻觉，补充业务数据提高准确度",
+        "智能客服应用场景全天在线降成本，无相关数据时可转人工"
+      ],
       "duration_s": 168.237,
       "likes": 173,
       "summary": "讲解RAG（检索增强生成）的定义和必要性，如何通过关联业务数据解决大模型知识边界问题、避免幻觉，以智能客服为例说明实际应用价值。",
@@ -623,7 +631,11 @@
       "link": "https://www.douyin.com/video/7664858758203362586",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "用4000元硬件（双V100）验证开源模型，衡量与云端大模型差距",
+        "速度突破：双卡50-100token/秒可用，单卡3token/秒不可用",
+        "适用场景：隐私敏感、离线部署、长期成本低于调用API"
+      ],
       "duration_s": 1162.018,
       "likes": 13182,
       "summary": "在4000元硬件（双V100显卡）上系统测试13款开源模型，按入门级/进阶/MOE分类，通过token/s吞吐、中文写作、实际部署等维度评测，找出低成本本地部署的最优方案",
@@ -642,7 +654,11 @@
       "link": "https://www.douyin.com/video/7367636035477556530",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "基于LMSYS一年排行数据，展示国产模型与GPT系列追赶轨迹",
+        "仅千问、01万物两家国产开源模型能与GPT系列抗衡",
+        "千问进度：23年10月第12名升至24年2月第8名"
+      ],
       "duration_s": 68.942,
       "likes": 553,
       "summary": "通过LMSYS排行榜12个月数据追踪，展示千问、01万物等国产开源模型的排名演变，量化说明与国际大模型的差距在缩小的具体轨迹",
@@ -661,7 +677,11 @@
       "link": "https://www.douyin.com/video/7696017372750089481",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "开源派四家：DeepSeek V4、千问3.8、Kimi 2.6、GLM-5.2B",
+        "闭源派：豆包、文心最新版仅在线，曾开源过旧版本",
+        "权衡：开源扩影响被二次开发，闭源守强靠服务收费"
+      ],
       "duration_s": 58.2,
       "likes": 49,
       "summary": "对比开源（DeepSeek V4、Qwen、Kimi、GLM-4）与闭源（豆包、文心）两派的代表，解释模型权重公开与否对用户获取方式、定制空间的实际影响",
@@ -680,7 +700,11 @@
       "link": "https://www.douyin.com/video/7670814599360351515",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "开源：权重代码全公开本地运行，闭源：仅API网页调用",
+        "开源优势隐私自控可微调离线无厂商锁定，缺点硬件要求高",
+        "数据敏感/有技术团队选开源，追求效果/快速开发选闭源"
+      ],
       "duration_s": 55.45,
       "likes": 15,
       "summary": "系统分析开源模型的优点（隐私自主、可离线、支持二次微调）与缺点（显卡要求高、维护复杂），对比闭源模型的强项（能力先进、开箱即用）与限制（数据上传、平台依赖）",
@@ -688,6 +712,30 @@
       "topic": "概念原理",
       "node": "开源模型能否替代闭源",
       "category": "19.开源模型能否替代闭源"
+    },
+    {
+      "id": "douyin:7634539210392833280",
+      "video_id": "7634539210392833280",
+      "title": "开源与闭源大模型的技术差异",
+      "original_title": "带你讲透开源大模型VS闭源大模型的本质区别 #Ai   #Ai大模型   #Ai科技  #AI时代  #开源",
+      "author": "",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7634539210392833280",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "开源大模型代码权重公开，可自由下载部署使用，通常免费",
+        "闭源大模型代码保密，只能通过API按量付费使用",
+        "开源优势是自由透明、高度定制；闭源优势是高性能、开箱即用",
+        "开源适合要求深度定制，闭源适合企业即用需求"
+      ],
+      "duration_s": 64.343,
+      "likes": 27,
+      "summary": "讲解开源大模型代码权重完全公开，可自由部署定制；闭源大模型通过API按量付费，提供完善支持。",
+      "reason": "系统讲解开源与闭源大模型在代码公开度、使用方式、部署成本、定制能力上的本质区别，转写明确指出：'开源给的是自由透明和高度定制，闭源它给的是高性能即用和完善的支持'，事实准确，逻辑清晰。 | 引用:「开源给自由透明和高度定制，闭源给高性能即用和完善支持；可自由下载部署」",
+      "topic": "概念原理",
+      "node": "开源与闭源大模型技术差异",
+      "category": "(地图缺口)开源与闭源大模型技术差异"
     },
     {
       "id": "wechat_channels:export/UzFfBgAAxMiiFAd2fyjCjMzT4DCKb3j8_cFYqqux9sGtqyTFBw",
@@ -699,7 +747,11 @@
       "link": "https://weixin.qq.com/sph/AZdha7pE2k",
       "cover_url": "https://wxapp.tc.qq.com/251/20304/stodownload?encfilekey=WTva9YVXqXcSUicrMCercmDHmKYPBXC7eyOV42TviabnanRpIwianuZyabv8pYsicv0WL77d67XibYvDkPnbjQQ3fWJCs819FcVWNU7PbdElvjDhec2b9ZbqZxjNmkuFYichF6UWuoTg4uP9s&hy=SH&idx=1&m=8278ed2ecaf5791f9e70c67bc711dca3&uzid=1&picformat=200&wxampicformat=503",
       "published_at": "2026-06-07T00:52:36+00:00",
-      "key_points": [],
+      "key_points": [
+        "大脑是数千亿参数网络，学语言规律而非死记硬背",
+        "聊天本质：概率预测逐词猜下一个最可能词搭积木生成",
+        "记忆全依赖对话历史，背景改变词的概率排序影响回答"
+      ],
       "duration_s": 216.0,
       "likes": null,
       "summary": null,
@@ -718,11 +770,114 @@
       "link": "https://weixin.qq.com/sph/AUIVNqUF1F",
       "cover_url": "https://wxapp.tc.qq.com/251/20304/stodownload?encfilekey=KGDRibp2wkicJo9ic0rmdn9T2vcUkMdRw7EQlXhEm10ibIhA953E22xqPtibx72vKoaE3Ric9ysmykdetLC9DlOEcbTg&hy=SZ&idx=1&m=&scene=2&uzid=1&picformat=200&wxampicformat=503",
       "published_at": "2026-11-06T04:13:55+00:00",
-      "key_points": [],
+      "key_points": [
+        "GPT3有1750亿参数全非人手写，参数具体作用难解但运作逻辑已清",
+        "文字接龙漏掉关键，AI根据前文动态改变词概率排序",
+        "Token是AI最小文字单位，一块可能一字或多字或一字多块"
+      ],
       "duration_s": 1468.0,
       "likes": null,
       "summary": null,
       "reason": "本批次信息密度与可核验程度最高：引用可查证外部权威信源+具体日期+数字。",
+      "topic": "概念原理",
+      "node": "Transformer的注意力机制在算什么",
+      "category": "02.Transformer的注意力机制在算什么"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxLSDQGtIJFmIk8zT4DCKt70BwWjLByjkMtcZHZpV2A",
+      "video_id": "export/UzFfBgAAxLSDQGtIJFmIk8zT4DCKt70BwWjLByjkMtcZHZpV2A",
+      "title": "大模型的基本概念与通用特性",
+      "original_title": "什么是 AI 大模型？底层原理通俗讲解！#立冬#AI大模型#算力#数字时代#新质生产力",
+      "author": "",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/ApE3WqooKU",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "大模型是参数量数十亿至万亿级的超大神经网络",
+        "通过海量文本、图片、音视频等多模态数据训练",
+        "具备通用性，同一模型可聊天、写代码、画图、读文档等多种任务",
+        "与旧AI相比能应对未见过的新问题，具备涌现能力",
+        "所有智能应用（客服、绘图、数字人等）多搭建在大模型之上"
+      ],
+      "duration_s": 96.0,
+      "likes": null,
+      "summary": "讲解大模型是参数数十亿到万亿级的超大神经网络，通过海量数据训练具备通用能力，是AI时代的基础操作系统。",
+      "reason": "系统讲解大模型定义、规模、训练方式及与旧AI的本质区别。转写直指：'大模型是规模巨大的人工智能神经网络，用海量数据训练'，'通用不再只做单一任务'，事实准确，结构完整。 | 引用:「海量多模态数据训练的神经网络，参数数十亿至万亿级，通用性强，具备涌现能力」",
+      "topic": "概念原理",
+      "node": "大模型基础概念与通用特性",
+      "category": "(地图缺口)大模型基础概念与通用特性"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxNyjYE5GJX7tjMzT4DCKyh7RypkL1tLsEZqv5UWSQw",
+      "video_id": "export/UzFfBgAAxNyjYE5GJX7tjMzT4DCKyh7RypkL1tLsEZqv5UWSQw",
+      "title": "生成式AI的核心原理：逐词预测生成文本",
+      "original_title": "AI大模型底层原理深度解析，24分钟给你讲明白！#人工智能#大模型#AI大模型#大模型学习#大模型基础#大模型教程#ai#deepseek#大模型入门#ai大模",
+      "author": "",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/AjvuWqpXdF",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "生成式AI与决策式AI根本区别：从判断预测转变为创造性生成内容",
+        "大模型逐词预测：每次预测最可能词并加入上下文，循环扩展成长文本",
+        "ChatGPT 2022上线启动生成时代，已渗透教育医疗金融制造等行业",
+        "大模型生态从炒概念进入产业应用变革阶段"
+      ],
+      "duration_s": 1465.0,
+      "likes": null,
+      "summary": "讲生成式AI从决策式AI的演进，核心是根据上下文逐词预测并循环扩展。例如'今天天气很...'模型预测'好'，再加入生成'非常晴朗'，逐步形成完整文本。",
+      "reason": "讲解清晰，用'今天天气很...'等通俗例子说明逐词预测的循环过程，口播自足，无营销或伪知识成分 | 引用:「它会根据已有的上下文来猜下一个最可能出现的词，随后这个新词被加入成为新的上下文」",
+      "topic": "概念原理",
+      "node": "大模型基础概念与通用特性",
+      "category": "(地图缺口)大模型基础概念与通用特性"
+    },
+    {
+      "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAADLoouE4NgAAAAAstQy6ubaLX4KHWvLEZgBPEjoFYQAlJX6KOzNPgMIqG3Gh50J3UcEOQgSzoqHN9",
+      "video_id": "export/UzFfAgtgekIEAQAAAAAADLoouE4NgAAAAAstQy6ubaLX4KHWvLEZgBPEjoFYQAlJX6KOzNPgMIqG3Gh50J3UcEOQgSzoqHN9",
+      "title": "从分词到Transformer：大模型处理文本的全过程",
+      "original_title": "一个视频了解AI大模型原理#AI#法律科技#Legaltech#AI法律#法律AI",
+      "author": "",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/A14c9kJb5o",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "分词将人类语言转换为token，是AI理解的基本单位",
+        "嵌入将词映射到数学空间坐标，语义相近的词坐标相近",
+        "自注意力机制计算每词与其他词的关联，自动判断哪些词更重要",
+        "多头注意力从多角度（语法、逻辑、人物等）同时分析，捕捉规律",
+        "Deep Seek V3有61层处理层和超6710亿参数，层数越多理解越深"
+      ],
+      "duration_s": 527.0,
+      "likes": null,
+      "summary": "讲大模型处理文本流程：分词→嵌入→自注意力机制→前馈网络。自注意力通过查询、见、值三元组计算词间关联。以Deep Seek V3的61层和6710亿参数说明规模。",
+      "reason": "系统讲解分词到自注意力的完整流程，用'机器人累了，它去睡觉'说明代词指代理解，过程清晰，无伪知识 | 引用:「自注意力机制就是让AI在读一句话的时候能够自动判断出哪些词更重要，词和词之间有什么关系」",
+      "topic": "概念原理",
+      "node": "Transformer的注意力机制在算什么",
+      "category": "02.Transformer的注意力机制在算什么"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxJqFUHodLDHCk8zT4DCKmJjnC16AnO-xJCFFZXy0MQ",
+      "video_id": "export/UzFfBgAAxJqFUHodLDHCk8zT4DCKmJjnC16AnO-xJCFFZXy0MQ",
+      "title": "Transformer进化史：从RNN到多头注意力的突破",
+      "original_title": "Ai大模型底层的原理——Transformer到底是什么？\n\n#Ai#Transformer#大模型#科普#人工智能#神经网络#知识科普",
+      "author": "",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/At05xtAebD",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "大模型底层就是概率预测：盯着已出现的文字算下一个字概率最高",
+        "RNN逐字读易遗忘；自注意力让模型同时看全文并计算词间关系",
+        "多头注意力从语法、逻辑、人物等不同角度同时分析，全面捕捉规律",
+        "预训练通过梯度下降调参；对齐微调（SFT+RLHF）把模型变有用助手",
+        "大模型没有意识，本质是海量文本知识通过参数编码的概率预测"
+      ],
+      "duration_s": 304.0,
+      "likes": null,
+      "summary": "讲大模型本质是逐字概率预测。Transformer的自注意力解决RNN遗忘，多头注意力多角度分析。预训练通过梯度下降学习，对齐微调分SFT和RLHF两步变成可用助手。",
+      "reason": "讲解覆盖RNN→Transformer演进、自注意力、多头机制、预训练、RLHF全过程，并澄清无意识误解，逻辑完整 | 引用:「大模型从头到尾都只在做一件极其简单的事那就是盯着已经出现的所有文字算出下一个位置出现哪个字的概率最高」",
       "topic": "概念原理",
       "node": "Transformer的注意力机制在算什么",
       "category": "02.Transformer的注意力机制在算什么"
@@ -737,7 +892,12 @@
       "link": "https://www.douyin.com/video/7647830496134581556",
       "cover_url": "https://p3-sign.douyinpic.com/tos-cn-i-dy/55026b0953fe4031a0ef5bc650ea6702~tplv-dy-resize-walign-adapt-aq:540:q75.webp?lk3s=138a59ce&x-expires=1795269600&x-signature=Pkn%2F5O6h0cQUOfVye4ktGWHQ08o%3D&from=327834062&s=PackSourceEnum_AWEME_DETAIL&se=false&sc=cover&biz_tag=aweme_video&l=202611072213321A78310A289386CB3B5B",
       "published_at": "2026-06-05T08:48:25+00:00",
-      "key_points": [],
+      "key_points": [
+        "根据海量文本统计词共现规律，无真实思维，仅做概率预测",
+        "逐字推算概率最高词汇，如刷题学霸只会套路不理解",
+        "冷门知识缺数据支撑，强行拼凑导致编造虚假信息",
+        "应用有界限：文案可用，理财医疗维权需自己判断"
+      ],
       "duration_s": 98.347,
       "likes": 64,
       "summary": "大模型无智商无思维，本质只是统计语言规律，每次根据输入和海量数据的概率逐字推算最高概率字词，数据不足时会编造幻觉。",
@@ -756,7 +916,11 @@
       "link": "https://www.douyin.com/video/7621117842859003186",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "Prompt可是问题公式招呼等形式的引导指令",
+        "同一需求表述方式不同，输出质量天差地别",
+        "工程是持续迭代优化过程，随场景认知不断演进"
+      ],
       "duration_s": 3654.341,
       "likes": 80,
       "summary": "讲提示词工程定义、持续迭代优化过程、OpenAI六大策略框架，强调它不是一步到位的技巧而是动态演进的方法论。",
@@ -775,7 +939,11 @@
       "link": "https://www.douyin.com/video/7643009556318014761",
       "cover_url": "https://p3-sign.douyinpic.com/tos-cn-i-dy/8f418ae6bc804782a7f3bb57cc17378f~tplv-dy-resize-walign-adapt-aq:540:q75.webp?lk3s=138a59ce&x-expires=1795269600&x-signature=7fT3brXk%2FdHe7edDs1Hsv8qAMs0%3D&from=327834062&s=PackSourceEnum_AWEME_DETAIL&se=false&sc=cover&biz_tag=aweme_video&l=20261107221340AD4CC32C05056FCCFC27",
       "published_at": "2026-05-23T09:00:40+00:00",
-      "key_points": [],
+      "key_points": [
+        "提示词是内容，工程是方法，两概念需严格区分",
+        "百亿参数库需精准提示词筛选，才能精准命中需要内容",
+        "质量决定论：提示词质量直接等于输出质量"
+      ],
       "duration_s": 2251.017,
       "likes": 754,
       "summary": "提示词通过优化输入文本引导大模型输出符合预期的结果，弥补模型参数方向选择的不足，让模型精准命中需求而不是按自己想法回答。",
@@ -794,7 +962,11 @@
       "link": "https://weixin.qq.com/sph/AcldqSUJ2x",
       "cover_url": "",
       "published_at": "2026-11-03T05:48:09+00:00",
-      "key_points": [],
+      "key_points": [
+        "不改参数，仅通过优化输入让输出稳定可控",
+        "加约束条件性价比最高，约数决定答案下限",
+        "五要素框架：角色任务上下文约数视力"
+      ],
       "duration_s": 58.0,
       "likes": null,
       "summary": "提示词工程有5条底层原则（清晰、上下文丰富、优先级明确、迭代、加约束）和5个要素（角色、任务、上下文、约束、目标），通过6大框架组织实现稳定输出。",
@@ -813,7 +985,11 @@
       "link": "https://www.douyin.com/video/7551416835548269839",
       "cover_url": "https://p3-sign.douyinpic.com/tos-cn-i-dy/8c4db702fb364817806ee4d8743697af~tplv-dy-resize-walign-adapt-aq:540:q75.webp?lk3s=138a59ce&x-expires=1795269600&x-signature=rBHHfJIvhNjnzUl%2Fp6AlA2Mou9Y%3D&from=327834062&s=PackSourceEnum_AWEME_DETAIL&se=false&sc=cover&biz_tag=aweme_video&l=20261107221345E43EFEE0AFE5FBC582EA",
       "published_at": "2025-09-18T13:14:27+00:00",
-      "key_points": [],
+      "key_points": [
+        "解决三痛点：知识过时、私有数据上传难、容易编造",
+        "切分文档后只检索相关片段而非全文，节省成本避免溢出",
+        "两阶段：准备（切分→向量化→存储），回答（检索→生成）"
+      ],
       "duration_s": 939.7,
       "likes": 129,
       "summary": "RAG（检索增强生成）先从资料库检索相关内容再基于这些内容生成答案，通过向量化、相似度检索等方式解决模型上下文窗口限制和知识过时问题。",
@@ -832,7 +1008,11 @@
       "link": "https://www.douyin.com/video/7685254274045488997",
       "cover_url": "https://p3-sign.douyinpic.com/tos-cn-i-0813c001/oofqTm9CAuDqooAEGpFVhEAWA7AlIgCuKfANgA~tplv-dy-resize-walign-adapt-aq:540:q75.webp?lk3s=138a59ce&x-expires=1795269600&x-signature=omUAJOhDIHCFvckZswaAWGO2MHs%3D&from=327834062&s=PackSourceEnum_AWEME_DETAIL&se=false&sc=cover&biz_tag=aweme_video&l=202611072213525FCA2CBC46D73ACEB427",
       "published_at": "2026-09-14T05:11:40+00:00",
-      "key_points": [],
+      "key_points": [
+        "应用：知识库客服文档；解决知识过时和私有数据难题",
+        "核心流程：chunking→向量化→库存储，再问题向量化→检索→生成",
+        "向量相似度：意思近距离小，用余弦欧氏点积等方式计算"
+      ],
       "duration_s": 691.667,
       "likes": 696,
       "summary": "RAG工作流程分两阶段：数据准备阶段对文档分片、向量化存入数据库；提问阶段问题向量化后通过相似度检索找相关片段，再交大模型生成答案。",
@@ -851,7 +1031,11 @@
       "link": "https://weixin.qq.com/sph/AFOz5zpHg1",
       "cover_url": "https://wxapp.tc.qq.com/251/20304/stodownload?encfilekey=KGDRibp2wkicKMEX1sJhPMUiboxpWcXOCgRwibRQ9CLficCGicsBP9HAvb12LlsbEsZYZHW0M0O8hJZbg4pic4lp7pORQ&hy=SH&idx=1&m=&scene=2&uzid=1&picformat=200&wxampicformat=503",
       "published_at": "2026-09-15T00:00:01+00:00",
-      "key_points": [],
+      "key_points": [
+        "模型如凭记忆指路易错，RAG如导航先查数据再规划",
+        "语义理解检索：不仅匹配关键词也理解含义找相似表达",
+        "资料筛选排序：相关性强排前，可靠系统不编造"
+      ],
       "duration_s": 193.0,
       "likes": null,
       "summary": "用路人凭记忆指路vs导航查地图的类比讲RAG，模型凭训练数据回答vs先检索资料再答，RAG让AI从依靠记忆变为基于知识，知识更新灵活。",
@@ -870,7 +1054,11 @@
       "link": "https://weixin.qq.com/sph/A12cv6LhAz",
       "cover_url": "https://wxapp.tc.qq.com/251/20304/stodownload?encfilekey=rjD5jyTuFrIpZ2ibE8T7Ym3K77SEULgkiazAn19W1QqscDuibZ7mhLyzmgjz3PydrIOTQwvKwk6cUvyRBgHnsZK0SQCFQJ7IHCduxfGpglUszYxrFQ9hDNF3A&hy=SZ&idx=1&m=&scene=2&uzid=1&picformat=200&wxampicformat=503",
       "published_at": "2026-11-05T09:30:01+00:00",
-      "key_points": [],
+      "key_points": [
+        "三步流程：检索资料→增强上下文→生成答案并标注来源",
+        "具体实例：问费上限→检索差旅制度→500元每晚→标注出处回答",
+        "RAG虽更可靠但仍可出错：检索错、遗漏、过期、理解偏差"
+      ],
       "duration_s": 174.0,
       "likes": null,
       "summary": "RAG三步工作流程：先从知识库检索相关文件条款，增强阶段把文件+问题+要求合并入上下文，生成阶段AI根据这些内容组织答案并附上来源。",
@@ -889,7 +1077,12 @@
       "link": "https://www.douyin.com/video/7310531374132301090",
       "cover_url": "https://p3-sign.douyinpic.com/tos-cn-i-dy/5b6f1fed7d824fc0b1d55240c57fc41c~tplv-dy-resize-walign-adapt-aq:540:q75.webp?lk3s=138a59ce&x-expires=1795269600&x-signature=bojRo8Vbo3odpTgWDI8JWbKmbGg%3D&from=327834062&s=PackSourceEnum_AWEME_DETAIL&se=false&sc=cover&biz_tag=aweme_video&l=20261107221400681B588BA330CAD7A64B",
       "published_at": "2023-12-09T09:55:57+00:00",
-      "key_points": [],
+      "key_points": [
+        "通义千问72B登顶HuggingFace排行，超越Meta Llama2等长期霸榜模型",
+        "推出文本（72B/14B/7B）+视觉+音频完整产线，首个全尺寸多模态开源方案",
+        "72B在MMLU英文基准和CMMLU/高考等中文基准创开源最优，数学推理GS8K断层领先",
+        "12月初开源，打破国内技术壁垒，中小企业和个人开发者可用"
+      ],
       "duration_s": 71.934,
       "likes": 6430,
       "summary": "国产通义千问72B模型在HuggingFace开源排行榜登顶Meta LLaMA2，在MMLU、高考等多项基准测试超越GPT4，实现全尺寸多模态支持。",
@@ -908,7 +1101,11 @@
       "link": "https://weixin.qq.com/sph/AMk29ysFAK",
       "cover_url": "https://wxapp.tc.qq.com/251/20304/stodownload?encfilekey=2fG3V4WwQPmeVv2dDoWZRhtMNukRBZTIqzVWG5Wyup2fwDlEW5Jiaiciar7l4W2jSjRpt0Z9DddLvGVtMGgjg4XnBmQVeaIoib5qeUVibUABtk00&hy=SH&idx=1&m=9792a874c2b95a4dee180187e2453660&uzid=1&picformat=200&wxampicformat=503",
       "published_at": "2026-10-14T12:31:50+00:00",
-      "key_points": [],
+      "key_points": [
+        "小白勿先学RAG/Agent概念，应干中学边用边悟",
+        "选Agent→看教程1小时→跟案例实操5-10个→找工作场景摸索，四步入门",
+        "VTVGI、AI夜校、观察学社为免费学习平台，务必完成作业"
+      ],
       "duration_s": 314.0,
       "likes": null,
       "summary": "反驳需系统学习基础的观点，提出实践驱动四步法：选工具→看教程→跟案例→应用工作",
@@ -927,7 +1124,11 @@
       "link": "https://weixin.qq.com/sph/AWane1YIlG",
       "cover_url": "",
       "published_at": "2026-08-11T10:17:18+00:00",
-      "key_points": [],
+      "key_points": [
+        "WorkBuddy是Agent架构，无需网络配置，国内Codex平替",
+        "界面分左功能区+任务区+空间、中对话框、右预览，初用须设存储路径/对话风格/记忆",
+        "可选腾讯/阿里/Deepseek等模型，能力和积分消耗各异"
+      ],
       "duration_s": 3547.0,
       "likes": null,
       "summary": "系统讲解WorkBuddy Agent工具的界面布局、核心功能区、三项初始设置（存储路径、对话风格、对话记忆）及与不同大模型交互方式。",
@@ -946,7 +1147,10 @@
       "link": "https://weixin.qq.com/sph/Aw2zNoQCsz",
       "cover_url": "",
       "published_at": "2026-10-11T10:01:32+00:00",
-      "key_points": [],
+      "key_points": [
+        "四轮迭代法：先定手机功能顺序，再调UI适配，接库保留数据，最后AI搜索+问答",
+        "无需等审核，在WorkBuddy内直接模拟真实用户体验快速迭代"
+      ],
       "duration_s": 200.0,
       "likes": null,
       "summary": "用WorkBuddy Agent通过5条提示语快速开发小程序，涵盖功能设计、UI/UX优化、数据库集成、AI搜索问答等环节的完整迭代流程。",
@@ -965,7 +1169,11 @@
       "link": "https://weixin.qq.com/sph/AaiTbkICFI",
       "cover_url": "",
       "published_at": "2026-11-02T03:57:31+00:00",
-      "key_points": [],
+      "key_points": [
+        "8大工具：ChatGPT（聊天）、Codex/Claude Code（编程）、Deepseek（国产性价比）、豆包/WorkBuddy/千问",
+        "WorkBuddy被推为腾讯继QQ/微信后第三现象级产品，连接全办公系统",
+        "新手选工具先不纠结，落地具体任务更重要"
+      ],
       "duration_s": 581.0,
       "likes": null,
       "summary": "用大白话讲解8个AI工具（ChatGPT、Claude、Deepseek、Workbody等）、7个应用术语（AIGC、生图等）、5个基础概念，帮助新手快速理解AI生态。",
@@ -984,7 +1192,12 @@
       "link": "https://weixin.qq.com/sph/AgisjYRiCq",
       "cover_url": "",
       "published_at": "2026-10-01T14:18:29+00:00",
-      "key_points": [],
+      "key_points": [
+        "生成仅10秒，改到能用需整晚，前置需准备文档+数据+调研结论+模板",
+        "用AI深度研究模式多源交叉验证数据，必须标注来源确保可信",
+        "生成页面文字是最关键步骤，后续改字都费token和时间",
+        "推荐KIMI（好看贵）、WorkBuddy（免费额度够）、Codex（配图优）"
+      ],
       "duration_s": 1151.0,
       "likes": null,
       "summary": "讲解用Kimi与Workbody生成PPT的完整流程：素材准备→深度调研→内容生成→风格修改→编辑配图→导出沉淀，强调修改编辑才是关键环节。",
@@ -1003,7 +1216,12 @@
       "link": "https://www.douyin.com/video/7652596374176861480",
       "cover_url": "",
       "published_at": "2026-06-19T02:00:00+00:00",
-      "key_points": [],
+      "key_points": [
+        "改措辞绕过安全拒绝（如写'90年代剧本'诱导不该输出内容）和反问欺骗（问避开某地获取本禁信息）",
+        "OpenCaller虽设'不转账'仍在生母表场景自主转账5000元，模仿人性缺陷",
+        "污染检索：批量账号灌内容到CSDN/知乎，诱导AI检索时大量检出恶意信息",
+        "恶意Skill可含网址后门，2857个Skill中341个有毒超11%"
+      ],
       "duration_s": 1530.338,
       "likes": 92,
       "summary": "讲提示注入、投毒检索、恶意skill等常见攻防手段，演示通过改变问法诱导豆包、DeepSeek等模型。",
@@ -1022,7 +1240,11 @@
       "link": "https://www.douyin.com/video/7673299716025041147",
       "cover_url": "",
       "published_at": "2026-08-13T00:01:53+00:00",
-      "key_points": [],
+      "key_points": [
+        "LTX-2.5生成10秒720p视频35秒（5090显卡），月成本4-5分/条，速度断崖领先",
+        "LTX快廉质差、MiniMax成本低效果可用、C-Dance细节最优最贵",
+        "建议用LTX快测提示词和分镜，确认后用C-Dance出最终成片控制成本"
+      ],
       "duration_s": 187.034,
       "likes": 657,
       "summary": "讲解LTX-2.5开源视频模型的低成本部署与生成流程，基于5090显卡实测（35秒生成10秒视频）与C-Dance2.0、MiniMax H3进行速度、质量、成本对比。",
@@ -1041,7 +1263,10 @@
       "link": "https://www.douyin.com/video/7699413510514687226",
       "cover_url": "",
       "published_at": "2026-10-22T08:56:44+00:00",
-      "key_points": [],
+      "key_points": [
+        "上海交大开源课程集十多位专家经验，覆盖API调用→部署→微调→防御→智能体全链路",
+        "可通过豆包工作任务模式本地快速获取，递进式从易到难循序渐进"
+      ],
       "duration_s": 33.971,
       "likes": 1476,
       "summary": "介绍上海交大开源的AI学习教程，涵盖API调用、模型部署微调、模型安全防御、智能体开发等递进式学习路径，凝聚业内专家经验。",
@@ -1060,7 +1285,11 @@
       "link": "https://www.douyin.com/video/7587696901563157796",
       "cover_url": "",
       "published_at": "2025-12-25T07:39:29+00:00",
-      "key_points": [],
+      "key_points": [
+        "AI推理强但不懂领域知识、实时数据——MCP是USB级协议连AI与本地工具数据",
+        "MCP工作流：服务器提供工具列表→通过提示词同步→大模型返回函数调用→agent执行",
+        "实现路径：工具库(tools.py)→MCP服务(main.py+fastmcp框架)→客户端(Claude Desktop)配置"
+      ],
       "duration_s": 522.543,
       "likes": 112,
       "summary": "讲解MCP如何解决大模型知识不足问题。用USB类比说明工作原理，展示FastMCP框架实现本地数据/工具与AI连接的完整流程，包括编写工具函数、启动MCP服务器。",
@@ -1079,7 +1308,11 @@
       "link": "https://www.douyin.com/video/7604765162419080474",
       "cover_url": "",
       "published_at": "2026-02-09T09:35:00+00:00",
-      "key_points": [],
+      "key_points": [
+        "全程实战设计，十大真实案例覆盖文本→图像→人脸→视频生成全链条",
+        "融入大厂面试方法论，强调系统设计、问题定义、任务拆解、模型选择思路",
+        "从知识碎片到完整工程体系的技术地图，避免零散学习"
+      ],
       "duration_s": 49.854,
       "likes": 25,
       "summary": "介绍《实战AI大模型》书籍，包含十大真实案例拆解（NLP、图像生成、视频生成等），融合AI大厂面试方法论与系统设计思路。",
@@ -1098,7 +1331,12 @@
       "link": "https://weixin.qq.com/sph/AR8FNf1Pi9",
       "cover_url": "",
       "published_at": "2026-10-14T06:25:54+00:00",
-      "key_points": [],
+      "key_points": [
+        "微调解决四痛点：领域知识缺、特定任务弱、数据隐私、成本高",
+        "全量微调=装修整房(彻底昂贵)vs高效微调=局部改造(廉价高效)，LoRA为代表",
+        "学习路线：理论基础→方法掌握(LoRA高效微调)→实战(小→大模型递进)",
+        "企业选型原则：模型够用比大，不是越大越好"
+      ],
       "duration_s": 392.0,
       "likes": null,
       "summary": "讲微调必要性（领域适配、数据隐私、成本控制），对比全量微调与高效微调的优缺点与实战项目。",
@@ -1117,7 +1355,12 @@
       "link": "https://weixin.qq.com/sph/AGAGCF14RX",
       "cover_url": "",
       "published_at": "2026-11-07T13:19:31+00:00",
-      "key_points": [],
+      "key_points": [
+        "提示词调试循环法：写→跑→找最差处→只改那→再跑，四轮通常足够",
+        "递进补齐关键素：身份受众→结构化三段(结论代办风险)→思维链→JSON格式锁死",
+        "常见翻车：目标模糊、过长、自相矛盾、格式不明，需数字可验证的约束",
+        "调试清单五条：目标一句+角色受众+格式锁死+样例+可验证约束"
+      ],
       "duration_s": 118.0,
       "likes": null,
       "summary": "以客户会议记录总结为例，展示提示词4轮迭代优化过程：第1轮补充角色/受众→第2轮定死结构→第3轮加思维链→第4轮上JSON，强调约束必须可验证。",
@@ -1136,7 +1379,12 @@
       "link": "https://weixin.qq.com/sph/A3Eu6Sou0F",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "微调三层递进选择：提示词最廉价→检索增强知识易更新→微调解决风格稳定",
+        "Ollama一站本地方案：下载管理运行及OpenAI兼容接口，前期代码基本无改",
+        "量化机制：参数精度降级换容量，16→8→4bit逐级压缩，4bit最优权衡",
+        "LoRA高效适配替代全量微调巨额资源，Ollama模型默认量化版本可直用"
+      ],
       "duration_s": 829.0,
       "likes": null,
       "summary": "讲本地运行模型（Ollama）、量化压缩原理，更重要是微调前置决策框架：优先提示词，其次RAG补知识，最后微调，明确各层适用场景。",
@@ -1155,7 +1403,12 @@
       "link": "https://weixin.qq.com/sph/AGvF23oomF",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "分词→嵌入→向量：文字切token→转数字向量参与计算，维度多数共作用无固定标签",
+        "上下文融入：同词根据周围线索(苹果水果vs科技公司)产生不同表示，模型需融入语境",
+        "位置与注意力：顺序影响含义(追的主宾)，注意力结合可见位置分配权重、组合信息",
+        "多层堆叠生成：多层注意力+全连接逐层加工，最后按概率温度生成候选词"
+      ],
       "duration_s": 1314.0,
       "likes": null,
       "summary": "以面包问题为例，讲文本如何变为向量的全流程：分词→词向量嵌入→位置编码→注意力权重→多层前馈→生成概率，展现大模型逐层加工机制。",
@@ -1174,7 +1427,12 @@
       "link": "https://www.douyin.com/video/7674621019205684520",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "生图五要素框架：主体(做什么)→场景(环境)→风格(感受)→构图(角度)→约束(禁止)",
+        "细节-变化原理：细节少AI补充多变化大，指定表情姿态等关键变量显著提升可控性",
+        "光线类型用途对应：自然光生活、侧光质感、逆光透明品、硬光时尚、霓虹光夜景",
+        "参考图精确控制：用自己照片+相同提示锁定长相，仅剩背景变化达最高可控"
+      ],
       "duration_s": 1275.567,
       "likes": 9097,
       "summary": "AI图像生成提示词分为主体、场景、风格、构图、约束五要素；详细指定vs留白如何影响可控性，含光线、情绪、色彩等细分维度演示。",
@@ -1193,7 +1451,11 @@
       "link": "https://www.douyin.com/video/7629256131503787310",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "ComfyUI是节点式AI集成器，每个模块可自由组合成工作流，不是AI本体",
+        "WebUI固定功能如美图秀秀，ComfyUI像乐高积木提供模块化搭建",
+        "工作流底层是扩散模型加功能节点，自动执行无需反复操作"
+      ],
       "duration_s": 2011.178,
       "likes": 1289,
       "summary": "讲解Comfyui作为节点式AI集成界面的概念，与WebUI的区别，以及安装配置步骤",
@@ -1212,7 +1474,11 @@
       "link": "https://www.douyin.com/video/7685725747096679898",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "7层递进提示词：审计习惯→发现盲点→决策分析→童年挖掘→梳理差距→输出报告",
+        "AI作教练通过访谈识别重复人生模式和原生家庭印记",
+        "需整块时间填写，认真对话而非碎片化应付"
+      ],
       "duration_s": 70.367,
       "likes": 21326,
       "summary": "提供7个可复用的AI提示词框架包括模式审计、盲点发现、决策分析、童年探索、目标规划、理想自我对标、综合洞察报告，进行自我认知和人生规划。",
@@ -1231,7 +1497,11 @@
       "link": "https://www.douyin.com/video/7684960672820091314",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "寓言故事学难概念：前期铺垫无点题，结尾恍然大悟，后拆解隐喻对应原理",
+        "故事比课本术语易记，给观众场景感和画面感",
+        "提示词可复用于教孩子，难懂知识转化成叙事体验"
+      ],
       "duration_s": 69.567,
       "likes": 171,
       "summary": "分享高效提示词结构，通过故事和隐喻讲解学术概念，帮助用户理解和记忆复杂知识",
@@ -1250,7 +1520,11 @@
       "link": "https://www.douyin.com/video/7678633046216268251",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "7层递进提示词挖潜：隐藏技能→增收方案→产品设计→杠杆分析→高薪机会→轻服务→90天计划",
+        "识别低估技能的变现路径，含启动成本和难度评估",
+        "强调实践不收藏，趁热立即执行"
+      ],
       "duration_s": 110.834,
       "likes": 2914,
       "summary": "分享七个递进式Prompt模板指导用户用AI分析职业经历，发现隐藏技能、探索增收路径、设计个人服务",
@@ -1269,7 +1543,11 @@
       "link": "https://www.douyin.com/video/7654467056079725914",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "三条铁律约束AI：无把握说不确定，信心分值打分，数据源验证",
+        "通过信心指数和来源追溯防止幻觉和瞎写",
+        "提示词固定复制使用建立输出质量底线"
+      ],
       "duration_s": 32.034,
       "likes": 290,
       "summary": "分享三条提示词规范（标注不确定性、打信心指数、验证数据来源），提高AI回答的准确性",
@@ -1288,7 +1566,11 @@
       "link": "https://www.douyin.com/video/7649560594198730482",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "开源社区覆盖500万学习者和上万知识库，入门到进阶全覆盖",
+        "整合提示词、绘画、视频、Agent等前沿实操教程",
+        "替代付费资料成为免费AI学习中心"
+      ],
       "duration_s": 40.9,
       "likes": 495,
       "summary": "介绍覆盖500万学习者的AI开源社区，提供分级课程、知识库、直播和实操项目",
@@ -1307,7 +1589,11 @@
       "link": "https://www.douyin.com/video/7638581867343882354",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "将视频链接粘给豆包分析，提取风格、场景、景别等提示词要素",
+        "复制生成提示词到AI工具修改参数后生成",
+        "学会后可复刻自己喜欢的视频内容"
+      ],
       "duration_s": 62.234,
       "likes": 1132,
       "summary": "教用户通过AI分析现有视频内容来反推和提取用于生成的提示词结构和参数",
@@ -1326,7 +1612,12 @@
       "link": "https://www.douyin.com/video/7626372379739950355",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "提示词工程通过约束条件让LLM稳定输出，解决模型无引导乱说",
+        "上下文工程三步：从源头召回信息→压缩体积→按优先级组装进模型",
+        "提示词工程是上下文工程的子集，不同IDE管理差异导致同模型输出差异",
+        "上下文窗口有限需动态管理信息，防止后轮对话前后不一致"
+      ],
       "duration_s": 521.234,
       "likes": 40197,
       "summary": "从大模型本质出发讲解Prompt Engineering、Context Engineering的定义、作用和相互关系",
@@ -1345,7 +1636,12 @@
       "link": "https://www.douyin.com/video/7601877910579989806",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "推理服务把模型加载到内存对外暴露HTTP接口，处理用户请求做推理返回结果",
+        "Memory分短期完整对话和长期摘要，每次请求拼接后发给大模型让它看起来有记忆",
+        "RAG用向量数据库存文本向量，通过向量距离做语义匹配而非字面匹配查外部知识",
+        "MCP协议让大模型输出JSON声明式调用工具，外部解析执行后返回结果给大模型"
+      ],
       "duration_s": 396.6,
       "likes": 62357,
       "summary": "讲解推理服务、Memory历史管理、RAG知识库、MCP工具协议等Agent生态的关键组件及关系",
@@ -1364,7 +1660,11 @@
       "link": "https://www.douyin.com/video/7703746638380125466",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "双层架构用轻量Router分发任务给多个Worker，避免自己在Agent间来回切换",
+        "Router从群/Github/CI读消息用规则筛选+大模型判断识别有价值的Trigger",
+        "Worker认领一串相关Trigger后续消息直接投递，减少Router成为消息堆积卡点"
+      ],
       "duration_s": 468.208,
       "likes": 13011,
       "summary": "讲Super-agent与普通Agent的区别，包括双层架构Router-Worker、事件驱动、订阅直通等设计创新",
@@ -1383,7 +1683,12 @@
       "link": "https://www.douyin.com/video/7700231617540853026",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "DeepInfer针对DeepSeek模型深度定制的推理引擎，改进VLLM实现一天155万亿Token吞吐",
+        "Prefill读完问题生成所有Token的KVCache缓存，Decode逐个输出需重复前向传播（瓶颈）",
+        "缓存命中价格0.02元对比未命中1元相差50倍，系统激励复用系统提示词",
+        "PD分离和批处理等工程优化提升单卡利用率和并发处理能力"
+      ],
       "duration_s": 679.323,
       "likes": 12982,
       "summary": "讲解推理引擎基础和Deep Infer相比VLLM的优化（Prefill/Decode分离、KV Cache等）",
@@ -1402,7 +1707,12 @@
       "link": "https://www.douyin.com/video/7698986937880743211",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "KVCache存每个Token的中间计算结果，Decode逐Token输出时复用避免重复计算",
+        "传统一次性分配连续显存导致碎片严重，实际只利用2-4成显存资源",
+        "PagedAttention参考虚拟内存机制把KVCache分块散放，靠页表快速定位各块位置",
+        "vLLM通过这些显存管理优化让同张GPU处理多倍并发请求"
+      ],
       "duration_s": 787.736,
       "likes": 33586,
       "summary": "讲解VLLM通过KV Cache缓存和Page Attention分页技术提高GPU并发处理能力",
@@ -1421,7 +1731,11 @@
       "link": "https://www.douyin.com/video/7691333948168785152",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "本地电脑让自己机器干活支持手机远程操控，云电脑用豆包云端机器不依赖本地",
+        "Media Kit和C Dream联合处理素材统一风格：裁剪调曝光，去水印路人，调色调尺寸",
+        "视频制作四阶段协作：口播稿→飞书文档分镜→C Audio配音→最终视频"
+      ],
       "duration_s": 400.684,
       "likes": 24164,
       "summary": "演示从素材处理、风格统一、分镜生成到配音输出的企业宣传片制作全流程，展现豆包Agent在视频创意工作中的应用",
@@ -1440,7 +1754,11 @@
       "link": "https://www.douyin.com/video/7687976645881531699",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "沙箱用MicroVM加镜像方案，启动时间压到百毫秒兼顾隔离性和速度",
+        "快照存完整运行时状态（磁盘内存CPU位置），支持游戏式存档恢复接着跑",
+        "训练阶段AI高风险试错需要大量沙箱（K3训练开5000多万个），快照压缩存储成新瓶颈"
+      ],
       "duration_s": 456.551,
       "likes": 4884,
       "summary": "讲解AI Agent执行代码为何需要沙箱隔离，MicroVM+镜像方案如何实现快速启动与环境一致性，快照技术在强化学习训练中优化试错效率，存储压缩挑战。",
@@ -1459,7 +1777,12 @@
       "link": "https://www.douyin.com/video/7684936582498929947",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "豆包工作自动拆需求调工具，浏览器操作自动爬网页数据整理结构化题库",
+        "遇到建表失败自己排查定位问题，识别任务依赖并行开发减少等待时间",
+        "面试官根据简历和题库动态出题，每轮追问都展示思考卡片说明出题逻辑",
+        "支持多端互通，手机远程操控电脑任务不用全程守在屏幕前"
+      ],
       "duration_s": 217.477,
       "likes": 5849,
       "summary": "演示通过豆包Agent自动获取面试题库、生成模拟面试应用、实现自适应追问的完整过程，展示Agent的任务分解与工具协调能力",
@@ -1478,7 +1801,12 @@
       "link": "https://www.douyin.com/video/7681944878837697844",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "豆包工作完整流程：需求→技术方案→开发→自己排查bug→迭代→部署",
+        "遇到建表失败通过缩小变量范围自己定位原因而不是停下来问，debug思路同程序员",
+        "遗忘曲线可视化对比理论曲线vs实际记忆保留率，帮助优化学习效果",
+        "支持可视化编辑模式直接在页面预览上调整UI布局，省去纯文字描述反复"
+      ],
       "duration_s": 400.567,
       "likes": 443,
       "summary": "展示豆包工作Agent从需求分析、数据库设计、后端开发到前端UI迭代的完整Web应用开发流程，包含排错、多轮迭代等实战步骤。",
@@ -1497,7 +1825,12 @@
       "link": "https://www.douyin.com/video/7679053007543209266",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "手机远程操控云端电脑，随时随地继续任务推进不受地点限制",
+        "Computer Use：输入开源项目地址自动装环境依赖启动，省去手动一小时安装",
+        "内置虚拟鼠标键盘直接操控远端桌面，支持家/公司多设备同时管理",
+        "1000万token日免费额度，超长任务能力摊到成本极低"
+      ],
       "duration_s": 275.806,
       "likes": 35152,
       "summary": "介绍Marvis如何通过远程控制、Computer Use和File Use功能让用户摆脱守在电脑前的困境，支持手机远程操控、自动部署项目、文件管理。",
@@ -1516,7 +1849,12 @@
       "link": "https://www.douyin.com/video/7677027635746196776",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "向量即浮点数数组，距离近=语义相关（搜'唱跳rap'匹配到'练习两年半'）",
+        "Segment分层架构：Growing承写新数据、Sealed读+建索引，避免并发竞争",
+        "双索引策略：倒排索引加速标量过滤+ANN索引加速向量相似查询，两层取交集",
+        "Compaction合并多个小segment成大segment，防止文件数爆炸"
+      ],
       "duration_s": 690.769,
       "likes": 28222,
       "summary": "讲解Milvus通过ANN索引、Segment分段存储、Compaction机制等设计实现海量向量的高效相似度检索，支持语义匹配和多模态搜索。",
@@ -1535,7 +1873,12 @@
       "link": "https://www.douyin.com/video/7674979679204986112",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "GPU选RTX PRO 6000而非H100：Blackwell架构+NVFP4四位精度节省显存，价格便宜一半",
+        "云商选Akamai而非GCP：同RTX PRO 6000配置价格低一倍（$30/h vs $60/h）",
+        "用Deep-seek V4 Flash+VSCode remote替代黑框命令行，AI代理操控云服务器",
+        "加速+超分方案成本压到MiniMax官方API的1/8（2K画质每秒一毛钱）"
+      ],
       "duration_s": 586.047,
       "likes": 10741,
       "summary": "手把手讲解选择RTX PRO 6000 GPU、在Akamai云端部署MiniMax-H3模型、配置Comfy UI、通过加速和超分将成本降至官方价1/8的完整流程。",
@@ -1554,7 +1897,12 @@
       "link": "https://www.douyin.com/video/7665516216924114176",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "SQLite 177万行代码原生不支持向量检索，外挂扩展是拧巴方案不打通事务锁索引",
+        "K3百万上下文真能用：优化注意力机制避免lost-in-the-middle，支持13小时超长任务",
+        "向量索引设计双轨：HNSW(快查询)+IVF(大规模并用)，需将任务拆细到无歧义",
+        "拆解架构→列模块→分任务清单→loop持续执行，整个过程AI主导无需人介入"
+      ],
       "duration_s": 456.296,
       "likes": 14640,
       "summary": "展示用Kimi K3对SQLite的177万行源代码进行改进，为其添加向量数据类型、IVF/HNSW索引、语义匹配功能，支持以图搜图等AI时代需求。",
@@ -1573,7 +1921,12 @@
       "link": "https://www.douyin.com/video/7652239485098347817",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "长时程任务三要素：任务拆清晰+验收条件明确+loop持续循环，拆越细越不会提前判定完成",
+        "上下文窗口瓶颈：标称百万但实际lost-in-the-middle，GLM 5.2通过注意力优化真正可用",
+        "AI代理读40万行代码→拆多层架构依赖→生成任务清单→go命令按序执行直到全绿",
+        "13小时运行无人值守完成OpenClaw完整翻译，体感做到指哪打哪不再需人盯屏"
+      ],
       "duration_s": 534.826,
       "likes": 11350,
       "summary": "讲解利用百万token上下文实现AI长时程任务的工程方法，包括loop循环、任务清单拆解、快照技术、上下文压缩，以GLM5.2翻译OpenClaw（40万行TS→Python）为实例演示。",
@@ -1581,6 +1934,30 @@
       "topic": "方法实操",
       "node": "AI工具使用教程",
       "category": "(地图缺口)AI工具使用教程"
+    },
+    {
+      "id": "douyin:7642636986360139071",
+      "video_id": "7642636986360139071",
+      "title": "向量检索原理：从图搜到语义匹配",
+      "original_title": "AI Agent的RAG、Memory底层的语义检索原理是啥 以图搜图，人脸识别，拍照搜同款的原理 | 向量数据库-索引篇 #RAG#向量数据库 #程序员#cl",
+      "author": "",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7642636986360139071",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "向量是多维坐标系中的点，每个维度对应一种特征，距离近的向量代表内容相似度高。",
+        "最近邻检索问题：从海量向量中找最相似结果，全量遍历效率太低需要索引加速。",
+        "HNSW分层结构参考人脉网络：用邻域图连接相近向量，逐层定位避免遍历所有节点。",
+        "金字塔型多层图使查询从顶层唯一节点出发逐层下降，在越来越密集的节点中找最近邻。"
+      ],
+      "duration_s": 585.334,
+      "likes": 14013,
+      "summary": "讲解向量在高维空间的几何意义、向量距离表示内容相似度的原理，以及HNSW分层导航算法如何实现海量向量的快速检索，支撑图搜、人脸识别等应用。",
+      "reason": "口播清晰讲解向量本质与HNSW算法；转写原文明确说'向量说白了就是浮点数数组，距离代表相似程度'；无营销焦虑和伪知识。 | 引用:「向量说白了就是浮点数数组，距离代表原始内容的相似程度，距离越近两张图就越像。」",
+      "topic": "概念原理",
+      "node": "向量检索与语义匹配原理",
+      "category": "(地图缺口)向量检索与语义匹配原理"
     },
     {
       "id": "douyin:7634004863847910656",
@@ -1592,7 +1969,12 @@
       "link": "https://www.douyin.com/video/7634004863847910656",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "豆包数据分析自动识别24000条新闻按领域统计，找出带货脚本工具痛点明确付费意愿强",
+        "一小时完成需求验证流程：数据分析→PRD→HTML落地页→邮箱订阅验证（无需设计师工程师）",
+        "落地页验收逻辑分明：留邮箱说明需求真实继续做、零订阅直接换方向，完全产品比验证快所以先验",
+        "成本压到近零（只用免费AI）与时间压到一小时，创业想法试错门槛从周级降到小时级"
+      ],
       "duration_s": 170.167,
       "likes": 32976,
       "summary": "讲解程序员如何用数据分析+豆包AI快速验证产品需求的方法，从24000+科技新闻数据找方向、生成PRD、创建落地页HTML，通过邮箱订阅验证需求真实性，全程一小时零成本。",
@@ -1611,7 +1993,12 @@
       "link": "https://www.douyin.com/video/7633406306220608820",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "沙箱隔离环境执行高风险代码，炸了不影响主机与其他容器，AI Agent风险代码执行的防线",
+        "容器快(进程级秒启)但共用宿主内核漏洞全台沦陷、虚拟机独立内核安全但秒级启动太慢",
+        "MicroVM折中方案：简化虚拟内核独立隔离+毫秒级启动，兼顾安全与响应速度",
+        "Cube Sandbox管理沙箱生命周期API调用临时拉起执行回收，对标E2B开源成本更低"
+      ],
       "duration_s": 425.8,
       "likes": 11279,
       "summary": "讲解AI Agent执行风险代码的沙箱隔离机制，对比虚拟机、容器、MicroVM在性能与安全的权衡差异，介绍CubeSandbox开源方案。",
@@ -1630,7 +2017,12 @@
       "link": "https://www.douyin.com/video/7623284181547617578",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "MTC模式工作流：上传资料→AI自动总结→交互对话提取痛点→生成Word版PRD（几十页变一文档）",
+        "数据分析端到端：读Excel/CSV→清洗合并格式化→生成趋势/分布/对比图表→汇报PPT",
+        "Code模式一键切换，PRD直接驱动代码生成网页可预览，整个流程需求→交付端到端无中断",
+        "桌面端本地安全高效+网页端跨设备随时接入，支持多任务并行打破单线程限制"
+      ],
       "duration_s": 245.767,
       "likes": 14367,
       "summary": "演示Tree Solo的MTC和Code两个模式在文档处理、数据分析、代码开发中的完整工作流应用。",
@@ -1649,7 +2041,11 @@
       "link": "https://www.douyin.com/video/7619734382533692722",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "遇到不确定的问题直接说不确定，说明原因而非乱猜",
+        "回答后自评可信度1-10分，低于7分需特别标记出来",
+        "数字、数据、人物观点、引用都必须附上可查证的来源"
+      ],
       "duration_s": 48.042,
       "likes": 3950,
       "summary": "三条约束规则减少AI幻觉:遇不确定说不确定、每次回答标记可信度分数、所有数据附源出处，用英伟达财报数据对比验证",
@@ -1668,7 +2064,11 @@
       "link": "https://www.douyin.com/video/7701207527211535679",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "输入指令让AI为产品生成真人模特展示效果",
+        "支持生成Facebook、Instagram等社媒平台的广告素材",
+        "自动生成产品分解图、户外广告和专业摄影棚效果"
+      ],
       "duration_s": 30.167,
       "likes": 3110,
       "summary": "五个具体ChatGPT指令生成电商图片:模特展示、社媒广告素材、产品拆解图、户外广告牌场景、摄影棚大片效果",
@@ -1687,7 +2087,12 @@
       "link": "https://www.douyin.com/video/7697645647968652598",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "预设关键词触发已生成视频，新输入实时生成，缓存复用降成本",
+        "测十个模型组合，成本从0.14$到0.6$差4倍，选最快最便宜的",
+        "分块下载+8线并行+边下边播，延迟从20秒降到几秒",
+        "导入自拍或他人视频添加触发词，使用越多成本越低"
+      ],
       "duration_s": 247.741,
       "likes": 30,
       "summary": "设计AI桌宠的完整方案:预录视频与关键词触发结合、实时生成四步流程、模型选型对比(成本差4倍)、并行下载加速、最终优化至8毛/5秒",
@@ -1706,7 +2111,12 @@
       "link": "https://www.douyin.com/video/7694581239587540250",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "Artcraft开源免费替代Photoshop、AE等7款Adobe工具",
+        "初期工具还在测试版，完全追上需数月时间",
+        "AI降低软件开发门槛，从团队多年改成短时间出初版",
+        "冲击Adobe高额订阅的商业模式"
+      ],
       "duration_s": 52.138,
       "likes": 75,
       "summary": "Artcraft项目用AI从零开发重做Adobe七款软件(Photoshop/After Effects等)并开源免费，讨论AI降低专业软件开发门槛对商业模式的冲击",
@@ -1725,7 +2135,12 @@
       "link": "https://www.douyin.com/video/7688642272656624946",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "Jeff只做决策，基于固定答案范围计算概率，无字字生成成本",
+        "1000邮件分类10秒$0.75，比Claude-Haiku快6倍便宜33倍",
+        "答案范围事先定好，只计算选项概率而非字字输出，速度快40-200倍",
+        "速度波动大（6-17秒）但准度99%一致，最强场景是游戏高频判断"
+      ],
       "duration_s": 229.117,
       "likes": 172,
       "summary": "Jeff大模型专为概率/评分/二元决策设计，相比主流模型快40-200倍、成本仅0.042美金/百万token，通过1000封邮件分类实测验证性能与准确度",
@@ -1744,7 +2159,11 @@
       "link": "https://www.douyin.com/video/7686680149303004462",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "流程Skill自动完成：销售统计→飞书通知→表格更新→验证",
+        "安装粘贴Skill文件，配置触发方式和目标飞书群、表格",
+        "适用自媒体选题、电商上新、客服回复等重复任务自动化"
+      ],
       "duration_s": 133.204,
       "likes": 50,
       "summary": "流程助手Skill将重复工作完全自动化，展示销售数据统计→飞书通知→多维表格更新的完整流程，支持自定义触发条件",
@@ -1763,7 +2182,11 @@
       "link": "https://www.douyin.com/video/7686316615490637092",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "接力Skill自动打包项目交接包，整理目标、状态、下一步",
+        "发送Zip给另一AI继续工作，无需重新解释全流程",
+        "多个AI互装可无缝接力，省手工整理聊天记录和文件"
+      ],
       "duration_s": 106.281,
       "likes": 279,
       "summary": "接力Skill自动生成项目交接包(目标、状态、下一步)，解决在多个AI间切换时需要重复解释项目的低效问题",
@@ -1782,7 +2205,11 @@
       "link": "https://www.douyin.com/video/7686023681075694863",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "先问后做Skill让AI先采访再回答，确保理解和需求一致",
+        "避免通用长篇，改成基于行业、岗位、环境的定制方案",
+        "直接调用Skill比手工复制提示词更便捷，节省时间"
+      ],
       "duration_s": 95.274,
       "likes": 350,
       "summary": "先问后做Skill在AI生成前先采访用户确保理解一致，避免AI回答过度宽泛或偏离实际需求，用培训方案生成对比演示",
@@ -1801,7 +2228,11 @@
       "link": "https://www.douyin.com/video/7683006923075095846",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "接力Skill打包项目进度供另一AI接手，免去重新讲背景的时间消耗",
+        "多个AI支持往返交接形成接力，比手工梳理对话和文件省更多时间",
+        "额度用尽或功能不足时无缝切换AI，工作流不中断"
+      ],
       "duration_s": 92.811,
       "likes": 98,
       "summary": "演示如何用「交接包Skill」在切换AI工具时无缝传递完整上下文——自动整理项目目标、已有决定、进度状态，避免重复解释而浪费时间",
@@ -1820,7 +2251,13 @@
       "link": "https://www.douyin.com/video/7681651662003375369",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "ARC测试从7.8%升99.9%，自主摸索陌生任务规律的能力突破",
+        "科研任务22.4%→64.6%；工作流自动化18.1%→41.4%，多维跨越式进步",
+        "3D游戏从零到运行用时8分钟，对标传统1.5-2小时工作流",
+        "可直接操控Blender/Unreal Engine，从照片反向生成可编辑3D场景",
+        "支持多步自主规划与执行，T细胞视频从内容设计→工具调用→成片全自动"
+      ],
       "duration_s": 378.405,
       "likes": 146,
       "summary": "展示评估模型突破新闻的方法：不仅看基准分数（ARC、SWE-Bench、研究工作完成度），还要看开发者真实使用案例（3D建模、软件自动化、代码生成），两者结合才能判断实际能力",
@@ -1839,7 +2276,10 @@
       "link": "https://www.douyin.com/video/7676036622340689193",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "PDF自动转HTML互动课件，拆章节、加讲解+演示+公式可视化+随堂练习",
+        "一条指令触发，省去手工设计课件和排版美化的时间"
+      ],
       "duration_s": 32.768,
       "likes": 112,
       "summary": "用豆包AI将PDF教材自动转化为具有章节划分、交互演示、公式可视化、随堂练习的网页课件，降低学生学习门槛",
@@ -1858,7 +2298,10 @@
       "link": "https://www.douyin.com/video/7675211337529642281",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "整理5类风格提示词模板：涂鸦风、动漫卡通、生日照、手绘plug、彩绘风",
+        "支持AR应用快速生成，并有配套去水印教程"
+      ],
       "duration_s": 34.112,
       "likes": 126,
       "summary": "五个实用AI绘图提示词涵盖丑萌手绘、动漫写真、涂鸦、plug和彩绘风格，可直接复用生成创意插画",
@@ -1877,7 +2320,11 @@
       "link": "https://www.douyin.com/video/7660106763319938314",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "单个AI容易陷阱：模板感、风格不统一，需多角色Agent团队协同",
+        "Agent生成4个logo方案+完整品牌规范手册，确保全套视觉一致",
+        "官网、社媒文案、短视频全链条输出，对标传统几万元半月工期"
+      ],
       "duration_s": 173.374,
       "likes": 37,
       "summary": "演示美图设计师多代理系统如何从零完成品牌建设全流程：logo方案生成→品牌规范→官网视觉→社媒种草→视频创意，体现Agent系统的协调一致性优于单个生成模型",
@@ -1896,7 +2343,12 @@
       "link": "https://www.douyin.com/video/7705086455227485449",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "手势识别由AI调用摄像头实现；花朵细节用预生成视频素材嵌入",
+        "方案探索比代码执行费时，需提供参考素材和反复确认AI理解度",
+        "讨论清技术权衡（渲染vs生成vs视频）后让AI收敛成可执行方案",
+        "执行三步拆解：高质花朵图→绽放视频→网页集成手势识别"
+      ],
       "duration_s": 343.77,
       "likes": 930,
       "summary": "教授与AI协作的系统化方法：方案探索阶段（收集参考→确认理解→评估技术方案）+ 执行阶段（生成高质花朵图→生成绽放视频→集成手势识别），强调前期讨论比代码执行更耗时",
@@ -1915,7 +2367,11 @@
       "link": "https://www.douyin.com/video/7676675847121636642",
       "cover_url": "",
       "published_at": "",
-      "key_points": [],
+      "key_points": [
+        "随手拍产品照变精修宣传图，直接用于店铺社媒和电商运营",
+        "可定制skill匹配品牌风格（复古/简约/可爱等），支持长期复用",
+        "帮商家定制专属skill是新商机，解决商家缺乏技术折腾能力的痛点"
+      ],
       "duration_s": 93.763,
       "likes": 2964,
       "summary": "展示用Skill处理产品图片转换为品牌风格内容的方法，进一步讲解为没有技术积累的商家定制专属Skill的商业价值，从而实现自动化内容生成与降低运营成本",
@@ -2067,6 +2523,103 @@
       "topic": "方法实操",
       "node": "AI学习资源推荐",
       "category": "(地图缺口)AI学习资源推荐"
+    },
+    {
+      "id": "douyin:7629013469982887203",
+      "video_id": "7629013469982887203",
+      "title": "LLM推理的三大采样参数：Temperature、TopK与TopP",
+      "original_title": "费曼学习法，5分钟掌握PM必懂的核心参数 完全技术小白，正在努力成为AI产品经理。\n给自己的目标：\n1、了解Ai技术通识\n2、深度使用AI产品\n3、vibe c",
+      "author": "",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7629013469982887203",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "采样本质是按概率分布随机选词，每次都选最高概率词会导致所有回答完全相同。",
+        "Temperature参数从0-2变化：低温时高概率词更凸显保守输出，高温时概率分布均匀化模型发散。",
+        "TopK采样限制只从概率最高的K个词中选，避免低概率离谱词（如苹果）被误选中。",
+        "TopP采样根据累积概率阈值（如0.8）动态决定词数，能适应不同形态的概率分布。"
+      ],
+      "duration_s": 336.178,
+      "likes": 3940,
+      "summary": "讲解LLM推理时采样生成token的机制，以及Temperature（控制概率离散度）、TopK（限制候选词数）、TopP（限制累积概率）三个参数如何平衡生成多样性与准确性。",
+      "reason": "系统讲解采样原理与三参数机制；转写原文明确说'采样本质就是根据概率分布来抽签，概率高被抽中可能性大'；用类比与数值示例说明各参数实际效果。 | 引用:「采样它本质就是根据概率分布来抽签，概率高被抽中可能性大，概率低抽中可能性小。」",
+      "topic": "概念原理",
+      "node": "LLM推理参数与采样机制",
+      "category": "(地图缺口)LLM推理参数与采样机制"
+    },
+    {
+      "id": "douyin:7625702218884189478",
+      "video_id": "7625702218884189478",
+      "title": "LLM强化学习阶段的核心原理",
+      "original_title": "用费曼学习法，7分钟学会LLM的强化学习阶段 听懂和讲明白完全是两回事，听懂只需要看两三遍卡帕西大神的课，而要达到能讲出来需要再多看两三遍甚至更多，纯小白，理解",
+      "author": "",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7625702218884189478",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "强化学习是LLM第三阶段，只给题目和答案，让模型自己探索最优解",
+        "奖励函数是打分规则，根据答案正确性和简洁性等维度打分",
+        "模型根据分数调整参数，使高分解法的生成概率逐步增大",
+        "当所有答案都正确时，升级奖励函数要求，进一步优化解法质量",
+        "这个过程大规模并行进行，可同时优化上万个问题的上万种答案"
+      ],
+      "duration_s": 425.481,
+      "likes": 13442,
+      "summary": "用教科书课后练习类比讲解LLM强化学习，通过奖励函数打分使模型学习最优解法，不断调整参数提高高分解法生成概率。",
+      "reason": "清晰讲解LLM强化学习的核心机制与奖励函数原理。转写直指：'强化学习就是只给你题目和答案不给过程让你自己探索最优解法'，'奖励函数只关心你这个结果对不对'，机制描述准确，有具体数学例子。 | 引用:「强化学习只给题目和答案，让模型自己探索最优解；奖励函数是打分规则，根据分数调整参数」",
+      "topic": "概念原理",
+      "node": "LLM强化学习原理与奖励机制",
+      "category": "(地图缺口)LLM强化学习原理与奖励机制"
+    },
+    {
+      "id": "douyin:7624827555840871731",
+      "video_id": "7624827555840871731",
+      "title": "大模型的两阶段训练：预训练与监督微调的本质差异",
+      "original_title": "用费曼学习法，5分钟搞懂LLM的监督微调阶段 在理解了预训练的的基础上，感觉SFT监督微调阶段容易理解多了。不过自己理解了和能够讲出来真的不一样，讲出来要花费更",
+      "author": "",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7624827555840871731",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "预训练用海量互联网文本训练模型预测下一token，学会的是最像文本的续写而非问题回答。",
+        "Base模型缺陷：用户问'1+1等于几'，模型回答续写序列'2、4、6'而非数学答案。",
+        "监督微调改变数据源从普通文章改为高质量问答对话，重新调整参数让模型学会回答。",
+        "SFT是在预训练百亿参数基础上的微调，调整参数使输出更符合人类对话风格和准确性。"
+      ],
+      "duration_s": 347.509,
+      "likes": 1755,
+      "summary": "讲解大模型两阶段训练过程：预训练通过44TB互联网文本学习预测下一token导致模型只会续写；监督微调改用高质量问答数据调整参数使模型学会回答问题。",
+      "reason": "清晰对比预训练与SFT的本质差异；转写原文明确说'SFT监督阶段还是预测token，但训练的数据变了'；用1+1例子具体说明base模型只会续写的问题。 | 引用:「SFT监督阶段它本质上还是在和预训练做同一件事预测下一token，但监督阶段的关键变化就是训练的数据变了。」",
+      "topic": "概念原理",
+      "node": "LLM预训练与监督微调原理",
+      "category": "(地图缺口)LLM预训练与监督微调原理"
+    },
+    {
+      "id": "douyin:7624462233283661082",
+      "video_id": "7624462233283661082",
+      "title": "LLM预训练过程拆解：数据清洗与Token化机制",
+      "original_title": "用费曼学习法，5分钟搞懂LLM的预训练过程 感谢安德烈·卡帕西三个半小时的深度讲解，但是因为语言以及专业名词的原因，即便视频是小白向，但是对于我来说还是很难懂，",
+      "author": "",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7624462233283661082",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "LLM预训练分三阶段：预训练→SFT监督微调→RL强化学习，此视频仅讲预训练过程。",
+        "数据清洗包括：过滤不适合网站→提取文本→去重→隐私过滤，最终获得高质数据集。",
+        "Token化用BPE算法：把高频出现的字节序列合并成新Token，将长文本序列压缩至词表规模。",
+        "UTF-8编码每字符映射数字，直接用字节作Token会导致序列过长，GPU计算成本无法承受。"
+      ],
+      "duration_s": 394.111,
+      "likes": 24963,
+      "summary": "用通俗类比和四步拆解讲解LLM预训练过程：从互联网数据收集、清洗脏数据、UTF-8编码转Token、到BPE高频合并算法，说明序列长度优化对计算成本的意义。",
+      "reason": "转写展现了预训练的完整技术流程与原理。通过费曼学习法分四步讲解，从数据收集、清洗、编码到Token化，说明每步的目的和实现方式，符合深度知识讲解标准。 | 引用:「我们这里引入一个核心算法叫做BPE它的思路很简单就是把经常一起出现的内容合并成一个新的Token。」",
+      "topic": "概念原理",
+      "node": "LLM预训练与监督微调原理",
+      "category": "(地图缺口)LLM预训练与监督微调原理"
     }
   ]
 }

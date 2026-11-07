@@ -11,16 +11,31 @@ OAuth），这一步只能 CY 本人做；而且在他的 Cloudflare 账号上�
 - **已有账号**：`vectorherd.com` 整域已托在 Cloudflare（NS = tom/elma.ns.cloudflare.com，
   notes 子域走 Zero Trust tunnel），不需要新买域名或开新账号。
 
-## 部署
+## 部署（4 步，约 3 分钟）
+
+> 下面每条命令的 flag 都在 **wrangler 4.158.0** 上实测过（`--remote` / `--file` / `-y`
+> 确实存在）。版本变了先 `npx wrangler d1 execute --help` 核一遍再跑。
+> wrangler 会自动使用 shell 里的代理变量（Cloudflare 在墙外，需要 Clash 开着）。
+
+```bash
+cd ~/repos/future/xing/site/collector
+
+# 1) 登录（会开浏览器做 OAuth；确认落在持有 vectorherd.com 的那个 Cloudflare 账号上）
+npx -y wrangler@4.158.0 login
+
+# 2) 建数据库 —— 输出里有一行 database_id，复制它
+npx -y wrangler@4.158.0 d1 create xing-bi
+
+# 3) 把上一步的 database_id 填进 wrangler.toml，然后建表
+#    （wrangler.toml 里那行现在是 TODO 占位，不填会报 database not found）
+npx -y wrangler@4.158.0 d1 execute xing-bi --remote -y --file=schema.sql
+
+# 4) 部署 —— 输出里有一行 https://xing-bi.<你的子域>.workers.dev
+npx -y wrangler@4.158.0 deploy
 ```
-npm i -g wrangler && wrangler login
-cd site/collector
-wrangler d1 create xing-bi            # 把返回的 database_id 填进 wrangler.toml
-wrangler d1 execute xing-bi --remote --file=schema.sql
-wrangler deploy                        # 得到 https://xing-bi.<账号>.workers.dev
-```
-然后把那个地址填进 `site/app.js` 顶部的 `COLLECT_URL`，推一次即生效。
-在那之前，事件只排在用户自己浏览器的本地队列里，**一个请求都不会发出去**；
+
+最后把第 4 步输出的那个 URL 发回来（或自己填进 `site/app.js` 顶部的 `COLLECT_URL=""`，
+推一次即生效）。在那之前，事件只排在用户自己浏览器的本地队列里，**一个请求都不会发出去**；
 端点填上后，积压的队列会随下一个事件一起补发。
 
 ## 看数（先用命令行，不必建后台）
