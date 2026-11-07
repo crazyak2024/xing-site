@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共342条",
+  "generated_note": "判定=合格的候选，共344条",
   "topics": [
     "概念原理",
     "方法实操",
@@ -8141,6 +8141,54 @@
       "summary": "按AI与机器人发展阶段分析职业冲击：第1阶段感知AI替代标准化劳动；第2阶段生成AI使岗位数量减少但<5%完全消失；第3阶段自主体Agent替代专业岗位。用海啸比喻说明渗透不均，避免一刀切预言。",
       "reason": "视频用三阶段框架配合具体职业案例（打字员、文案编辑、程序员等）和量化判断（<5%岗位完全消失），系统分析了AI对职业的分化影响，体现了'AI对不同行业的渗透就像海啸一样不是同时淹没所有海岸线'的客观认识。 | 引用:「AI对不同行业的渗透就像海啸一样不是同时淹没所有海岸线它会先吞掉低洼地带再一波一波的推进。这个阶段的特点是只有不到5%左右的岗位会被完全替代大多数岗位不会消失但由于效率的提升数量会大量减少」",
       "topic": "概念原理",
+      "node": "AI替代某职业的说法靠谱吗",
+      "category": "12.AI替代某职业的说法靠谱吗"
+    },
+    {
+      "id": "douyin:7671234128854977838",
+      "video_id": "7671234128854977838",
+      "title": "无人化替代的制度框架与民生保障",
+      "original_title": "无人化应不应该替代真人？普通人的工作丢了，科技不应该造福于人吗？#无人化 #人工智能 #就业 #掘金计划2026 #青年创作者成长计划",
+      "author": "逻辑财经",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7671234128854977838",
+      "cover_url": "https://p3-sign.douyinpic.com/tos-cn-i-dy/51f21bb88fd141a7a938e3f857826a99~tplv-dy-resize-walign-adapt-aq:540:q75.webp?lk3s=138a59ce&x-expires=1795284000&x-signature=%2Bzq2ML9R7u7vzFqo1rhFJF%2F1kbs%3D&from=327834062&s=PackSourceEnum_AWEME_DETAIL&se=false&sc=cover&biz_tag=aweme_video&l=20261108022637BE0F4AC47C52F0DECA8A",
+      "published_at": "2026-08-07T10:26:24+00:00",
+      "key_points": [
+        "无人化正在替代基层岗位（收银员、快递员、客服等），造成结构性失业",
+        "技术进步红利被资本拿走，需从制度层面引导资本投向高风险行业",
+        "应建立技术替代评估机制、职业转训体系、民生服务最低人工比例",
+        "首先推进危险行业无人化（矿山、高空、化工），不能制造数字鸿沟"
+      ],
+      "duration_s": 250.01,
+      "likes": 2064,
+      "summary": "分析无人化对就业的实际冲击，提出从制度层面引导技术应用、保障底层就业的政策方案。",
+      "reason": "不是简单焦虑营销，而是深入的政策分析。转写明确指出应建立制度框架保障就业。 | 引用:「应建立技术替代的就业影响评估机制，通过财税政策引导，健全职业技能培训与社保体系」",
+      "topic": "误区纠正",
+      "node": "AI替代某职业的说法靠谱吗",
+      "category": "12.AI替代某职业的说法靠谱吗"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxM-HXEtLaSC8jczT4DCK5Jv4pJ9iJrO0HgLIoZPz_A",
+      "video_id": "export/UzFfBgAAxM-HXEtLaSC8jczT4DCK5Jv4pJ9iJrO0HgLIoZPz_A",
+      "title": "中间层信息节点比基层工作更易被AI替代",
+      "original_title": "大众总以为 AI 先淘汰基层执行者，实则恰恰相反：AI 真正冲击的是企业中间层。这类人不创造核心结果，也不做关键判断，核心只做三件事：搬运信息、协调关系、维持流程 —— 写纪要、拆需求、同步进度、做汇报、拉群对齐。过去因组织信息成本高而必需，如今 AI 可全自动完成纪要、汇总、追踪、同步。基层因线下场景、复杂例外反而更稳，而纯信息流转的中间节点，会被系统大幅压缩。未来最危险的，是只传递价值、不创造",
+      "author": "ChainLens",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/AwSNla2e9V",
+      "cover_url": "https://wxapp.tc.qq.com/251/20304/stodownload?encfilekey=rjD5jyTuFrIpZ2ibE8T7Ym3K77SEULgkiaicoiayvWR0MJwkAAZypCLoUtPaGibpwESUnHNyQKZnuateJiasjPficTk7wostOLN4nGWiaD0W6cI8CJGf7c29usOELA&hy=SZ&idx=1&m=&scene=2&uzid=1&picformat=200&wxampicformat=503",
+      "published_at": "2026-04-07T12:00:01+00:00",
+      "key_points": [
+        "中间层工作是搬运信息、协调关系、维持流程，正是AI最擅长的任务",
+        "基层涉及线下执行、复杂例外，相对难以被AI替代",
+        "信息处理成本下降后，中间层岗位价值被重新审视",
+        "最危险的人既不创造结果也不做决策，是纯中间传递节点"
+      ],
+      "duration_s": 319.0,
+      "likes": null,
+      "summary": "纠正普遍认知误区，指出AI替代的不是基层执行者，而是中间层信息流转岗位，这些工作的本质是搬运信息、协调关系、维持流程。",
+      "reason": "提出反直觉且有深入分析的观点，有效纠正'基层最易被替代'误解。转写清晰展示中间层工作本质与替代逻辑。 | 引用:「AI真正替代的未必是最底层反而是那些卡在中间的既不直接创造结果又不真正负责最终判断的人」",
+      "topic": "误区纠正",
       "node": "AI替代某职业的说法靠谱吗",
       "category": "12.AI替代某职业的说法靠谱吗"
     }
