@@ -82,6 +82,10 @@ function countBy(items, key) {
 function go(patch) {
   Object.assign(state, patch);
   render();
+  // BI：他点了地图上的哪一格。只在真的选中某一层时记，取消选择不记（避免噪音）
+  if (typeof emit === "function" && (patch.node || patch.topic)) {
+    emit("pick", { picked: patch.node ? "node" : "topic" });
+  }
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -196,18 +200,25 @@ function sortItems(items) {
   });
 }
 
+/* 卡片是**纯文字**的，列表里不放封面图。三条理由，都不是审美偏好：
+ * ① 技术上修不了：抖音封面 URL 的尺寸参数在签名里，改小即 403（实测），
+ *    所以只能把 540px 的图硬塞进几十像素的格子——封面上那些大字必然糊成一团。
+ * ② 数据上根本没有：95 条里只有 21 条拿到了 cover_url，另外 74 张卡原本显示的是灰方块。
+ * ③ **立场上不该放**：平台封面是钩子（大字标题、惊讶脸、红圈箭头），而且它上面的字
+ *    和我们已经显示的标题重复。在列表里替平台做钩子展示，正是我们要反的东西。
+ * 封面仍然保留在弹窗里（大图、看得清），那里它是内容不是钩子。
+ * 换上来的是**时长**——"这会花掉我多少时间"才是反沉迷产品该在列表里给的信息。
+ */
 function cardHtml(it) {
+  const dur = fmtDuration(it.duration_s);
   return `<div class="card" style="--c:${topicColor(it.topic)}" data-id="${esc(it.id)}">
-      ${it.cover_url ? `<img class="thumb" src="${it.cover_url}" loading="lazy" alt="">` : `<div class="thumb"></div>`}
-      <div class="card-body">
-        <h3>${esc(it.title)}</h3>
-        <div class="meta">
-          <span class="plat">${PLATFORM_CN[it.platform] || it.platform}</span>
-          ${it.author ? `<span class="author">@${esc(it.author)}</span> · ` : ""}
-          ${fmtDuration(it.duration_s)}${it.likes ? " · " + it.likes + "赞" : ""}
-        </div>
-        <div class="summary">${esc(it.summary || it.reason || "")}</div>
+      <h3>${esc(it.title)}</h3>
+      <div class="meta">
+        <span class="plat">${PLATFORM_CN[it.platform] || it.platform}</span>
+        ${dur ? `<span class="dur">${dur}</span>` : ""}
+        ${it.author ? `<span class="author">@${esc(it.author)}</span>` : ""}
       </div>
+      <div class="summary">${esc(it.summary || it.reason || "")}</div>
     </div>`;
 }
 
@@ -267,9 +278,16 @@ function openModal(it) {
   const embedFn = EMBED_URL[it.platform];
   const m = document.getElementById("modal-content");
   m.className = embedFn ? "modal embed-mode" : "modal nolink-mode";
-  const transcript = it.asr_text
-    ? `<span class="transcript-toggle" id="tt">展开转写全文 ▾</span>
-       <div class="transcript-box" id="tb">${esc(it.asr_text)}</div>` : "";
+  /* 要点取代了原来的「展开转写全文」（CY 2026-11-07 批 tx2）。
+     逐字稿是把原作者的内容整篇复制出来公开，撞我们自己定的边界；要点是我们的概括。
+     **这几条是产品真正的交付物**：读完多数情况就不必看视频了，省下的时间就是价值。
+     所以它不是折叠的附属品，而是弹窗里排在最前、默认展开的主体。 */
+  const points = (it.key_points && it.key_points.length)
+    ? `<div class="kp"><div class="kp-head">这条视频讲了什么</div>
+         <ul>${it.key_points.map(p => `<li>${esc(p)}</li>`).join("")}</ul>
+         <div class="kp-note">我们的概括，不是原话。读完还想看讲述过程，再点下面的原视频。</div>
+       </div>`
+    : `<div class="kp"><div class="kp-note">这条还没出要点（判定流水线还在补），先看摘要或直接看原视频。</div></div>`;
   const body = embedFn
     ? `<iframe class="modal-embed" src="${embedFn(it.video_id)}" allow="autoplay; fullscreen" allowfullscreen></iframe>
        <p class="modal-tip">播放器是抖音官方的，它自带的点赞/评论/引导条我们改不掉。点进播放区后 Escape 可能失效（跨站 iframe 限制），用右上角 ✕ 关闭。</p>`
@@ -296,14 +314,15 @@ function openModal(it) {
         ${fmtDuration(it.duration_s) ? " · " + fmtDuration(it.duration_s) : ""}
       </div>
       <div class="modal-summary">${esc(it.summary || "")}</div>
+      ${points}
       ${it.reason ? `<div class="modal-reason">入选依据：${esc(it.reason)}</div>` : ""}
       <a class="src" href="${it.link}" target="_blank" rel="noopener">在原平台看原作者的完整内容</a>
-      ${transcript}
       <!-- 所有视频站在这个位置放"相关推荐"。我们在这个位置放一句"没有下一条"。
            这是整个产品最结构性的一处叛逆：连播的入口被我们拿掉了，不是忘了做。 -->
       <p class="no-next">没有「下一条」。看完回地图，或者直接关掉。</p>
     </div>`;
   document.getElementById("modal-overlay").classList.add("open");
+  emit("open", { item: it.id, has_points: !!(it.key_points && it.key_points.length) });
   m.querySelector(".modal-close").addEventListener("click", closeModal);
   // 弹窗里也能跳地图——看完一条顺着它所在的位置继续找，是这个产品的主循环
   m.querySelectorAll("[data-jump-topic]").forEach(b => b.addEventListener("click", () => {
@@ -312,12 +331,6 @@ function openModal(it) {
   m.querySelectorAll("[data-jump-node]").forEach(b => b.addEventListener("click", () => {
     closeModal(); go({ node: b.dataset.jumpNode, topic: b.dataset.topic });
   }));
-  const tt = m.querySelector("#tt");
-  if (tt) tt.addEventListener("click", () => {
-    const box = m.querySelector("#tb");
-    box.classList.toggle("open");
-    tt.textContent = box.classList.contains("open") ? "收起转写全文 ▴" : "展开转写全文 ▾";
-  });
   m.focus();
 }
 function closeModal() {
@@ -332,19 +345,62 @@ function closeModal() {
  * 传统视频网站分不出这两种，也不在乎——它们数的是停留时长，两种离开都只是"会话结束"。
  * 我们只认一种成功，所以必须问。这两颗按钮同时是**产品的成绩单**和**价值观最响的一句话**。
  *
- * ⚠️ 诚实边界：这一版是纯静态站，**没有后端**，点击只能记在用户自己的浏览器里，
- * 收不到我们这一侧。界面上如实写明，不假装在收集。要真收上来需要一个最小后端——
- * 已作为待拍板项交给 CY，别在这里悄悄接第三方表单（那会直接打脸隔壁那行
- * "没有第三方脚本"，而那行正是我们最强的叛逆声明）。
+ * 这是 BI，按 BI 做（CY 2026-11-07 07:3x：「当做BI来做，BI我们总是要做的呀」）。
+ * 我上一轮把"现在还没有后端"说成了"收不到"，那是两件事——收集端是我们自己写的
+ * 20 行，不是做不到。
+ *
+ * **匿名口径（和墙上那行"不认识你"必须一致，不然就是自己打自己脸）**：
+ * 访客 id 存在 **sessionStorage**，关掉标签页就没了。这足够回答 BI 要回答的问题
+ * （"这一次来访，他搜了什么、点了哪颗按钮"），但**跨访问拼不出一个人的档案**——
+ * charter 明文禁止观看行为画像。用 localStorage 存持久 id 就越界了，别改。
+ *
+ * **端点**：COLLECT_URL 为空时事件只排在本地队列里，不发任何请求（也就不存在
+ * "偷偷发出去"这回事）。填上我们自己的 Worker 地址后，队列会随下次事件一起补发。
+ * 刻意不接任何第三方统计脚本——那会直接作废墙上那行"没有第三方脚本"。
  */
-function recordExit(kind, note) {
+const COLLECT_URL = "";  // 部署自己的收集端点后填这里（见 site/collector/README.md）
+
+function visitorId() {
   try {
-    const log = JSON.parse(localStorage.getItem("xing_exit") || "[]");
-    log.push({ kind, q: state.q || "", topic: state.topic || "", node: state.node || "",
-               results: filtered().length, note: note || "", at: new Date().toISOString() });
-    localStorage.setItem("xing_exit", JSON.stringify(log.slice(-50)));
-  } catch (e) { /* 隐私模式下 localStorage 会抛，这不该影响任何别的东西 */ }
+    let v = sessionStorage.getItem("xing_vid");
+    if (!v) {
+      v = (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2)).slice(0, 12);
+      sessionStorage.setItem("xing_vid", v);
+    }
+    return v;
+  } catch (e) { return "no-storage"; }
 }
+
+function queued(ev) {
+  let q = [];
+  try { q = JSON.parse(localStorage.getItem("xing_q") || "[]"); } catch (e) { /* 隐私模式 */ }
+  if (ev) q.push(ev);
+  return q.slice(-200);
+}
+
+function emit(kind, extra) {
+  const ev = Object.assign({
+    v: 1, kind, vid: visitorId(),
+    q: state.q || "", topic: state.topic || "", node: state.node || "",
+    results: filtered().length, lib: DATA.length,
+    at: new Date().toISOString(),
+  }, extra || {});
+  const q = queued(ev);
+  try { localStorage.setItem("xing_q", JSON.stringify(q)); } catch (e) { /* ignore */ }
+  if (!COLLECT_URL) return;
+  // sendBeacon 在页面关闭过程中也能发出去——"用户点完就关窗"正是我们最常见的路径
+  const payload = JSON.stringify({ events: q });
+  const sent = navigator.sendBeacon
+    ? navigator.sendBeacon(COLLECT_URL, new Blob([payload], { type: "application/json" }))
+    : false;
+  if (sent) { try { localStorage.setItem("xing_q", "[]"); } catch (e) { /* ignore */ } return; }
+  fetch(COLLECT_URL, { method: "POST", body: payload, keepalive: true,
+                       headers: { "Content-Type": "application/json" } })
+    .then(() => { try { localStorage.setItem("xing_q", "[]"); } catch (e) { /* ignore */ } })
+    .catch(() => { /* 发不出去就留在队列里，下次补发；绝不因为 BI 影响用户 */ });
+}
+
+function recordExit(kind, note) { emit(kind, note ? { note } : undefined); }
 
 function exitSaid(html, cls) {
   document.getElementById("exit").innerHTML =
@@ -386,12 +442,19 @@ let qTimer = null;
 document.getElementById("q").addEventListener("input", e => {
   clearTimeout(qTimer);
   const v = e.target.value.trim().toLowerCase();
-  qTimer = setTimeout(() => { state.q = v; render(); }, 160);
+  qTimer = setTimeout(() => {
+    state.q = v;
+    render();
+    // 只在停下打字后记一次（不是每个按键）。**搜了什么 + 命中几条**是这个产品
+    // 最该看的 BI：命中 0 的词就是内容缺口清单。
+    if (v) emit("search");
+  }, 160);
 });
 
-/* data.json 已经 ~800KB（转写全文都在里面），实测网络不稳时会**半截下载却仍回 200**，
-   JSON.parse 直接抛 → 页面全白。宁可给一句能看懂的话加一个重试按钮，
-   也不要让人对着空白页猜。（根治是把 asr_text 拆成按需加载，见 ledger 下一步） */
+/* 实测过一次：data.json 当时 ~800KB（转写全文都在里面），网络不稳时会**半截下载却仍回
+   HTTP 200**，JSON.parse 直接抛 → 页面全白。tx2 把转写全文移出 data.json 后体积掉了
+   一个数量级，但这个兜底留着——"200 + 残缺 body"是这台机器上反复出现的形状，
+   不该靠文件小来避免它。 */
 function loadData(attempt = 1) {
   fetch("data.json", { cache: "no-cache" })
     .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })

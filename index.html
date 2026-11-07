@@ -98,14 +98,16 @@ button{font-family:inherit}
 @media (min-width:640px){.grid{grid-template-columns:1fr 1fr}}
 @media (min-width:1080px){.grid{grid-template-columns:1fr 1fr 1fr}}
 
-.card{background:#fff;border:1px solid var(--line);border-left:3px solid var(--c);border-radius:8px;padding:9px 10px;display:flex;gap:9px;cursor:pointer}
-.card:hover{border-color:#ccc;border-left-color:var(--c)}
-.thumb{width:58px;height:58px;border-radius:6px;object-fit:cover;flex-shrink:0;background:#eee}
-.card-body{flex:1;min-width:0}
-.card h3{font-size:13.5px;margin:0 0 3px;line-height:1.35}
-.meta{font-size:11px;color:var(--sub);margin-bottom:4px}
-.meta .plat{display:inline-block;padding:1px 5px;border-radius:4px;background:#eef2f7;margin-right:4px}
-.meta .author{color:#444}
+/* 纯文字卡片：没有缩略图（理由见 app.js 的 cardHtml 注释）。
+   标题可以吃满宽度、给到 3 行，这是文字优先的全部意义。 */
+.card{background:#fff;border:1px solid var(--line);border-left:3px solid var(--c);border-radius:8px;padding:10px 11px;cursor:pointer}
+.card:hover{border-color:#bbb;background:#fffefb}
+.card h3{font-size:14px;margin:0 0 5px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.meta{font-size:11px;color:var(--sub);margin-bottom:5px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.meta .plat{padding:1px 5px;border-radius:4px;background:#eef2f7}
+/* 时长是列表里唯一的"数字"：反沉迷产品该先告诉你这会花掉多少时间 */
+.meta .dur{padding:1px 5px;border-radius:4px;background:#f3f0e8;color:#8a7a52;font-variant-numeric:tabular-nums}
+.meta .author{color:#555;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:48%}
 .summary{font-size:12.5px;color:#333;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
 .empty{color:var(--sub);text-align:center;padding:34px 0;font-size:13.5px}
@@ -136,9 +138,12 @@ footer{padding:14px 16px 30px;color:var(--sub);font-size:12px;border-top:1px sol
 .modal-reason{font-size:11.5px;color:#888;background:#f7f7f7;border-radius:6px;padding:7px 9px;margin:8px 0}
 .modal-tip{font-size:11px;color:#999;margin-top:6px}
 .no-next{font-size:11.5px;color:#aaa;margin:14px 0 2px;padding-top:9px;border-top:1px dashed var(--line)}
-.transcript-toggle{font-size:12px;color:var(--accent);cursor:pointer;margin-top:10px;display:inline-block}
-.transcript-box{font-size:12.5px;color:#444;background:#f7f7f7;border-radius:8px;padding:10px;margin-top:8px;max-height:260px;overflow-y:auto;white-space:pre-wrap;display:none}
-.transcript-box.open{display:block}
+/* 要点区：弹窗里的主体，默认展开。取代了原来折叠的「转写全文」。 */
+.kp{background:#fbfaf7;border:1px solid #efece3;border-radius:8px;padding:10px 12px;margin:10px 0}
+.kp-head{font-size:11.5px;color:#8a7a52;font-weight:600;margin-bottom:6px}
+.kp ul{margin:0;padding-left:17px}
+.kp li{font-size:13px;color:#2d2d2d;line-height:1.55;margin-bottom:4px}
+.kp-note{font-size:10.5px;color:#aaa;margin-top:7px;line-height:1.5}
 a.src{font-size:13px;color:var(--accent);text-decoration:none}
 a.src:after{content:" →"}
 </style>

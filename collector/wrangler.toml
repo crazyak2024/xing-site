@@ -1,0 +1,8 @@
+name = "xing-bi"
+main = "worker.js"
+compatibility_date = "2026-11-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "xing-bi"
+database_id = "TODO-wrangler-d1-create-后把返回的-id-填这里"
