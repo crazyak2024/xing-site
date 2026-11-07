@@ -9,22 +9,50 @@
 :root{--ink:#1a1a1a;--sub:#666;--line:#e5e5e5;--bg:#fafafa;--accent:#2b6cb0;}
 *{box-sizing:border-box}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
-header{padding:16px 16px 8px;max-width:960px;margin:0 auto}
-h1{font-size:20px;margin:0 0 2px;display:inline}
-.tagline{color:var(--sub);font-size:13px;margin:2px 0 10px}
-.searchbar{display:flex;gap:8px;margin-bottom:4px}
-.searchbar input{flex:1;padding:9px 12px;font-size:15px;border:1px solid var(--line);border-radius:8px}
+
+.layout{display:flex;flex-direction:column;max-width:1200px;margin:0 auto}
+@media (min-width:900px){.layout{flex-direction:row;align-items:flex-start}}
+
+.brand-panel{padding:16px 16px 10px;flex-shrink:0}
+@media (min-width:900px){.brand-panel{width:220px;position:sticky;top:0;padding:28px 20px}}
+.brand-panel h1{font-size:22px;margin:0 0 4px}
+.brand-panel .tagline{color:var(--sub);font-size:13px;margin:0 0 14px}
+.value-list{list-style:none;padding:0;margin:0;font-size:12.5px;color:#444}
+.value-list li{margin-bottom:8px;padding-left:16px;position:relative}
+.value-list li:before{content:"·";position:absolute;left:2px;color:var(--accent);font-weight:bold}
+@media (max-width:899px){.value-list{display:none}}
+
+.content-panel{flex:1;min-width:0;padding:0 16px 40px}
+@media (min-width:900px){.content-panel{padding:20px 20px 40px;border-left:1px solid var(--line)}}
+
+.searchbar{display:flex;gap:8px;margin:12px 0 4px}
+.searchbar input{flex:1;padding:10px 12px;font-size:15px;border:1px solid var(--line);border-radius:8px}
 .hint{font-size:11px;color:#999;margin:0 0 10px}
-main{max-width:960px;margin:0 auto;padding:0 16px 40px}
-.cat-nav{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0 12px}
-.cat-btn{font-size:11.5px;padding:4px 9px;border-radius:11px;border:1px solid var(--line);background:#fff;color:var(--sub);cursor:pointer}
-.cat-btn.active{background:#2d3748;color:#fff;border-color:#2d3748}
-.sort-note{font-size:11px;color:#999;margin-bottom:10px}
+
+.tag-cloud{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.tag-btn{font-size:11.5px;padding:4px 9px;border-radius:11px;border:1px solid var(--line);background:#fff;color:var(--sub);cursor:pointer}
+.tag-btn.selected{background:#2d3748;color:#fff;border-color:#2d3748}
+.tag-btn .count{opacity:.6;margin-left:2px}
+
+.toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px}
+.sort-controls{display:flex;gap:4px;font-size:11.5px}
+.sort-btn{padding:4px 9px;border-radius:6px;border:1px solid var(--line);background:#fff;color:var(--sub);cursor:pointer}
+.sort-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.sort-btn:disabled{opacity:.4;cursor:not-allowed}
+.result-count{font-size:11px;color:#999}
+
+.section{margin-bottom:18px}
+.section-head{display:flex;align-items:center;gap:7px;margin-bottom:7px;padding-left:2px}
+.section-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.section-title{font-size:13px;font-weight:600;color:#333}
+.section-title.gap{color:#b7791f}
+.section-count{font-size:11px;color:#999}
 .grid{display:grid;grid-template-columns:1fr;gap:8px}
 @media (min-width:640px){.grid{grid-template-columns:1fr 1fr}}
-@media (min-width:960px){.grid{grid-template-columns:1fr 1fr 1fr}}
-.card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px;display:flex;gap:9px;cursor:pointer}
-.card:hover{border-color:#ccc}
+@media (min-width:1100px){.grid{grid-template-columns:1fr 1fr 1fr}}
+
+.card{background:#fff;border:1px solid var(--line);border-left:3px solid var(--cat-color,var(--line));border-radius:8px;padding:10px;display:flex;gap:9px;cursor:pointer}
+.card:hover{border-color:#ccc;border-left-color:var(--cat-color,#ccc)}
 .thumb{width:60px;height:60px;border-radius:6px;object-fit:cover;flex-shrink:0;background:#eee}
 .card-body{flex:1;min-width:0}
 .card h3{font-size:13.5px;margin:0 0 4px;line-height:1.35}
@@ -32,19 +60,14 @@ main{max-width:960px;margin:0 auto;padding:0 16px 40px}
 .meta .plat{display:inline-block;padding:1px 5px;border-radius:4px;background:#eef2f7;margin-right:4px}
 .meta .author{color:#444}
 .summary{font-size:12.5px;color:#333;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.cat-chip{display:inline-block;font-size:10px;color:var(--accent);background:#ebf4ff;padding:1px 6px;border-radius:9px;margin-bottom:4px}
-.cat-chip.gap{color:#b7791f;background:#fffbea}
-a.src{font-size:13px;color:var(--accent);text-decoration:none}
-a.src:after{content:" →"}
 .empty{color:var(--sub);text-align:center;padding:40px 0;font-size:14px}
-footer{max-width:960px;margin:0 auto;padding:16px 16px 32px;color:var(--sub);font-size:12px;border-top:1px solid var(--line)}
+footer{padding:16px 16px 32px;color:var(--sub);font-size:12px;border-top:1px solid var(--line)}
 .about{font-size:12.5px;color:var(--sub);margin-top:10px;line-height:1.6}
 
-/* 弹窗：顶上去播放，Escape/点遮罩/点X都能关闭 */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:flex-start;justify-content:center;z-index:100;padding:0;overflow-y:auto}
 .modal-overlay.open{display:flex}
-.modal{background:#fff;width:100%;margin-top:0;border-radius:0 0 12px 12px;animation:slideDown .18s ease-out;position:relative}
-.modal.embed-mode{max-width:420px}
+.modal{background:#fff;width:100%;margin-top:0;border-radius:0 0 12px 12px;animation:slideDown .18s ease-out;position:relative;outline:none}
+.modal.embed-mode{max-width:460px}
 .modal.nolink-mode{max-width:520px}
 @keyframes slideDown{from{transform:translateY(-16px);opacity:.6}to{transform:translateY(0);opacity:1}}
 .modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line)}
@@ -58,23 +81,44 @@ footer{max-width:960px;margin:0 auto;padding:16px 16px 32px;color:var(--sub);fon
 .modal-meta{font-size:12px;color:var(--sub);margin:8px 0}
 .modal-summary{font-size:13px;color:#333;margin:8px 0}
 .modal-tip{font-size:11px;color:#999;margin-top:6px}
+.transcript-toggle{font-size:12px;color:var(--accent);cursor:pointer;margin-top:10px;display:inline-block}
+.transcript-box{font-size:12.5px;color:#444;background:#f7f7f7;border-radius:8px;padding:10px;margin-top:8px;max-height:260px;overflow-y:auto;white-space:pre-wrap;display:none}
+.transcript-box.open{display:block}
+a.src{font-size:13px;color:var(--accent);text-decoration:none}
+a.src:after{content:" →"}
 </style>
 </head>
 <body>
-<header>
-  <h1>醒</h1> <span class="tagline">可信、有趣的知识，主动找，慢慢看。</span>
-  <div class="searchbar">
-    <input id="q" type="text" placeholder="你想弄明白什么？比如：大模型为什么会幻觉">
+<div class="layout">
+  <aside class="brand-panel">
+    <h1>醒</h1>
+    <p class="tagline">可信、有趣的知识，主动找，慢慢看。</p>
+    <ul class="value-list">
+      <li>质量优先，不是数量优先——每条内容经过人工定标准+AI判定</li>
+      <li>反沉迷：没有无限滚动、没有自动连播、没有算法迎合</li>
+      <li>找到答案，看完就离开——不以停留时长为目标</li>
+      <li>内容来自原作者，我们只做筛选、分类与去重</li>
+    </ul>
+  </aside>
+  <div class="content-panel">
+    <div class="searchbar">
+      <input id="q" type="text" placeholder="你想弄明白什么？比如：大模型为什么会幻觉">
+    </div>
+    <p class="hint">搜索按标题/总结/作者做关键词包含匹配，不是语义搜索（下一版会改进）</p>
+    <div class="tag-cloud" id="tag-cloud"></div>
+    <div class="toolbar">
+      <div class="sort-controls" id="sort-controls">
+        <button class="sort-btn" data-sort="relevance">相关性</button>
+        <button class="sort-btn active" data-sort="combined">综合</button>
+        <button class="sort-btn" data-sort="latest">最新</button>
+      </div>
+      <span class="result-count" id="result-count"></span>
+    </div>
+    <div id="sections"></div>
   </div>
-  <p class="hint">搜索按标题/总结/作者做关键词包含匹配，不是语义搜索（下一版会改进）</p>
-  <div class="cat-nav" id="cat-nav"></div>
-</header>
-<main>
-  <p class="sort-note" id="sort-note"></p>
-  <div class="grid" id="main"></div>
-</main>
+</div>
 <div class="modal-overlay" id="modal-overlay">
-  <div class="modal" id="modal-content"></div>
+  <div class="modal" id="modal-content" tabindex="-1"></div>
 </div>
 <footer>
   <div class="about">
