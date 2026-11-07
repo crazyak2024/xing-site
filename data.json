@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共111条",
+  "generated_note": "判定=合格的候选，共114条",
   "topics": [
     "概念原理",
     "方法实操",
@@ -878,6 +878,77 @@
       "likes": null,
       "summary": "讲大模型本质是逐字概率预测。Transformer的自注意力解决RNN遗忘，多头注意力多角度分析。预训练通过梯度下降学习，对齐微调分SFT和RLHF两步变成可用助手。",
       "reason": "讲解覆盖RNN→Transformer演进、自注意力、多头机制、预训练、RLHF全过程，并澄清无意识误解，逻辑完整 | 引用:「大模型从头到尾都只在做一件极其简单的事那就是盯着已经出现的所有文字算出下一个位置出现哪个字的概率最高」",
+      "topic": "概念原理",
+      "node": "Transformer的注意力机制在算什么",
+      "category": "02.Transformer的注意力机制在算什么"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxJyIBAENZyy2k8zT4DCKZH1Jbl0RPii7p_JLpeyU1w",
+      "video_id": "export/UzFfBgAAxJyIBAENZyy2k8zT4DCKZH1Jbl0RPii7p_JLpeyU1w",
+      "title": "大模型的数学本质：函数、参数与逐字生成",
+      "original_title": "大模型就是一个数学函数 #大模型 #AI",
+      "author": "",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/AoGngwEBua",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "大模型本质是多元数学函数，有输入、输出、系数三部分，与加权求和原理相同",
+        "输入是文字，输出逐字生成，每次生成一字后追加再调用拼接完整答案",
+        "系数数量庞大（DeepSeek 1.6万亿），相当于200所大学藏书总量，展示模型复杂性"
+      ],
+      "duration_s": 279.0,
+      "likes": null,
+      "summary": "用一元一次函数类比讲解大模型本质，阐述大模型的三要素：输入（文字）、输出（逐字生成）和系数（1.6万亿参数）。",
+      "reason": "视频清晰讲解了大模型的核心数学抽象。原文明确指出：'大模型的本质就是个数元函数，输入就是一串的文字，输出的话只有一个字'，通过函数类比降低理解难度。 | 引用:「大模型本质是数元函数，输入是一串的文字，输出的话只有一个字，系数数量庞大。」",
+      "topic": "概念原理",
+      "node": "大模型基础概念与通用特性",
+      "category": "(地图缺口)大模型基础概念与通用特性"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxNeHECgHB2ark8zT4DCKaDX9Azc6CO_2SNkLm_2EeA",
+      "video_id": "export/UzFfBgAAxNeHECgHB2ark8zT4DCKaDX9Azc6CO_2SNkLm_2EeA",
+      "title": "神经网络为何演进：MLP全连接到CNN的优化",
+      "original_title": "Transformer为什么统治了AI？看懂神经网络的进化：MLP-CNN-RNN-Transformer-Mamba#科学科普 #科普 #AI #神经网络#T",
+      "author": "",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/Att2WcTtNF",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "神经网络处理数字，节点读取加权求和后经非线性处理，权重由训练过程学习得出",
+        "MLP全连接通用但参数众；CNN局部连接和权重共享减少参数，适合有空间结构的图片",
+        "CNN关键创新是局部连接（只读相邻像素）和权重共享（不同位置重用权重），大幅降低参数量"
+      ],
+      "duration_s": 670.0,
+      "likes": null,
+      "summary": "讲神经网络处理原理和架构差异。对比MLP全连接与CNN局部连接、权重共享，解释CNN如何利用数据结构优化计算效率。",
+      "reason": "视频系统讲解了神经网络的数学基础和不同架构的设计逻辑。原文明确指出：'CNN有两个关键的改变第一个是局部连接第二个是权重共享'，通过对比清晰展示架构选择的原理。 | 引用:「CNN有两个关键改变，第一个是局部连接，第二个是权重共享，大幅减少参数和计算。」",
+      "topic": "概念原理",
+      "node": "神经网络为何演进",
+      "category": "(地图缺口)神经网络为何演进"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxLuCfCseCTKCk8zT4DCKitVYfZv5kQQj8lOmB-JlRQ",
+      "video_id": "export/UzFfBgAAxLuCfCseCTKCk8zT4DCKitVYfZv5kQQj8lOmB-JlRQ",
+      "title": "Transformer推理流程详解：注意力机制与多头计算",
+      "original_title": "一句话进 Transformer，都发生了什么？把“手机没电了，赶紧拿去”交给千问，它接的是“充电”。这期不讲复杂的公式和原理，跟着这句话从分词走到输出，看看每",
+      "author": "",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/AhRS3gloRQ",
+      "cover_url": "",
+      "published_at": "",
+      "key_points": [
+        "分词后按tokenID从预训练嵌入表取向量；模型通过注意力学习如何利用上下文改变输出",
+        "注意力分数＝Q·K的点积，除以√D标准化防止维度大时Softmax权重过度集中",
+        "旋转位置编码在Q、K的向量对上按位置旋转，使不同距离的token对应不同的角度差，实现相对位置感知",
+        "因果masking在Softmax前将未来位置分数设-∞，保证生成时每位置只使用左边的token（单向性）",
+        "多头注意力用不同参数矩阵并行计算多组权重，捕捉多种上下文关系，拼接后乘输出矩阵，与原向量做残差加法"
+      ],
+      "duration_s": 667.0,
+      "likes": null,
+      "summary": "用「手机没电赶紧拿去」→「充电」的例子，逐步讲解Transformer从分词、词嵌入、注意力机制（Q·K·V与Softmax权重）、旋转位置编码、因果masking到多头融合与残差连接的完整推理流程。",
+      "reason": "完整讲解Transformer的核心机制。原文：「注意力分数经过Softmax转换成一组合为1的注意力权重，按照这些权重对各个token对应的V加权求和得到的向量就融合了上下文信息」，证明内容是对注意力原理的具体讲解。 | 引用:「分数越高表示模型在这组计算里认为这个token与去字越相关；除以根号D不管64维还是128维标准差都回到1」",
       "topic": "概念原理",
       "node": "Transformer的注意力机制在算什么",
       "category": "02.Transformer的注意力机制在算什么"
