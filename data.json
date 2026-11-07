@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共388条",
+  "generated_note": "判定=合格的候选，共395条",
   "topics": [
     "概念原理",
     "方法实操",
@@ -9256,6 +9256,174 @@
       "topic": "方法实操",
       "node": "大模型评测体系与基准问题",
       "category": "(地图缺口)大模型评测体系与基准问题"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxJqCOBkNBz6Pk8zT4DCKECx2JIXIU07R4HPY_Qtumw",
+      "video_id": "export/UzFfBgAAxJqCOBkNBz6Pk8zT4DCKECx2JIXIU07R4HPY_Qtumw",
+      "title": "综合榜单第一不等于全场景最强",
+      "original_title": "#AI#大模型#Agent#测评",
+      "author": ".观商局.",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/ARZoMSv5HQ",
+      "cover_url": "https://wxapp.tc.qq.com/251/20304/stodownload?encfilekey=KGDRibp2wkicLpwicBEYZ8See1bf3PcFmWRj6owEkFCIYMSiazJPEibJCzrFQAxQ5ht4kpy4G7P8xVicsZMiagM2Yzamg&hy=SZ&idx=1&m=&scene=2&uzid=1&picformat=200&wxampicformat=503",
+      "published_at": "2026-11-05T10:00:02+00:00",
+      "key_points": [
+        "综合分数把多维度压缩加权，会抹平各能力的强弱差异，第一不代表全场景最强",
+        "开发者场景多是固定任务反复调用，编码子榜单的参考价值远高于综合总分",
+        "榜单权重设置本身就是评测机构的选择，改变权重排名就重新洗牌，不是客观常数",
+        "选型应先明确任务，看专项基准，最后才参考综合分数，不能只盯综合第一"
+      ],
+      "duration_s": 210.0,
+      "likes": null,
+      "summary": "分析综合分数为何抹平各能力维度差异，论证开发者应看专项基准而非总分，揭示权重设置如何影响排名",
+      "reason": "转写明确指出综合分数的本质：\"把一大堆不同能力维度压缩加全之后算出的一个数字\"，并警示\"只盯着综合第一去选模型很容易才坑\" | 引用:「综合分数本身的属性...把一大堆不同能力维度压缩加全之后算出的一个数字...只盯着综合第一去选模型很容易才坑」",
+      "topic": "误区纠正",
+      "node": "模型超越模型的新闻怎么看",
+      "category": "15.模型超越模型的新闻怎么看"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxOmqbH5sNg_2k8zT4DCKMQu9OAXVenC2QPzaoPwerg",
+      "video_id": "export/UzFfBgAAxOmqbH5sNg_2k8zT4DCKMQu9OAXVenC2QPzaoPwerg",
+      "title": "MMLU评测的三大问题与改进方案",
+      "original_title": "MMLU 评估细节讲透\n#人工智能 #大模型 #MMLU \n数据污染、答案偏 C、few-shot 敏感——MMLU 三大坑。\nPro 加难抗污染，Redux 重标注修错误。\n#MMLU #大模型评估 #Benchmark",
+      "author": "古希腊掌管代码的神",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/Al9xoWVqcy",
+      "cover_url": "https://wxapp.tc.qq.com/251/20304/stodownload?encfilekey=KGDRibp2wkicLvEkiaZ3IOhCXzIJklISRfvv6tLlpP2NvPeHs4ea8zt2Byibo2HgYGvgbNuZPp9duDpk1ueKIic1y3w&hy=SH&idx=1&m=&scene=2&uzid=1&picformat=200&wxampicformat=503",
+      "published_at": "2026-08-29T18:00:00+00:00",
+      "key_points": [
+        "MMLU结构：57个学科14000道四选一题，用5-shot提示词测知识广度",
+        "三大坑：模型训练数据可能见过原题导致虚高；C选项正确比例30%高于随机25%；改变提示词可导致分数浮动5-10个百分点",
+        "数据污染与few-shot敏感让排行榜上差距可能只是提示词工程差异，不是模型实力差异",
+        "MMLU Pro加难加选项抗污染，MMLU Redux请专家重标注修正了约6%的错误答案"
+      ],
+      "duration_s": 252.0,
+      "likes": null,
+      "summary": "剖析MMLU的数据污染、答案偏向C、提示词敏感三大坑，介绍改进版本MMLU Pro与Redux的解决方案",
+      "reason": "转写给出量化证据：\"C选项作为正确答案的比例接近30%明显高于25%的随机水平\"和\"改变提示词的措辞...分数可能上下浮动5到10个百分点\" | 引用:「C选项作为正确答案的比例接近30%...高于25%...改变提示词的措辞...分数可能上下浮动5到10个百分点」",
+      "topic": "概念原理",
+      "node": "大模型评测体系与基准问题",
+      "category": "(地图缺口)大模型评测体系与基准问题"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxMqCGHxzTXrrk8zT4DCKlGCFYhKX5w86lyAZBCYeeA",
+      "video_id": "export/UzFfBgAAxMqCGHxzTXrrk8zT4DCKlGCFYhKX5w86lyAZBCYeeA",
+      "title": "6大权威AI评测榜单的特点与选用指南",
+      "original_title": "本期整理国内外6大权威AI测评榜单，帮你精准辨别AI真实实力，按需选对大模型！\n【国外三大榜单】\nArtificial Analysis（artificialanalysis.ai）：全球商用级AI测评榜单，综合考量模型能力、运行速度与调用成本，主打真实落地性价比，仅支持英文测评，无法考核中文能力。\nLiveBench（livebench.ai）：业内公认防作弊硬核榜单，定期更新全新考题，杜绝模型",
+      "author": "蓝云探数",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/AKoNnG0Bfk",
+      "cover_url": "https://wxapp.tc.qq.com/251/20304/stodownload?encfilekey=KGDRibp2wkicJvkCbMsbEN2rIJfBBsl9dHSkIuQn0lZ8PLo1Jw9omI977AibXa6Oc8SzbY98wicdue3iar3QaiaD2ogA&hy=SZ&idx=1&m=&scene=2&uzid=1&picformat=200&wxampicformat=503",
+      "published_at": "2026-08-25T13:00:34+00:00",
+      "key_points": [
+        "榜单维度差异：AA看商用性价比、LiveBench用新题防作弊防评测被背熟、OpenRouter看实际调用热度反映市场认可",
+        "国内榜单侧重中文本土：SuperCLUE看日常好用度、OpenCompass是学术权威测技术实力、ModelScope看开源生态价值",
+        "选型三步：先明确需求场景，再对应看相关榜单，不要单纯比综合分；跨榜比较参考有限",
+        "记住口诀简化决策：日常商用看AA+SuperCLUE、真实智商看LiveBench+OpenCompass、全球落地看OpenRouter+ModelScope"
+      ],
+      "duration_s": 183.0,
+      "likes": null,
+      "summary": "对比国际（AA、LiveBench、OpenRouter）和国内（SuperCLUE、OpenCompass、ModelScope）6大榜单，讲清各自侧重点和选型逻辑",
+      "reason": "转写明确指出核心原则：\"不同榜单测的根本是不同维度的能力\"和\"没有最强的大模型只有最适合场景的大模型\" | 引用:「不同榜单测的根本是不同维度的能力...没有最强的大模型只有最适合场景的大模型」",
+      "topic": "方法实操",
+      "node": "大模型评测体系与基准问题",
+      "category": "(地图缺口)大模型评测体系与基准问题"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxMepHGdtQiyCk8zT4DCK-7yyy-bYKqBjai8hyJiT2w",
+      "video_id": "export/UzFfBgAAxMepHGdtQiyCk8zT4DCK-7yyy-bYKqBjai8hyJiT2w",
+      "title": "前沿大模型的技术方案与选型建议",
+      "original_title": "#AI大模型排名",
+      "author": "胖哒在跑步",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/AeCTbtKcbG",
+      "cover_url": "https://wxapp.tc.qq.com/251/20304/stodownload?encfilekey=2fG3V4WwQPk70G2J6RdJ90vspqBiaIniaWNeQ9a9uDaHTxBPibzGZibYd9weqQVRzlEJcrxjBJKGibuXLiajXu7VZAWBQKhREO2StVlWe51z9ocDE&hy=SZ&idx=1&m=85258eec6ed9a03d578faab988cdcae2&uzid=1&picformat=200&wxampicformat=503",
+      "published_at": "2026-11-03T04:37:46+00:00",
+      "key_points": [
+        "榜单排序三种方法：盲测ELO算分贴近体感、硬考题验证糊弄不了、综合指数权重人为设置有偏差",
+        "前沿模型用混合专家结构，总参数大但每次只激活部分参数：DeepSeek输入激活80亿参数、输出激活160亿",
+        "模型支持推理时调节：Claude Opus有Reasoning模式、GPT-6有Pro模式，想得久准确率高但更贵更慢",
+        "选型关键：按实际任务对应选，综合成本、速度、能力三维度，上下文百万Token成标配、多模态成竞争维度"
+      ],
+      "duration_s": 245.0,
+      "likes": null,
+      "summary": "讲榜单排序的三种方法、前沿模型的混合专家等技术方案，分析性价比差异，给出按场景选型的实用建议",
+      "reason": "转写给出具体机制详解：\"混合专家结构模型里有很多个专家子网络每个词进来只叫醒其中一小部分\"，举例\"Deep Seek V4.1更极端输入只激活80亿\" | 引用:「混合专家结构...每个词进来只叫醒其中一小部分...Deep Seek输入只激活80亿输出激活160亿」",
+      "topic": "时效选择",
+      "node": "大模型版本与选型指南",
+      "category": "(地图缺口)大模型版本与选型指南"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxPWCKAIVQG-RjMzT4DCKtM91YMJCofE9pOWmYVfMgg",
+      "video_id": "export/UzFfBgAAxPWCKAIVQG-RjMzT4DCKtM91YMJCofE9pOWmYVfMgg",
+      "title": "6大权威AI评测榜单的特点与选用指南",
+      "original_title": "本期整理国内外6大权威AI测评榜单，帮你精准辨别AI真实实力，按需选对大模型！\n【国外三大榜单】\nArtificial Analysis（artificialanalysis.ai）：全球商用级AI测评榜单，综合考量模型能力、运行速度与调用成本，主打真实落地性价比，仅支持英文测评，无法考核中文能力。\nLiveBench（livebench.ai）：业内公认防作弊硬核榜单，定期更新全新考题，杜绝模型",
+      "author": "蓝云探数",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/AuhCxSAooX",
+      "cover_url": "https://wxapp.tc.qq.com/251/20304/stodownload?encfilekey=KGDRibp2wkicLiasd8pkK1kfYvQia460dIicVibeBnKFOWw6Clnc1JkYKWo1N1SY8h1QoPQDb5cS3vN50nQgpZJMdDbQ&hy=SZ&idx=1&m=&scene=2&uzid=1&picformat=200&wxampicformat=503",
+      "published_at": "2026-08-05T11:24:16+00:00",
+      "key_points": [
+        "榜单维度差异：AA看商用性价比、LiveBench用新题防作弊防评测被背熟、OpenRouter看实际调用热度反映市场认可",
+        "国内榜单侧重中文本土：SuperCLUE看日常好用度、OpenCompass是学术权威测技术实力、ModelScope看开源生态价值",
+        "选型三步：先明确需求场景，再对应看相关榜单，不要单纯比综合分；跨榜比较参考有限",
+        "记住口诀简化决策：日常商用看AA+SuperCLUE、真实智商看LiveBench+OpenCompass、全球落地看OpenRouter+ModelScope"
+      ],
+      "duration_s": 183.0,
+      "likes": null,
+      "summary": "对比国际（AA、LiveBench、OpenRouter）和国内（SuperCLUE、OpenCompass、ModelScope）6大榜单，讲清各自侧重点和选型逻辑",
+      "reason": "转写明确指出核心原则：\"不同榜单测的根本是不同维度的能力\"和\"没有最强的大模型只有最适合场景的大模型\" | 引用:「不同榜单测的根本是不同维度的能力...没有最强的大模型只有最适合场景的大模型」",
+      "topic": "方法实操",
+      "node": "大模型评测体系与基准问题",
+      "category": "(地图缺口)大模型评测体系与基准问题"
+    },
+    {
+      "id": "douyin:7626772450386185506",
+      "video_id": "7626772450386185506",
+      "title": "AI不会思考也没有意识",
+      "original_title": "AI真的会思考吗？有自己的意识吗？ #AI #科普 #科技改变生活 #观点分享",
+      "author": "木丁之眼",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7626772450386185506",
+      "cover_url": "https://p3-sign.douyinpic.com/tos-cn-i-dy/2749ea49cfd840b6ac88957592b93cc2~tplv-dy-resize-walign-adapt-aq:540:q75.webp?lk3s=138a59ce&x-expires=1795284000&x-signature=Oo3yKPiITXiDphlAx7yzVaB1EYU%3D&from=327834062&s=PackSourceEnum_AWEME_DETAIL&se=false&sc=cover&biz_tag=aweme_video&l=20261108025849CDBC9A0F2A7EC8D7D684",
+      "published_at": "2026-04-09T14:52:29+00:00",
+      "key_points": [
+        "AI无自主思考和意识，是基于海量训练数据的高级复杂运算；类比学霸把课本滚瓜烂熟但不理解原理",
+        "AI的亲切感不是真感受：安慰你\"抱抱别难过\"只是根据见过的对话数据规律推断，不是真的感受到你难过",
+        "AI的聪明是\"记出来的\"不是\"想出来的\"：把记过的词语句子按规律重新组合，没有真的理解意思",
+        "AI缺乏人类的喜怒哀乐和自主判断，所有响应都是基于记好的海量数据按规律组合，无任何自主思考"
+      ],
+      "duration_s": 111.067,
+      "likes": 11,
+      "summary": "用类比说明AI的聪明源于数据规律的复杂运算，没有自主思考和情绪，强调是\"记出来\"而非\"想出来\"",
+      "reason": "转写用具体例子说明：\"他只是记住了无数类似的对话知道不开心后面该接这样的话\"和\"只是把见过的和春天相关的词语句子重新组合\" | 引用:「他只是记住了无数类似的对话知道不开心后面该接这样的话...只是把见过的词语句子重新组合」",
+      "topic": "误区纠正",
+      "node": "AI真的在思考吗",
+      "category": "16.AI真的在思考吗"
+    },
+    {
+      "id": "douyin:7329138163052449061",
+      "video_id": "7329138163052449061",
+      "title": "思考的本质与AI的局限性",
+      "original_title": "AI会思考吗？ 爱，是思考力的极致表现 #AI #人工智能 #思考 #AIGC",
+      "author": "英如是观",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7329138163052449061",
+      "cover_url": "https://p3-sign.douyinpic.com/tos-cn-i-dy/9f4d2885ea0a4026ad12aaf26a78ea90~tplv-dy-resize-walign-adapt-aq:720:q75.webp?lk3s=138a59ce&x-expires=1795284000&x-signature=v4SSI8mK2s3H%2BWkSfhr9JmqViw8%3D&from=327834062&s=PackSourceEnum_AWEME_DETAIL&se=false&sc=cover&biz_tag=aweme_video&l=20261108025905F7C9F3E4C817E2DDDB29",
+      "published_at": "2024-01-28T13:19:37+00:00",
+      "key_points": [
+        "思考三步骤：接收信息、处理、响应，AI都有但质量根本不同——人类有独立感官和抽象理解能力，AI没有",
+        "图灵测试已不足判断真实思考，AI通过测试只说明响应能力相近，但可能只是复杂运算而非真实思维",
+        "人类独特性：不只被动响应输入，还能自发创作，为爱而赞美、为爱而艺术而不求任何回报",
+        "爱是思考力的极致表现，源于对世界的赞美，构成人类文明历史长河，AI是否能具有这种能力仍未知"
+      ],
+      "duration_s": 261.738,
+      "likes": 24,
+      "summary": "从思考的三步骤分析AI虽通过图灵测试但不具真实思考，指出人类独特能力是为爱而创作、为赞美而艺术",
+      "reason": "转写精准对比人类的自发创作能力：\"人类会做一些不是纯粹为了生存的事...因为爱去化，因为爱去赞美这个世界...构成了人类文明的历史长河\" | 引用:「人类会做一些不是纯粹为了生存的事...因为爱去化，因为爱去赞美这个世界...构成了人类文明的历史长河」",
+      "topic": "误区纠正",
+      "node": "AI真的在思考吗",
+      "category": "16.AI真的在思考吗"
     }
   ]
 }
