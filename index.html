@@ -21,10 +21,14 @@ main{max-width:760px;margin:0 auto;padding:0 16px 60px}
 .cat-nav{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 20px}
 .cat-btn{font-size:12px;padding:5px 10px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--sub);cursor:pointer}
 .cat-btn.active{background:#2d3748;color:#fff;border-color:#2d3748}
-.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:12px;display:flex;gap:12px;cursor:pointer}
+.card:hover{border-color:#ccc}
+.thumb{width:72px;height:72px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#eee}
+.card-body{flex:1;min-width:0}
 .card h3{font-size:15px;margin:0 0 6px;line-height:1.4}
 .meta{font-size:12px;color:var(--sub);margin-bottom:8px}
 .meta .plat{display:inline-block;padding:1px 6px;border-radius:4px;background:#eef2f7;margin-right:6px}
+.meta .author{color:#444}
 .summary{font-size:14px;color:#333;margin-bottom:8px}
 .reason{font-size:12px;color:var(--sub);border-left:2px solid var(--line);padding-left:8px;margin-bottom:10px}
 .cat-chip{display:inline-block;font-size:11px;color:var(--accent);background:#ebf4ff;padding:2px 8px;border-radius:10px;margin-bottom:8px}
@@ -34,6 +38,22 @@ a.src:after{content:" →"}
 .empty{color:var(--sub);text-align:center;padding:40px 0;font-size:14px}
 footer{max-width:760px;margin:0 auto;padding:20px 16px 40px;color:var(--sub);font-size:12px;border-top:1px solid var(--line)}
 .about{font-size:13px;color:var(--sub);margin-top:16px;line-height:1.7}
+
+/* 弹窗：顶上去播放，Escape/点遮罩可关闭 */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-start;justify-content:center;z-index:100;padding:0}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;width:100%;max-width:760px;margin-top:0;border-radius:0 0 12px 12px;max-height:92vh;overflow-y:auto;animation:slideDown .18s ease-out}
+@keyframes slideDown{from{transform:translateY(-16px);opacity:.6}to{transform:translateY(0);opacity:1}}
+.modal-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line)}
+.modal-head h2{font-size:16px;margin:0;line-height:1.4}
+.modal-close{border:none;background:none;font-size:22px;color:var(--sub);cursor:pointer;line-height:1;padding:4px}
+.modal-body{padding:16px}
+.modal-embed{width:100%;aspect-ratio:9/16;max-height:70vh;border:none;border-radius:8px;background:#000}
+.modal-cover-wrap{text-align:center}
+.modal-cover{max-width:100%;max-height:50vh;border-radius:8px}
+.modal-openlink{display:inline-block;margin-top:14px;padding:10px 20px;background:var(--accent);color:#fff;border-radius:8px;text-decoration:none;font-size:14px}
+.modal-meta{font-size:13px;color:var(--sub);margin:10px 0}
+.modal-summary{font-size:14px;color:#333;margin:10px 0}
 </style>
 </head>
 <body>
@@ -46,6 +66,9 @@ footer{max-width:760px;margin:0 auto;padding:20px 16px 40px;color:var(--sub);fon
   <div class="cat-nav" id="cat-nav"></div>
 </header>
 <main id="main"></main>
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal-content"></div>
+</div>
 <footer>
   <div class="about">
     我们按问题组织内容，检查关键事实，减少重复，带你回到原作者的原内容。
