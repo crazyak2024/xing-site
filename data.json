@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共415条",
+  "generated_note": "判定=合格的候选，共416条",
   "topics": [
     "概念原理",
     "方法实操",
@@ -9924,6 +9924,31 @@
       "topic": "误区纠正",
       "node": "大模型为什么会幻觉",
       "category": "01.大模型为什么会幻觉"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxPakIEUXVG74k8zT4DCKE2i8e9r2InkYsdCu8olVlw",
+      "video_id": "export/UzFfBgAAxPakIEUXVG74k8zT4DCKE2i8e9r2InkYsdCu8olVlw",
+      "title": "AI长篇网文创作工具选型与实战指南",
+      "original_title": "2026年AI写小说软件从夯到拉推荐#AI写作 #AI写小说 #AI网文创作",
+      "author": "蛙趣拼文",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/Ag9sHCbmhE",
+      "cover_url": "https://wxapp.tc.qq.com/251/20304/stodownload?encfilekey=KGDRibp2wkicKm50zmsFxC4pyvBrVquMAr7pXPiaWcibAAMfDxXn4l0ic4JxoYSn2xbo5XrYAIlNRPib55A8488kCT2Q&hy=SH&idx=1&m=&scene=2&uzid=1&picformat=200&wxampicformat=503",
+      "published_at": "2026-09-06T07:34:04+00:00",
+      "key_points": [
+        "ChatGPT适合短篇脑洞，长篇需手动维护设定，素材建设全靠人工输入",
+        "Kimi百万字上下文优势强，素材和文献记忆力强，但超量后开始遗忘",
+        "DeepSeek性价比高、写作稳定，但通用模型不专注长篇，易在长篇中崩设定",
+        "专业网文平台支持千张大纲、五层人物伏笔生命周期，可追踪百万字级内容",
+        "实战搭配：长篇闭眼选专业平台，短篇用ChatGPT，素材梳理用Kimi和DeepSeek"
+      ],
+      "duration_s": 69.0,
+      "likes": null,
+      "summary": "对比ChatGPT、DeepSeek、Kimi等AI工具在网文长篇创作中的表现，推荐专业网文平台支持千张大纲和向量记忆，能保持百万字级写作连贯性。",
+      "reason": "这是方法实操类知识讲解，教授如何选择和使用AI工具进行网文长篇创作。虽涉及网文创作，但内容本质是工具选型指导和创作流程，符合'知识讲解'而非'叙事娱乐'标准。口播自足，未触发排除项。 | 引用:「中文长篇网文选挖曲拼文短篇灵感ChatGPT素材梳理用Kimi和Deep Seek工具选对日更不累」",
+      "topic": "方法实操",
+      "node": "AI内容创作工具工作流",
+      "category": "(地图缺口)AI内容创作工具工作流"
     }
   ]
 }
