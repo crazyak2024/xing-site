@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>醒 · 可信、有趣的知识，主动找，慢慢看</title>
+<meta name="description" content="一个经过质量筛选和去重、按问题组织的中文知识视频索引。">
+<style>
+:root{--ink:#1a1a1a;--sub:#666;--line:#e5e5e5;--bg:#fafafa;--accent:#2b6cb0;}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:var(--bg);line-height:1.6}
+header{padding:24px 16px 12px;max-width:760px;margin:0 auto}
+h1{font-size:22px;margin:0 0 4px}
+.tagline{color:var(--sub);font-size:14px;margin:0 0 16px}
+.searchbar{display:flex;gap:8px;margin-bottom:12px}
+.searchbar input{flex:1;padding:12px 14px;font-size:16px;border:1px solid var(--line);border-radius:8px}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.tag{padding:6px 12px;border:1px solid var(--line);border-radius:16px;font-size:13px;color:var(--sub);background:#fff;cursor:pointer}
+.tag.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+main{max-width:760px;margin:0 auto;padding:0 16px 60px}
+.cat-nav{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 20px}
+.cat-btn{font-size:12px;padding:5px 10px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--sub);cursor:pointer}
+.cat-btn.active{background:#2d3748;color:#fff;border-color:#2d3748}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.card h3{font-size:15px;margin:0 0 6px;line-height:1.4}
+.meta{font-size:12px;color:var(--sub);margin-bottom:8px}
+.meta .plat{display:inline-block;padding:1px 6px;border-radius:4px;background:#eef2f7;margin-right:6px}
+.summary{font-size:14px;color:#333;margin-bottom:8px}
+.reason{font-size:12px;color:var(--sub);border-left:2px solid var(--line);padding-left:8px;margin-bottom:10px}
+.cat-chip{display:inline-block;font-size:11px;color:var(--accent);background:#ebf4ff;padding:2px 8px;border-radius:10px;margin-bottom:8px}
+.cat-chip.gap{color:#b7791f;background:#fffbea}
+a.src{font-size:13px;color:var(--accent);text-decoration:none}
+a.src:after{content:" →"}
+.empty{color:var(--sub);text-align:center;padding:40px 0;font-size:14px}
+footer{max-width:760px;margin:0 auto;padding:20px 16px 40px;color:var(--sub);font-size:12px;border-top:1px solid var(--line)}
+.about{font-size:13px;color:var(--sub);margin-top:16px;line-height:1.7}
+</style>
+</head>
+<body>
+<header>
+  <h1>醒</h1>
+  <p class="tagline">可信、有趣的知识，主动找，慢慢看。</p>
+  <div class="searchbar">
+    <input id="q" type="text" placeholder="你想弄明白什么？比如：大模型为什么会幻觉">
+  </div>
+  <div class="cat-nav" id="cat-nav"></div>
+</header>
+<main id="main"></main>
+<footer>
+  <div class="about">
+    我们按问题组织内容，检查关键事实，减少重复，带你回到原作者的原内容。
+    我们不会根据你的观看历史推荐同类内容，也不建立个人浏览档案。
+    当前处于 M1 技术验证阶段，首批仅 5 条经人工判定合格的内容，持续扩充中。
+  </div>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>

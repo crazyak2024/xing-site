@@ -1,0 +1,70 @@
+{
+  "generated_note": "只含判定=合格的候选；未处理/暂缓的不展示。首批共5条，来自M1技术验证阶段。",
+  "items": [
+    {
+      "id": "reczz28WmigDXU1N",
+      "title": "一个动画搞懂AI大模型工作原理 从词向量到Transformer，AI大模型背后的原理，一个动画急速入门 #人工智能 #AI大模型 #ChatGPT  #Tra",
+      "platform": "抖音",
+      "link": "https://www.douyin.com/video/7673870413914590504",
+      "duration_s": 1514.5,
+      "likes": 1584,
+      "summary": "从n-gram统计模型的局限（组合爆炸、不懂同义词关系如鹦鹉/虎皮鹦鹉）讲起，铺垫词向量/Transformer为何被需要。动画形式，逐层递进。",
+      "reason": "对应问题02(Transformer注意力机制)的前置铺垫：准确指出n-gram的两个真实缺陷（组合稀疏、符号独立无语义关联），为后续讲嵌入向量做铺垫，无事实错误，口播自足。",
+      "category": "02.Transformer的注意力机制在算什么",
+      "category_fit": "exact",
+      "category_note": ""
+    },
+    {
+      "id": "reczz28WmigDX8SE",
+      "title": "颠覆认知！AI为何能回答你的问题？一期搞懂底层逻辑 你每天用AI问问题，但你有没有想过它凭什么能回答你？为什么聊得越多token消耗越多？token究竟是什么？",
+      "platform": "抖音",
+      "link": "https://www.douyin.com/video/7627765283347828004",
+      "duration_s": 2585.7,
+      "likes": 5134,
+      "summary": "用\"文字接龙\"\"床前明月光\"类比讲清大模型是概率续写而非理解；讲了token计费逻辑。",
+      "reason": "对应问题01(幻觉)/16(是否在思考)：准确说明\"按概率续写\"核心机制。注意：反复强调\"AI根本不会思考\"，表述略滑向过度简化一端(Q16要求不简单贬为统计)——内容不算错，措辞强度建议人工复核留意。",
+      "category": "01.大模型为什么会幻觉",
+      "category_fit": "exact",
+      "category_note": ""
+    },
+    {
+      "id": "reczz28WmigDVuIF",
+      "title": "挑战全网最通俗易懂！3层结构讲透大模型到智能体 #科技下一站 #扣子 #AI大模型 #ai基础教程 #ai底层逻辑",
+      "platform": "抖音",
+      "link": "https://www.douyin.com/video/7598472812789009698",
+      "duration_s": 722.6,
+      "likes": 34709,
+      "summary": "AI应用层三层架构科普：大语言模型(大脑)/多模态(感官四肢)/联网知识库与Agent(五感工具)。讲清大模型两个局限：知识时效性、不懂个人数据。",
+      "reason": "对应问题04/06相关：\"大模型知识有时间节点和范围局限\"表述准确，提示词定义符合判据；科普分类框架，信息密度高、无错误。",
+      "category": "（地图缺口）AI应用层生态与Agent关系",
+      "category_fit": "gap",
+      "category_note": "20题现有节点里没有完全匹配的，建议扩图新增此主题"
+    },
+    {
+      "id": "reczz28WmigDafNU",
+      "title": "大白话讲AI：3分钟讲透AI大模型底层原理 ＃大模型#人工智能#AI大模型#AI#AI原理",
+      "platform": "视频号",
+      "link": "https://weixin.qq.com/sph/AZdha7pE2k",
+      "duration_s": 216,
+      "likes": null,
+      "summary": "3分钟讲透：AI的大脑是参数构成的网络，通过概率预测生成文字；核心讲清幻觉机制——AI追求流畅不追求事实核查。",
+      "reason": "直接命中问题01(幻觉)判据①②：表述精准(=语言艺术家不是事实核查员)。缺判据③具体应对方法，2/3命中仍判合格。",
+      "category": "01.大模型为什么会幻觉",
+      "category_fit": "exact",
+      "category_note": ""
+    },
+    {
+      "id": "reczz28WmigDcua8",
+      "title": "...零基础小白25分钟彻底搞懂AI大模型运作原理",
+      "platform": "视频号",
+      "link": "https://weixin.qq.com/sph/AUIVNqUF1F",
+      "duration_s": 1468,
+      "likes": null,
+      "summary": "25分钟长视频，从Anthropic CEO Dario 2025年4月文章(坦言不完全理解自家AI如何工作)切入，系统讲token/Transformer原理，引用GPT-3具体参数(1750亿,2020年发布)。",
+      "reason": "本批次信息密度与可核验程度最高：引用可查证外部权威信源+具体日期+数字。建议后续优先做外部核验流程的试验样本。",
+      "category": "02.Transformer的注意力机制在算什么",
+      "category_fit": "exact",
+      "category_note": ""
+    }
+  ]
+}
