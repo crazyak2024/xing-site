@@ -22,8 +22,27 @@ button{font-family:inherit}
 .creed{list-style:none;padding:0;margin:0;font-size:12.5px;color:#555}
 .creed li{margin-bottom:5px}
 @media (max-width:899px){.creed{display:flex;gap:10px;margin:0;font-size:11.5px}.creed li{margin:0}}
-.libnote{font-size:11px;color:#aaa;margin-top:14px}
-@media (max-width:899px){.libnote{display:none}}
+/* 离开按钮区：面板上最响的一块，但只有两颗按钮和两行字——"极其简洁"是硬约束 */
+.exit{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.exit-lead{font-size:12.5px;color:#777;margin:0 0 9px;line-height:1.55}
+.exit-lead b{color:#1a1a1a;font-size:13.5px}
+.exit-btns{display:flex;flex-direction:column;gap:6px}
+.exit-btn{padding:8px 10px;font-size:12.5px;border-radius:7px;cursor:pointer;text-align:left;border:1px solid var(--line);background:#fff;color:#444}
+.exit-btn.ok{border-color:#38a169;color:#276749;font-weight:600}
+.exit-btn.ok:hover{background:#38a169;color:#fff}
+.exit-btn.no:hover{background:#f3f3f3;border-color:#bbb}
+.exit-note{font-size:10.5px;color:#aaa;margin:7px 0 0;line-height:1.5}
+.exit-said{font-size:12.5px;color:#444;line-height:1.6;margin:0}
+.exit-said b{color:#276749}
+.exit-said.bad b{color:#b7791f}
+.exit-ask{display:flex;gap:5px;margin-top:8px}
+.exit-ask input{flex:1;min-width:0;padding:6px 8px;font-size:12px;border:1px solid var(--line);border-radius:6px}
+.exit-ask button{padding:6px 9px;font-size:12px;border:1px solid var(--line);background:#fff;border-radius:6px;cursor:pointer}
+@media (min-width:900px) and (max-width:1100px){.exit-btn{font-size:12px}}
+
+.purity{font-size:10.5px;color:#bbb;margin-top:16px;line-height:1.6}
+.libnote{font-size:11px;color:#aaa;margin-top:6px}
+@media (max-width:899px){.libnote{display:none}.purity{margin-top:12px}}
 
 .content-panel{flex:1;min-width:0;padding:0 14px 40px}
 @media (min-width:900px){.content-panel{padding:20px 20px 40px;border-left:1px solid var(--line)}}
@@ -116,6 +135,7 @@ footer{padding:14px 16px 30px;color:var(--sub);font-size:12px;border-top:1px sol
 .modal-summary{font-size:13px;color:#333;margin:8px 0}
 .modal-reason{font-size:11.5px;color:#888;background:#f7f7f7;border-radius:6px;padding:7px 9px;margin:8px 0}
 .modal-tip{font-size:11px;color:#999;margin-top:6px}
+.no-next{font-size:11.5px;color:#aaa;margin:14px 0 2px;padding-top:9px;border-top:1px dashed var(--line)}
 .transcript-toggle{font-size:12px;color:var(--accent);cursor:pointer;margin-top:10px;display:inline-block}
 .transcript-box{font-size:12.5px;color:#444;background:#f7f7f7;border-radius:8px;padding:10px;margin-top:8px;max-height:260px;overflow-y:auto;white-space:pre-wrap;display:none}
 .transcript-box.open{display:block}
@@ -133,6 +153,20 @@ a.src:after{content:" →"}
       <li>反沉迷</li>
       <li>找到就走</li>
     </ul>
+
+    <!-- 两个离开按钮：这是整个产品的成绩单，也是价值观最响的一句话。
+         两种离开都以关窗结束，传统网站分不出来、也不在乎（它们数的是停留时长）。
+         我们分得出来，因为我们只认一种成功。 -->
+    <div class="exit" id="exit">
+      <p class="exit-lead">别的网站怕你走。<br><b>我们等你走。</b></p>
+      <div class="exit-btns">
+        <button class="exit-btn ok" id="exit-ok">找到了，我走</button>
+        <button class="exit-btn no" id="exit-no">没找到，我走</button>
+      </div>
+      <p class="exit-note">走之前点一下。这是我们唯一的成绩单。</p>
+    </div>
+
+    <div class="purity">不要账户 · 不认识你 · 没有第三方脚本 · 没有推荐算法</div>
     <div class="libnote">库内 <span id="lib-count">—</span> 条，全部通过质量判定</div>
   </aside>
 
@@ -140,7 +174,7 @@ a.src:after{content:" →"}
     <div class="searchbar">
       <input id="q" type="text" placeholder="你想弄明白什么？比如：大模型为什么会幻觉">
     </div>
-    <p class="hint">关键词包含匹配（标题/总结/问题名/作者），不是语义搜索。同一问题下按标题排序；有搜索词时标题命中的排前面。</p>
+    <p class="hint">关键词包含匹配（标题/总结/问题名/作者），不是语义搜索。同一问题下按标题排序；有搜索词时标题命中的排前面。<br>搜不到是我们的问题 —— 点左边那颗「没找到」告诉我们。</p>
     <div id="scope-hint"></div>
     <div id="crumbs"></div>
     <div id="map"></div>
@@ -155,8 +189,9 @@ a.src:after{content:" →"}
 
 <footer>
   <div class="about">
-    按问题组织，检查关键事实，减少重复，带你回到原作者的原内容。
-    不根据你的观看历史推荐同类内容，不建立个人浏览档案，没有无限滚动和自动连播。
+    传统视频站的成功是你留下来。<b>我们的成功是你走掉。</b>
+    所以这里没有无限滚动、没有自动连播、没有「猜你喜欢」，也没有账户和浏览档案。
+    我们只做三件事：按问题组织、核对关键事实、去掉重复，然后把你送回原作者那里。
     当前处于技术验证阶段，内容持续扩充中。
   </div>
 </footer>

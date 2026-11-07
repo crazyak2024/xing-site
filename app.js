@@ -299,6 +299,9 @@ function openModal(it) {
       ${it.reason ? `<div class="modal-reason">入选依据：${esc(it.reason)}</div>` : ""}
       <a class="src" href="${it.link}" target="_blank" rel="noopener">在原平台看原作者的完整内容</a>
       ${transcript}
+      <!-- 所有视频站在这个位置放"相关推荐"。我们在这个位置放一句"没有下一条"。
+           这是整个产品最结构性的一处叛逆：连播的入口被我们拿掉了，不是忘了做。 -->
+      <p class="no-next">没有「下一条」。看完回地图，或者直接关掉。</p>
     </div>`;
   document.getElementById("modal-overlay").classList.add("open");
   m.querySelector(".modal-close").addEventListener("click", closeModal);
@@ -321,6 +324,57 @@ function closeModal() {
   document.getElementById("modal-overlay").classList.remove("open");
   document.getElementById("modal-content").innerHTML = "";
 }
+
+/* ---------- 两种离开 ----------
+ * CY 2026-11-07 07:2x：「成功 = 用户找到了想要的，然后离开。失败 = 找了一圈没找到，
+ * 然后离开。两种离开都以关窗结束，但是两个完全不同的 signal。」
+ *
+ * 传统视频网站分不出这两种，也不在乎——它们数的是停留时长，两种离开都只是"会话结束"。
+ * 我们只认一种成功，所以必须问。这两颗按钮同时是**产品的成绩单**和**价值观最响的一句话**。
+ *
+ * ⚠️ 诚实边界：这一版是纯静态站，**没有后端**，点击只能记在用户自己的浏览器里，
+ * 收不到我们这一侧。界面上如实写明，不假装在收集。要真收上来需要一个最小后端——
+ * 已作为待拍板项交给 CY，别在这里悄悄接第三方表单（那会直接打脸隔壁那行
+ * "没有第三方脚本"，而那行正是我们最强的叛逆声明）。
+ */
+function recordExit(kind, note) {
+  try {
+    const log = JSON.parse(localStorage.getItem("xing_exit") || "[]");
+    log.push({ kind, q: state.q || "", topic: state.topic || "", node: state.node || "",
+               results: filtered().length, note: note || "", at: new Date().toISOString() });
+    localStorage.setItem("xing_exit", JSON.stringify(log.slice(-50)));
+  } catch (e) { /* 隐私模式下 localStorage 会抛，这不该影响任何别的东西 */ }
+}
+
+function exitSaid(html, cls) {
+  document.getElementById("exit").innerHTML =
+    `<p class="exit-said ${cls || ""}">${html}</p>
+     <p class="exit-note">只记在你这台设备上，没有上传——这一版还没有后端。</p>`;
+}
+
+document.getElementById("exit-ok").addEventListener("click", () => {
+  recordExit("found");
+  exitSaid(`<b>记下了。</b><br>这是我们唯一的成功。<br>不用收藏，有下一个问题再来。`);
+});
+
+document.getElementById("exit-no").addEventListener("click", () => {
+  recordExit("not_found");
+  document.getElementById("exit").innerHTML =
+    `<p class="exit-said bad"><b>记下了——这是我们的失败，不是你的。</b><br>你想找的是什么？</p>
+     <div class="exit-ask">
+       <input id="exit-want" type="text" placeholder="一句话就行" maxlength="80">
+       <button id="exit-send">送出</button>
+     </div>
+     <p class="exit-note">它会进我们的内容缺口清单。只记在你这台设备上，没有上传——这一版还没有后端。</p>`;
+  const input = document.getElementById("exit-want");
+  const send = () => {
+    recordExit("gap_wish", input.value.trim());
+    exitSaid(`<b>收到。</b><br>这句话比一万次点击有用。`, "bad");
+  };
+  document.getElementById("exit-send").addEventListener("click", send);
+  input.addEventListener("keydown", e => { if (e.key === "Enter") send(); });
+  input.focus();
+});
 
 /* ---------- 绑定 ---------- */
 document.getElementById("modal-overlay").addEventListener("click", e => {
