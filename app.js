@@ -16,6 +16,14 @@ function escapeHtml(s) {
   return (s || "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 
+// 排序规则明确、确定性：按分类分组后，组内按标题排序——不是伪装成"智能推荐"，
+// 就是字面意思的字典序，免得看着像有隐藏算法在打分。
+function sortedItems(items) {
+  return [...items].sort((a, b) =>
+    (a.category || "").localeCompare(b.category || "", "zh") ||
+    (a.title || "").localeCompare(b.title || "", "zh"));
+}
+
 function render() {
   const q = document.getElementById("q").value.trim().toLowerCase();
   const main = document.getElementById("main");
@@ -25,11 +33,14 @@ function render() {
     items = items.filter(it =>
       (it.title + it.summary + (it.author||"")).toLowerCase().includes(q));
   }
+  items = sortedItems(items);
+  document.getElementById("sort-note").textContent =
+    `共${items.length}条 · 排序：按分类，同分类内按标题排序（不是按热度或推荐算法）`;
   if (!items.length) {
     main.innerHTML = `<div class="empty">没找到匹配内容——当前库还很小，换个词或清空搜索框看看全部。</div>`;
     return;
   }
-  main.innerHTML = items.map((it, i) => `
+  main.innerHTML = items.map(it => `
     <div class="card" data-idx="${DATA.indexOf(it)}">
       ${it.cover_url ? `<img class="thumb" src="${it.cover_url}" loading="lazy" alt="">` : `<div class="thumb"></div>`}
       <div class="card-body">
@@ -51,13 +62,17 @@ function render() {
 
 function openModal(it) {
   const embedFn = EMBED_URL[it.platform];
+  const modalEl = document.getElementById("modal-content");
+  modalEl.className = embedFn ? "modal embed-mode" : "modal nolink-mode";
   const body = embedFn
-    ? `<iframe class="modal-embed" src="${embedFn(it.video_id)}" allow="autoplay; fullscreen" allowfullscreen></iframe>`
+    ? `<iframe class="modal-embed" src="${embedFn(it.video_id)}" allow="autoplay; fullscreen" allowfullscreen></iframe>
+       <p class="modal-tip">提示：视频播放区域内无法用Escape关闭（跨站iframe的浏览器限制），点右上角 ✕ 或弹窗外侧关闭。</p>`
     : `<div class="modal-cover-wrap">
          ${it.cover_url ? `<img class="modal-cover" src="${it.cover_url}" alt="">` : ""}
          <div><a class="modal-openlink" href="${it.link}" target="_blank" rel="noopener">在${PLATFORM_CN[it.platform] || it.platform}中打开观看</a></div>
+         <p class="modal-tip">${PLATFORM_CN[it.platform] || it.platform}的官方嵌入只支持微信小程序内，网页做不到，这是平台限制。</p>
        </div>`;
-  document.getElementById("modal-content").innerHTML = `
+  modalEl.innerHTML = `
     <div class="modal-head">
       <h2>${escapeHtml(it.title)}</h2>
       <button class="modal-close" aria-label="关闭">&times;</button>
@@ -73,10 +88,8 @@ function openModal(it) {
       <a class="src" href="${it.link}" target="_blank" rel="noopener">在原平台观看</a>
     </div>
   `;
-  const overlay = document.getElementById("modal-overlay");
-  overlay.classList.add("open");
-  document.getElementById("modal-content").querySelector(".modal-close")
-    .addEventListener("click", closeModal);
+  document.getElementById("modal-overlay").classList.add("open");
+  modalEl.querySelector(".modal-close").addEventListener("click", closeModal);
 }
 
 function closeModal() {
