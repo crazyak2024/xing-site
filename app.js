@@ -46,6 +46,25 @@ function fmtDuration(s) {
   const m = Math.floor(s / 60), sec = Math.round(s % 60);
   return m ? `${m}分${sec}秒` : `${sec}秒`;
 }
+/* 发布时间（CY 2026-11-07 20:52 要求"每一个视频发布的时间得写上去"）。
+ * 为什么它不是装饰：这个领域里"2026-02 的模型选型推荐"和"2026-11 的"价值差一个量级，
+ * 用户必须能一眼看到新旧，而不是读完才发现讲的是半年前的产品。
+ * 拿不到发布时间的（上游没给）**显式写"发布时间未知"**，不留空——留空会被当成"刚发的"。 */
+function fmtDate(s) {
+  if (!s) return "";
+  const d = new Date(s);
+  if (isNaN(d)) return "";
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+function fmtAge(s) {
+  const d = new Date(s);
+  if (!s || isNaN(d)) return "";
+  const days = Math.floor((Date.now() - d.getTime()) / 86400000);
+  if (days < 0) return "";
+  if (days < 30) return `${days}天前`;
+  if (days < 365) return `${Math.floor(days / 30)}个月前`;
+  return `${(days / 365).toFixed(1)}年前`;
+}
 function esc(s) {
   return (s || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
@@ -216,6 +235,9 @@ function cardHtml(it) {
       <div class="meta">
         <span class="plat">${PLATFORM_CN[it.platform] || it.platform}</span>
         ${dur ? `<span class="dur">${dur}</span>` : ""}
+        ${fmtDate(it.published_at)
+      ? `<span class="pub" title="发布于 ${esc(fmtDate(it.published_at))}">${esc(fmtDate(it.published_at))}</span>`
+      : `<span class="pub unknown" title="上游平台没给发布时间">发布时间未知</span>`}
         ${it.author ? `<span class="author">@${esc(it.author)}</span>` : ""}
       </div>
       <div class="summary">${esc(it.summary || it.reason || "")}</div>
@@ -312,6 +334,9 @@ function openModal(it) {
         <span class="plat">${PLATFORM_CN[it.platform] || it.platform}</span>
         ${it.author ? ` · @${esc(it.author)}` : ""}
         ${fmtDuration(it.duration_s) ? " · " + fmtDuration(it.duration_s) : ""}
+        ${fmtDate(it.published_at)
+      ? ` · 发布于 ${esc(fmtDate(it.published_at))}${fmtAge(it.published_at) ? `（${esc(fmtAge(it.published_at))}）` : ""}`
+      : " · 发布时间未知"}
       </div>
       <div class="modal-summary">${esc(it.summary || "")}</div>
       ${points}
