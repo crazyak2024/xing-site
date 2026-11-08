@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共726条",
+  "generated_note": "判定=合格的候选，共727条",
   "topics": [
     "概念原理",
     "方法实操",
@@ -15,7 +15,7 @@
     {
       "id": "fin1",
       "label": "财经基础",
-      "count": 92
+      "count": 93
     }
   ],
   "items": [
@@ -19469,6 +19469,33 @@
       "topic": "概念原理",
       "node": "黄金美元股债的相对位置怎么看",
       "category": "42.黄金美元股债的相对位置怎么看",
+      "domain": "fin1"
+    },
+    {
+      "id": "bilibili:BV1Aq4y1f7H9",
+      "video_id": "BV1Aq4y1f7H9",
+      "title": "股债配置的风险溢价判断法",
+      "original_title": "9、【股债性价】中长期资产配置策略",
+      "author": "韭圈儿",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1Aq4y1f7H9",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/7000a1bd83ebf16d33f093dd657e6d13b184f447.jpg",
+      "published_at": "2021-09-20T03:50:12+00:00",
+      "key_points": [
+        "资产配置实践用股债性价比判断，不用复杂数学模型，为众多基金经理采用",
+        "EP是市盈率倒数，一块钱÷十块钱=10%，表达股票年收益率预期",
+        "对比EP与债券收益率：收益率高的资产应被更多配置到组合中",
+        "历史验证FED值高低点：低位卖股（2015年）、高位买股（2020年3月）"
+      ],
+      "duration_s": 958.0,
+      "likes": 115,
+      "collects": null,
+      "comments": null,
+      "summary": "讲用PE倒数（EP）与债券收益率对比指导中长期配置：EP高时相对买股，低时相对卖股，历史验证有效。",
+      "reason": "讲述资产配置中用股债性价比判断方向的基础原理，核心概念（PE、EP、风险溢价）通过通俗例子讲述充分，虽涉及图表但不影响概念理解。 | 引用:「中长期的方法就是看这个股债性价比就是我们所谓的这个风险溢价水平」",
+      "topic": "方法实操",
+      "node": "资产配置的基本原理",
+      "category": "38.资产配置的基本原理",
       "domain": "fin1"
     },
     {
