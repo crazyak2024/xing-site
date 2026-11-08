@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共611条",
+  "generated_note": "判定=合格的候选，共634条",
   "topics": [
     "概念原理",
     "方法实操",
@@ -11485,6 +11485,53 @@
       "category": "02.Transformer的注意力机制在算什么"
     },
     {
+      "id": "bilibili:BV1fJ4m1s7zf",
+      "video_id": "BV1fJ4m1s7zf",
+      "title": "Transformer的编码器、解码器与自注意力机制",
+      "original_title": "深入浅出：Transformer编码器解码器与自注意力机制(self-attention) | 人工智能，大模型",
+      "author": "叶零川",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1fJ4m1s7zf",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/7b519b20ab1af7dd9e30e33a5cf9cd88b003483a.jpg",
+      "published_at": "2024-02-09T10:00:00+00:00",
+      "key_points": [
+        "自注意力让模型同时查看全文所有词而非逐个处理，突破RNN的顺序限制",
+        "编码器处理输入生成表示，解码器生成输出，各层都含自注意力+前馈网络",
+        "位置编码用正弦余弦组合为每个位置创建唯一编码，保留相对位置关系"
+      ],
+      "duration_s": 613.0,
+      "likes": 418,
+      "summary": "讲Transformer如何用自注意力机制同时考虑所有词汇、编码器-解码器的分工以及位置编码的作用",
+      "reason": "转写明确讲解了Transformer的核心组件与工作逻辑。\"Transformer模型之所以独特，是因为它通过一种称为自注意力的机制，同时考虑文本中的所有部分。\"说明了自注意力的核心优势。 | 引用:「Transformer模型之所以独特，是因为它通过一种称为自注意力的机制，同时考虑文本中的所有部分」",
+      "topic": "概念原理",
+      "node": "Transformer的注意力机制在算什么",
+      "category": "02.Transformer的注意力机制在算什么"
+    },
+    {
+      "id": "bilibili:BV1PSxYzJEkf",
+      "video_id": "BV1PSxYzJEkf",
+      "title": "Transformer注意力机制：Q-K-V的语义权重计算",
+      "original_title": "大白话讲明白Transformer的注意力机制",
+      "author": "薛什么的B站",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1PSxYzJEkf",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/300e1b80904f019ab1d4c08127a443a7fce8901e.jpg",
+      "published_at": "2025-10-08T12:00:00+00:00",
+      "key_points": [
+        "计算机处理NLP需解决三问题：词序、语义关系、词义消歧，注意力机制围绕这三点设计",
+        "Q询问其他词K的关系度，用百分比表示关系程度，乘以V吸取相应比例的信息",
+        "五步计算：Q×K矩阵乘法→缩放→可选遮掩→Softmax→乘V矩阵",
+        "通过机制实现上下文消歧，如同一词汇\"苹果\"能识别为科技公司而非水果"
+      ],
+      "duration_s": 392.0,
+      "likes": 182,
+      "summary": "用查表类比解释Q(查询)K(键)V(值)三者含义，讲注意力如何计算词语间的语义关系权重和词义消歧",
+      "reason": "用具体例子讲清了权重计算过程，\"苹果的Q去问每个单词的K：你是不是和我有关系？经过计算苹果就会发现它和手机这个词的关系程度很高，可以到55%\"直观演示了权重如何生成。 | 引用:「苹果的Q去问每个单词的K：你是不是和我有关系？经过计算可以到55%」",
+      "topic": "概念原理",
+      "node": "Transformer的注意力机制在算什么",
+      "category": "02.Transformer的注意力机制在算什么"
+    },
+    {
       "id": "bilibili:BV1Zqjm6gEEH",
       "video_id": "BV1Zqjm6gEEH",
       "title": "多头注意力：多视角理解的必要性",
@@ -11648,6 +11695,30 @@
       "topic": "概念原理",
       "node": "AI真的在思考吗",
       "category": "16.AI真的在思考吗"
+    },
+    {
+      "id": "bilibili:BV1jg9tYEE4i",
+      "video_id": "BV1jg9tYEE4i",
+      "title": "AI写作去味三法：翻译、人设、检测",
+      "original_title": "如何去除AI味?DeepSeek写论文避坑指南！保姆级文章降低AIGC检测率【Git源宝】",
+      "author": "Git源宝",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1jg9tYEE4i",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/5a8ffd8fdb00d7a7bd8ae8b1c380ff8b95f0fb72.jpg",
+      "published_at": "2025-03-05T08:00:00+00:00",
+      "key_points": [
+        "AI文章易暴露的根本原因：语言风格单一规范、结构过于机械逻辑性过强",
+        "翻译法：先英后中打破转接词重复、消除固定逻辑节奏，产出风格变异文本",
+        "人设法：用提示词让AI模拟不同教育程度和性格人物，生成明显风格差异内容",
+        "检测法：用开源AIGC检测器反向判断和优化，提高文本自然度"
+      ],
+      "duration_s": 183.0,
+      "likes": 28981,
+      "summary": "通过翻译工具转换、提示词引导人设、开源检测工具等方法，降低AI文章的机械感和检测风险",
+      "reason": "转写明确讲了三个实践方法，每个都有具体操作步骤。\"用翻译工具把文章先翻译成英文再翻译成中文...这样一篇没有AI味的文章就修改好了\"给出了可直接应用的技巧。 | 引用:「用翻译工具把文章先翻译成英文再翻译成中文，这样一篇没有AI味的文章就修改好了」",
+      "topic": "方法实操",
+      "node": "AI内容创作工具工作流",
+      "category": "(地图缺口)AI内容创作工具工作流"
     },
     {
       "id": "bilibili:BV1xqc6zVEBr",
@@ -11870,6 +11941,30 @@
       "topic": "概念原理",
       "node": "怎么用AI学全新领域而不被带偏",
       "category": "11.怎么用AI学全新领域而不被带偏"
+    },
+    {
+      "id": "bilibili:BV1XoRJB7ERe",
+      "video_id": "BV1XoRJB7ERe",
+      "title": "从异或问题看多层神经网络：为什么需要隐层",
+      "original_title": "深度学习架构：MLP到神经网络的升级，理解反向传播的基础",
+      "author": "谦行AIing",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1XoRJB7ERe",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/f6fe843594d9653384d862e78379f811bbc6736e.jpg",
+      "published_at": "2026-05-10T14:52:00+00:00",
+      "key_points": [
+        "单层感知机只能线性分割，无法解决异或（非线性）问题，导致明斯基诘难与AI寒冬",
+        "异或可由与门、或门、非门等简单逻辑电路组合实现，启发多层神经网络的必要性",
+        "两层感知机通过隐层分别实现与、非与运算，输出层求和完成异或逻辑",
+        "复杂功能通过简单模块层层组合实现，这是深层网络与反向传播的基础"
+      ],
+      "duration_s": 978.0,
+      "likes": 674,
+      "summary": "用异或问题演示单层感知机无法解决，引入隐层和多层组合如何通过简单逻辑门实现复杂功能",
+      "reason": "用具体的异或问题和电路类比讲清了为什么需要多层。\"一些复杂的功能你是可以通过一些简单模块的层层组合得到的...两层感知机就能把平面中红色和蓝色的点分开\"。 | 引用:「一些复杂的功能你是可以通过一些简单模块的层层组合得到的」",
+      "topic": "概念原理",
+      "node": "神经网络基础架构与学习机制",
+      "category": "(地图缺口)神经网络基础架构与学习机制"
     },
     {
       "id": "bilibili:BV1fc411m7Yt",
@@ -12139,6 +12234,30 @@
       "category": "07.怎么写提示词才能少踩坑"
     },
     {
+      "id": "bilibili:BV1mz8GzuEyA",
+      "video_id": "BV1mz8GzuEyA",
+      "title": "大模型预训练数据准备：从文本到训练样本对",
+      "original_title": "大模型预训练的数据如何准备？【从零开始训练大模型01】",
+      "author": "费曼学徒冬瓜",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1mz8GzuEyA",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/8e829a84a5a436e74d6810f546772f5169649289.jpg",
+      "published_at": "2025-07-28T11:00:00+00:00",
+      "key_points": [
+        "大模型本质是自回归模型，推理时用前一步输出作下一步输入，训练时预测每位置的词",
+        "数据准备五步：原文→分词(token)→映射ID→添加结束符→按上下文长度采样",
+        "stride参数控制窗口移动距离，大则数据多样无重复、小则重复多，根据总数据量调节",
+        "上下文长度决定模型能处理的最大序列，从GPT-3的1K扩到现在的128K"
+      ],
+      "duration_s": 480.0,
+      "likes": 1840,
+      "summary": "讲大模型预训练数据的完整准备流程：分词→编码→添加结束标志→滑动窗口采样，及上下文长度与stride参数设置",
+      "reason": "用具体例子讲清了从原始文本到训练数据对的每一步。\"假设模型允许每次最多输入三个token，那三个词源就可以作为一条输入数据，往右移动一个词语就可以得到另外三个token这是目标数据\"。 | 引用:「假设模型允许每次最多输入三个token，往右移动一个词语就可以得到另外三个token这是目标数据」",
+      "topic": "方法实操",
+      "node": "LLM预训练与监督微调原理",
+      "category": "(地图缺口)LLM预训练与监督微调原理"
+    },
+    {
       "id": "bilibili:BV1ZqH56fEwi",
       "video_id": "BV1ZqH56fEwi",
       "title": "腾讯混元世界模型评测：3D场景生成能力",
@@ -12339,6 +12458,30 @@
       "category": "AI学习资源推荐"
     },
     {
+      "id": "bilibili:BV1D4ArzdE3D",
+      "video_id": "BV1D4ArzdE3D",
+      "title": "AI写作新分工：人的洞察+AI的结构化",
+      "original_title": "【进阶方法】如何用AI，帮我们写出90-100分的文案？",
+      "author": "人类行为设计师-小周",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1D4ArzdE3D",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/1c852376bed9cffb391533fc59c488e0950622c5.jpg",
+      "published_at": "2026-02-26T09:18:49+00:00",
+      "key_points": [
+        "AI虽强于结构化和逻辑化，但缺乏独特洞察，深度文章不应全权交给AI做决策",
+        "高质量输出需人做三件事：提出洞察问题→给足够高密度信息→做最终判断",
+        "思维导图角色转变：从结构整理工具变为信息放大器、问题收集器、信息捕捉器",
+        "人的信息密度和颗粒度（源自经验、知识、方法论）直接决定AI产出质量上限"
+      ],
+      "duration_s": 412.0,
+      "likes": 893,
+      "summary": "讲AI在写作中的新分工模式：人负责提出洞察、提问和最终判断，AI负责结构化、验证和润色",
+      "reason": "清晰讲明了人AI分工的新模式。\"一旦这些判断全部交给AI，他写出来的东西通常是清晰的、平衡的、合理的，但经常不够独特、没有灵魂\"，说明AI缺乏的关键是洞察力。 | 引用:「一旦这些判断全部交给AI，他写出来的东西经常不够独特、没有灵魂」",
+      "topic": "方法实操",
+      "node": "AI内容创作工具工作流",
+      "category": "(地图缺口)AI内容创作工具工作流"
+    },
+    {
       "id": "bilibili:BV1X2GVzrEET",
       "video_id": "BV1X2GVzrEET",
       "title": "AI文案仿写的正确方法：拆解而非微调",
@@ -12410,6 +12553,30 @@
       "topic": "方法实操",
       "node": "AI工具使用教程",
       "category": "AI工具使用教程"
+    },
+    {
+      "id": "bilibili:BV1dF4i6AE1d",
+      "video_id": "BV1dF4i6AE1d",
+      "title": "AI时代职场数据使用的法律底线：案例解读",
+      "original_title": "员工把数据上传AI平台遭辞退 是个人违规还是企业违法？",
+      "author": "央视频",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1dF4i6AE1d",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/40ade3a070ff20e2e2523b15395084ab9b540290.jpg",
+      "published_at": "2026-11-06T06:04:14+00:00",
+      "key_points": [
+        "员工上传数据到第三方AI平台的法律后果取决于主观故意，无意过失加管理规范缺失会逆转责任",
+        "企业需明确数据等级划分和具体禁令，单靠通用信息安全制度不足以认定严重违纪",
+        "法律判定三要素：主观故意缺失加企业管理规范不清晰加无证实实际损失，三者结合定违法解除",
+        "教训：企业要主动完善AI使用合规体系，不能依赖事后追责；员工需增强数据保密意识"
+      ],
+      "duration_s": 288.0,
+      "likes": 795,
+      "summary": "通过法律案例说明员工因缺乏故意、公司管理缺陷而上传数据后胜诉，阐明AI使用中的法律责任边界",
+      "reason": "用真实法律判决讲清了职场AI使用的边界。\"公司虽有保密制度但未明确禁止使用第三方AI工具...法院认为保险公司的解除构成违法\"说明了法律对故意和管理清晰度的要求。 | 引用:「公司虽有保密制度但未明确禁止使用第三方AI工具...不足以认定吴女士严重违反工作纪律」",
+      "topic": "误区纠正",
+      "node": "AI数据隐私与安全保护",
+      "category": "(地图缺口)AI数据隐私与安全保护"
     },
     {
       "id": "bilibili:BV1LVa86ZEj7",
@@ -12787,6 +12954,30 @@
       "category": "(地图缺口)大模型推理框架与引擎优化"
     },
     {
+      "id": "bilibili:BV1QUx9eFENq",
+      "video_id": "BV1QUx9eFENq",
+      "title": "降低大模型幻觉的6个方法：从RAG到多模型集成",
+      "original_title": "减少大模型幻觉，你必须要掌握的 6 个方法！",
+      "author": "土妹土妹",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1QUx9eFENq",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/687a835e89c14eebcdfd335095a6958ac6c6d5e3.jpg",
+      "published_at": "2024-10-07T02:25:00+00:00",
+      "key_points": [
+        "幻觉无法完全消除但可降低，99%正确率在多数场景已足够，无需追求完美",
+        "方法1：用RAG和外部工具让模型在不知道时检索而非凭空编造，最实用的做法",
+        "方法2：微调模型虽成本高（数据准备、算力），但能提高领域专业度和可靠性",
+        "方法3：多模型集成用多个模型回答同一问题再验证对比，增加输出鲁棒性"
+      ],
+      "duration_s": 585.0,
+      "likes": 155,
+      "summary": "讲大模型幻觉问题的成因和应用层的6个降低方法：RAG、微调、多模型集成、模型选择等工程实践",
+      "reason": "转写明确讲了幻觉问题和6个具体方法。\"我们只要能去降低它出现幻觉的可能性...在很多实际应用中就已经可以达到落地\"说明了实用主义的态度。 | 引用:「我们只要能去降低它出现幻觉的可能性，在很多实际应用中就已经可以达到落地」",
+      "topic": "方法实操",
+      "node": "大模型为什么会幻觉",
+      "category": "01.大模型为什么会幻觉"
+    },
+    {
       "id": "bilibili:BV1CCosBJEbf",
       "video_id": "BV1CCosBJEbf",
       "title": "设计师AI生图工具选型指南",
@@ -12856,6 +13047,30 @@
       "topic": "方法实操",
       "node": "AI工作流一体化平台介绍",
       "category": "(地图缺口)AI工作流一体化平台介绍"
+    },
+    {
+      "id": "bilibili:BV1BN411W7VH",
+      "video_id": "BV1BN411W7VH",
+      "title": "XAgent：通用智能体框架的标准化与复杂任务处理",
+      "original_title": "XAgent 通用智能体  多 AI Agents 协作框架 | 动画演示 框架核心 | Code 讲解 | Demo 演示",
+      "author": "平行思维",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1BN411W7VH",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/880a21ce2f4b244dc2f490a88bacd8a249695c6c.jpg",
+      "published_at": "2023-10-24T02:10:00+00:00",
+      "key_points": [
+        "XAgent团队在Agent领域有深厚积累，从AgentWars→ChadDev→XAgent，Toolbench内置1600+API",
+        "现有Agent框架局限：只能处理简单任务（贪吃蛇、问答系统），缺乏统一标准",
+        "XAgent目标是处理更复杂的多步任务，并建立通用的框架和工具库标准",
+        "相对AutoGen优势：团队中文支持好、产品化程度高、开箱即用、内置丰富工具"
+      ],
+      "duration_s": 1278.0,
+      "likes": 302,
+      "summary": "介绍XAgent开源Agent框架的团队背景、技术优势、相对现有框架的改进（复杂任务处理、统一标准）及应用潜力",
+      "reason": "讲清了XAgent的来源、问题定位和解决方案。\"现有框架只能处理贪吃蛇这样的游戏或简单问答系统...XAgent想要处理更复杂的任务\"说明了框架演进的必要性。 | 引用:「现有框架只能处理贪吃蛇这样的游戏或简单问答系统...XAgent想要处理更复杂的任务」",
+      "topic": "概念原理",
+      "node": "AI Agent核心概念与生态系统",
+      "category": "(地图缺口)AI Agent核心概念与生态系统"
     },
     {
       "id": "bilibili:BV1F1Yf6pE6v",
@@ -13218,6 +13433,31 @@
       "category": "(地图缺口)AI工具使用教程"
     },
     {
+      "id": "bilibili:BV1KHxE6wE31",
+      "video_id": "BV1KHxE6wE31",
+      "title": "17个AI编程工具实测对比与选择指南",
+      "original_title": "程序员编程都用啥？17个AI编程工具，从夯到拉排名",
+      "author": "程序员Web3社区",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1KHxE6wE31",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/050d3d8211fe78751cb3fb2684edcebd84801484.jpg",
+      "published_at": "2026-10-28T10:45:00+00:00",
+      "key_points": [
+        "GitHub Copilot稳定但创新慢，常被其他工具抄走功能后才跟进，通常云端报销",
+        "Cursor与Claude Code是行业标准，分别主打Composer多文件改写和整库理解能力",
+        "国内工具（Dify、通义灵码）针对Java和云原生企业应用做了特殊适配",
+        "开源工具（Open Code）社区活跃Star反超商业产品，适合不想被绑定的开发者",
+        "工具选择应根据场景：企业多线程用Coder，个人用Cursor，追求自由度用开源"
+      ],
+      "duration_s": 320.0,
+      "likes": 81,
+      "summary": "对GitHub Copilot、Cursor、Claude Code等17个编程助手进行功能和体验评测，从稳定性、创新度、价格、协作能力和国内可用性多个维度给出推荐等级。",
+      "reason": "视频系统对比了编程工具的功能特点、创新速度和使用场景，如'GitHub Copilot总是慢半拍，好多功能都是Cursor完剩下的它才跟进'，帮助用户快速定位所需工具。 | 引用:「GitHub Copilot这是老大哥生态是真的广，但说实话它的创新总是慢半排，好多功能都是Cursor完剩下的它才跟进」",
+      "topic": "时效选择",
+      "node": "AI工具使用教程",
+      "category": "(地图缺口)AI工具使用教程"
+    },
+    {
       "id": "bilibili:BV1b5AeeGEFc",
       "video_id": "BV1b5AeeGEFc",
       "title": "Cursor免费替代：Open Router接入顶级模型",
@@ -13237,6 +13477,30 @@
       "likes": 3099,
       "summary": "分享通过Cursor自定义API和Open Router接入Gemini、Deep Seek等免费模型的方案。",
       "reason": "转写详细展示配置步骤和问题分析。原文'科尔瑟的唯一缺点就是贵…每个月仅500次高级模型额度…超过就慢得无法忍受'说明问题切实。 | 引用:「科尔瑟的唯一缺点就是贵，即使是付费用户每个月仅有500次高级模型使用额度，超过就慢」",
+      "topic": "方法实操",
+      "node": "AI工具使用教程",
+      "category": "(地图缺口)AI工具使用教程"
+    },
+    {
+      "id": "bilibili:BV1cDzQBmEDn",
+      "video_id": "BV1cDzQBmEDn",
+      "title": "用AI生成易语言代码的完整流程",
+      "original_title": "AI编程辅助易语言开发 使用AI生成易语言代码",
+      "author": "阿朝编程",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1cDzQBmEDn",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/d92b998a20dd330d7495b0c74577ef84434dc781.jpg",
+      "published_at": "2026-01-25T07:04:18+00:00",
+      "key_points": [
+        "AI编程优先用Python实现功能验证逻辑，再转易语言降低失败率，因为易语言训练数据少",
+        "与AI交互要主动反问获取需求细节而非让AI猜测，这样选项清晰提升需求明确度",
+        "AI只能学习过去数据无法预判未来趋势，如经济走向变化需人类经验和直觉补充",
+        "GUI开发和命令行工具可直接AI生成，学习成本低于手工编码，新手快速上手好方案"
+      ],
+      "duration_s": 1223.0,
+      "likes": 37,
+      "summary": "演示如何用Deepseek等大模型辅助开发易语言，核心方法是先用Python验证逻辑再转目标语言，并讲解反问技巧获取需求细节。",
+      "reason": "讲解了完整的AI辅助开发流程，强调'你直接让AI开发意员他因为毕竟他训练的这个数据少，很多东西他是掌握不好的'，明确说明了采用Python过渡的原因。 | 引用:「你如果说直接让AI开发意员，很多东西他是掌握不好的，所以说首先第一步我们是进行python的一个功能实现」",
       "topic": "方法实操",
       "node": "AI工具使用教程",
       "category": "(地图缺口)AI工具使用教程"
@@ -13510,6 +13774,30 @@
       "topic": "误区纠正",
       "node": "AI数据隐私与安全保护",
       "category": "(地图缺口)AI数据隐私与安全保护"
+    },
+    {
+      "id": "bilibili:BV124xR6YEZT",
+      "video_id": "BV124xR6YEZT",
+      "title": "AI Agent在EDA芯片设计中的端到端自动化",
+      "original_title": "全程不碰鼠标：AI Agent 在 Virtuoso 里完成比较器设计到后仿真",
+      "author": "张托肯",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV124xR6YEZT",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/0fb698103547138ee151178807e332273db1e818.jpg",
+      "published_at": "2026-11-04T18:24:29+00:00",
+      "key_points": [
+        "AI自动完成电路设计全链路：原理图→版图→DRC检查→LVS验证→寄生参数提取",
+        "版图设计保证镜像对称性、输入对分离、关键节点不交叉的模拟设计最佳实践",
+        "寄生参数提取显著影响性能：后仿真延迟从25ps增到33-58ps，能耗增加0.9%",
+        "AI代替数小时人工工作，自动化检查与纠正，EDA工具重复性工作可由Agent接管"
+      ],
+      "duration_s": 185.0,
+      "likes": 56,
+      "summary": "展示AI Agent在Virtuoso EDA工具中端到端驱动电路设计流程，22nm工艺比较器从原理图到后仿真完整链路在10分钟内自动完成。",
+      "reason": "完整展示了AI Agent驱动专业工具的实际工程流程，'从schematic到post layout在约10分钟内完成'，包括参数、性能指标等都是实测数据。 | 引用:「Schematic to post layout in about 10 minutes, Every number straight from the tools」",
+      "topic": "方法实操",
+      "node": "AI Agent产品功能介绍",
+      "category": "(地图缺口)AI Agent产品功能介绍"
     },
     {
       "id": "bilibili:BV1kGNG6nEv8",
@@ -13793,6 +14081,78 @@
       "category": "(地图缺口)神经网络为何演进"
     },
     {
+      "id": "bilibili:BV1RLVG6oEw8",
+      "video_id": "BV1RLVG6oEw8",
+      "title": "AI生成歌曲的成本收益与多平台发布实测",
+      "original_title": "我花了两个月 做了1000首AI歌曲 我挣了多少钱？",
+      "author": "音乐人-魏歌",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1RLVG6oEw8",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/c76bc65244a2a9196076958e3a140d33942c8e43.jpg",
+      "published_at": "2026-05-30T07:23:24+00:00",
+      "key_points": [
+        "创作流程完全自动化：AI写歌词、AI作曲、AI唱歌，成本最低0.6元/首",
+        "平台审核差异大：翻前通过率50%，抖音因版权独立性无法直接转发，快手审核相对快",
+        "总收入与成本基本打平：收入1000多元（翻前400+、毅云400+、快手200+）与千元制作成本相当",
+        "盈利关键是内容筛选，不好听的歌直接删除避免亏本，人工干预成本仍需计算"
+      ],
+      "duration_s": 270.0,
+      "likes": 318,
+      "summary": "分享用Suno等AI工具生成1000首歌曲发布到翻前、抖音、快手、王毅云的完整运营数据，总收入约1000元与成本基本平衡。",
+      "reason": "提供真实的成本与收益数据，'做了一千首我大概挣了一千多块钱'和'单曲成本合到一千'直观展示了当前AI创收的实际情况。 | 引用:「做了一千首我大概挣了一千多块钱，一首歌差不多也合到一千了，相当于不赔就相当于没赚钱」",
+      "topic": "方法实操",
+      "node": "AI内容创作工具工作流",
+      "category": "(地图缺口)AI内容创作工具工作流"
+    },
+    {
+      "id": "bilibili:BV18e5fzNE5W",
+      "video_id": "BV18e5fzNE5W",
+      "title": "AI生成作品的著作权认定与法律责任",
+      "original_title": "用AI生成图片、视频，享有著作权吗？利用AI造谣，会承担何种责任？#人民说法",
+      "author": "人民网",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV18e5fzNE5W",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/14448de4a7a4ad72d5b9c8fe824f16f0ccaf1f71.jpg",
+      "published_at": "2025-04-20T03:47:06+00:00",
+      "key_points": [
+        "AI生成作品著作权需个案判断，关键看使用者是否给予创作空间并体现个性化表达",
+        "不同提示词生成不同结果的差异体现人的独创性，提示词设计可被认定为创作行为",
+        "被告主张'AI功能强大使用者没做什么'的理由不成立，法院支持使用者的著作权",
+        "中国法律框架正在完善，趋势是激励创作者使用AI工具，强化人在AI发展中的主导地位"
+      ],
+      "duration_s": 177.0,
+      "likes": 619,
+      "summary": "通过李某诉刘女士案例讲解AI生成图片的著作权认定标准，法院认定使用者通过提示词设计体现独创性，享有著作权。",
+      "reason": "案件判决明确指出'通过设计不同的提示词，不同的人会生成不同的结果，这种差异其实可以体现人类的独创性'，直接回应了使用者能否拥有AI生成内容著作权的常见疑问。 | 引用:「通过设计不同的提示词，不同的人会生成不同的结果，这种差异其实可以体现人类的独创性」",
+      "topic": "误区纠正",
+      "node": "AI生成内容有没有版权",
+      "category": "14.AI生成内容有没有版权"
+    },
+    {
+      "id": "bilibili:BV1Ru411s7rv",
+      "video_id": "BV1Ru411s7rv",
+      "title": "AI生成内容版权归属的四种方案与比较",
+      "original_title": "AI生成内容的版权究竟属于谁？",
+      "author": "设计王老板",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1Ru411s7rv",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/5cb4447d36f9e006de48587237f8694273aafc05.jpg",
+      "published_at": "2023-05-31T00:34:55+00:00",
+      "key_points": [
+        "版权归属核心问题是谁能控制结果，使用者相比开发者更精确控制最终产出且已付费",
+        "AI训练数据来自未授权的原作者作品，构成侵权隐患，需获得版权人同意或支付对价",
+        "美国版权局认定纯AI生成内容不被保护，需证明人类创作干预和独创性才能申请",
+        "目前开发者与使用者通过平台协议约定版权归属和使用范围，逐步形成市场标准"
+      ],
+      "duration_s": 268.0,
+      "likes": 123,
+      "summary": "分析AI生成内容版权可能的四种归属方案（开发者、公众、机器、使用者），比较各方案的合理性和法律风险，讨论当前中国的规范框架。",
+      "reason": "系统分析了四种版权归属逻辑，提出'谁最终享有作品的权益谁就要承担可能引起的侵权责任'这一核心判断，帮助理解版权问题的实质。 | 引用:「版权归属无非就四种第一个就是版权归属于AI软件开发者，第四种将版权归于使用者」",
+      "topic": "概念原理",
+      "node": "AI生成内容有没有版权",
+      "category": "14.AI生成内容有没有版权"
+    },
+    {
       "id": "bilibili:BV1ZCvSeJEc5",
       "video_id": "BV1ZCvSeJEc5",
       "title": "用LLM做Zero-shot文本分类实战",
@@ -13883,6 +14243,102 @@
       "topic": "方法实操",
       "node": "大模型开发岗位定义与工程范畴",
       "category": "(地图缺口)大模型开发岗位定义与工程范畴"
+    },
+    {
+      "id": "bilibili:BV1dZVq6NEFi",
+      "video_id": "BV1dZVq6NEFi",
+      "title": "AI对话隐私保护插件的使用方法",
+      "original_title": "与大模型问答时，如何保护你的隐私数据？",
+      "author": "明月七-",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1dZVq6NEFi",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/93e5980fa83db39547f32476358726642d5c7577.jpg",
+      "published_at": "2026-06-02T04:43:37+00:00",
+      "key_points": [
+        "插件离线运行不走大模型后台，无需配置API也不读取用户数据，纯本地工具",
+        "自动检测并隐藏33+类隐私信息（姓名、电话、QQ、微信、账户等），对话完后自动恢复原文",
+        "支持自定义识别规则，可针对特定公司名、人名添加识别避免信息泄露",
+        "支持PDF/Word文件上传检测，生成安全副本后再上传，全流程隐私保护"
+      ],
+      "duration_s": 169.0,
+      "likes": 1,
+      "summary": "演示如何使用AI隐私检测插件在与大模型对话时自动隐藏敏感信息（名字、账户、公司名等），对话后自动恢复，离线运行无后台读取。",
+      "reason": "提供具体的隐私保护工具和使用演示，说明'这个插件就是一个离线的小工具，然后我们在这里面还可以设置特定的名字'，展现了在大模型交互中保护敏感数据的可行方案。 | 引用:「这个插件是不走大模型的不需要配置任何的API后台也不会读取你的数据，它就是一个离线的小工具」",
+      "topic": "方法实操",
+      "node": "AI数据隐私与安全保护",
+      "category": "(地图缺口)AI数据隐私与安全保护"
+    },
+    {
+      "id": "bilibili:BV1Kw4beJEjx",
+      "video_id": "BV1Kw4beJEjx",
+      "title": "AI技术在网络安全中的应用与双刃剑特性",
+      "original_title": "网络安全宣传周 | AI安全知识科普",
+      "author": "小默说安全",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1Kw4beJEjx",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/05c1cd07ff27d0149888d7ab918860c3bb5a8132.jpg",
+      "published_at": "2024-09-13T08:30:17+00:00",
+      "key_points": [
+        "AI发展经历冬天期（70-90年代技术瓶颈资金缺失），深度学习兴起后加速发展",
+        "AI自动分类处理海量告警减轻团队工作量，缓解安全人员因告警疲劳导致的漏检",
+        "AI通过历史攻击案例分析预测黑客行为模式，提前发现新型威胁而非被动应对",
+        "攻击者同样使用AI增强攻击复杂度和隐蔽性，安全防御和攻击都在AI驱动下升级"
+      ],
+      "duration_s": 1167.0,
+      "likes": 14,
+      "summary": "从AI发展历程讲起，系统介绍AI在网络安全防御中的应用（告警分类、趋势预测、漏洞发现），同时强调AI也被攻击者利用加强攻击手法。",
+      "reason": "讲解AI在网络安全领域的具体应用场景，如'AI可以自动地分类和处理一些警报，帮助团队减轻工作量'和'AI通过深入分析历史问题摸清黑客行为习惯'，覆盖防御和风险两个面向。 | 引用:「AI可以自动地分类和处理一些警报，帮助团队减轻工作量，通过机器学习AI还能自动解决一些常见的问题」",
+      "topic": "概念原理",
+      "node": "AI数据隐私与安全保护",
+      "category": "(地图缺口)AI数据隐私与安全保护"
+    },
+    {
+      "id": "bilibili:BV1fx4y1a7dQ",
+      "video_id": "BV1fx4y1a7dQ",
+      "title": "LLM数据隐私保护的差分隐私与令牌重建方案",
+      "original_title": "大语言模型(LLM)数据隐私保护-论文分享",
+      "author": "暴躁的World",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1fx4y1a7dQ",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/38cf092a80408937c96cc0d1dd5e537bd4073f5c.png",
+      "published_at": "2024-04-02T09:39:08+00:00",
+      "key_points": [
+        "差分隐私通过向特征向量添加噪声保护数据，但导致模型准确率大幅下降（Cifar10从80%降到60%）",
+        "差分隐私破坏特征与词库映射关系，需通过最近邻查找方法量化恢复特征向量映射",
+        "Mask令牌重建类似BERT遮蔽技术，通过遮蔽部分词汇学习复原整句，缓解隐私保护带来的性能损害",
+        "该方案用于云端LLM训练场景，用户数据加密后上传，开发者无法获取原始数据"
+      ],
+      "duration_s": 1156.0,
+      "likes": 42,
+      "summary": "讲解一篇LLM隐私保护论文，介绍用差分隐私保护云端训练数据并用Mask令牌重建技术缓解精度下降的方案，适用于联邦学习场景。",
+      "reason": "讲解论文方法时说'如果你一旦使用了这个差分隐私，那么你的这个准确率可能就只有60多的准确率了'，明确指出隐私保护与性能的权衡，以及后续技术如何缓解这个问题。 | 引用:「差分隐私它会导致这个模型准确率的这个大幅大幅度下降，比如说针对于Cypher10这个数据集，你一旦使用了这个差分隐私那么你的这个准确率可能就只有60多」",
+      "topic": "概念原理",
+      "node": "AI数据隐私与安全保护",
+      "category": "(地图缺口)AI数据隐私与安全保护"
+    },
+    {
+      "id": "bilibili:BV1hWo1BXEko",
+      "video_id": "BV1hWo1BXEko",
+      "title": "主流AI模型的核心原理与关键特性",
+      "original_title": "19分钟讲透所有主流AI模型",
+      "author": "TED官方精选",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1hWo1BXEko",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/066a02e8031d98500f90c29e1dabb2aa1292b01c.jpg",
+      "published_at": "2026-04-28T03:30:00+00:00",
+      "key_points": [
+        "AI模型本质是预测下一个token，所有复杂功能都来自持续迭代这个基础预测能力",
+        "模型参数量增加让其识别更复杂语言模式，上下文窗口决定对话短期记忆容量大小",
+        "推理模型会停下来思考比标准模型慢，但在数学逻辑多步问题上性能显著提升",
+        "ChatGPT是应用界面不是模型本身，真正的AI大脑是GPT，多个应用可共享同一模型"
+      ],
+      "duration_s": 1129.0,
+      "likes": 4840,
+      "summary": "讲解AI模型工作原理（文本预测、下一token生成）和关键特性（参数量、上下文窗口、推理模型），区分模型和应用界面的差异。",
+      "reason": "明确区分了模型和应用界面，'ChatGPT isn't the model. GPT is. ChatGPT is just the app'，并解释了模型的基本工作原理'most AI models are predicting the next word, one token at a time'。 | 引用:「most AI models are predicting the next word, one token at a time. Everything impressive they do, comes from doing this prediction extremely well」",
+      "topic": "概念原理",
+      "node": "大模型基础概念与通用特性",
+      "category": "(地图缺口)大模型基础概念与通用特性"
     },
     {
       "id": "bilibili:BV1MFn3z1EVA",
@@ -14101,6 +14557,30 @@
       "category": "(地图缺口)AI副业骗局与避坑指南"
     },
     {
+      "id": "bilibili:BV1iox46uEZx",
+      "video_id": "BV1iox46uEZx",
+      "title": "为什么AI生成文本容易被识别为'AI味'",
+      "original_title": "AI味到底是什么？",
+      "author": "隔壁的程序员老王",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1iox46uEZx",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/9d17c83e955cf5c01be3aeffff78b7e80d477a81.jpg",
+      "published_at": "2026-11-05T09:00:00+00:00",
+      "key_points": [
+        "人类边读边猜后文内容，AI常用拟人化比喻（死物配活物动作）打破预期导致卡顿",
+        "例如'对话吃自己尾巴''混乱期待你'这类错配让读者必须停顿重新理解",
+        "AI句子结构冗长、修饰成分多，导致读者同时保存多个信息导致短期记忆过载",
+        "这些特性不是AI能力不足而是概率预测模型自然产生的文本风格特征"
+      ],
+      "duration_s": 738.0,
+      "likes": 1189,
+      "summary": "基于学术论文分析AI文本难读的原因：人类期望与内容不符（拟人化比喻）和句子结构复杂导致短期记忆超载，解释AI'有味道'的语言特性。",
+      "reason": "论文发现'AI就特别喜欢写死物配活物动作的句子'，通过具体例子'conversation is eating its own tail'说明AI文本难读的机制，帮助理解而非简单评价。 | 引用:「论文发现AI就特别喜欢写这样的句子。在这些句子里，又有一种写法特别典型，就是给死物配上一个活物的动作」",
+      "topic": "概念原理",
+      "node": "大模型基础概念与通用特性",
+      "category": "(地图缺口)大模型基础概念与通用特性"
+    },
+    {
       "id": "bilibili:BV128Atz7EAy",
       "video_id": "BV128Atz7EAy",
       "title": "AI无法替代的职业特征分析",
@@ -14171,6 +14651,30 @@
       "topic": "概念原理",
       "node": "开源与闭源大模型技术差异",
       "category": "(地图缺口)开源与闭源大模型技术差异"
+    },
+    {
+      "id": "bilibili:BV16nQpBZEuQ",
+      "video_id": "BV16nQpBZEuQ",
+      "title": "6个AI学习开源项目推荐与学习路径",
+      "original_title": "【Github】用6个开源项目彻底搞懂AI大模型！从原理到实战全搞定",
+      "author": "神秘的鱼仔",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV16nQpBZEuQ",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/5d7843bbfd35c08526e1f161af4a4e1b793efa81.jpg",
+      "published_at": "2026-04-16T10:00:00+00:00",
+      "key_points": [
+        "大模型学习分层路线：基础原理→开源模型部署→Transformer架构理解→应用开发",
+        "动手学大模型和Happy Transformer都获28k+ Star，提供课件+可运行脚本适合边学边做",
+        "应用层学习从RAG开始最友好，LLM Universe提供详细文档适合开发者小白入门",
+        "Agent学习内容稀缺但Hello Agents和Claude Code项目补充了这一空白"
+      ],
+      "duration_s": 139.0,
+      "likes": 501,
+      "summary": "推荐6个GitHub开源项目（28k-53k Star）覆盖大模型原理、开源模型部署、Transformer深度理解、RAG应用、Agent构建、Claude Code设计。",
+      "reason": "给出了具体的项目名称、GitHub Star数和各项目的学习难度与适用人群，如'做好了这50多个开源大模型的完整部署未调和使用教程'，帮助用户按阶段选择学习资源。 | 引用:「目前这个项目已经做好了这50多个开源大模型的完整部署未调和使用教程，内容还是十分详细的」",
+      "topic": "方法实操",
+      "node": "AI学习资源推荐",
+      "category": "(地图缺口)AI学习资源推荐"
     },
     {
       "id": "bilibili:BV1AVCvBCE4H",
@@ -14411,6 +14915,54 @@
       "topic": "概念原理",
       "node": "提示词工程概念与基础",
       "category": "(地图缺口)提示词工程概念与基础"
+    },
+    {
+      "id": "bilibili:BV1Ef3kzAEAJ",
+      "video_id": "BV1Ef3kzAEAJ",
+      "title": "ComfyUI提示词助手插件的完整使用指南",
+      "original_title": "Comfyui一站式提示词助手 扔掉你的DeepSeek和GPT4o | 提示词翻译 提示词反推 提示词AI扩展 kontext提示词神器",
+      "author": "CG迷李辰",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1Ef3kzAEAJ",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/a9ec78eae0255e522bd4bd6ca8cc761c492aee86.jpg",
+      "published_at": "2025-07-07T06:37:45+00:00",
+      "key_points": [
+        "插件集成翻译、扩写、反推、标签选择功能，无需在ComfyUI和网页间切换，提升工作效率",
+        "自动扩写将简短框架转为详细描述，涵盖衣着、动作、环境、构图、光线等设计维度",
+        "图片反推可生成精细文本描述，适合复刻参考图片风格而不知如何表达时使用",
+        "标签选择模式支持SD1.5分类方式，可逐项添加或搜索特定标签快速拼接提示词"
+      ],
+      "duration_s": 459.0,
+      "likes": 1765,
+      "summary": "演示ComfyUI PromAssist插件的一体化提示词管理功能，包括中英互译、自动扩写、图片反推、标签选择，支持Flux和SD1.5等多个模型。",
+      "reason": "完整演示了插件的每个功能，说明'我们在任意提示词文本节点上点击一下右下角就会出现一排小图标'和'点击一下这个扩写瞬间简短朴素的提示词就被丰富成从衣着动作环境分为再到构图光线都有详细描述的华丽提示词'。 | 引用:「点击一下这个扩写，瞬间简短朴素的提示词就被丰富成从衣着动作环境分为再到构图光线都有详细描述的华丽提示词了」",
+      "topic": "方法实操",
+      "node": "AI内容创作工具工作流",
+      "category": "(地图缺口)AI内容创作工具工作流"
+    },
+    {
+      "id": "bilibili:BV1oCEnzEE2B",
+      "video_id": "BV1oCEnzEE2B",
+      "title": "大模型系统提示词提取技巧与验证方法",
+      "original_title": "【提示词技巧】教你轻松套取LLM的系统提示词，ChatGPT等大模型统统中招！",
+      "author": "雷雨同学qwq",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1oCEnzEE2B",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/27be8bf8a1d452e5b36962f36f5835fdc8189168.jpg",
+      "published_at": "2025-05-15T23:24:00+00:00",
+      "key_points": [
+        "用特定提示词结构可套取系统提示词，不同模型防守能力差异大",
+        "多次验证对比、参考GitHub开源项目可判断真伪",
+        "需正确猜开头语；错的开头语会降低成功率，方法仍需优化",
+        "系统提示词长度差异大，官方可能持续更新内容"
+      ],
+      "duration_s": 302.0,
+      "likes": 208,
+      "summary": "通过特定的提示词结构（从开头到内容结尾）套取ChatGPT、Claude、Gemini等大模型的系统提示词，演示了实际操作、对比分析和真伪验证的完整方法。",
+      "reason": "转写明确演示了技巧原理与多个实际操作案例，内容技术性强。其中说明：'就用这样一个提示词就可以把各路大模型的背景提示词给套出来'，并给出验证方法与GitHub参考。 | 引用:「就用这样一个提示词就可以把各路大模型的背景提示词给套出来」",
+      "topic": "方法实操",
+      "node": "高级提示词工程与系统提示词提取",
+      "category": "(地图缺口)高级提示词工程与系统提示词提取"
     },
     {
       "id": "bilibili:BV1LjmoYLEJJ",
