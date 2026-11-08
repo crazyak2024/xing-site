@@ -45,9 +45,29 @@ const TOPIC_HINT = {
   "时效选择": "现在该选哪个（会过期）",
 };
 
-let DATA = [];
+let DATA = [];          // 当前领域内的内容（下面所有渲染都只看这个）
+let ALL_DATA = [];      // 全部内容（跨领域）
 let TOPICS = [];
-const state = { q: "", topic: null, node: null };
+let DOMAIN_LIST = [];   // [{id,label,count}]，只含真有合格内容的领域
+const state = { q: "", topic: null, node: null, domain: null };
+
+/* 领域切换（fin1 起）：领域是比主题更粗的一级——"AI 与大模型"和"财经基础"下面各有
+   自己的 4 个主题。为什么要这一级：不分的话"概念原理"里会同时出现 Transformer 和
+   通货膨胀，用户点进去看到的是两个不相干领域搅在一起。
+   ⚠️ 只有在**真有 2 个以上领域有内容**时才显示这个切换条——只有一个领域时它是纯噪音。 */
+function applyDomain() {
+  DATA = state.domain ? ALL_DATA.filter(it => it.domain === state.domain) : ALL_DATA;
+  const el = document.getElementById("lib-count");
+  if (el) el.textContent = DATA.length;
+}
+function domainBarHtml() {
+  if (DOMAIN_LIST.length < 2) return "";
+  const btn = (id, label, n) =>
+    `<button class="dchip${(state.domain === id || (!state.domain && id === null)) ? " on" : ""}" ` +
+    `data-domain="${id === null ? "" : esc(id)}">${esc(label)}${n ? ` <span class="dn">${n}</span>` : ""}</button>`;
+  return `<div class="domain-bar">` + btn(null, "全部领域", ALL_DATA.length) +
+    DOMAIN_LIST.map(d => btn(d.id, d.label, d.count)).join("") + `</div>`;
+}
 
 /* ---------- 工具 ---------- */
 function fmtDuration(s) {
@@ -191,7 +211,16 @@ function renderMap() {
     if (!rows.length) html = `<div class="map-label">没有命中任何问题节点，换个说法试试，或点上面的「全部」回到地图。</div>`;
   }
 
-  el.innerHTML = html;
+  el.innerHTML = domainBarHtml() + html;
+  el.querySelectorAll("[data-domain]").forEach(b => b.addEventListener("click", () => {
+    // 换领域 = 清掉主题/节点/搜索词：旧的选择在新领域里多半不存在，留着只会显示空结果
+    const id = b.dataset.domain || null;
+    const qbox = document.getElementById("q");
+    if (qbox) qbox.value = "";
+    state.domain = id;
+    applyDomain();
+    go({ topic: null, node: null, q: "" });
+  }));
   el.querySelectorAll("[data-node]").forEach(b => b.addEventListener("click", () => {
     const node = b.dataset.node;
     // 点已选中的节点 = 取消它（回到主题范围），不用再去找清除按钮
@@ -525,9 +554,10 @@ function loadData(attempt = 1) {
   fetch("data.json", { cache: "no-cache" })
     .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
     .then(d => {
-      DATA = d.items || [];
-      TOPICS = d.topics || [...new Set(DATA.map(i => i.topic))];
-      document.getElementById("lib-count").textContent = DATA.length;
+      ALL_DATA = d.items || [];
+      TOPICS = d.topics || [...new Set(ALL_DATA.map(i => i.topic))];
+      DOMAIN_LIST = d.domains || [];
+      applyDomain();
       render();
     })
     .catch(err => {

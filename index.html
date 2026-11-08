@@ -92,6 +92,12 @@ button{font-family:inherit}
 .topic-head .dot{width:8px;height:8px;border-radius:50%;background:var(--c);flex-shrink:0}
 .topic-head .tn{font-size:var(--fs-xs);font-weight:400;color:#aaa}
 .thint{font-size:var(--fs-xs);color:#999;margin:2px 0 7px;padding-left:14px}
+/* 领域切换条（fin1 起）：比主题更粗的一级入口。只有 ≥2 个领域有内容时 JS 才渲染它。 */
+.domain-bar{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.dchip{font-size:var(--fs-sm);padding:5px 12px;border-radius:15px;border:1px solid var(--line);background:#fff;color:#555;cursor:pointer}
+.dchip:hover{border-color:#2b6cb0;color:#2b6cb0}
+.dchip.on{background:#2b6cb0;border-color:#2b6cb0;color:#fff}
+.dchip .dn{font-size:var(--fs-xs);opacity:.7;margin-left:4px}
 .chips{display:flex;flex-wrap:wrap;gap:5px}
 .chip{font-size:var(--fs-sm);padding:4px 9px;border-radius:13px;border:1px solid var(--line);background:#fff;color:#444;cursor:pointer;text-align:left}
 .chip:hover{border-color:var(--c);color:var(--c)}
