@@ -51,6 +51,12 @@ let TOPICS = [];
 let DOMAIN_LIST = [];   // [{id,label,count}]，只含真有合格内容的领域
 const state = { q: "", topic: null, node: null, domain: null };
 
+/* 哪些主题行在 S1/S2 被手动展开过（CY 2026-11-08 10:5x：「section下tag太多了，无法阅读了，
+   而且把视频推到太下面」）。不进 state/URL——只是这一屏的临时展示状态，换个主题/搜索词
+   就该重新收起，不该跨导航保留。 */
+const expandedRows = new Set();
+const ROW_CHIP_MAIN = 8; // 单行最多先亮出几个节点，其余折进"其他N条"（S0 同款阈值的行版）
+
 /* 领域切换（fin1 起）：领域是比主题更粗的一级——"AI 与大模型"和"财经基础"下面各有
    自己的 4 个主题。为什么要这一级：不分的话"概念原理"里会同时出现 Transformer 和
    通货膨胀，用户点进去看到的是两个不相干领域搅在一起。
@@ -201,13 +207,33 @@ function renderMap() {
     const label = state.q
       ? `围绕「${esc(state.q)}」的知识地图 —— 命中内容落在这些问题上，点一个就只看它`
       : `${esc(state.topic || "")} 下的问题 —— 点一个进去`;
-    html = `<div class="map-label">${label}</div>` + rows.map(r => `
+    html = `<div class="map-label">${label}</div>` + rows.map(r => {
+      // 一行最多先亮出 ROW_CHIP_MAIN 个节点，其余折进"其他N条"——不然标签把视频挤到看不见
+      // （CY 2026-11-08 10:5x 截图实锤：一个主题 25+ 个节点原样铺开，视频区要滚好几屏才到）。
+      // 当前选中的节点若被挤进"其他"里，强制拉回主列表，不能让高亮的东西自己藏起来。
+      const expanded = expandedRows.has(r.t);
+      let main = r.nodes, rest = [];
+      if (!expanded && r.nodes.length > ROW_CHIP_MAIN) {
+        main = r.nodes.slice(0, ROW_CHIP_MAIN);
+        rest = r.nodes.slice(ROW_CHIP_MAIN);
+        if (state.node && rest.some(([node]) => node === state.node)) {
+          const idx = rest.findIndex(([node]) => node === state.node);
+          main = [...main, rest[idx]];
+          rest = rest.filter((_, i) => i !== idx);
+        }
+      }
+      const restN = rest.reduce((s, [, n]) => s + n, 0);
+      return `
       <div class="map-row">
         <button class="row-topic" data-topic-only="${esc(r.t)}" style="--c:${topicColor(r.t)}">
           <span class="dot"></span>${esc(r.t)}<span class="n">${r.n}</span>
         </button>
-        <div class="chips">${r.nodes.map(([node, n]) => nodeChip(node, n, r.t, node === state.node)).join("")}</div>
-      </div>`).join("");
+        <div class="chips">
+          ${main.map(([node, n]) => nodeChip(node, n, r.t, node === state.node)).join("")}
+          ${restN ? `<button class="chip more" data-expand-row="${esc(r.t)}">其他 ${restN} 条…</button>` : ""}
+        </div>
+      </div>`;
+    }).join("");
     if (!rows.length) html = `<div class="map-label">没有命中任何问题节点，换个说法试试，或点上面的「全部」回到地图。</div>`;
   }
 
@@ -229,6 +255,11 @@ function renderMap() {
   el.querySelectorAll("[data-topic-only]").forEach(b => b.addEventListener("click", () => {
     const t = b.dataset.topicOnly;
     go(t === state.topic && !state.node ? { topic: null } : { topic: t, node: null });
+  }));
+  // 原地展开"其他N条"——不导航（已经在这个主题里了，没有别处可去），只重画地图区
+  el.querySelectorAll("[data-expand-row]").forEach(b => b.addEventListener("click", () => {
+    expandedRows.add(b.dataset.expandRow);
+    renderMap();
   }));
 }
 
