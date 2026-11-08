@@ -147,7 +147,9 @@ footer{padding:14px 16px 30px;color:var(--sub);font-size:var(--fs-sm);border-top
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:flex-start;justify-content:center;z-index:100;overflow-y:auto}
 .modal-overlay.open{display:flex}
 .modal{background:#fff;width:100%;border-radius:0 0 12px 12px;animation:slideDown .18s ease-out;position:relative;outline:none}
-.modal.embed-mode{max-width:430px}
+/* 嵌入弹窗按画面形状选宽度：抖音竖屏(9:16)窄，B站横屏(16:9)宽 */
+.modal.embed-mode.embed-portrait{max-width:430px}
+.modal.embed-mode.embed-landscape{max-width:860px}
 .modal.nolink-mode{max-width:520px}
 @keyframes slideDown{from{transform:translateY(-16px);opacity:.6}to{transform:translateY(0);opacity:1}}
 .modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line)}
@@ -155,6 +157,7 @@ footer{padding:14px 16px 30px;color:var(--sub);font-size:var(--fs-sm);border-top
 .modal-close{border:none;background:#2d3748;color:#fff;border-radius:50%;width:30px;height:30px;font-size:18px;cursor:pointer;line-height:1;flex-shrink:0}
 .modal-body{padding:12px 14px}
 .modal-embed{width:100%;aspect-ratio:9/16;border:none;border-radius:8px;background:#000;display:block}
+.embed-landscape .modal-embed{aspect-ratio:16/9}
 .modal-cover-wrap{text-align:center}
 .modal-cover{max-width:100%;max-height:50vh;border-radius:8px}
 .modal-openlink{display:inline-block;margin-top:14px;padding:10px 20px;background:var(--accent);color:#fff;border-radius:8px;text-decoration:none;font-size:14px}
@@ -217,7 +220,7 @@ a.src:after{content:" →"}
     <!-- 排序规则就写在结果列表上方（CY 之前提过"搜索/排序机制不透明"）。
          放这里而不是搜索框下面：它说明的是下面这个列表怎么排的。 -->
     <div class="toolbar">
-      <span class="sort-note">同一问题内按标题排序；有搜索词时标题命中的排前面。没有热度排序，也没有推荐算法。</span>
+      <span class="sort-note">同一问题内：B站优先（讲得通常更完整），其余按标题排序；有搜索词时标题命中的排前面。没有热度排序，也没有推荐算法。</span>
       <span id="result-count"></span>
     </div>
     <div id="results"></div>

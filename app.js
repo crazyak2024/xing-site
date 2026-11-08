@@ -18,8 +18,17 @@
  */
 
 const PLATFORM_CN = { douyin: "抖音", wechat_channels: "视频号" };
-// 只有抖音有官方 iframe 播放端点。视频号官方嵌入只存在于微信小程序里，网页做不到（平台限制）。
-const EMBED_URL = { douyin: vid => `https://open.douyin.com/player/video?vid=${vid}&autoplay=1` };
+/* 可嵌入的平台。视频号官方嵌入只存在于微信小程序里，网页做不到（平台限制，不是我们技术不行）。
+ * B站：`player.bilibili.com/player.html` 是**官方外链播放器**（页面 title 自称
+ * "External Player - 哔哩哔哩嵌入式外链播放器"），2026-11-07 实测响应头
+ * **无 X-Frame-Options、无 CSP frame-ancestors** ⟹ 允许被嵌。横屏 16:9，
+ * 所以弹窗宽度不能沿用抖音那套 420px 竖屏尺寸。 */
+const EMBED_URL = {
+  douyin: (vid) => `https://open.douyin.com/player/video?vid=${vid}&autoplay=1`,
+  bilibili: (vid) => `https://player.bilibili.com/player.html?bvid=${vid}&autoplay=0&high_quality=1&danmaku=0`,
+};
+// 嵌入画面的宽高比：抖音竖屏、B站横屏。弹窗按这个选宽度。
+const EMBED_SHAPE = { douyin: "portrait", bilibili: "landscape" };
 
 // 4 个主题 4 个固定色——**不再按分类名哈希**。颜色的单位是主题（4 色封顶），
 // 不是问题节点（20+ 色），这正是 CY 说"颜色没逻辑、一眼看花"的根源。
@@ -207,6 +216,13 @@ function renderScopeHint() {
 }
 
 /* ---------- 结果区 ---------- */
+/* 平台优先级（CY 2026-11-07 21:27 定）：「B站的视频质量会高一些，如果有B站的视频的话，
+ * 我都会倾向于优先放B站的视频」。这是**明确的编辑方针，不是热度排序**——所以它排在
+ * 标题字典序之前、但排在搜索命中度之后（搜得准仍然优先于平台偏好）。
+ * 有实测支撑：B站均时长 1112s（抖音 340 / 视频号 234），是三站唯一的长讲解形态，
+ * 且 87% 自带官方字幕（证据可追溯到逐句原文），这两点都指向"讲得更完整"。 */
+const PLATFORM_RANK = { bilibili: 0, douyin: 1, wechat_channels: 2 };
+
 function sortItems(items) {
   const q = state.q;
   return [...items].sort((a, b) => {
@@ -215,6 +231,8 @@ function sortItems(items) {
       const d = sc(b) - sc(a);
       if (d) return d;
     }
+    const pd = (PLATFORM_RANK[a.platform] ?? 9) - (PLATFORM_RANK[b.platform] ?? 9);
+    if (pd) return pd;
     return (a.title || "").localeCompare(b.title || "", "zh");
   });
 }
@@ -299,7 +317,8 @@ function openModal(it) {
   if (!it) return;
   const embedFn = EMBED_URL[it.platform];
   const m = document.getElementById("modal-content");
-  m.className = embedFn ? "modal embed-mode" : "modal nolink-mode";
+  const shape = EMBED_SHAPE[it.platform] || "portrait";
+  m.className = embedFn ? `modal embed-mode embed-${shape}` : "modal nolink-mode";
   /* 要点取代了原来的「展开转写全文」（CY 2026-11-07 批 tx2）。
      逐字稿是把原作者的内容整篇复制出来公开，撞我们自己定的边界；要点是我们的概括。
      **这几条是产品真正的交付物**：读完多数情况就不必看视频了，省下的时间就是价值。
@@ -311,8 +330,8 @@ function openModal(it) {
        </div>`
     : `<div class="kp"><div class="kp-note">这条还没出要点（判定流水线还在补），先看摘要或直接看原视频。</div></div>`;
   const body = embedFn
-    ? `<iframe class="modal-embed" src="${embedFn(it.video_id)}" allow="autoplay; fullscreen" allowfullscreen></iframe>
-       <p class="modal-tip">播放器是抖音官方的，它自带的点赞/评论/引导条我们改不掉。点进播放区后 Escape 可能失效（跨站 iframe 限制），用右上角 ✕ 关闭。</p>`
+    ? `<iframe class="modal-embed" src="${embedFn(it.video_id)}" allow="autoplay; fullscreen" allowfullscreen scrolling="no" frameborder="0"></iframe>
+       <p class="modal-tip">播放器是${PLATFORM_CN[it.platform] || it.platform}官方的，它自带的那些按钮我们改不掉。点进播放区后 Escape 可能失效（跨站 iframe 限制），用右上角 ✕ 关闭。</p>`
     : `<div class="modal-cover-wrap">
          ${it.cover_url ? `<img class="modal-cover" src="${it.cover_url}" alt="">` : ""}
          <div><a class="modal-openlink" href="${it.link}" target="_blank" rel="noopener">在${PLATFORM_CN[it.platform] || it.platform}中打开观看</a></div>
