@@ -237,28 +237,50 @@ function sortItems(items) {
   });
 }
 
-/* 卡片是**纯文字**的，列表里不放封面图。三条理由，都不是审美偏好：
- * ① 技术上修不了：抖音封面 URL 的尺寸参数在签名里，改小即 403（实测），
- *    所以只能把 540px 的图硬塞进几十像素的格子——封面上那些大字必然糊成一团。
- * ② 数据上根本没有：95 条里只有 21 条拿到了 cover_url，另外 74 张卡原本显示的是灰方块。
- * ③ **立场上不该放**：平台封面是钩子（大字标题、惊讶脸、红圈箭头），而且它上面的字
- *    和我们已经显示的标题重复。在列表里替平台做钩子展示，正是我们要反的东西。
- * 封面仍然保留在弹窗里（大图、看得清），那里它是内容不是钩子。
- * 换上来的是**时长**——"这会花掉我多少时间"才是反沉迷产品该在列表里给的信息。
+/* 卡片 v2（CY 2026-11-07 反馈后重做）：带缩略图+互动数+要点式摘要。
+ * DoD（CY原话）："视觉体验好，内容效率高，用户看到3-5秒就大概知道这个视频的主题，
+ * 并决定是否要点开"。三处具体改动对应他的三条反馈：
+ *  1. 互动数（藏+评）上卡——只在数据真实存在时显示，不拿 null 冒充 0（691/634=69%有封面，
+ *     但 collects/comments 现在只覆盖 douyin+bilibili，wechat 整体还没有，缺的就不显示）
+ *  2. 缩略图拿回来——用 CSS object-fit 控制显示尺寸，不改 URL 本身，不触发 403，
+ *     浏览器默认的降采样也不会有锯齿；没有封面的用主题色渐变占位，不用灰方块
+ *  3. 摘要换成要点式——从 key_points 里取前 2-3 条短句，比一段话扫得快
  */
+function fmtNum(n) {
+  if (n == null) return null;
+  if (n >= 10000) return (n / 10000).toFixed(1).replace(/\.0$/, "") + "万";
+  if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, "") + "k";
+  return String(n);
+}
 function cardHtml(it) {
   const dur = fmtDuration(it.duration_s);
+  const hasImg = !!it.cover_url;
+  const kps = (it.key_points || []).slice(0, 3);
+  const body = kps.length
+    ? `<ul class="kp-mini">${kps.map(k => `<li>${esc(k)}</li>`).join("")}</ul>`
+    : `<div class="summary">${esc(it.summary || it.reason || "")}</div>`;
+  const eng = [];
+  if (it.collects != null) eng.push(`<span class="eng" title="收藏数">⭐${fmtNum(it.collects)}</span>`);
+  if (it.comments != null) eng.push(`<span class="eng" title="评论数">💬${fmtNum(it.comments)}</span>`);
   return `<div class="card" style="--c:${topicColor(it.topic)}" data-id="${esc(it.id)}">
-      <h3>${esc(it.title)}</h3>
-      <div class="meta">
-        <span class="plat">${PLATFORM_CN[it.platform] || it.platform}</span>
-        ${dur ? `<span class="dur">${dur}</span>` : ""}
-        ${fmtDate(it.published_at)
+      <div class="card-thumb${hasImg ? "" : " noimg"}">
+        ${hasImg
+      ? `<img src="${esc(it.cover_url)}" alt="" loading="lazy" referrerpolicy="no-referrer">`
+      : `<span>${esc(PLATFORM_CN[it.platform] || it.platform)}</span>`}
+        <span class="plat-badge">${esc(PLATFORM_CN[it.platform] || it.platform)}</span>
+        ${dur ? `<span class="dur-badge">${dur}</span>` : ""}
+      </div>
+      <div class="card-body">
+        <h3>${esc(it.title)}</h3>
+        <div class="meta">
+          ${fmtDate(it.published_at)
       ? `<span class="pub" title="发布于 ${esc(fmtDate(it.published_at))}">${esc(fmtDate(it.published_at))}</span>`
       : `<span class="pub unknown" title="上游平台没给发布时间">发布时间未知</span>`}
-        ${it.author ? `<span class="author">@${esc(it.author)}</span>` : ""}
+          ${eng.join("")}
+          ${it.author ? `<span class="author">@${esc(it.author)}</span>` : ""}
+        </div>
+        ${body}
       </div>
-      <div class="summary">${esc(it.summary || it.reason || "")}</div>
     </div>`;
 }
 
@@ -449,7 +471,7 @@ function recordExit(kind, note) { emit(kind, note ? { note } : undefined); }
 function exitSaid(html, cls) {
   document.getElementById("exit").innerHTML =
     `<p class="exit-said ${cls || ""}">${html}</p>
-     <p class="exit-note">只记在你这台设备上，没有上传——这一版还没有后端。</p>`;
+     <p class="exit-note">${COLLECT_URL ? "匿名记一条到我们自己的服务器（这台设备这次访问的编号，关掉网页就失效，拼不出你是谁）。" : "只记在你这台设备上，没有上传——这一版还没有后端。"}</p>`;
 }
 
 document.getElementById("exit-ok").addEventListener("click", () => {
@@ -465,7 +487,7 @@ document.getElementById("exit-no").addEventListener("click", () => {
        <input id="exit-want" type="text" placeholder="一句话就行" maxlength="80">
        <button id="exit-send">送出</button>
      </div>
-     <p class="exit-note">它会进我们的内容缺口清单。只记在你这台设备上，没有上传——这一版还没有后端。</p>`;
+     <p class="exit-note">它会进我们的内容缺口清单${COLLECT_URL ? "（匿名，只认这次访问的设备编号，拼不出你是谁）" : "——只记在你这台设备上，没有上传，这一版还没有后端"}。</p>`;
   const input = document.getElementById("exit-want");
   const send = () => {
     recordExit("gap_wish", input.value.trim());

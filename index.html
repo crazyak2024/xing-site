@@ -122,19 +122,36 @@ button{font-family:inherit}
 @media (min-width:640px){.grid{grid-template-columns:1fr 1fr}}
 @media (min-width:1080px){.grid{grid-template-columns:1fr 1fr 1fr}}
 
-/* 纯文字卡片：没有缩略图（理由见 app.js 的 cardHtml 注释）。
-   标题可以吃满宽度、给到 3 行，这是文字优先的全部意义。 */
-.card{background:#fff;border:1px solid var(--line);border-left:3px solid var(--c);border-radius:8px;padding:10px 11px;cursor:pointer}
-.card:hover{border-color:#bbb;background:#fffefb}
-.card h3{font-size:14px;margin:0 0 5px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+/* 卡片 v2（CY 2026-11-07 23:xx 反馈后重做：要缩略图+互动数+更高信息密度，
+   DoD="3-5秒决定点不点"）。缩略图用 CSS 控制显示尺寸而不改URL本身——
+   之前"改小即403"是因为改了签名URL的尺寸参数；只用 object-fit 缩小渲染尺寸、
+   不碰URL，403 问题不存在，浏览器自带的降采样也不会产生锯齿（真正的"aliasing"
+   是最近邻缩放才有的瑕疵，现代浏览器默认双线性/双三次降采样，不会那样）。 */
+.card{background:#fff;border:1px solid var(--line);border-radius:8px;cursor:pointer;overflow:hidden;display:flex;flex-direction:column}
+.card:hover{border-color:#bbb}
+.card-thumb{position:relative;aspect-ratio:16/9;background:#2a2a2a;overflow:hidden;flex-shrink:0}
+.card-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+/* 没有封面时的占位：用主题色渐变+平台名，不是灰方块或破图标 */
+.card-thumb.noimg{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--c),#1f1f1f)}
+.card-thumb.noimg span{color:rgba(255,255,255,.9);font-size:12px;font-weight:600;letter-spacing:2px}
+.card-thumb .dur-badge{position:absolute;right:6px;bottom:6px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;padding:1px 6px;border-radius:4px;font-variant-numeric:tabular-nums}
+.card-thumb .plat-badge{position:absolute;left:6px;bottom:6px;background:rgba(0,0,0,.6);color:#fff;font-size:10px;padding:1px 6px;border-radius:4px}
+.card-body{padding:9px 11px 10px;border-left:3px solid var(--c);flex:1;display:flex;flex-direction:column;min-width:0}
+.card h3{font-size:14px;margin:0 0 4px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .meta{font-size:var(--fs-xs);color:var(--sub);margin-bottom:5px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
 .meta .plat{padding:1px 5px;border-radius:4px;background:#eef2f7}
-/* 时长是列表里唯一的"数字"：反沉迷产品该先告诉你这会花掉多少时间 */
-.meta .dur{padding:1px 5px;border-radius:4px;background:#f3f0e8;color:#8a7a52;font-variant-numeric:tabular-nums}
 /* 发布时间：这个领域里内容半年就可能过时，用户得在点进去之前就看到新旧 */
 .meta .pub{font-variant-numeric:tabular-nums;color:#666}
 .meta .pub.unknown{color:#a0a0a0;font-style:italic}
-.meta .author{color:#555;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:48%}
+.meta .author{color:#555;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:38%}
+/* 互动数：只在平台真给了数据时显示（不少平台/字段缺失），用⭐收藏优先于👍点赞——
+   收藏是"以后要用"的信号，比点赞更贴近"这条内容有没有用"而不是"好不好看" */
+.meta .eng{color:#8a6d3b;font-variant-numeric:tabular-nums}
+/* 要点取代原来的一段式摘要：3-5秒扫完几个短句，比读一段话快，
+   这才是CY要的"信息效率高"——摘要句式天然要起承转合，要点不用 */
+.kp-mini{margin:2px 0 0;padding:0;list-style:none;font-size:var(--fs-sm);color:#333;flex:1}
+.kp-mini li{position:relative;padding-left:12px;line-height:1.4;margin-bottom:1px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.kp-mini li::before{content:"›";position:absolute;left:0;top:0;color:var(--c);font-weight:700}
 .summary{font-size:var(--fs-sm);color:#333;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
 .empty{color:var(--sub);text-align:center;padding:34px 0;font-size:var(--fs-md)}
