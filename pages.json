@@ -1,0 +1,1731 @@
+{
+  "generated_note": "主题页 v0（S4）。答案骨架由 LM 从该问题下全部合格内容归纳，入选与顺序是编辑判断、逐条理由存 map_log 可回查；非参与度排序。被拒内容的节点归属部分缺失（收录判定只给合格内容写节点），所以 rejected=0 只代表没有归属记录，不代表没拒过。",
+  "n_pages": 7,
+  "pages": [
+    {
+      "category": "02.Transformer的注意力机制在算什么",
+      "coverage": "骨架 0-7 全部被覆盖：0 由 pick1，1/4 由 pick2，2 被 pick1/2/3/4 多重覆盖，3 由 pick3+pick4，5/6 由 pick1+pick3，7 由 pick5。薄弱处有两个：要点 1（词向量前提）和要点 4（上下文消歧）只靠 pick2 一条支撑；要点 7 只覆盖到 KV 缓存这一面，O(n²) 带来的长文本稀疏化/先筛再精算方案没有收进来——候选里唯一讲它的 《注意力机制与长文档成本的技术解析》 是厂商方案软文，故主动留缺而不凑数。",
+      "disputed": [
+        {
+          "claim": "RoPE 旋转的是哪两个张量",
+          "sides": "《位置编码：让Transformer理解词序信息》 说通过旋转 Q、V 体现位置；《Transformer推理流程详解：注意力机制与多头计算》 说在 Q、K 的向量对上旋转。后者与原始 RoPE 一致，前者的 V 应为笔误/错讲。"
+        },
+        {
+          "claim": "位置信息是怎么进入模型的",
+          "sides": "《Transformer论文详解》 说每个词的 embedding 本身就同时编码了词义与位置；《位置编码：让Transformer理解词序信息》、wechat 推理流程详解、《Transformer：从RNN到注意力机制的演进》 则说词嵌入不含位置，必须靠独立的正余弦位置编码相加或 RoPE 旋转注入。多数派与标准实现一致。"
+        }
+      ],
+      "domain": "ai1",
+      "editor_note": "这个节点的最大问题不是缺内容，而是高度同质：29 条里约三分之二是同一套模板（RNN 慢 → 自注意力看全句 → QKV 比喻 → 多头多视角 → 位置编码），彼此措辞不同但主张完全重合，折叠后只剩 5 条真正互补。真正提供可核验锚点的很少，入选的 4 条就把主要锚点占满了：√d 缩放、softmax 前置 -∞ 的因果 mask、RoPE 旋转、残差相加、8 头、KV 缓存不缓存 Q。另外三点需要注意：① 微信视频号那一批全部点赞为 0、发布时间未知，无法用时效或热度破平，只能凭要点密度判断，入选的那条是靠锚点密度而非数据赢的；② 《多模态大模型的视觉编码》 讲的是 ViT 的图像分块与视觉-语言维度对齐，不属于本节点，应挂到多模态节点；《Transformer架构的矩阵原理与自注意力》（矩阵乘法、A×Aᵀ 的夹角含义、线性映射）是很好的数学前置，但它不回答本节点的问题，建议挂到上游的线性代数节点而不是在这里占位；③ 《位置编码：让Transformer理解词序信息》 有一个别人都没讲的独有论证——纯加权求和对词序是置换不变的，所以位置信息必须外加——但它把 RoPE 说成旋转 Q、V，存在事实错误，因此只作为位置编码方向的备选，不进主集。时效上本节点整体不敏感（注意力的数学十年不变），所以 2023 年的手算演示照选不误；真正时间敏感的只有参数规模、具体模型版本和长文本优化方案这三类，已在 stale 里标出。",
+      "node": "Transformer的注意力机制在算什么",
+      "order": [
+        {
+          "bucket": "pick",
+          "id": "douyin:7676700398304627365",
+          "reason": "编辑判断·入选最小互补集：十分钟全景速览：一条线串完「为什么要注意力→三步算什么→多头→位置编码」，先建立整张骨架｜覆盖骨架[0, 2, 5, 6]｜独有：把 RNN（慢、长依赖衰减）和 CNN（可并行但感受野受限）并列成两个待解问题，说明注意力是同时解决这两者的那一招",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "bilibili:BV16f1mB7Ebj",
+          "reason": "编辑判断·入选最小互补集：数学直觉层：解释「注意力到底在算什么」——算的是向量间的语义相似度，并落到同词异义的具体对照｜覆盖骨架[1, 2, 4]｜独有：用「爱上水课」vs「爱喝水」同一个「水」得到不同向量的对照，把点积相似度与上下文消歧直接扣在一起",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "wechat_channels:export/UzFfBgAAxLuCfCseCTKCk8zT4DCKitVYfZv5kQQj8lOmB-JlRQ",
+          "reason": "编辑判断·入选最小互补集：完整实现层：按真实推理流程把每一步的工程细节讲全，是全部候选里锚点最密的一条｜覆盖骨架[2, 3, 5, 6]｜独有：因果 mask 在 softmax 前把未来位置置 -∞、RoPE 在 Q/K 向量对上按位置旋转使距离对应角度差、多头拼接后乘输出矩阵并与原向量残差相加",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "bilibili:BV1Rz4y1g7J7",
+          "reason": "编辑判断·入选最小互补集：动手演算层：把 QKV 从权重矩阵一路算到输出，适合跟着纸笔走一遍确认自己真懂了｜覆盖骨架[2, 3]｜独有：明确指出 Q/K/V 来自随机初始化的 WQ/WK/WV 与输入相乘（而非天然存在），并给出可逐步复算的完整数值演示",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "douyin:7688992585808956706",
+          "reason": "编辑判断·入选最小互补集：代价与工程后果层：注意力的计算结构如何直接决定推理时的显存与速度｜覆盖骨架[7]｜独有：解释为什么只缓存 K/V 而不缓存 Q（旧位置的查询已完成，之后只会被新位置查询），以及 KV 缓存显存可能超过输入 token 本身",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1PSxYzJEkf",
+          "reason": "编辑判断·主张层面与《Transformer推理流程详解：注意力机制与多头计算》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1fJ4m1s7zf",
+          "reason": "编辑判断·主张层面与《Transformer：从RNN到注意力机制的演进》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1Zqjm6gEEH",
+          "reason": "编辑判断·主张层面与《Transformer：从RNN到注意力机制的演进》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "wechat_channels:export/UzFfBgAAxP2HLB9zbjiOk8zT4DCK5sTZlEU2XBaXeFJvKvpOQA",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxIGiPEtdDgLzk8zT4DCKOA2J-p7GKvPsQ8NnaZ6UuA",
+          "reason": "编辑判断·主张层面与《从词向量到Transformer》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7681883263673077019",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7672660733494807547",
+          "reason": "编辑判断·主张层面与《Transformer：从RNN到注意力机制的演进》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7622517527843425946",
+          "reason": "编辑判断·主张层面与《注意力机制：向量相似度与自注意力原理》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7680387069427846415",
+          "reason": "编辑判断·主张层面与《Transformer：从RNN到注意力机制的演进》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7671477443236056335",
+          "reason": "编辑判断·主张层面与《Transformer：从RNN到注意力机制的演进》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7589929287071845682",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxJqFUHodLDHCk8zT4DCKmJjnC16AnO-xJCFFZXy0MQ",
+          "reason": "编辑判断·主张层面与《大模型内部工作流程：从分词到生成》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAADLoouE4NgAAAAAstQy6ubaLX4KHWvLEZgBPEjoFYQAlJX6KOzNPgMIqG3Gh50J3UcEOQgSzoqHN9",
+          "reason": "编辑判断·主张层面与《大模型内部工作流程：从分词到生成》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7673870413914590504",
+          "reason": "编辑判断·主张层面与《Transformer论文详解》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7688005140527222042",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7687185227600366857",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "wechat_channels:export/UzFfBgAAxPauaAFhH1mMk8zT4DCKF10rVhubTTsRe0wmA0l8TA",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7655985615095221514",
+          "reason": "编辑判断·主张层面与《Transformer论文详解》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7703780787179616683",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxLulKB5xSH6Mk8zT4DCKUO2QUE022XeBiSHjgnBm3g",
+          "reason": "编辑判断·主张层面与《注意力机制：向量相似度与自注意力原理》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxK2GTBBoLw-Fk8zT4DCKno6gz7GRblPaQLUG5yJ_HA",
+          "reason": "编辑判断·主张层面与《Transformer推理流程详解：注意力机制与多头计算》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxI6uDGQ7SCPJk8zT4DCK0RWNyMgDBerIAzD1I_NUvQ",
+          "reason": "编辑判断·主张层面与《Transformer：从RNN到注意力机制的演进》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7687290902934523155",
+          "reason": "编辑判断·主张层面与《Transformer推理流程详解：注意力机制与多头计算》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxKqiIA87e1Skk8zT4DCKYK36Q8ptuzpJr870uaCtzQ",
+          "reason": "编辑判断·主张层面与《Transformer：从RNN到注意力机制的演进》重复，默认折叠",
+          "source": "editorial_lm"
+        }
+      ],
+      "outline": [
+        "为什么需要注意力：RNN/LSTM 必须顺序计算（不可并行）且长距离依赖在逐层传递中衰减",
+        "前提是词向量：词被映射成高维空间坐标，语义相近则距离近，相似度可用点积/余弦几何度量",
+        "注意力的核心运算：Q·Kᵀ 点积得到词与词的相关性分数 → 除以 √d 缩放 → softmax 归一成权重 → 按权重加权求和 V",
+        "QKV 三角色分工及其来源：同一个输入向量经 WQ/WK/WV 三个权重矩阵变换成 Q(我要什么)/K(我是什么标签)/V(我能提供的内容)",
+        "输出的含义：每个词按上下文被改写成新的表示，从而实现词义消歧与指代解析（苹果/水/它）",
+        "多头注意力：多组独立 QKV 并行从语法、指代、远距关系等不同视角观察，拼接后再做线性变换（Base 常用 8 头）",
+        "词序与单向性：纯加权求和本身丢失位置信息，需正余弦绝对位置编码或 RoPE 注入；生成时还需因果 mask 屏蔽未来 token",
+        "代价与工程后果：注意力计算量随序列长度平方增长，由此衍生 KV 缓存、长文本筛选/稀疏化等工程手段"
+      ],
+      "picks": [
+        {
+          "covers": [
+            0,
+            2,
+            5,
+            6
+          ],
+          "id": "douyin:7676700398304627365",
+          "role": "十分钟全景速览：一条线串完「为什么要注意力→三步算什么→多头→位置编码」，先建立整张骨架",
+          "unique": "把 RNN（慢、长依赖衰减）和 CNN（可并行但感受野受限）并列成两个待解问题，说明注意力是同时解决这两者的那一招"
+        },
+        {
+          "covers": [
+            1,
+            2,
+            4
+          ],
+          "id": "bilibili:BV16f1mB7Ebj",
+          "role": "数学直觉层：解释「注意力到底在算什么」——算的是向量间的语义相似度，并落到同词异义的具体对照",
+          "unique": "用「爱上水课」vs「爱喝水」同一个「水」得到不同向量的对照，把点积相似度与上下文消歧直接扣在一起"
+        },
+        {
+          "covers": [
+            2,
+            3,
+            5,
+            6
+          ],
+          "id": "wechat_channels:export/UzFfBgAAxLuCfCseCTKCk8zT4DCKitVYfZv5kQQj8lOmB-JlRQ",
+          "role": "完整实现层：按真实推理流程把每一步的工程细节讲全，是全部候选里锚点最密的一条",
+          "unique": "因果 mask 在 softmax 前把未来位置置 -∞、RoPE 在 Q/K 向量对上按位置旋转使距离对应角度差、多头拼接后乘输出矩阵并与原向量残差相加"
+        },
+        {
+          "covers": [
+            2,
+            3
+          ],
+          "id": "bilibili:BV1Rz4y1g7J7",
+          "role": "动手演算层：把 QKV 从权重矩阵一路算到输出，适合跟着纸笔走一遍确认自己真懂了",
+          "unique": "明确指出 Q/K/V 来自随机初始化的 WQ/WK/WV 与输入相乘（而非天然存在），并给出可逐步复算的完整数值演示"
+        },
+        {
+          "covers": [
+            7
+          ],
+          "id": "douyin:7688992585808956706",
+          "role": "代价与工程后果层：注意力的计算结构如何直接决定推理时的显存与速度",
+          "unique": "解释为什么只缓存 K/V 而不缓存 Q（旧位置的查询已完成，之后只会被新位置查询），以及 KV 缓存显存可能超过输入 token 本身"
+        }
+      ],
+      "provenance": {
+        "input_hash": "bd67d415ddceff21",
+        "model": "opus"
+      },
+      "receipt": {
+        "folded": 17,
+        "picked": 5,
+        "qualified": 29,
+        "rejected": 2,
+        "rejected_why": [
+          "虽讲述原理完整，但前两分钟夹入'抖音精选作者周边福利参与活动'等明显营销内容，构成广告伪装，违反内容纯度要求 | 引用:",
+          "提及'2026年9月'GPT Live发布但未给模型版本号或功能变更日期，作为时效性内容缺乏明确时间锚点 | 引用:「前"
+        ]
+      },
+      "stale": [
+        {
+          "id": "wechat_channels:export/UzFfBgAAxP2HLB9zbjiOk8zT4DCK5sTZlEU2XBaXeFJvKvpOQA",
+          "why": "仍以 GPT-3 的 1750 亿参数作为「大模型」参照系，2026 年已严重落后于现状；且内容停在 token/文字接龙层面，对本节点的注意力计算几乎没有信息量"
+        },
+        {
+          "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAADLoouE4NgAAAAAstQy6ubaLX4KHWvLEZgBPEjoFYQAlJX6KOzNPgMIqG3Gh50J3UcEOQgSzoqHN9",
+          "why": "用 DeepSeek V3 的 61 层/6710 亿参数做唯一具体锚点，版本已非当前主力；并把「层数越多理解越深」说成简单因果，不严谨"
+        },
+        {
+          "id": "douyin:7703780787179616683",
+          "why": "内容绑定百度 SRSWA/HateGate/TokenServe 的具体产品方案，属厂商方案宣讲，随版本迭代即失效；O(n²) 这一通用结论可从别处获得，不值得为它承担软文风险"
+        }
+      ]
+    },
+    {
+      "category": "03.参数量更大一定更聪明吗",
+      "coverage": "骨架 0/1/2/3/4/6/7 都被覆盖：0、1 由主干条承担（含 7B≈14GB 的体积公式），2 的『容量上限』部分由速览条和主干条覆盖，3 被四条交叉覆盖，4 由三要素条承担，6 由档位体验条（671B 需机房）与成本条（×7-10 倍）承担，7 由主干条+成本条给出可执行方法。漏两处：骨架 2 的『跨系列/跨架构参数不可直接比较』在 picks 里只被间接带到，没有一条明确讲这条判别规则（候选 《参数单位与跨系列对比的陷阱：数据质量才是决胜点》 专讲这点，可作第 6 条补位）；骨架 5 的『量化/蒸馏』只覆盖了 MoE 一半，量化机制（FP32→INT4）没有进 picks（候选 《参数、MOE架构、量化对模型性能的真实影响》 讲得最细）。",
+      "disputed": [
+        {
+          "claim": "参数里究竟『存不存知识』",
+          "sides": "UzFfBgAAxK6gBCdLbVWMk8zT（每个旋钮存了部分学到的知识和规律）和 UzFfAgtgekIEAQAAAAAAvzcGpv（参数多能记住更多知识）把参数当知识载体；《参数、MOE架构、量化对模型性能的真实影响》、《参数本质：训练出的数学规则而非知识库》、UzFfBgAAxNyqbFlYOGy9 明确反对——参数是训练出的数学规则/表示复杂关系的自由度，更多参数≠更多知识"
+        },
+        {
+          "claim": "小参数模型能覆盖多少日常场景",
+          "sides": "《大模型参数的定义、作用与模型选型逻辑》 说小参数在 90% 场景体验与旗舰无异、没必要花钱；《模型参数7B/70B/671B的含义与成本权衡》 说 7B 根本抓不住重点、要到 70B 才结构清晰可用；UzFfAgtgekIEAQAAAAAAfuM5 划线在『代码生成/复杂推理/长文档分析必须 70B』"
+        },
+        {
+          "claim": "Chinchilla 结论该怎么表述",
+          "sides": "UzFfBgAAxNiuWBdSYXONk8zT 与 UzFfBgAAxNyqbFlYOGy9 表述为『更少参数+4 倍数据反超更大的 Gopher』（对照实验）；《小模型逆袭的秘密：数据与架构的胜利》 表述成『Chinchilla 定律：性能=参数×数据量』（公式化，与原结论不是一回事）"
+        }
+      ],
+      "domain": "ai1",
+      "editor_note": "这个节点最大的问题是同质化：24 条里至少 14 条讲的是同一套话（参数≠能力 → 数据质量 → 架构/MoE → 按需选型 → 别看跑分），换的只是比喻（旋钮/开关/员工数/书价/画家颜色）。主张层面能折叠掉一大半，真正有独立信息量的只有 5-8 条，所以这里只给 5 条、每条承担不同用途（速览/主干/档位体验/机制/成本与验证）。两个必须警惕的坑：①多条把 Chinchilla 的参数量说成 700B vs 2800B Gopher，与公开论文的量级不符（量级疑似放大 10 倍）；『13B InstructGPT 优于 1750B GPT-3』『130B LLaMA 优于 1750B GPT-3』这两个被反复引用的锚点，型号参数同样对不上（InstructGPT 的对照版本和 LLaMA 的最大尺寸都不是这个数）。这三个数字是本节点被引用最多的『硬证据』，上线前必须外部复核，否则等于把错误数字当权威论据分发。②显存口径（FP16 每参数 2 字节、7B≈14GB、70B≈140GB）在多条里互相一致，这部分可以放心用。整体没有明显的焦虑营销或卖课引流，无需因『有毒』排除任何一条；主要代价是信息密度低而不是不可信。",
+      "node": "参数量更大一定更聪明吗",
+      "order": [
+        {
+          "bucket": "pick",
+          "id": "douyin:7660840268903582995",
+          "reason": "编辑判断·入选最小互补集：76 秒拿走全部结论的速览，先把『参数量=知识容量上限，不等于实际表现』这个总判断立住｜覆盖骨架[2, 3, 4, 5]｜独有：是唯一把『指令对齐水平』和参数量、数据、架构并列成四要素、且能在一分钟内讲完的那条",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "wechat_channels:export/UzFfBgAAxNiuWBdSYXONk8zT4DCKKy1QoMmkVXAR5Yh76JQXEw",
+          "reason": "编辑判断·入选最小互补集：主干讲解：参数的定义、体积换算、Chinchilla 对照、MoE 激活参数、以及最后怎么判断，一条打通骨架大半｜覆盖骨架[0, 1, 3, 5, 7]｜独有：唯一把『先估体积和计算量、再看你关心的任务答得怎样，参数只是线索不是分数』写成可执行判断顺序",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "douyin:7641953834079620378",
+          "reason": "编辑判断·入选最小互补集：反方向的具体性：参数确实带来能力阶跃，7B/70B/671B 用起来是什么体验差异、成本门槛在哪｜覆盖骨架[1, 3, 6, 7]｜独有：唯一把不同参数档的实际失效形态讲具体（7B 抓不住重点、70B 结构清晰可用、671B 能自动关联提醒）",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "wechat_channels:export/UzFfBgAAxLWoJFkTfhz9k8zT4DCKNtyGgawAJdzeFp6jT4GSDw",
+          "reason": "编辑判断·入选最小互补集：解释『为什么小的能反超』的机制层：分工（MoE 配比）、数据、后训练三要素｜覆盖骨架[3, 4, 5]｜独有：唯一给出后训练反超的具体案例（基础模型未变、仅靠后训练就超越更大对手）和 16/896 这种激活配比锚点",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "wechat_channels:export/UzFfBgAAxK6gBCdLbVWMk8zT4DCKUu39t-uhmj5BNMmwTOzLbQ",
+          "reason": "编辑判断·入选最小互补集：收尾的成本账与验证纪律：代价是非线性的，所以只能拿真实场景实测｜覆盖骨架[3, 6, 7]｜独有：唯一给出成本非线性的量级（参数×10 → 成本×7-10倍甚至更多）并明确否定跑分榜",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7690426281757773094",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7695310442747672027",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7675266716825373987",
+          "reason": "编辑判断·主张层面与《参数体重与推理深度：旋钮数多的代价分析》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7698271176719748371",
+          "reason": "编辑判断·主张层面与《参数单位与跨系列对比的陷阱：数据质量才是决胜点》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxNSEPFUuHk3yk8zT4DCKOpTT8mfwBjwevizEaZ1Kvg",
+          "reason": "编辑判断·主张层面与《参数量、数据质量、架构设计决定模型能力》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxIaDMERlJiOqk8zT4DCKioni0cvIgx96oOlY9xGj5Q",
+          "reason": "编辑判断·主张层面与《参数规模不是智能排行榜：Chinchilla对照与实测方法》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxNyqbFlYOGy9k8zT4DCKUFCFJ9-2_y3WZOEpTI15aA",
+          "reason": "编辑判断·主张层面与《参数规模不是智能排行榜：Chinchilla对照与实测方法》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7693542813618718885",
+          "reason": "编辑判断·主张层面与《参数规模不是智能排行榜：Chinchilla对照与实测方法》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxMaHSBUfEmiRjMzT4DCKvUmmrEUPkdLAFIgHEed1dA",
+          "reason": "编辑判断·主张层面与《模型能力的三要素：分工、数据与后训练》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxOqGID0dHz2Mk8zT4DCKuSbUM7r8Spv3gqoZOA19WA",
+          "reason": "编辑判断·主张层面与《模型能力的三要素：分工、数据与后训练》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAAvzcGpvOXwAAAAAstQy6ubaLX4KHWvLEZgBPE46B4RTtQRNGPzNPgMIrea5zK1Fv2mG_mg3nUB3sh",
+          "reason": "编辑判断·主张层面与《参数量、数据质量、架构设计决定模型能力》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxNCgEBNxTAqKjMzT4DCKo6y65gpTAqoqy8L2_hgW2g",
+          "reason": "编辑判断·主张层面与《参数量、数据质量、架构设计决定模型能力》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxJugDCsIVQT1k8zT4DCKl0RSx-RxXoCPcTCUrnc6eQ",
+          "reason": "编辑判断·主张层面与《参数体重与推理深度：旋钮数多的代价分析》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7527977818191482164",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7683070355459607834",
+          "reason": "编辑判断·主张层面与《普通用户怎么在7B和70B之间选择》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7607749602904673586",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAAfuM5abvdCAAAAAstQy6ubaLX4KHWvLEZgBPEmqJAaSR5C_eNzNPgMIoRPNo_STazpZnzTuLnsbW9",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxOGJeGlCfnS3k8zT4DCKQjY-apHIREJu_kRDFoy8HQ",
+          "reason": "编辑判断·主张层面与《参数规模不是智能排行榜：Chinchilla对照与实测方法》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxOCkfGkJdyGDk8zT4DCKzU5rE-ce5boZO0TeQEFNIg",
+          "reason": "编辑判断·主张层面与《参数体重与推理深度：旋钮数多的代价分析》重复，默认折叠",
+          "source": "editorial_lm"
+        }
+      ],
+      "outline": [
+        "参数到底是什么：训练过程中反向调整出来的权重+偏置数值，不是知识条数、文档数或词汇量；推理时只读，不会被用户的提问改变",
+        "单位与硬件换算：B=10亿；FP16 每参数2字节，7B≈14GB、70B≈140GB显存，参数量直接决定文件体积与能跑在什么硬件上",
+        "参数量只决定容量/表达能力的上限：同系列内参数越多越强，跨系列、跨架构之间的参数数字不可直接比较",
+        "训练数据的质量与数量才是决胜点：Chinchilla 式对照（参数更少+数据更多反超更大模型）、数据不足会过拟合与训练触顶",
+        "后训练/指令对齐决定『会不会干活』：基座不变、只做后训练与对齐就能大幅反超更大的模型",
+        "架构与压缩改写参数-算力关系：MoE 总参数 vs 每次激活参数（宣传数字最容易在这里被误读）；量化/蒸馏在保留能力的前提下降低部署门槛",
+        "堆参数的真实代价与边际递减：参数×10 往往意味着成本×7-10倍以上，叠加显存、延迟、算力电力，大参数并非免费变强",
+        "选型与验证方法：按场景匹配（日常任务小模型足够，复杂推理才上大模型），并用自己的真实任务实测，而不是看跑分榜和参数数字"
+      ],
+      "picks": [
+        {
+          "covers": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "id": "douyin:7660840268903582995",
+          "role": "76 秒拿走全部结论的速览，先把『参数量=知识容量上限，不等于实际表现』这个总判断立住",
+          "unique": "是唯一把『指令对齐水平』和参数量、数据、架构并列成四要素、且能在一分钟内讲完的那条"
+        },
+        {
+          "covers": [
+            0,
+            1,
+            3,
+            5,
+            7
+          ],
+          "id": "wechat_channels:export/UzFfBgAAxNiuWBdSYXONk8zT4DCKKy1QoMmkVXAR5Yh76JQXEw",
+          "role": "主干讲解：参数的定义、体积换算、Chinchilla 对照、MoE 激活参数、以及最后怎么判断，一条打通骨架大半",
+          "unique": "唯一把『先估体积和计算量、再看你关心的任务答得怎样，参数只是线索不是分数』写成可执行判断顺序"
+        },
+        {
+          "covers": [
+            1,
+            3,
+            6,
+            7
+          ],
+          "id": "douyin:7641953834079620378",
+          "role": "反方向的具体性：参数确实带来能力阶跃，7B/70B/671B 用起来是什么体验差异、成本门槛在哪",
+          "unique": "唯一把不同参数档的实际失效形态讲具体（7B 抓不住重点、70B 结构清晰可用、671B 能自动关联提醒）"
+        },
+        {
+          "covers": [
+            3,
+            4,
+            5
+          ],
+          "id": "wechat_channels:export/UzFfBgAAxLWoJFkTfhz9k8zT4DCKNtyGgawAJdzeFp6jT4GSDw",
+          "role": "解释『为什么小的能反超』的机制层：分工（MoE 配比）、数据、后训练三要素",
+          "unique": "唯一给出后训练反超的具体案例（基础模型未变、仅靠后训练就超越更大对手）和 16/896 这种激活配比锚点"
+        },
+        {
+          "covers": [
+            3,
+            6,
+            7
+          ],
+          "id": "wechat_channels:export/UzFfBgAAxK6gBCdLbVWMk8zT4DCKUu39t-uhmj5BNMmwTOzLbQ",
+          "role": "收尾的成本账与验证纪律：代价是非线性的，所以只能拿真实场景实测",
+          "unique": "唯一给出成本非线性的量级（参数×10 → 成本×7-10倍甚至更多）并明确否定跑分榜"
+        }
+      ],
+      "provenance": {
+        "input_hash": "94a4cee80d8a7959",
+        "model": "opus"
+      },
+      "receipt": {
+        "folded": 14,
+        "picked": 5,
+        "qualified": 24,
+        "rejected": 0,
+        "rejected_why": []
+      },
+      "stale": [
+        {
+          "id": "douyin:7527977818191482164",
+          "why": "2025-07 发布，全篇只讲参数→硬盘体积的换算和量化位宽，没碰『更大是否更聪明』；举例模型是上一代的千问 32B，在 MoE 已成主流的今天用总参数算体积会严重误导（总参数与激活参数不同）"
+        },
+        {
+          "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAAfuM5abvdCAAAAAstQy6ubaLX4KHWvLEZgBPEmqJAaSR5C_eNzNPgMIoRPNo_STazpZnzTuLnsbW9",
+          "why": "2026-02 发布，整条建立在『7B 实习生 vs 70B 专家』的二分法上。这正是模型选型最时效敏感的部分——后训练强化过的小模型和 MoE 已经把这条分界线推移，现在照它划线会低估小模型"
+        },
+        {
+          "id": "douyin:7607749602904673586",
+          "why": "2026-02 发布，核心锚点是『8B-80B 小钢炮超越参数 10 倍模型』这类代际说法，具体型号与倍数关系已被 2026-10/11 的候选覆盖更新；对 Chinchilla 的公式化表述也不准确"
+        }
+      ]
+    },
+    {
+      "category": "14.AI生成内容有没有版权",
+      "coverage": "骨架 0–7 全部被覆盖：0由pick1+pick3，1由pick1/2/3，2由pick2，3由pick2，4由pick2/3/4（pick4最深），5由pick1+pick5，6由pick3+pick5，7由pick3。唯一的缺口是第7条里的「美欧成文规则」细节——只有 《纯AI一键生成内容无版权保护的国际法律规则》 讲到，但该条含未经核实的「2026年欧盟正式规定」和「三方规则完全统一」等绝对化表述，故未入选；另外职务/委托作品归属（仅 《AI生成作品著作权的法律框架与认定原则》 有）未进骨架也未入选，属节点外延。",
+      "disputed": [
+        {
+          "claim": "平台/工具协议能不能决定AI生成内容的版权归属",
+          "sides": "《AI生成作品版权归属的法律框架》 与 《AI生成内容版权归属的四种方案与比较》、《AI生成作品的著作权登记完整流程指南》 说平台协议/研发方声明决定初始归属（正规平台归用户）；《纯AI一键生成内容无版权保护的国际法律规则》 明确说法律规则「不因平台协议改变」。实质上两者谈的是不同层面：协议只能约定合同权益，不能让不构成作品的生成物凭空产生著作权"
+        },
+        {
+          "claim": "版权登记对AI生成作品到底有多大用",
+          "sides": "《AI生成作品的著作权登记完整流程指南》 把登记当作「把版权拿下来」的完整流程教；《AI生成图片版权判定的全国首例判决解读》、《AI创作版权维权的关键：保留完整的创作过程痕迹》、《AI生成作品版权归属的法律结论与实操要点》、《AI生成图片版权保护的两个对比判例与实质审查标准》 则说登记只是形式审查、不审独创性，证书不代表有版权"
+        },
+        {
+          "claim": "纯AI一键生成内容的法律状态是「公有领域」还是「无著作权客体」",
+          "sides": "《AI生成作品版权归属的法律框架》 称简单指令生成内容「属公有领域」；《AI生成内容版权归属的四种方案与比较》、《AI生成图片版权判定的全国首例判决解读》 等的表述是「不构成作品、不受保护」。两种说法的下游后果不同（能否被他人自由使用、能否主张其他权益）"
+        }
+      ],
+      "domain": "ai1",
+      "editor_note": "这个节点的最大问题是同质化到了极点：29条里至少20条在重复同一个主张「版权看人的独创性投入、留好提示词与修改记录」，用词不同而已，真正带新增信息的只有五六条。判例锚点高度集中在北京互联网法院春风案与蝴蝶椅案（蝴蝶椅案的法院表述各条不一，有的写苏州，有的不写，建议核对一手判决）。两个明显的坑：一是多条把「版权登记」暗示成获得版权的手段，与登记仅形式审查的事实直接冲突，用户照做会误判自己有权；二是 《纯AI一键生成内容无版权保护的国际法律规则》 用「2026年欧盟正式规定」「三方规则完全统一」「法律均不认可」这类绝对化且难核验的表述，信息量看着大但可信度低，故排除。内容缺口有三处：输出端实质性相似侵权如何判（只有零星一两句）、AIGC标识与生成内容合规标注义务（全无）、以及被侵权后的具体维权路径与赔偿量级（只有口号式提及）。整体没有发现卖课引流或焦虑营销的硬毒性条目，质量下限尚可，但上限不高。",
+      "node": "AI生成内容有没有版权",
+      "order": [
+        {
+          "bucket": "pick",
+          "id": "douyin:7624857736132745103",
+          "reason": "编辑判断·入选最小互补集：77秒速览整套判定骨架：先排除AI本身，再看平台条款，再看参与程度分档｜覆盖骨架[0, 1, 5]｜独有：把归属拆成「主体资格→平台条款→参与程度」三层递进，并指出简单指令生成物落入公有领域",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "wechat_channels:export/UzFfBgAAxK6idBRJThfyjMzT4DCKqHevSry3_t42L0oO8RiTLg",
+          "reason": "编辑判断·入选最小互补集：219秒判例深讲：用春风案与蝴蝶椅案正反对比把抽象标准落到法院怎么审｜覆盖骨架[1, 2, 3, 4]｜独有：同时点明登记中心形式审查与诉讼中实质审查的落差——登记过了照样可能被判不构成作品",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "douyin:7644201808211277494",
+          "reason": "编辑判断·入选最小互补集：276秒最全一条：四个判例 + 训练端与平台端侵权 + 最高法立法信号 + 实操清单｜覆盖骨架[1, 4, 6, 7]｜独有：唯一讲清平台未尽审核义务（奥特曼侵权模型）构成帮助侵权连带责任，并给出2026年3月最高法起草专门法律的时间锚",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "douyin:7656992680468262565",
+          "reason": "编辑判断·入选最小互补集：举证专篇：真打官司时哪些证据被法院采信、哪些被判举证不力｜覆盖骨架[4]｜独有：AI检测报告不能单独定案需形成证据链；图层截图不够、完整PSD才是最有力证据",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "wechat_channels:export/UzFfBgAAxJGJLA1bBkyNk8zT4DCK6hKB67K8YNNlsUIu87ycjg",
+          "reason": "编辑判断·入选最小互补集：企业/团队视角补角：个人创作之外的协议与数据合规义务，节点内最新一条｜覆盖骨架[5, 6]｜独有：开源模型协议可能要求延伸作品一并开源，以及训练数据采集需提前做合规梳理",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1c497YoEBi",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV18e5fzNE5W",
+          "reason": "编辑判断·主张层面与《AI生成作品版权归属的法律框架》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1Ru411s7rv",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7681938667036028017",
+          "reason": "编辑判断·主张层面与《AI生成作品版权归属的法律框架》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7615607334076730624",
+          "reason": "编辑判断·主张层面与《AI图片版权纠纷中的证据认定规则》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7619160533312261419",
+          "reason": "编辑判断·主张层面与《AI生成作品版权归属的法律框架》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxP2nEAU3TCusjMzT4DCK403MRRX1cAeGGUvb5J4hOA",
+          "reason": "编辑判断·主张层面与《AI生成作品版权归属的法律框架》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7664836428399906048",
+          "reason": "编辑判断·主张层面与《AI图片版权纠纷中的证据认定规则》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxOajaG4NWzWUjczT4DCK18bl2tm0dZyliSJvJVLS5g",
+          "reason": "编辑判断·主张层面与《AI生成作品版权的四个真实判例分析》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxOihCBgTY0SKjMzT4DCKmk5myBalmoKxeKZuKXLg1A",
+          "reason": "编辑判断·主张层面与《AI生成图片版权保护的两个对比判例与实质审查标准》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7651434533312613683",
+          "reason": "编辑判断·主张层面与《AI生成作品版权归属的法律框架》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "wechat_channels:export/UzFfBgAAxOGiSDMgSVC2k8zT4DCKy7daJWBJ2l-XHY6Itbozdg",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxLiBPCISJFyFk8zT4DCKOtw1dJrPqpPAqCwJ0QHFgw",
+          "reason": "编辑判断·主张层面与《AI生成图片版权保护的两个对比判例与实质审查标准》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxNGifDBxPmCWjczT4DCK0CDhguxVh121OeVs11gTsw",
+          "reason": "编辑判断·主张层面与《AI生成作品版权归属的法律框架》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAAi_cpk0WqQwAAAAstQy6ubaLX4KHWvLEZgBPEp4FAfwFGc7qOzNPgMIptVZKhNb6emYJIcwNLtn2o",
+          "reason": "编辑判断·主张层面与《AI生成作品版权归属的法律框架》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7672051890603399537",
+          "reason": "编辑判断·主张层面与《AI生成作品版权归属的法律框架》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7635638942104177970",
+          "reason": "编辑判断·主张层面与《AI生成图片版权保护的两个对比判例与实质审查标准》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAAeUYWTK36IgAAAAstQy6ubaLX4KHWvLEZgBPExKZkUWwOIq-OzNPgMIq5RI7pI02N8VfhnqJCidUG",
+          "reason": "编辑判断·主张层面与《AI生成图片版权保护的两个对比判例与实质审查标准》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAA2ksjEwCb5gAAAAstQy6ubaLX4KHWvLEZgBPEg4BENhsdWdeOzNPgMIopLfawzM6hnqVGngRe45H0",
+          "reason": "编辑判断·主张层面与《AI生成图片版权保护的两个对比判例与实质审查标准》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxNSjVDJyCQeWjczT4DCKU_9szyETaShnaZEk0Tf1qw",
+          "reason": "编辑判断·主张层面与《AI生成作品版权归属的法律框架》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAA8RUDhYEiXwAAAAstQy6ubaLX4KHWvLEZgBPEroIkNjBka9aNzNPgMIqTLdgDvzTQn1l_PnBvpHPn",
+          "reason": "编辑判断·主张层面与《AI生成作品版权归属的法律框架》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAAvcw2Yjo2zQAAAAstQy6ubaLX4KHWvLEZgBPEuYAoGSQdUaiOzNPgMIrQWx6ZIiy4RzYaAxTCDQWn",
+          "reason": "编辑判断·主张层面与《AI生成作品版权归属的法律框架》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAAjpc4KaUzvgAAAAstQy6ubaLX4KHWvLEZgBPE5qEUHVkePqCOzNPgMIoDsic_LwW6ginlLJWWbqd_",
+          "reason": "编辑判断·主张层面与《AI图片版权纠纷中的证据认定规则》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "wechat_channels:export/UzFfBgAAxOOvIAAlEm2Ik8zT4DCKBranOMg5A0HXBYM1L64tQg",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        }
+      ],
+      "outline": [
+        "AI本身不是民事主体、不能当作者，著作权只能归自然人或法人；法律保护的是人的独创性智力投入，不是AI技术",
+        "判定分档：反复调提示词/设参数/筛选/后期修改（深度参与）可构成作品归使用者；简单关键词一键生成无改动则独创性不足、不受保护",
+        "中国关键判例对比：北京互联网法院「春风送来了温柔」认定受保护 vs 蝴蝶椅案纯AI一键生成被驳回",
+        "版权登记只做形式审查、不审独创性，登记证书≠拥有版权，纯AI图也能登记成功",
+        "维权靠创作过程证据链：提示词版本、参数/seed、修改截图录屏、PSD源文件、工具付费记录；事后补证因AI随机性无法复现，效力极低",
+        "平台与工具协议决定初始归属和训练授权范围；企业还要审开源模型协议（延伸作品开源义务）与数据来源合规",
+        "侵权风险在输入输出两端：用他人作品/IP训练模型侵权、提示词刻意复刻他人画面构成侵权、平台未尽审核义务承担帮助侵权连带责任",
+        "规则走势：美国版权局/欧盟对纯AI生成物不予保护，中国最高法2026年3月起草AI生成物专门规则，从个案走向统一标准；商用需按风险分档处理"
+      ],
+      "picks": [
+        {
+          "covers": [
+            0,
+            1,
+            5
+          ],
+          "id": "douyin:7624857736132745103",
+          "role": "77秒速览整套判定骨架：先排除AI本身，再看平台条款，再看参与程度分档",
+          "unique": "把归属拆成「主体资格→平台条款→参与程度」三层递进，并指出简单指令生成物落入公有领域"
+        },
+        {
+          "covers": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "id": "wechat_channels:export/UzFfBgAAxK6idBRJThfyjMzT4DCKqHevSry3_t42L0oO8RiTLg",
+          "role": "219秒判例深讲：用春风案与蝴蝶椅案正反对比把抽象标准落到法院怎么审",
+          "unique": "同时点明登记中心形式审查与诉讼中实质审查的落差——登记过了照样可能被判不构成作品"
+        },
+        {
+          "covers": [
+            1,
+            4,
+            6,
+            7
+          ],
+          "id": "douyin:7644201808211277494",
+          "role": "276秒最全一条：四个判例 + 训练端与平台端侵权 + 最高法立法信号 + 实操清单",
+          "unique": "唯一讲清平台未尽审核义务（奥特曼侵权模型）构成帮助侵权连带责任，并给出2026年3月最高法起草专门法律的时间锚"
+        },
+        {
+          "covers": [
+            4
+          ],
+          "id": "douyin:7656992680468262565",
+          "role": "举证专篇：真打官司时哪些证据被法院采信、哪些被判举证不力",
+          "unique": "AI检测报告不能单独定案需形成证据链；图层截图不够、完整PSD才是最有力证据"
+        },
+        {
+          "covers": [
+            5,
+            6
+          ],
+          "id": "wechat_channels:export/UzFfBgAAxJGJLA1bBkyNk8zT4DCK6hKB67K8YNNlsUIu87ycjg",
+          "role": "企业/团队视角补角：个人创作之外的协议与数据合规义务，节点内最新一条",
+          "unique": "开源模型协议可能要求延伸作品一并开源，以及训练数据采集需提前做合规梳理"
+        }
+      ],
+      "provenance": {
+        "input_hash": "918a7d89607c0ee1",
+        "model": "opus"
+      },
+      "receipt": {
+        "folded": 20,
+        "picked": 5,
+        "qualified": 29,
+        "rejected": 0,
+        "rejected_why": []
+      },
+      "stale": [
+        {
+          "id": "bilibili:BV1Ru411s7rv",
+          "why": "2023-05发布，在中国首批AIGC著作权判例出现之前，内容是「四种归属方案」的纯理论推演；此后春风案、蝴蝶椅案与最高法统一规则动向已把问题从「方案比较」推进到「个案标准与举证」，该框架已被事实取代"
+        },
+        {
+          "id": "bilibili:BV18e5fzNE5W",
+          "why": "2025-04发布，只讲到「法律框架正在完善、趋势是激励使用者」，未涵盖此后蝴蝶椅案这类反向驳回判例、登记形式审查的澄清以及2026年3月最高法起草专门规则，乐观口吻容易误导"
+        },
+        {
+          "id": "bilibili:BV1c497YoEBi",
+          "why": "2025-03发布的登记流程指南，其叙事前提（登记即确权、研发方声明决定归属）已被2026年多条司法/官方口径澄清为形式审查不确权；流程细节也可能与现行登记平台要求脱节"
+        }
+      ]
+    },
+    {
+      "category": "16.AI真的在思考吗",
+      "coverage": "覆盖骨架 0,1,2,3,5,6；漏了 4（输出的思考过程与内部真实依赖不一致／会编造推理过程）和 7（实践用法与不交出思考权）。4 可由 《AI内部构建的理解模式：证据与局限》 或 wechat_channels:...xPKlCGZUNEfAk8zT4DCKPjFeFRlsusCUfggHQMk9Hg 补；7 可由 《把AI当人思考的三层错误与正确用法》 补，但二者都与已选条目主张重叠度高，按'宁少不凑'未入选。",
+      "disputed": [
+        {
+          "claim": "AI内部是否存在某种真实的'理解'/结构化表征",
+          "sides": "认为有：wechat_channels:...xL6gJCFeQF6Ik8zT4DCKpdMHazBCigRL7PP6HyQEFQ（Hinton：机器自主学到'代系'抽象，存的是形状变换规律而非词串）、wechat_channels:...xO-laFtFRRGIk8zT4DCKGrXiDlFnLpaoxjHxw4mTlA（棋盘自建、押韵预选）、《AI内部构建的理解模式：证据与局限》、wechat_channels:...xIKieHctDDGPjczT4DCKmnZnT（功能层面可能完全实现）；认为无：wechat_channels:...xKmCMBgQVwH5jMzT4DCKrHZqyLJjINHyKJJwiV_XUQ（给了算法仍出错=纯模式匹配）、wechat_channels:...xJyiTF8QWByPk8zT4DCKaQB57lQFSsr_J4TdZ4QDbw（鹦鹉非乌鸦）、《AI不会思考也没有意识》、《AI大模型工作原理》"
+        },
+        {
+          "claim": "'概率预测'与'理解'是否构成对立",
+          "sides": "构成对立（预测=不理解）：《AI大模型工作原理》、《AI不会思考也没有意识》；不构成对立（人脑也是预测机器，二者同框架）：wechat_channels:...xO-laFtFRRGIk8zT4DCKGrXiDlFnLpaoxjHxw4mTlA、wechat_channels:...xBgAAxIKieHctDD 系列中的'理解定义值得反思'一派（wechat_channels:...xIKieHctDDGPjczT4DCKmnZnT_V-cNs5cxrvLBuRFg 同属）"
+        },
+        {
+          "claim": "AI是否可能已有意识",
+          "sides": "Hinton相信AI有意识（wechat_channels:...xPCCEGldBFrYjMzT4DCKi8rIIbSuYOrcfF9sep2zFA 转述）；主张不可判定/无证据：《AI意识研究的困境：模拟与体验的边界》、《AI内部构建的理解模式：证据与局限》、《把AI当人思考的三层错误与正确用法》；主张明确没有：《AI不会思考也没有意识》"
+        }
+      ],
+      "domain": "ai1",
+      "editor_note": "这个节点的候选质量两极：机制科普层（预测下一词=高级复杂运算=学霸刷题）严重同质，光'刷题学霸'这个比喻就出现了至少三次，可大幅折叠；真正稀缺的是三类——(a) 带可核验工程锚点的机制讲解（只有 《大模型运行原理》 和两条长视频做到）、(b) 有实验证据的双向论证（苹果论文崩溃曲线 vs 棋盘自建/Hinton家族关系）、(c) 对'理解'和'意识'本身做概念澄清而不是急着下结论。明显的坑有三个：① 大量条目把'底层是概率预测'直接当作'所以不思考'的充分证据，这是逻辑跳跃，候选里只有 2-3 条指出了这一点；② 多条带'未来竞争不在谁会用AI而在谁更懂独立思考''不能把思考权交给AI'这类同质化鸡汤收尾（wechat_channels 的 xNSuIF/xJyiTF/xPCCEG 三条几乎同一套话术），信息密度低且偏情绪动员，已全部排除出 picks；③ 时效断层明显，2024 年那条还在用图灵测试当主框架，而推理模型相关的实质讨论全部集中在 2026-09 之后——这个节点对时间敏感，旧条目即使点赞高也不该前置。另：《AI真的在思考吗？从哲学与技术层面的深度解析》（19分钟，Hume归纳问题+原生/派生意向性）和 wechat_channels 的 xL6gJ（Hinton 形状变换）是两条高质量深度候选，仅因与已选条目覆盖重叠、且长度对'找答案就走'的用户不友好而未入选，若节点需要延伸阅读位可补这两条。",
+      "node": "AI真的在思考吗",
+      "order": [
+        {
+          "bucket": "pick",
+          "id": "douyin:7703163852426464552",
+          "reason": "编辑判断·入选最小互补集：机制打底：用参数文件、token化、嵌入矩阵、290层这些可核验的具体锚点把'预测下一个词'讲清楚，看完才有资格谈'思不思考'｜覆盖骨架[0]｜独有：0.5B模型=5亿数字≈1GB文件、15万词表×896维嵌入、290层堆叠这类可查证的工程细节",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "wechat_channels:export/UzFfBgAAxO-laFtFRRGIk8zT4DCKGrXiDlFnLpaoxjHxw4mTlA",
+          "reason": "编辑判断·入选最小互补集：框架纠偏：把问题从'概率还是理解'翻转成'理解到底是什么'，并列出棋盘自建、押韵预选、反转诅咒等双向证据｜覆盖骨架[1, 2, 6]｜独有：指出人脑也是预测机器，因此'概率vs理解'的二元对立本身不成立——全candidate里唯一反过来质疑提问方式的",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "douyin:7686490257763732746",
+          "reason": "编辑判断·入选最小互补集：能力边界实测：思维链到底帮了什么、在什么难度段有用、'能描述步骤'与'能稳定执行步骤'是两种能力｜覆盖骨架[3, 5]｜独有：按任务难度分三段给推理模型的收益曲线（简单不划算/中等明显/高难度都崩），是最可直接用于选型的判据",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "wechat_channels:export/UzFfBgAAxKmCMBgQVwH5jMzT4DCKrHZqyLJjINHyKJJwiV_XUQ",
+          "reason": "编辑判断·入选最小互补集：反方硬证据：苹果论文的崩溃曲线——超阈值断崖下跌、临崩时思考长度反而暴跌、告诉它算法仍出错｜覆盖骨架[5]｜独有：'接近崩溃时思考长度断崖式下降'这一反直觉实证指标，只有它给了",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "bilibili:BV1283R6hEtM",
+          "reason": "编辑判断·入选最小互补集：意识层收口：为什么'有没有真实感受'在方法论上不可判定，以及这个研究领域正在被资金带偏｜覆盖骨架[6]｜独有：指出研究可能转向'什么指标方便给AI盖章'——对意识研究本身的元批评",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7626772450386185506",
+          "reason": "编辑判断·主张层面与《AI思考机制：链式推理与人类思维的差异》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7694177980242775332",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxNSuIFheDjuCk8zT4DCK4cz56YVGpCa7OfZRoax85Q",
+          "reason": "编辑判断·主张层面与《鹦鹉vs乌鸦：大模型理解能力的根本局限》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7647830496134581556",
+          "reason": "编辑判断·主张层面与《大模型运行原理》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7524916611694742836",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7685102170458311977",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxPKlCGZUNEfAk8zT4DCKPjFeFRlsusCUfggHQMk9Hg",
+          "reason": "编辑判断·主张层面与《wechat_channels:export/UzFfBgAAxBgQVwH5jMzT4DCKGrXiDlFnLpaoxjHxw4mTlA》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "wechat_channels:export/UzFfBgAAxL6gJCFeQF6Ik8zT4DCKpdMHazBCigRL7PP6HyQEFQ",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "wechat_channels:export/UzFfBgAAxPCCEGldBFrYjMzT4DCKi8rIIbSuYOrcfF9sep2zFA",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "wechat_channels:export/UzFfBgAAxIKieHctDDGPjczT4DCKmnZnT_V-cNs5cxrvLBuRFg",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxLKgaHVaDyaPjMzT4DCKDv2Bc5BJPfq-HWf-5FM2PA",
+          "reason": "编辑判断·主张层面与《大模型运行原理》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7698037324508187955",
+          "reason": "编辑判断·主张层面与《大模型运行原理》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7329138163052449061",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7681699702684863790",
+          "reason": "编辑判断·主张层面与《AI分析能力强≠有真实思考能力》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxJyiTF8QWByPk8zT4DCKaQB57lQFSsr_J4TdZ4QDbw",
+          "reason": "编辑判断·主张层面与《苹果论文实证：AI推理的崩溃与模式匹配本质》重复，默认折叠",
+          "source": "editorial_lm"
+        }
+      ],
+      "outline": [
+        "AI的底层机制：基于海量文本的参数化函数，逐token预测下一个词（词表、嵌入、多层堆叠、注意力打分）",
+        "'仅预测下一个词'的机制描述不等于简单背诵：为了预测得好，模型在高维空间构建了跨域关系网络（可视为世界压缩模型）",
+        "存在'内部表征'的实证证据：自建棋盘状态、提前预选押韵词、家族关系中自发学到'代系'抽象",
+        "思维链/测试时计算的真实作用与边界：展开步骤像给草稿纸能提升准确率，但展开≠每步正确，长距离稳定执行是另一种能力",
+        "输出的'思考过程'不可全信：与内部真实依赖的特征不一致，且模型会为迎合用户编造推理过程",
+        "能力的崩溃点与归纳本质：复杂度越阈值后准确率断崖式崩溃、给了算法仍出错、归纳无法推出必然因果",
+        "意识/主观体验的不可判定性：语言行为相似无法证明有感受，人类过去的判断依赖同构脑结构，而AI是陌生系统；'理解'本身定义未解",
+        "实践含义：把AI当辅助工具（列思路、找漏洞、扩展视野），事实核验与价值判断留给人，不交出思考权"
+      ],
+      "picks": [
+        {
+          "covers": [
+            0
+          ],
+          "id": "douyin:7703163852426464552",
+          "role": "机制打底：用参数文件、token化、嵌入矩阵、290层这些可核验的具体锚点把'预测下一个词'讲清楚，看完才有资格谈'思不思考'",
+          "unique": "0.5B模型=5亿数字≈1GB文件、15万词表×896维嵌入、290层堆叠这类可查证的工程细节"
+        },
+        {
+          "covers": [
+            1,
+            2,
+            6
+          ],
+          "id": "wechat_channels:export/UzFfBgAAxO-laFtFRRGIk8zT4DCKGrXiDlFnLpaoxjHxw4mTlA",
+          "role": "框架纠偏：把问题从'概率还是理解'翻转成'理解到底是什么'，并列出棋盘自建、押韵预选、反转诅咒等双向证据",
+          "unique": "指出人脑也是预测机器，因此'概率vs理解'的二元对立本身不成立——全candidate里唯一反过来质疑提问方式的"
+        },
+        {
+          "covers": [
+            3,
+            5
+          ],
+          "id": "douyin:7686490257763732746",
+          "role": "能力边界实测：思维链到底帮了什么、在什么难度段有用、'能描述步骤'与'能稳定执行步骤'是两种能力",
+          "unique": "按任务难度分三段给推理模型的收益曲线（简单不划算/中等明显/高难度都崩），是最可直接用于选型的判据"
+        },
+        {
+          "covers": [
+            5
+          ],
+          "id": "wechat_channels:export/UzFfBgAAxKmCMBgQVwH5jMzT4DCKrHZqyLJjINHyKJJwiV_XUQ",
+          "role": "反方硬证据：苹果论文的崩溃曲线——超阈值断崖下跌、临崩时思考长度反而暴跌、告诉它算法仍出错",
+          "unique": "'接近崩溃时思考长度断崖式下降'这一反直觉实证指标，只有它给了"
+        },
+        {
+          "covers": [
+            6
+          ],
+          "id": "bilibili:BV1283R6hEtM",
+          "role": "意识层收口：为什么'有没有真实感受'在方法论上不可判定，以及这个研究领域正在被资金带偏",
+          "unique": "指出研究可能转向'什么指标方便给AI盖章'——对意识研究本身的元批评"
+        }
+      ],
+      "provenance": {
+        "input_hash": "539428eb0ee9210a",
+        "model": "opus"
+      },
+      "receipt": {
+        "folded": 8,
+        "picked": 5,
+        "qualified": 20,
+        "rejected": 5,
+        "rejected_why": [
+          "内容涉及对未来的推测且部分表述可能过于绝对。转写：\"为了预测下一单词必须理解句子，认为只是预测下一单词所以不聪明是疯狂的",
+          "转写内容虽涉及AI思考话题，但仅反复强调'AI无意识=不是真思考'，缺乏机制讲解、对比分析或充分论证。深度不足以构成完整",
+          "转写末尾出现大量'所以所以所以'重复，表示转写可能损坏或视频质量存疑；另外该时间预测（5-10年）在2026年已部分过期"
+        ]
+      },
+      "stale": [
+        {
+          "id": "douyin:7329138163052449061",
+          "why": "2024-01 发布，还在用图灵测试当讨论框架，完全早于推理模型（o系/测试时计算）与思维链可信度研究，对当下'AI是否在思考'的技术现实已不适用"
+        },
+        {
+          "id": "douyin:7524916611694742836",
+          "why": "2025-07 发布，Chain of Thought 的讲法尚可但'AI思考受制于智商与资源'的结论已被测试时计算范式（小模型多轮推理超越大模型）部分推翻"
+        },
+        {
+          "id": "wechat_channels:export/UzFfBgAAxIKieHctDDGPjczT4DCKmnZnT_V-cNs5cxrvLBuRFg",
+          "why": "（注：此 id 为 《AI意识研究的困境：模拟与体验的边界》 的误配，忽略此条）"
+        }
+      ]
+    },
+    {
+      "category": "21.现在该用哪个大模型",
+      "coverage": "picks 合起来覆盖骨架 0-6 共七条，其中 1（横向清单）由速览条打底、3（版本档位与推理强度）被两条从不同侧面讲到。唯一漏掉的是 7（免费与低价路径）——节点内只有 《2026年AI免费与低价替代方案完整指南》 系统讲这块，但它是\"薅额度\"教程而非选型判断，为保持集合最小没有选进来，想省钱的用户可单独去看它。",
+      "disputed": [
+        {
+          "claim": "写作/文笔最强的是谁",
+          "sides": "《2026大模型写作能力排名》 与 《6款AI模型网文创作能力对比评测》 说 Gemini 系列文笔第一（Opus/GPT 只适合审核把关）；wechat 的 8 个主流对比和 《2026年全球AI助手能力评测与选型建议》 则说 Claude 是文字质感天花板"
+        },
+        {
+          "claim": "上下文到底谁最长、长上下文是否越长越好",
+          "sides": "wechat 六大对标说 Kimi 2000 万字最长、Claude 100 万 token；UzFfBgAAxMepHG… 说百万 token 已成标配；《2026主流大模型上下文档位选型指南》 则反向论证上下文越长显存、并发、速度、成本全面恶化，8K-32K 才是多数场景的性价比区间"
+        },
+        {
+          "claim": "官方宣称的 Token 节省幅度是否可信",
+          "sides": "《Swift 1.5模型实测评估：省Token与能力平衡》 实测 Swift 1.5 仅省 6%，远低于官方宣传的 58%，并指出参数更少的千文 3.8 Flash 反而用量最低——与厂商自述口径直接冲突"
+        },
+        {
+          "claim": "通用大模型能不能胜任专业写作",
+          "sides": "《AI写作大模型排名评测》 与 《AI写小说工具排名对比》 称垂直网文工具明显胜过通用大模型；《2026大模型写作能力排名》 则认为 Gemini+Opus 的通用模型组合即可"
+        }
+      ],
+      "domain": "ai1",
+      "editor_note": "这个节点的最大问题是候选被两类内容稀释：一是五六条\"AI 写小说/网文工具排名\"（douyin 三条 + 《6款AI模型网文创作能力对比评测》 + 《2026大模型写作能力排名》），它们互相高度重复、几条还带明显的垂直工具引流色彩（点名\"笔零 A\"\"绍文\"\"绝文\"并给保姆级模板承诺），虽然点赞很高（4000+）但不适合代表选型答案，应折叠成写作子节点并剔掉软广；二是走题条目——《腾讯混元世界模型评测：3D场景生成能力》 讲腾讯混元世界模型的 3D 视频生成，和\"该用哪个模型\"无关，建议移出本节点。另一个坑是数字可信度：多条候选引用的分数、价格、上下文长度各说各话且无出处，只有 UzFfBgAAxMepHG…（讲清榜单算法偏差）和 《Swift 1.5模型实测评估：省Token与能力平衡》（实测打穿官方宣称的 58% 节省）提供了可核验的方法论，所以把前者放进 picks、把后者作为 disputed 的证据保留。整体质量中等：有具体锚点的条目不多，而本节点时效性极强，建议把 picks 设为 90 天内复查。",
+      "node": "现在该用哪个大模型",
+      "order": [
+        {
+          "bucket": "pick",
+          "id": "wechat_channels:export/UzFfBgAAxMiCECBrRmKqk8zT4DCKQ_nupTIfvbzgnC5n--pHHw",
+          "reason": "编辑判断·入选最小互补集：110 秒速览，先把 8 个主流模型的生态位和各自长板摆清，用来快速定方向｜覆盖骨架[0, 1]｜独有：明确提出\"工具无高低，多工具组合常优于单一工具\"这个结论，而不是排一个名次",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "douyin:7661983184120237348",
+          "reason": "编辑判断·入选最小互补集：成本与版本档位的具体样本：同一家三个版本怎么分工、计价在哪里会突然变贵｜覆盖骨架[2, 3]｜独有：超过 272k token 输入直接翻倍计费、输出涨至 1.5 倍——百万上下文\"能用\"不等于\"便宜\"的可核验锚点",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "bilibili:BV1jpnn66Edz",
+          "reason": "编辑判断·入选最小互补集：换掉\"必须选一个最强模型\"的框架，给出分层架构的做法｜覆盖骨架[6]｜独有：决策模型前置自动分类、MB 级轻量模型 CPU 可跑，把选型问题转成路由问题",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "douyin:7704700444011057266",
+          "reason": "编辑判断·入选最小互补集：给\"要不要自己部署开源模型\"这条岔路一个算账式的否定答案，收尾止损｜覆盖骨架[5]｜独有：机器 50 万 + 人力 50 万、总成本可能超过直接买 API；开源占七成流量但收入不到三成",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1emKb6sE93",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1RrgQ6aEQU",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV12TpW6NEnt",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1Q2iXBtEme",
+          "reason": "编辑判断·主张层面与《8个主流大模型对比与选型指南》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1pmJy6mEP4",
+          "reason": "编辑判断·主张层面与《2026大模型写作能力排名》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV13ZnY6NEwi",
+          "reason": "编辑判断·主张层面与《专精小模型与大模型分层架构设计》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1NvnU6KEm7",
+          "reason": "编辑判断·主张层面与《13款开源模型本地部署横评与选型指南》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1aYrnB1EPL",
+          "reason": "编辑判断·主张层面与《8个主流大模型对比与选型指南》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1ZqH56fEwi",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7703856387515813162",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxKqnIBpMO32QjMzT4DCKqcspIftDu9KyycPhfk7sjA",
+          "reason": "编辑判断·主张层面与《8个主流大模型对比与选型指南》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7681668070007807482",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7678643214076680817",
+          "reason": "编辑判断·主张层面与《AI写作大模型排名评测》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7678647639394800314",
+          "reason": "编辑判断·主张层面与《AI写作大模型排名评测》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAA5oszH80HSQAAAAstQy6ubaLX4KHWvLEZgBPEvKIgWWp0SqqJzNPgMIqsNbwXrWmNNualfoB_Ta40",
+          "reason": "编辑判断·主张层面与《13款开源模型本地部署横评与选型指南》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7696844013965544738",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxMyHNFgMAWfPk8zT4DCKH70hAMd3La8bCCojBvD-GQ",
+          "reason": "编辑判断·主张层面与《2026年编程大模型性能对比与选型》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "wechat_channels:export/UzFfBgAAxMepHGdtQiyCk8zT4DCK-7yyy-bYKqBjai8hyJiT2w",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxIagRDVbKHCOjMzT4DCKhNqsXpgv4nuYmqNripQW2Q",
+          "reason": "编辑判断·主张层面与《8个主流大模型对比与选型指南》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxNOnMG5IdE35k8zT4DCKGKOq0ux7r_eVBpBwlgAj6w",
+          "reason": "编辑判断·主张层面与《8个主流大模型对比与选型指南》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "wechat_channels:export/UzFfBgAAxI2ISF1-Y0qJk8zT4DCKsvGzBYioRCgBp-ksG9j0Fg",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        }
+      ],
+      "outline": [
+        "先按任务类型定方向：代码、写作、多模态、长文本、实时信息各有不同的最优模型，没有通用第一",
+        "主流模型的强项与短板横向清单：Claude 代码与文字质感、GPT 全能、Gemini 多模态与上下文、DeepSeek 低成本强推理、Kimi 长文本、豆包/千问/GLM 各自生态位",
+        "成本结构：每百万 token 单价可差几十倍；超长上下文越过阈值会翻倍计费，agent/并行模式会加速耗额度",
+        "同一家内部还要选档：旗舰/日常主力/轻量速度版，以及推理强度开关（Reasoning、Pro 模式）对准确率、速度、花费的三角权衡",
+        "榜单怎么读：盲测 ELO、硬考题、综合指数各有偏差；官方宣称的指标与第三方实测可能差很远",
+        "开源/本地部署这条路的真实账：参数量—显存—速度的非线性关系，机器与人力成本可能高于直接买 API，什么时候才划算",
+        "不必只用一个模型：小模型/决策模型前置路由 + 大模型兜底的分层架构，以及多模型互审（主笔+审核）",
+        "低价与免费路径：免费额度、学生优惠、国产低价 API 作为起步选择"
+      ],
+      "picks": [
+        {
+          "covers": [
+            0,
+            1
+          ],
+          "id": "wechat_channels:export/UzFfBgAAxMiCECBrRmKqk8zT4DCKQ_nupTIfvbzgnC5n--pHHw",
+          "role": "110 秒速览，先把 8 个主流模型的生态位和各自长板摆清，用来快速定方向",
+          "unique": "明确提出\"工具无高低，多工具组合常优于单一工具\"这个结论，而不是排一个名次"
+        },
+        {
+          "covers": [
+            2,
+            3
+          ],
+          "id": "douyin:7661983184120237348",
+          "role": "成本与版本档位的具体样本：同一家三个版本怎么分工、计价在哪里会突然变贵",
+          "unique": "超过 272k token 输入直接翻倍计费、输出涨至 1.5 倍——百万上下文\"能用\"不等于\"便宜\"的可核验锚点"
+        },
+        {
+          "covers": [
+            6
+          ],
+          "id": "bilibili:BV1jpnn66Edz",
+          "role": "换掉\"必须选一个最强模型\"的框架，给出分层架构的做法",
+          "unique": "决策模型前置自动分类、MB 级轻量模型 CPU 可跑，把选型问题转成路由问题"
+        },
+        {
+          "covers": [
+            5
+          ],
+          "id": "douyin:7704700444011057266",
+          "role": "给\"要不要自己部署开源模型\"这条岔路一个算账式的否定答案，收尾止损",
+          "unique": "机器 50 万 + 人力 50 万、总成本可能超过直接买 API；开源占七成流量但收入不到三成"
+        }
+      ],
+      "provenance": {
+        "input_hash": "de1d562060e865a3",
+        "model": "opus"
+      },
+      "receipt": {
+        "folded": 12,
+        "picked": 4,
+        "qualified": 25,
+        "rejected": 0,
+        "rejected_why": []
+      },
+      "stale": [
+        {
+          "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAA5oszH80HSQAAAAstQy6ubaLX4KHWvLEZgBPEvKIgWWp0SqqJzNPgMIqsNbwXrWmNNualfoB_Ta40",
+          "why": "2025-02 发布，围绕当时的 DeepSeek 蒸馏版本谈 1.5B/7B/70B 档位，这代小参数蒸馏模型已基本被新一代同尺寸模型取代，显存与价格结论不再适用"
+        },
+        {
+          "id": "bilibili:BV1Q2iXBtEme",
+          "why": "2026-01 的能力地图，十个月里各家主力版本已换代（文中\"Claude 无多模态\"这类结论已不成立），虽然点赞 1.1 万远超其他候选，但模型选型是时效敏感节点，热度不能抵掉过时"
+        },
+        {
+          "id": "wechat_channels:export/UzFfBgAAxNOnMG5IdE35k8zT4DCKGKOq0ux7r_eVBpBwlgAj6w",
+          "why": "版本号自相矛盾（一边说 GPT-6 最强、一边说 Gemini 2.0 多模态领先），像是跨期拼凑的旧稿，数字不可核验"
+        },
+        {
+          "id": "wechat_channels:export/UzFfBgAAxI2ISF1-Y0qJk8zT4DCKsvGzBYioRCgBp-ksG9j0Fg",
+          "why": "核心卖点是\"12 月 31 日前五折\"的限时定价，促销一过结论即失效；且排名只引用厂商自家口径的测试分数"
+        }
+      ]
+    },
+    {
+      "category": "31.通货膨胀是怎么发生的",
+      "coverage": "骨架 0、1、2、3、4、5、7 均被覆盖，其中 2 被三条从不同层次覆盖（现象→条件→历史）。缺口是第 6 条：程度分级标准与恶性通胀极端案例只由 《历史大通胀的成因、自我修正与演变规律》 以 1946 一例弱覆盖，分级阈值和德国/津巴布韦/民国法币这些案例未进集合——若要补，最优的一条是 《通货膨胀的三种分类与危害程度》（647s 就给全分级阈值＋对比案例），而非点赞 14.9 万的 《通货膨胀的本质与历史极端案例》。",
+      "disputed": [
+        {
+          "claim": "通胀的根本成因是否就是货币超发（印钞）",
+          "sides": "货币论一侧：《通货膨胀的表现、原因、实质与对策》『原因就是纸币发行量超过流通所需』、《通货膨胀成因的三种经济学解释》『通胀纯由货币供应量引起』、《通货膨胀的经济学定义与货币现象论》『通胀是货币现象』；反方：《历史大通胀的成因、自我修正与演变规律》 主张历次大通胀均源于供需极度失衡、现代通胀还涉供应链冲击与产业结构变化，不只印钞；《需求拉动型与成本推动型通胀机制》 则给限定条件——闲置资源充足阶段增加货币只增产不涨价"
+        },
+        {
+          "claim": "通胀是靠政策被压下去的，还是靠供给自己恢复",
+          "sides": "《通货膨胀的表现、原因、实质与对策》 与 《用'钱'字串联：通胀、通缩、宏观政策体系》：通胀用紧缩政策（提税、减支、提准提息）反向操作即可；《历史大通胀的成因、自我修正与演变规律》：供给恢复才是终结通胀的根本机制，1946 年通胀靠企业疯狂投产自我修正；《通货膨胀的本质与历史极端案例》 与 《通货膨胀的历史案例与成因》：各国央行普遍无法有效控制，连美联储也难驾驭"
+        },
+        {
+          "claim": "需求拉动型通胀是否在任何产能状态下都会推高物价",
+          "sides": "《通货膨胀的四种成因机制》、《货币增发如何推高物价的传导链条》、《通货膨胀的成因：稀缺、需求与成本》：需求超供给就涨价，无条件限定；《需求拉动型与成本推动型通胀机制》：只在充分就业附近阶段才发生，闲置资源充足时增产而不涨价"
+        }
+      ],
+      "domain": "fin1",
+      "editor_note": "这个节点整体干净：16 条里没有发现焦虑营销、卖课引流或绝对化承诺，可以放心用。主要问题有四个。一是同质化严重——过半候选停在『钱印多了所以物价涨』这一句话上，只是换了面粉掺水、十个苹果、鱼竿、包子等不同类比，主张层面完全重复，所以折叠掉了 6 条。二是历史极端案例类（德国 1923、津巴布韦、民国法币、宋朝纸币）扎堆且与『怎么发生』的题面只有弱相关，它们回答的其实是『能有多严重』；点赞最高的 《通货膨胀的本质与历史极端案例》（14.9 万赞、1505s）信息增量并不比 647s 的 《通货膨胀的三种分类与危害程度》 多，只多了 CPI 和『难控原因』两点，长度却翻倍——这个节点不能按热度排。三是 《通货膨胀的成因：稀缺、需求与成本》（63s、2.9 万赞）第一个要点说『商品稀有性下降、供应增加导致价格下跌』，方向与通胀相反，混在成因列表里会误导新手，是这批里唯一的事实性坑。四是全节点缺真实数据锚：没有一条给出 CPI 的实际统计口径、近年真实通胀数字或各国央行 2% 目标，具体性最好的 《通货膨胀的四种成因机制》 和 《纸币滥发导致的通货膨胀：宋朝案例》 用的也只是自编算例和宋代史料。",
+      "node": "通货膨胀是怎么发生的",
+      "order": [
+        {
+          "bucket": "pick",
+          "id": "bilibili:BV1Cg4y1p7B8",
+          "reason": "编辑判断·入选最小互补集：3 分半的入口：先把『什么才算通胀』和『原因层 vs 实质层』分清，顺带给出对策框架｜覆盖骨架[0, 1, 2, 7]｜独有：把『全面』和『持续』两个判定要素单列出来——缺一就不能叫通胀，这是其余 15 条都跳过的前提",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "bilibili:BV1VszSBoEbW",
+          "reason": "编辑判断·入选最小互补集：成因主干：四种机制（需求拉动／成本推动／工资-价格螺旋／货币超发）各配一个可算的数字例子｜覆盖骨架[1, 2, 3, 4]｜独有：工资-价格螺旋这条自我强化回路，全部候选里只有它讲",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "bilibili:BV12q4y1E7jt",
+          "reason": "编辑判断·入选最小互补集：把货币超发那一条链逐步推演完：从少数人手里到全社会的扩散过程｜覆盖骨架[5]｜独有：超发货币『逐步从某些人手中流向全社会』的扩散次序（坎蒂隆式传导），其余只讲『钱多了物价涨』的静态结果",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "bilibili:BV1Xa411D76i",
+          "reason": "编辑判断·入选最小互补集：边界条件层：说明增加货币并不总是涨价，取决于经济处在供给曲线的哪一段｜覆盖骨架[2, 3, 7]｜独有：供给曲线三段论——闲置资源充足时增产不涨价，只有逼近完全就业才只涨价不增产",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "bilibili:BV1fU4y1f7Xw",
+          "reason": "编辑判断·入选最小互补集：反面校正与收尾：通胀怎么结束，以及为什么不能把成因全归给印钞｜覆盖骨架[2, 6, 7]｜独有：1946 年战后通胀被供给侧自我修正甚至反转为通缩的实例，提出『供给恢复才是终结机制，而非政策干预』",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1yo4y1t7Tt",
+          "reason": "编辑判断·主张层面与《通货膨胀的表现、原因、实质与对策》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1Cf41z9E1y",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1SY4y137Jn",
+          "reason": "编辑判断·主张层面与《货币超发通胀机制：从需求扩大到供需失衡的传导》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1DR4y197GW",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1Zg4y1E73N",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1bj411379D",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1Jk4y1x7iu",
+          "reason": "编辑判断·主张层面与《通货膨胀的本质与历史极端案例》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV15CMuzWEBP",
+          "reason": "编辑判断·主张层面与《通货膨胀的四种成因机制》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1KP4y1678m",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1asz4BbEud",
+          "reason": "编辑判断·主张层面与《通货膨胀的成因：稀缺、需求与成本》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1vT411D71R",
+          "reason": "编辑判断·主张层面与《通货膨胀成因的三种经济学解释》重复，默认折叠",
+          "source": "editorial_lm"
+        }
+      ],
+      "outline": [
+        "判定标准：通胀是物价『全面且持续』上涨（CPI 衡量），单一商品或短期涨价不算通胀",
+        "货币机制：流通货币量超过商品流通所需，太多钱追太少商品，单位货币购买力下降（费雪方程 MV=PQ／货币数量论）",
+        "需求拉动型：总需求超过总供给、短期产能固定；且只在闲置资源用尽、接近充分就业时才表现为涨价",
+        "成本推动型：上游原材料、工资等生产成本上升，企业提价弥补并向消费端传导",
+        "工资-价格螺旋：物价涨→要求加薪→成本涨→再涨价，形成自我强化循环",
+        "完整传导链：降息/印钞/财政投放→需求上升→商家涨价→利润扩产→上游采购与原材料涨价→新增货币由少数人扩散至全社会，形成普遍通胀",
+        "程度分级与极端案例：温和(<10%)／剧烈(10-100%)／恶性(>100%)；德国1923、津巴布韦2008、民国法币、宋朝纸币滥发",
+        "如何被抑制或终结：紧缩货币与财政政策（加息、提准、减支）；以及供给恢复带来的自我修正，和『为何现实中极难控制』"
+      ],
+      "picks": [
+        {
+          "covers": [
+            0,
+            1,
+            2,
+            7
+          ],
+          "id": "bilibili:BV1Cg4y1p7B8",
+          "role": "3 分半的入口：先把『什么才算通胀』和『原因层 vs 实质层』分清，顺带给出对策框架",
+          "unique": "把『全面』和『持续』两个判定要素单列出来——缺一就不能叫通胀，这是其余 15 条都跳过的前提"
+        },
+        {
+          "covers": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "id": "bilibili:BV1VszSBoEbW",
+          "role": "成因主干：四种机制（需求拉动／成本推动／工资-价格螺旋／货币超发）各配一个可算的数字例子",
+          "unique": "工资-价格螺旋这条自我强化回路，全部候选里只有它讲"
+        },
+        {
+          "covers": [
+            5
+          ],
+          "id": "bilibili:BV12q4y1E7jt",
+          "role": "把货币超发那一条链逐步推演完：从少数人手里到全社会的扩散过程",
+          "unique": "超发货币『逐步从某些人手中流向全社会』的扩散次序（坎蒂隆式传导），其余只讲『钱多了物价涨』的静态结果"
+        },
+        {
+          "covers": [
+            2,
+            3,
+            7
+          ],
+          "id": "bilibili:BV1Xa411D76i",
+          "role": "边界条件层：说明增加货币并不总是涨价，取决于经济处在供给曲线的哪一段",
+          "unique": "供给曲线三段论——闲置资源充足时增产不涨价，只有逼近完全就业才只涨价不增产"
+        },
+        {
+          "covers": [
+            2,
+            6,
+            7
+          ],
+          "id": "bilibili:BV1fU4y1f7Xw",
+          "role": "反面校正与收尾：通胀怎么结束，以及为什么不能把成因全归给印钞",
+          "unique": "1946 年战后通胀被供给侧自我修正甚至反转为通缩的实例，提出『供给恢复才是终结机制，而非政策干预』"
+        }
+      ],
+      "provenance": {
+        "input_hash": "99d30e3b3b6a855b",
+        "model": "opus"
+      },
+      "receipt": {
+        "folded": 6,
+        "picked": 5,
+        "qualified": 16,
+        "rejected": 0,
+        "rejected_why": []
+      },
+      "stale": [
+        {
+          "id": "bilibili:BV1DR4y197GW",
+          "why": "2022-10 发布，第四点把『美元超发→美联储加息→中美利差缩小→人民币贬值』当作进行中的结论，绑定的是 2022 那一轮加息周期；到今天利率与汇率方向已变，机制部分可用但结论性判断不能照搬"
+        },
+        {
+          "id": "bilibili:BV1fU4y1f7Xw",
+          "why": "2022-02 发布，用 1946 年类比当时正在发生的疫情后通胀并预判『会自我修正甚至转通缩』；该预判此后已被实际走势检验过，看它时要把结论当『一种假说』而不是已验证事实"
+        }
+      ]
+    },
+    {
+      "category": "38.资产配置的基本原理",
+      "coverage": "覆盖骨架 0,1,2,3,4,6；漏了 5（人力资产与财务地图三表）和 7（股债性价比EP估值工具）。漏 5 是取舍：《低息时代普通人的资产配置框架》 讲得最好但整条片子只服务'配置前的自我盘点'，与本节点'配置原理'偏移；漏 7 是因为 《股债配置的风险溢价判断法》 的FED股债性价比属于进阶择时工具，对'基本原理'节点是加项不是必需，想补时优先加这两条。",
+      "disputed": [
+        {
+          "claim": "股债负相关是否可靠到可以当作配置的地基",
+          "sides": "《资产配置应对市场波动的方法》 称资产配置是'天下唯一免费午餐'、靠负相关在任何环境都能获稳健收益，《三种经典资产配置策略》 也称股债负相关是应用最广的底层规律；《普通人资产配置框架：从金字塔底座开始》 反驳：2022年股债相关性罕见转正、固定搭配无永久效力。按'具体锚点优先'应采信后者。"
+        },
+        {
+          "claim": "居住/房产在配置里该占多大比例",
+          "sides": "《标准普尔四象限家庭资产配置模型》 把房产直接划入'生钱的钱'30%作为现金流资产；《标准普尔家庭资产配置四象限框架》 则称房价高不代表居住配置比例高，应按生活成本（房租口径）分配；《机会成本在资产配置决策中的应用》 更进一步说买房划不划算取决于个人投资能力带来的机会成本高低。"
+        }
+      ],
+      "domain": "fin1",
+      "editor_note": "这个节点候选严重同质化：20条里有7条在重复讲'分散/负相关/鸡蛋别放一个篮子'或'标普四象限'，用词不同但主张完全一致，折叠后真正增量只有5-6条。质量坑有三个：①多条用'唯一免费午餐''八条腿走路'这类口号代替数据，只有 《普通人资产配置框架：从金字塔底座开始》 和 《资产配置中的再平衡：时间法vs价格法》 给了可核验回测数字；②《资产配置四笔钱框架》 的'四笔钱框架超过80%散户水平''资产过亿客户也用这套'属于话术型抬价，信息量低于 《标准普尔家庭资产配置四象限框架》，故未选；③《债券基金的真实风险与选择要点》（5146赞）和 《指数基金定投的实践路径》（1720赞）是本节点最火的两条，但分别讲债基风险和指数基金定投，属于下游单品节点而非配置原理，热度没拿来破平——这正是互动数不能当排序依据的典型。另外 《低息时代普通人的资产配置框架》 的人力资产+财务地图三表是全集唯一视角，若该节点允许扩到6条，它应是第一个补进来的。",
+      "node": "资产配置的基本原理",
+      "order": [
+        {
+          "bucket": "pick",
+          "id": "bilibili:BV1KXT76jEzc",
+          "reason": "编辑判断·入选最小互补集：开篇定锚：用金字塔底座讲清'配置管波动不管收益'，并给出相关性会失效的反例，先把预期校正｜覆盖骨架[0, 1, 3]｜独有：配置决定组合波动的90%、相对收益仅40%来自配置；2022年股债相关性罕见转正（美股-19%/美债-13%）的具体数据",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "bilibili:BV1HV411e7ER",
+          "reason": "编辑判断·入选最小互补集：3分钟补齐底层概念：债与股的本质区别，是后面所有股债比例讨论的前提｜覆盖骨架[2]｜独有：破产清算顺序：债权人先取偿、股东最后分配",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "bilibili:BV1A54y1D7jK",
+          "reason": "编辑判断·入选最小互补集：主框架：标普四象限的分层逻辑与每层的用途边界，解决'投太多没现金流/闲钱不增值'的平衡｜覆盖骨架[3]｜独有：CPI只计房租不计房价，所以房价高≠居住配置比例高，自有住房应按生活成本比例分配",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "bilibili:BV1SLG4zgEEE",
+          "reason": "编辑判断·入选最小互补集：落地到数字：把框架变成可执行的仓位比例与建仓/调整动作，5分钟速览型｜覆盖骨架[4, 6]｜独有：风险承受力五档对应债权8成到3成、100-年龄作为股票仓位上限、一年期资金别做配置",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "bilibili:BV1L2nvzhE8N",
+          "reason": "编辑判断·入选最小互补集：收尾讲机制：再平衡的两种做法与不做的代价，带回测数字｜覆盖骨架[6]｜独有：2008年全仓股-37%/股六债四不调整-25%/再平衡仅-9%；时间法vs价格法年化只差0.2%",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1PbCZYHEh8",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1WT4y1K7Wb",
+          "reason": "编辑判断·主张层面与《资产配置：股债组合与动态调整方法》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1364y1S7wK",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1yMta6NE6h",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1og411h7Gc",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1Vi4YekEqS",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1q9xi6AE6X",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1nC41137By",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV19W4y1k7Lv",
+          "reason": "编辑判断·主张层面与《标准普尔家庭资产配置四象限框架》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1Aq4y1f7H9",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1XN4R6kEpw",
+          "reason": "编辑判断·主张层面与《标准普尔家庭资产配置四象限框架》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV12q2LBKErF",
+          "reason": "编辑判断·主张层面与《资产配置中的再平衡：时间法vs价格法》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1dFxCzaERE",
+          "reason": "编辑判断·主张层面与《普通人资产配置框架：从金字塔底座开始》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1Yy4y1m7av",
+          "reason": "编辑判断·主张层面与《资产配置的理论框架与多元化投资原理》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1LEVJezEgv",
+          "reason": "编辑判断·主张层面与《普通人资产配置框架：从金字塔底座开始》重复，默认折叠",
+          "source": "editorial_lm"
+        }
+      ],
+      "outline": [
+        "为什么要配置：单一资产/单一币种会齐涨齐跌，组合思维以整体而非单项为衡量单位",
+        "低相关/负相关是配置的数学内核：改善夏普比例与最大回撤，而非提高绝对收益；且相关性并非永久（2022年股债双杀）",
+        "可投资产的分类与本质差异：债券是借贷关系（固定利息、清算优先），股票是所有权关系（浮动收益、可能血本无归）",
+        "现金流分层框架：活钱/保命钱/生钱/增值钱（标普四象限、四笔钱），先按用途与期限分层再谈选品",
+        "仓位比例怎么定：风险承受力分档、100-年龄、投资期限越短越保守",
+        "人力资产与财务地图：赚钱能力是普通人最值钱的资产；三张表认清家底与应急资金后才谈金融配置",
+        "再平衡机制：固定比例后定期/按价格偏离调整，削峰填谷实现买低卖高，不调整则对冲失效",
+        "动态微调的判断工具：股债性价比（EP vs 债券收益率）等可核验的估值锚，而非凭感觉择时"
+      ],
+      "picks": [
+        {
+          "covers": [
+            0,
+            1,
+            3
+          ],
+          "id": "bilibili:BV1KXT76jEzc",
+          "role": "开篇定锚：用金字塔底座讲清'配置管波动不管收益'，并给出相关性会失效的反例，先把预期校正",
+          "unique": "配置决定组合波动的90%、相对收益仅40%来自配置；2022年股债相关性罕见转正（美股-19%/美债-13%）的具体数据"
+        },
+        {
+          "covers": [
+            2
+          ],
+          "id": "bilibili:BV1HV411e7ER",
+          "role": "3分钟补齐底层概念：债与股的本质区别，是后面所有股债比例讨论的前提",
+          "unique": "破产清算顺序：债权人先取偿、股东最后分配"
+        },
+        {
+          "covers": [
+            3
+          ],
+          "id": "bilibili:BV1A54y1D7jK",
+          "role": "主框架：标普四象限的分层逻辑与每层的用途边界，解决'投太多没现金流/闲钱不增值'的平衡",
+          "unique": "CPI只计房租不计房价，所以房价高≠居住配置比例高，自有住房应按生活成本比例分配"
+        },
+        {
+          "covers": [
+            4,
+            6
+          ],
+          "id": "bilibili:BV1SLG4zgEEE",
+          "role": "落地到数字：把框架变成可执行的仓位比例与建仓/调整动作，5分钟速览型",
+          "unique": "风险承受力五档对应债权8成到3成、100-年龄作为股票仓位上限、一年期资金别做配置"
+        },
+        {
+          "covers": [
+            6
+          ],
+          "id": "bilibili:BV1L2nvzhE8N",
+          "role": "收尾讲机制：再平衡的两种做法与不做的代价，带回测数字",
+          "unique": "2008年全仓股-37%/股六债四不调整-25%/再平衡仅-9%；时间法vs价格法年化只差0.2%"
+        }
+      ],
+      "provenance": {
+        "input_hash": "f887099e9701f7dc",
+        "model": "opus"
+      },
+      "receipt": {
+        "folded": 7,
+        "picked": 5,
+        "qualified": 20,
+        "rejected": 1,
+        "rejected_why": [
+          "转写片段严重混乱，中文部分大段重复无意义文本无法解析，虽英文段落涉及经济衰退期央行政策与资产配置，但转写质量无法保证口播"
+        ]
+      },
+      "stale": [
+        {
+          "id": "bilibili:BV1364y1S7wK",
+          "why": "2021-04 发布且长 2.5 小时，讲的是人生风险与理财规划总论，对资产配置原理节点既偏题又超长"
+        },
+        {
+          "id": "bilibili:BV1Aq4y1f7H9",
+          "why": "2021-09 发布，股债性价比的历史验证只举到2020年3月，近五年FED分位数区间已变，直接照搬区间阈值会误判"
+        },
+        {
+          "id": "bilibili:BV1Vi4YekEqS",
+          "why": "国债逆回购的收益率水平与节假日规则随利率环境变化，2024年的具体收益对比（高于货基）在低息环境下需重新核对"
+        }
+      ]
+    }
+  ]
+}

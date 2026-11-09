@@ -134,6 +134,8 @@ function countBy(items, key) {
 
 /* ---------- 状态改写（地图上每一次点击都走这里） ---------- */
 function go(patch) {
+  // 换节点就把"其余N条"收回去：展开状态属于那一页，不该跟着导航走
+  if ("node" in patch && patch.node !== state.node) evExpanded = false;
   Object.assign(state, patch);
   render();
   // BI：他点了地图上的哪一格。只在真的选中某一层时记，取消选择不记（避免噪音）
@@ -275,6 +277,98 @@ function renderScopeHint() {
   }
 }
 
+/* ---------- 主题页（S4 · CY 批 vr2 第五件，2026-11-09） ----------
+ * R9 的那一刀：**完成感必须发生在点出之前**。用户点开抖音/B站链接那一刻他已经在别人的
+ * app 里了，微信内没有回来的路径 ⟹ 指望他"看完视频觉得搞懂了"是指望一件我们看不见也
+ * 影响不到的事。所以主题页自己把答案给完：答案在前 → 视频退居证据位 → 页尾明确说可以关了。
+ * R9 还指出：真正的落地页是**节点页**，不是搜索框。这就是那个页。
+ *
+ * 数据来自 pages.json（pipeline/render_pages.py 确定性渲染，顺序取自审计表 map_log）。
+ * 前端**不重排** picks：顺序是编辑判断过、逐条有理由可回查的那一份，不是前端当时算出来的。
+ * pages.json 拿不到就安静退回原来的列表视图——答案区是增强，不是前提。
+ */
+let PAGES = new Map();      // node -> page
+let evExpanded = false;     // 「其余N条」是否已展开；换节点时重置
+let lastAnswerNode = null;  // 只在节点变化时记一次 BI，不是每次重绘
+
+/* pages.json 的 node 用的是**展示名**（和 data.json 同一套，编号/「地图缺口」已剥掉），
+   所以这里直接用 state.node 查就行，前端不再做第二次名字规整——两端各自规整是
+   "join 不上但两边都不报错"那类 bug 的温床（本次真浏览器验收就撞到一次）。 */
+function currentPage() { return state.node ? PAGES.get(state.node) : null; }
+function topicOfNode(n) {
+  const hit = ALL_DATA.find(it => it.node === n);
+  return hit ? hit.topic : null;
+}
+
+function renderAnswer() {
+  const el = document.getElementById("answer");
+  if (!el) return;
+  const p = currentPage();
+  if (!p || !(p.outline || []).length) { el.innerHTML = ""; lastAnswerNode = null; return; }
+  const r = p.receipt || {};
+  const disputed = (p.disputed || []).length ? `
+    <div class="ans-disputed">
+      <div class="dh">这个问题上，内容之间有分歧——我们不替你选边</div>
+      <ul>${p.disputed.map(d => `<li>${esc(d.claim || "")}
+        ${d.sides ? `<div class="sides">${esc(d.sides)}</div>` : ""}</li>`).join("")}</ul>
+    </div>` : "";
+  el.innerHTML = `<div class="ans" style="--c:${topicColor(topicOfNode(p.node))}">
+      <p class="ans-q">${esc(p.node)}</p>
+      <p class="ans-lead">下面就是答案。我们读完了这个问题下全部 ${r.qualified} 条合格内容，
+        把它们讲的合并成一份——不是某一条视频的说法。</p>
+      <ol>${p.outline.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
+      ${disputed}
+      <p class="ans-foot"><b>答完了。关掉就行。</b>
+        还想看讲述过程，下面 ${r.picked} 条视频是它的证据——我们从 ${r.qualified} 条里挑的，
+        ${r.folded ? `另有 ${r.folded} 条讲的是同一件事，默认折起来了` : "没有多余的重复"}${
+    r.rejected ? `；还有 ${r.rejected} 条没过关，没放上来` : ""}。</p>
+    </div>`;
+  if (lastAnswerNode !== p.node) {
+    lastAnswerNode = p.node;
+    emit("answer", { note: `outline=${p.outline.length} picked=${r.picked} folded=${r.folded || 0}` });
+  }
+}
+
+/** 证据区：picks 按审计顺序一条条给，每条上面写清它在这个答案里负责哪一段。 */
+function renderEvidence(el, items, page) {
+  const byId = new Map(items.map(it => [it.id, it]));
+  const staleWhy = new Map((page.stale || []).map(s => [s.id, s.why]));
+  const picks = (page.picks || []).filter(p => byId.has(p.id));
+  const restRows = (page.order || []).filter(o => o.bucket !== "pick" && byId.has(o.id));
+
+  const evBlock = (p) => {
+    const it = byId.get(p.id);
+    const cov = (p.covers || []).length
+      ? `<span class="cov">对应上面第 ${p.covers.map(i => i + 1).join("、")} 点</span> · ` : "";
+    const why = staleWhy.get(p.id);
+    return `<div class="ev">
+        <p class="ev-role">${cov}${esc(p.role || "")}${
+      p.unique ? `<br>只有它讲了：${esc(p.unique)}` : ""}
+        ${why ? `<div class="ev-stale">⏳ 可能过时：${esc(why)}</div>` : ""}</p>
+        <div class="grid">${cardHtml(it)}</div>
+      </div>`;
+  };
+
+  el.innerHTML = `
+    <div class="ev-head"><span class="t">证据</span>
+      <span class="n">${picks.length} 条，按读的顺序</span></div>
+    ${picks.map(evBlock).join("")}
+    ${restRows.length ? (evExpanded
+      ? `<div class="ev-head"><span class="t">这个问题下其余的内容</span>
+           <span class="n">${restRows.length} 条</span></div>
+         <p class="ev-foldnote">没入选不代表不好——多数是和上面某一条讲的同一件事。
+           每条都有一句为什么没入选，鼠标停在卡片上能看到。</p>
+         <div class="grid">${restRows.map(o =>
+        cardHtml(byId.get(o.id), o.reason)).join("")}</div>`
+      : `<button class="ev-more" id="ev-more">其余 ${restRows.length} 条（多数与上面重复）…</button>`)
+    : ""}`;
+
+  const more = el.querySelector("#ev-more");
+  if (more) more.addEventListener("click", () => { evExpanded = true; renderResults(); });
+  el.querySelectorAll(".card").forEach(c => c.addEventListener("click", () =>
+    openModal(DATA.find(it => it.id === c.dataset.id))));
+}
+
 /* ---------- 结果区 ---------- */
 /* 平台优先级（CY 2026-11-07 21:27 定）：「B站的视频质量会高一些，如果有B站的视频的话，
  * 我都会倾向于优先放B站的视频」。这是**明确的编辑方针，不是热度排序**——所以它排在
@@ -312,7 +406,7 @@ function fmtNum(n) {
   if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, "") + "k";
   return String(n);
 }
-function cardHtml(it) {
+function cardHtml(it, whyNote) {
   const dur = fmtDuration(it.duration_s);
   const hasImg = !!it.cover_url;
   const kps = (it.key_points || []).slice(0, 3);
@@ -322,7 +416,9 @@ function cardHtml(it) {
   const eng = [];
   if (it.collects != null) eng.push(`<span class="eng" title="收藏数">⭐${fmtNum(it.collects)}</span>`);
   if (it.comments != null) eng.push(`<span class="eng" title="评论数">💬${fmtNum(it.comments)}</span>`);
-  return `<div class="card" style="--c:${topicColor(it.topic)}" data-id="${esc(it.id)}">
+  // whyNote：主题页里"为什么没入选"的那句审计理由，挂 title 上（不占版面，但可查）
+  return `<div class="card" style="--c:${topicColor(it.topic)}" data-id="${esc(it.id)}"
+      ${whyNote ? `title="${esc(whyNote)}"` : ""}>
       <div class="card-thumb${hasImg ? "" : " noimg"}">
         ${hasImg
       ? `<img src="${esc(it.cover_url)}" alt="" loading="lazy" referrerpolicy="no-referrer"
@@ -350,6 +446,20 @@ function renderResults() {
   const items = filtered();
   document.getElementById("result-count").textContent = items.length ? `${items.length}条` : "";
 
+  /* 主题页命中时走证据视图。只在**没有搜索词**时走——有搜索词说明他在这个节点里再找
+     某个具体说法，那时该按命中度排，不该按编辑顺序排。 */
+  const page = currentPage();
+  const sortNote = document.querySelector(".sort-note");
+  if (page && !state.q && items.length) {
+    // 列表视图那句"B站优先/按标题排"在这一页是错的：这里的顺序是编辑判断过的阅读序
+    if (sortNote) sortNote.textContent =
+      "这一页的顺序是编辑判断：先给答案，再按阅读顺序给证据。每条为什么入选、为什么没入选都有记录。没有热度排序。";
+    renderEvidence(el, items, page);
+    return;
+  }
+  if (sortNote) sortNote.textContent =
+    "同一问题内：B站优先（讲得通常更完整），其余按标题排序；有搜索词时标题命中的排前面。没有热度排序，也没有推荐算法。";
+
   if (!items.length) {
     el.innerHTML = `<div class="empty">这里还没有内容。<br>
       <button class="linklike" id="reset-all">回到知识地图</button> 看看现在有什么。
@@ -369,7 +479,9 @@ function renderResults() {
     byNode.get(it.node).push(it);
   }
   if (byNode.size < 2) {
-    el.innerHTML = `<div class="grid">${sortItems(items).map(cardHtml).join("")}</div>`;
+    // ⚠️ 不能写 .map(cardHtml)：Array.map 会把下标当第二个参数传进去，
+    // cardHtml 的第二参是 whyNote ⟹ esc(数字) 当场抛 TypeError（真浏览器里抓到的）
+    el.innerHTML = `<div class="grid">${sortItems(items).map(it => cardHtml(it)).join("")}</div>`;
   } else {
     const order = [...byNode.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0], "zh"));
     el.innerHTML = order.map(([node, list]) => `
@@ -379,7 +491,7 @@ function renderResults() {
           <button class="section-title" data-drill="${esc(node)}" data-topic="${esc(list[0].topic)}">${esc(node)}</button>
           <span class="section-count">${list.length}条</span>
         </div>
-        <div class="grid">${sortItems(list).map(cardHtml).join("")}</div>
+        <div class="grid">${sortItems(list).map(it => cardHtml(it)).join("")}</div>
       </div>`).join("");
     el.querySelectorAll("[data-drill]").forEach(b => b.addEventListener("click", () =>
       go({ node: b.dataset.drill, topic: b.dataset.topic })));
@@ -393,6 +505,7 @@ function render() {
   if (typeof renderSuggest === "function") renderSuggest();
   renderMap();
   renderScopeHint();
+  renderAnswer();
   renderResults();
 }
 
@@ -691,4 +804,18 @@ function loadData(attempt = 1) {
          <div class="empty-note">多半是网络半途断了。内容本身没事，刷一下就好。</div></div>`;
     });
 }
+
+/* 主题页数据。**失败是非致命的**：拿不到就退回原来的列表视图，不弹错、不挡内容——
+   答案区是增强层，不是前提（和 /semantic 同样的姿势）。 */
+function loadPages() {
+  fetch("pages.json", { cache: "no-cache" })
+    .then(r => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+    .then(d => {
+      PAGES = new Map((d.pages || []).map(p => [p.node, p]));
+      render();
+    })
+    .catch(() => { /* 没有主题页就当没有，列表视图照常工作 */ });
+}
+
 loadData();
+loadPages();

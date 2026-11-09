@@ -206,6 +206,35 @@ footer{padding:14px 16px 30px;color:var(--sub);font-size:var(--fs-sm);border-top
 .kp-note{font-size:var(--fs-xs);color:#aaa;margin-top:7px;line-height:1.5}
 a.src{font-size:var(--fs-md);color:var(--accent);text-decoration:none}
 a.src:after{content:" →"}
+
+/* ---------- 主题页答案区（S4） ----------
+   它是这一屏的主体，所以比卡片更重：白底、细边、左侧一道主题色。
+   但刻意**不**用大标题压住全页——它是"答案"，不是"栏目"。 */
+#answer:empty{display:none}
+#answer{margin:4px 0 14px}
+.ans{background:#fff;border:1px solid var(--line);border-left:3px solid var(--c);border-radius:9px;padding:13px 15px 11px}
+.ans-q{font-size:var(--fs-xl);font-weight:700;margin:0 0 2px;line-height:1.4}
+.ans-lead{font-size:var(--fs-xs);color:var(--mute);margin:0 0 9px}
+.ans ol{margin:0;padding-left:20px}
+.ans ol li{font-size:var(--fs-lg);line-height:1.62;margin-bottom:6px;color:#222}
+.ans-foot{font-size:var(--fs-xs);color:#999;margin:10px 0 0;padding-top:9px;border-top:1px dashed var(--line);line-height:1.6}
+.ans-foot b{color:#276749;font-size:var(--fs-sm)}
+/* 分歧块：这是我们能给、聊天机器人给不了的东西——"这个问题上说法不一致"本身是答案的一部分 */
+.ans-disputed{margin-top:10px;background:#fffaf0;border:1px solid #f0e2c8;border-radius:7px;padding:9px 11px}
+.ans-disputed .dh{font-size:var(--fs-sm);font-weight:600;color:#975a16;margin-bottom:5px}
+.ans-disputed li{font-size:var(--fs-sm);color:#5f4a1f;line-height:1.55;margin-bottom:5px}
+.ans-disputed ul{margin:0;padding-left:17px}
+.ans-disputed .sides{color:#8a7a52;font-size:var(--fs-xs)}
+/* 证据区的标签行 */
+.ev-head{display:flex;align-items:baseline;gap:7px;margin:14px 0 7px}
+.ev-head .t{font-size:var(--fs-md);font-weight:600;color:#333}
+.ev-head .n{font-size:var(--fs-xs);color:#aaa}
+.ev-role{font-size:var(--fs-xs);color:#666;background:#f6f6f4;border-radius:5px;padding:4px 7px;margin:0 0 6px;line-height:1.5}
+.ev-role .cov{color:#2b6cb0}
+.ev-stale{font-size:var(--fs-xs);color:#975a16;margin-top:3px}
+.ev-more{width:100%;margin-top:10px;padding:9px;font-size:var(--fs-sm);color:#666;background:#fff;border:1px dashed var(--line);border-radius:8px;cursor:pointer;text-align:center}
+.ev-more:hover{border-color:#bbb;color:#333}
+.ev-foldnote{font-size:var(--fs-xs);color:#aaa;margin:6px 0 0;line-height:1.5}
 </style>
 </head>
 <body>
@@ -250,6 +279,10 @@ a.src:after{content:" →"}
          刻意**不说**"地图上没有"——用户没有"地图"这个概念（CY 2026-11-09 定的话术）。 -->
     <div id="suggest"></div>
     <div id="map"></div>
+    <!-- 主题页的答案区（S4）。R9 的那一刀：用户点开抖音链接那一刻他已经离开我们了，
+         微信里没有回来的路径 ⟹ **完成感必须发生在点出之前**。所以这一屏自己把答案给完，
+         视频退居证据位，页尾明确告诉他可以关掉。 -->
+    <div id="answer"></div>
     <!-- 排序规则就写在结果列表上方（CY 之前提过"搜索/排序机制不透明"）。
          放这里而不是搜索框下面：它说明的是下面这个列表怎么排的。 -->
     <div class="toolbar">

@@ -58,8 +58,10 @@ function cors(request) {
 // S1 新增三个 kind（2026-11-09）：search_sem = 地图认为他问的是哪个节点（node 列放节点名、
 // note 列放 score/n/ms）· search_sem_fail = 语义调用挂了 · sem_pick = 他点了哪条语义建议。
 // 白名单仍然保留：这个端点对匿名流量开放，不能变成任意写入口。
+// S4 新增 answer = 他看到了某个问题的主题页（node 列放节点名、note 列放骨架/入选/折叠条数）。
+// 它是"完成感发生在点出之前"这条设计的唯一读数：答案页被看过多少次 vs 点出去多少次。
 const KINDS = new Set(["found", "not_found", "gap_wish", "search", "pick", "open",
-                       "search_sem", "search_sem_fail", "sem_pick"]);
+                       "search_sem", "search_sem_fail", "sem_pick", "answer"]);
 
 export default {
   async fetch(request, env) {
