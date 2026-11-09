@@ -27,6 +27,8 @@
  *   ↑ 第二条就是**内容缺口清单**：用户搜了、我们一条都没有的词。
  */
 
+import { NODES } from "./nodes.gen.js";
+
 // 只放行我们自己的来源，不开 `*`。现在站点在 GitHub Pages；live.vozo.ai 先放进来，
 // 迁站那天少一步（多一个允许的来源不增加风险，少一个会在迁站当天静默报 CORS 错）。
 const ALLOWED = new Set([
@@ -53,6 +55,7 @@ export default {
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
     const url = new URL(request.url);
     if (url.pathname === "/rtsearch") return rtSearch(request, env, CORS);
+    if (url.pathname === "/semantic") return semantic(request, env, CORS, url);
     if (request.method !== "POST") return new Response("POST only", { status: 405, headers: CORS });
 
     let body;
@@ -152,8 +155,19 @@ async function rtSearch(request, env, CORS) {
   }
 
   // ③ 真实调用 Quorum（只打快道两站，不碰视频号——它取流贵、这里又不取流只搜索，没必要碰）
+  //
+  // ⚠️ 2026-11-09 修（CY 批 vr2 第一件）：这一段原来把每站的失败整个吞掉
+  //   （`if (!r.ok) continue` + 空 catch），于是**两站全挂时仍然返回
+  //   `{ok:true, results:[]}`，和"搜索成功但真的没有结果"一模一样**；更糟的是它还把这个
+  //   空结果**写进了 rt_cache**，让一次瞬时故障在 TTL 内污染后续所有同词查询。
+  //   现在：逐站记下失败原因；**一站都没成功就返回 ok:false + 502，且不写缓存、不记预算**
+  //   （什么都没花）；部分成功则 ok:true 带 partial + errors。
+  //   这个 bug 的根因是边缘够不到本机数据网关（通路已定为"出站轮询"，还没建）——
+  //   但"够不到"必须说出来，不能装成"没有结果"。
   let totalCost = 0;
   const results = [];
+  const errors = [];
+  let okPlatforms = 0;
   for (const platform of PLATFORMS_FAST) {
     try {
       const r = await fetch(`${env.QUORUM_URL}/v1/search/videos`, {
@@ -161,8 +175,9 @@ async function rtSearch(request, env, CORS) {
         headers: { "X-API-Key": env.QUORUM_API_KEY, "Content-Type": "application/json" },
         body: JSON.stringify({ platform, keyword: qRaw }),
       });
-      if (!r.ok) continue;
+      if (!r.ok) { errors.push({ platform, err: `http_${r.status}` }); continue; }
       const data = await r.json();
+      okPlatforms += 1;
       // 真实响应形状（curl 实测）：{schema_version, data:[...items], meta:{cost_usd,...}}
       // ——不是 python SDK SearchPage 的 .items/.cost_usd 属性名，那是客户端包装后的名字。
       totalCost += data?.meta?.cost_usd || 0;
@@ -174,7 +189,18 @@ async function rtSearch(request, env, CORS) {
         results.push({ platform, title: title.slice(0, 80), link: it.url || "",
                        cover: it.media?.cover_url || "", duration_s: dur || null });
       }
-    } catch (e) { /* 单站失败不拖垮另一站，宁可少一半结果也别整体失败 */ }
+    } catch (e) {
+      // 单站失败不拖垮另一站，但**必须留痕**：吞掉异常正是 11-09 那个假绿的来源。
+      errors.push({ platform, err: (e && e.name) || "fetch_failed",
+                    msg: String((e && e.message) || e).slice(0, 120) });
+    }
+  }
+
+  // ③.5 一站都没成功 ⟹ 这不是"没有结果"，是"我们没搜到任何上游"。
+  //     不写缓存（否则污染 TTL 内的同词查询）、不记预算（什么都没花）、HTTP 502。
+  if (okPlatforms === 0) {
+    return json(CORS, { ok: false, err: "upstream_unreachable",
+                        searched: PLATFORMS_FAST, errors, results: [] }, 502);
   }
 
   // ④ 落账：缓存结果 + 记花费（即使零结果也要记，因为搜索调用已经花了钱）
@@ -189,5 +215,112 @@ async function rtSearch(request, env, CORS) {
     ).bind(day, totalCost, totalCost),
   ]);
 
-  return json(CORS, { ok: true, verified: false, cached: false, cost_usd: totalCost, results });
+  return json(CORS, {
+    ok: true, verified: false, cached: false, cost_usd: totalCost, results,
+    // 成功但零结果 ≠ 失败：把"搜了哪几站、几站成功、哪几站报了什么错"一起给出去，
+    // 让前端和日后的监控能分辨这两件事（而不是都看成 results: []）。
+    searched: PLATFORMS_FAST, ok_platforms: okPlatforms,
+    partial: okPlatforms < PLATFORMS_FAST.length,
+    errors,
+  });
+}
+
+/* ============ 语义搜索（CY 2026-11-09 01:15「能用就用」批 Workers AI） ============
+ *
+ * 做什么：把用户打的字和 35 个知识节点（ai1 23 + fin1 12）比语义相似度，返回最接近的
+ * 三个节点。**不替代**前端现有的关键词匹配——向量擅长"换句话说"，不擅长专有名词精确
+ * 匹配（实测「ElevenLabs怎么用」最高只到 0.542，比离题问句高不了多少）。两层并存：
+ * 关键词负责"打对了名字"，语义负责"说的是人话但没打中词"。
+ *
+ * 为什么用 Workers AI 而不是 OpenAI embedding：同一个 Cloudflare 账号、零新凭据、
+ * 不出 Cloudflare 网（少一跳出站），免费层 10,000 neurons/天 ≈ 9.3M input tokens/天，
+ * 按一次查询十几个 token 算是 40 万次/天量级，这个站用不到千分之一。
+ * 实测（2026-11-09，35 节点 / 13 条留出问法）：节点名+典型问法索引命中 12/13。
+ *
+ * ⚠️ 同 rtsearch：**只上端点，前端没接**，app.js 现在不会调用它。接进搜索框
+ * （什么时候触发、怎么跟关键词结果合并、"没有好答案"怎么说）会改变用户看到的东西，
+ * 单独一轮做、单独验。
+ */
+const EMBED_MODEL = "@cf/baai/bge-m3";
+// 判「这个问题我们地图上没有对应节点」的下限。实测分隔度（n=15）：离题问句最高 0.542，
+// 正确命中最低 0.656 —— 0.60 落在这条缝里。样本小，上线后要用真实查询重标，别当定数。
+const SEM_MIN = 0.60;
+const EMBED_BATCH = 50;          // 一次 AI.run 不喂太多条，避免撞上模型侧的批量上限
+
+// 模块级缓存：同一 isolate 内复用节点向量。冷启动要多花一次 ~1-2s 把 105 条索引文本
+// 向量化，之后每次请求只向量化用户那一句。**故意不落 D1/KV**——节点表会改，缓存越持久
+// 越容易指向旧节点；isolate 生命周期天然就是"部署一次失效一次"，正好是我们要的语义。
+let VEC_CACHE = null;
+
+async function embedTexts(env, texts) {
+  const out = [];
+  for (let i = 0; i < texts.length; i += EMBED_BATCH) {
+    const r = await env.AI.run(EMBED_MODEL, { text: texts.slice(i, i + EMBED_BATCH) });
+    const d = r?.data;
+    if (!Array.isArray(d)) throw new Error("embed: unexpected shape");
+    out.push(...d);
+  }
+  return out;
+}
+
+async function nodeVecs(env) {
+  if (VEC_CACHE) return VEC_CACHE;
+  const texts = [], owner = [];
+  NODES.forEach((n, i) => n.texts.forEach(t => { texts.push(t); owner.push(i); }));
+  const vecs = await embedTexts(env, texts);
+  VEC_CACHE = { vecs, owner };
+  return VEC_CACHE;
+}
+
+function cosine(a, b) {
+  let dot = 0, na = 0, nb = 0;
+  for (let i = 0; i < a.length; i++) { dot += a[i] * b[i]; na += a[i] * a[i]; nb += b[i] * b[i]; }
+  return dot / (Math.sqrt(na) * Math.sqrt(nb) || 1);
+}
+
+async function semantic(request, env, CORS, url) {
+  const t0 = Date.now();
+  let q = "", domain = "";
+  if (request.method === "GET") {
+    q = (url.searchParams.get("q") || "").trim();
+    domain = url.searchParams.get("domain") || "";
+  } else if (request.method === "POST") {
+    let body;
+    try { body = await request.json(); } catch (e) { return json(CORS, { ok: false, err: "bad json" }, 400); }
+    q = (body?.q || "").trim();
+    domain = body?.domain || "";
+  } else {
+    return json(CORS, { ok: false, err: "GET or POST" }, 405);
+  }
+  if (!q || q.length > 60) return json(CORS, { ok: false, err: "bad q" }, 400);
+
+  let idx, qv;
+  try {
+    idx = await nodeVecs(env);
+    [qv] = await embedTexts(env, [q]);
+  } catch (e) {
+    // 向量化挂了就老实说挂了，别回一个空结果让前端以为"地图上没有"
+    return json(CORS, { ok: false, err: "embed failed" }, 502);
+  }
+
+  const best = new Map();                       // 节点下标 → 该节点所有索引文本里的最高相似度
+  for (let j = 0; j < idx.vecs.length; j++) {
+    const i = idx.owner[j];
+    if (domain && NODES[i].domain !== domain) continue;
+    const s = cosine(qv, idx.vecs[j]);
+    if (s > (best.get(i) ?? -2)) best.set(i, s);
+  }
+  const top = [...best.entries()]
+    .sort((a, b) => b[1] - a[1]).slice(0, 3)
+    // `n` = 该节点下已核验内容条数，`kind` = map（正式地图节点）/ gap（判定器自动开的）。
+    // 前端要用 n 来区分"有货"和"地图上有这个问题但一条内容都没有"——两种话术不一样。
+    .map(([i, s]) => ({ domain: NODES[i].domain, id: NODES[i].id, kind: NODES[i].kind,
+                        name: NODES[i].name, n: NODES[i].n,
+                        score: Math.round(s * 1000) / 1000 }));
+
+  return json(CORS, {
+    ok: true, q, model: EMBED_MODEL, ms: Date.now() - t0,
+    confident: top.length > 0 && top[0].score >= SEM_MIN,   // false ⟹ 地图上大概没有这个问题
+    threshold: SEM_MIN, top,
+  });
 }

@@ -100,6 +100,13 @@ button{font-family:inherit}
 .dchip .dn{font-size:var(--fs-xs);opacity:.7;margin-left:4px}
 .chips{display:flex;flex-wrap:wrap;gap:5px}
 .chip{font-size:var(--fs-sm);padding:4px 9px;border-radius:13px;border:1px solid var(--line);background:#fff;color:#444;cursor:pointer;text-align:left}
+/* 语义建议区（S1）。低调：它是"你也许想问这个"，不是结果本身，不该比结果更抢眼。 */
+#suggest:empty{display:none}
+#suggest{margin:6px 0 10px;padding:8px 10px;border:1px dashed var(--line);border-radius:8px;background:#fcfcfc}
+#suggest .sg-label{font-size:var(--fs-xs);color:#888;margin-bottom:6px}
+#suggest .chips{display:flex;flex-wrap:wrap;gap:6px}
+#suggest .chip.gap{cursor:default;color:#999;border-style:dashed}
+#suggest .sg-note{font-size:var(--fs-xs);color:#aaa;margin-top:6px}
 .chip:hover{border-color:var(--c);color:var(--c)}
 .chip.current{background:var(--c);border-color:var(--c);color:#fff}
 .chip.more{color:#999;border-style:dashed}
@@ -236,9 +243,12 @@ a.src:after{content:" →"}
     <div class="searchbar">
       <input id="q" type="text" placeholder="你想弄明白什么？比如：大模型为什么会幻觉">
     </div>
-    <p class="hint">关键词匹配，不是语义搜索。搜不到是我们的问题——点左边那颗「没找到」告诉我们。</p>
+    <p class="hint">按你自己的话问就行，用词不一样也能找到。搜不到是我们的问题——点左边那颗「没找到」告诉我们。</p>
     <div id="scope-hint"></div>
     <div id="crumbs"></div>
+    <!-- 语义建议：用户的说法和我们的问题措辞对不上时，这里列最接近的几个问题。
+         刻意**不说**"地图上没有"——用户没有"地图"这个概念（CY 2026-11-09 定的话术）。 -->
+    <div id="suggest"></div>
     <div id="map"></div>
     <!-- 排序规则就写在结果列表上方（CY 之前提过"搜索/排序机制不透明"）。
          放这里而不是搜索框下面：它说明的是下面这个列表怎么排的。 -->

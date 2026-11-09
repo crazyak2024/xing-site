@@ -12,3 +12,8 @@ routes = [{ pattern = "bi.vectorherd.com", custom_domain = true }]
 binding = "DB"
 database_name = "xing-bi"
 database_id = "9f61e002-bda1-4641-a658-44626405c95f"
+
+# Workers AI：语义搜索用 @cf/baai/bge-m3 把查询词向量化。零新凭据（同账号），
+# 免费层 10,000 neurons/天 ≈ 9.3M input tokens/天。CY 2026-11-09「能用就用」批。
+[ai]
+binding = "AI"

@@ -389,6 +389,7 @@ function renderResults() {
 
 function render() {
   renderCrumbs();
+  if (typeof renderSuggest === "function") renderSuggest();
   renderMap();
   renderScopeHint();
   renderResults();
@@ -558,6 +559,90 @@ document.getElementById("exit-no").addEventListener("click", () => {
   input.focus();
 });
 
+/* ---------- 语义搜索接入（S1 · CY 批 vr2 第二件，2026-11-09） ----------
+ * 为什么必须接：前台原来只做关键词子串匹配，用户换个说法就 0 命中
+ * （"通胀是什么" vs 节点名"通货膨胀是怎么发生的"），而 /semantic 端点 11-09 02:0x
+ * 就上线了、一直没人调用。接它同时解掉另一件事：**搜索事件里从此带上"地图认为他问的是
+ * 哪个节点"**——那是自动升级闸（"搜索次数够多"）和地图残缺度判断的输入。
+ * 刻意忽略端点返回的 `confident` 布尔：那是在让向量做判定（v3 §6.1 已决定撤掉）；
+ * 前台不说"我们有/没有"，只列最接近的几个问题。
+ */
+const SEMANTIC_URL = COLLECT_URL + "/semantic";
+let SEM = { q: "", top: [], ms: 0, pending: false, err: "" };
+let semSeq = 0;
+
+function fetchSemantic(q) {
+  if (!q || q.length > 60) { SEM = { q: "", top: [], ms: 0, pending: false, err: "" }; renderSuggest(); return; }
+  const seq = ++semSeq;
+  SEM = { q, top: [], ms: 0, pending: true, err: "" };
+  renderSuggest();
+  fetch(SEMANTIC_URL, { method: "POST", headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ q }) })
+    .then(r => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
+    .then(d => {
+      if (seq !== semSeq) return;            // 用户还在打字，过期响应直接丢掉
+      if (!d || d.ok !== true) throw new Error((d && d.err) || "bad payload");
+      SEM = { q, top: (d.top || []).slice(0, 5), ms: d.ms || 0, pending: false, err: "" };
+      renderSuggest();
+      const t0 = SEM.top[0];
+      emit("search_sem", { sem_top: t0 ? t0.name : "", sem_score: t0 ? t0.score : null,
+                           sem_n: t0 ? (t0.n || 0) : null, sem_ms: SEM.ms });
+    })
+    .catch(e => {
+      if (seq !== semSeq) return;
+      // 失败就安静退回关键词匹配（绝不因为一个附加能力影响用户），但**必须留痕**——
+      // 不留痕就会变成 /rtsearch 那种"自报成功的空结果"。
+      SEM = { q, top: [], ms: 0, pending: false, err: String((e && e.message) || e) };
+      renderSuggest();
+      emit("search_sem_fail", { err: SEM.err });
+    });
+}
+
+/** 这个问题节点在库里有内容吗？有就返回它的 topic/domain（用于跳转），没有返回 null。 */
+function nodeInLib(name) {
+  const hit = ALL_DATA.find(it => it.node === name);
+  return hit ? { topic: hit.topic, domain: hit.domain } : null;
+}
+
+function renderSuggest() {
+  const el = document.getElementById("suggest");
+  if (!el) return;
+  if (!state.q || SEM.q !== state.q) { el.innerHTML = ""; return; }
+  const localHits = matchedByQuery().length;
+  if (SEM.pending) {
+    // 关键词已经有命中时不打扰（他已经有东西看了）；0 命中时才告诉他我们在想
+    el.innerHTML = localHits ? "" : `<div class="sg-label">正在理解你这句话…</div>`;
+    return;
+  }
+  if (!SEM.top.length) { el.innerHTML = ""; return; }
+  const localNodes = new Set(matchedByQuery().map(it => it.node));
+  // 关键词命中的就是语义最近的那个节点 ⟹ 没有新信息，不打扰
+  if (localHits && localNodes.has(SEM.top[0].name)) { el.innerHTML = ""; return; }
+
+  const chips = SEM.top.map(t => {
+    const where = nodeInLib(t.name);
+    if (!where) {
+      return `<span class="chip gap" title="这个问题还没有合格内容">${esc(t.name)}</span>`;
+    }
+    return `<button class="chip" data-sg="${esc(t.name)}" data-sg-topic="${esc(where.topic)}"
+      data-sg-domain="${esc(where.domain || "")}">${esc(t.name)}<span class="n">${t.n || ""}</span></button>`;
+  }).join("");
+  const allGap = SEM.top.every(t => !nodeInLib(t.name));
+  el.innerHTML =
+    `<div class="sg-label">你想问的，也许是这几个问题：</div>
+     <div class="chips">${chips}</div>` +
+    (allGap ? `<div class="sg-note">这些问题很重要，但我们现在还没有干净的答案，会继续寻找。</div>` : "");
+  el.querySelectorAll("[data-sg]").forEach(b => b.addEventListener("click", () => {
+    const d = b.dataset.sgDomain || null;
+    if (d && state.domain && d !== state.domain) { state.domain = d; applyDomain(); }
+    // 跳过去时清掉搜索词：他的原话已经完成任务了（我们已经把他路由到对的问题上），
+    // 留着只会把结果再按字面过滤一遍，又变成 0 条。
+    document.getElementById("q").value = "";
+    emit("sem_pick", { sem_picked: b.dataset.sg });
+    go({ q: "", node: b.dataset.sg, topic: b.dataset.sgTopic });
+  }));
+}
+
 /* ---------- 绑定 ---------- */
 document.getElementById("modal-overlay").addEventListener("click", e => {
   if (e.target.id === "modal-overlay") closeModal();
@@ -574,6 +659,9 @@ document.getElementById("q").addEventListener("input", e => {
     // 只在停下打字后记一次（不是每个按键）。**搜了什么 + 命中几条**是这个产品
     // 最该看的 BI：命中 0 的词就是内容缺口清单。
     if (v) emit("search");
+    // 语义搜索：关键词命中与否都要问一次——它不只是兜底，还负责把
+    // "地图认为他问的是哪个节点"记进事件表（自动升级闸要吃这个）。
+    fetchSemantic(v);
   }, 160);
 });
 
