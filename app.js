@@ -325,7 +325,8 @@ function cardHtml(it) {
   return `<div class="card" style="--c:${topicColor(it.topic)}" data-id="${esc(it.id)}">
       <div class="card-thumb${hasImg ? "" : " noimg"}">
         ${hasImg
-      ? `<img src="${esc(it.cover_url)}" alt="" loading="lazy" referrerpolicy="no-referrer">`
+      ? `<img src="${esc(it.cover_url)}" alt="" loading="lazy" referrerpolicy="no-referrer"
+             onerror="this.closest('.card-cover')?.remove()||this.remove()">`
       : `<span>${esc(PLATFORM_CN[it.platform] || it.platform)}</span>`}
         <span class="plat-badge">${esc(PLATFORM_CN[it.platform] || it.platform)}</span>
         ${dur ? `<span class="dur-badge">${dur}</span>` : ""}
@@ -416,7 +417,8 @@ function openModal(it) {
     ? `<iframe class="modal-embed" src="${embedFn(it.video_id)}" allow="autoplay; fullscreen" allowfullscreen scrolling="no" frameborder="0"></iframe>
        <p class="modal-tip">播放器是${PLATFORM_CN[it.platform] || it.platform}官方的，它自带的那些按钮我们改不掉。点进播放区后 Escape 可能失效（跨站 iframe 限制），用右上角 ✕ 关闭。</p>`
     : `<div class="modal-cover-wrap">
-         ${it.cover_url ? `<img class="modal-cover" src="${it.cover_url}" alt="">` : ""}
+         ${it.cover_url ? `<img class="modal-cover" src="${it.cover_url}" alt=""
+              onerror="this.closest('.modal-cover-wrap')?.remove()||this.remove()">` : ""}
          <div><a class="modal-openlink" href="${it.link}" target="_blank" rel="noopener">在${PLATFORM_CN[it.platform] || it.platform}中打开观看</a></div>
          <p class="modal-tip">视频号的官方嵌入只支持微信小程序内，网页做不到，这是平台限制。</p>
        </div>`;
@@ -585,8 +587,10 @@ function fetchSemantic(q) {
       SEM = { q, top: (d.top || []).slice(0, 5), ms: d.ms || 0, pending: false, err: "" };
       renderSuggest();
       const t0 = SEM.top[0];
-      emit("search_sem", { sem_top: t0 ? t0.name : "", sem_score: t0 ? t0.score : null,
-                           sem_n: t0 ? (t0.n || 0) : null, sem_ms: SEM.ms });
+      // 落进现有 ev 表不加列：node 列正好就是节点名，细节塞 note。
+      // （加列要改 D1 schema，而这条信息的形状本来就跟 node 对得上。）
+      if (t0) emit("search_sem", { node: t0.name,
+                                   note: `score=${t0.score} n=${t0.n || 0} ms=${SEM.ms}` });
     })
     .catch(e => {
       if (seq !== semSeq) return;
@@ -594,7 +598,7 @@ function fetchSemantic(q) {
       // 不留痕就会变成 /rtsearch 那种"自报成功的空结果"。
       SEM = { q, top: [], ms: 0, pending: false, err: String((e && e.message) || e) };
       renderSuggest();
-      emit("search_sem_fail", { err: SEM.err });
+      emit("search_sem_fail", { note: SEM.err });
     });
 }
 
@@ -638,7 +642,7 @@ function renderSuggest() {
     // 跳过去时清掉搜索词：他的原话已经完成任务了（我们已经把他路由到对的问题上），
     // 留着只会把结果再按字面过滤一遍，又变成 0 条。
     document.getElementById("q").value = "";
-    emit("sem_pick", { sem_picked: b.dataset.sg });
+    emit("sem_pick", { node: b.dataset.sg });
     go({ q: "", node: b.dataset.sg, topic: b.dataset.sgTopic });
   }));
 }

@@ -43,11 +43,23 @@ function cors(request) {
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Max-Age": "86400",
+    // ⚠️ 2026-11-09 真浏览器验收才发现：**所有 BI 事件一条都没进来过**。
+    //   `navigator.sendBeacon` 的跨源请求按规范是 credentials mode = include，
+    //   而浏览器要求此时响应必须带 `Access-Control-Allow-Credentials: true`
+    //   （且 ACAO 不能是 `*`——我们本来就回具体 origin，正好满足）。
+    //   少这一行 ⟹ 预检不通过 ⟹ 请求 ERR_FAILED 被丢掉，**而 curl 验收全绿**
+    //   （curl 不做预检，也不带凭据）。这就是"自己的判据看不见浏览器看见的"。
+    //   承诺不破：我们从不设任何 cookie，所以 include 实际什么也带不出去。
+    "Access-Control-Allow-Credentials": "true",
     "Vary": "Origin",
   };
 }
 
-const KINDS = new Set(["found", "not_found", "gap_wish", "search", "pick", "open"]);
+// S1 新增三个 kind（2026-11-09）：search_sem = 地图认为他问的是哪个节点（node 列放节点名、
+// note 列放 score/n/ms）· search_sem_fail = 语义调用挂了 · sem_pick = 他点了哪条语义建议。
+// 白名单仍然保留：这个端点对匿名流量开放，不能变成任意写入口。
+const KINDS = new Set(["found", "not_found", "gap_wish", "search", "pick", "open",
+                       "search_sem", "search_sem_fail", "sem_pick"]);
 
 export default {
   async fetch(request, env) {
