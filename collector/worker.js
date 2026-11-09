@@ -61,7 +61,7 @@ function cors(request) {
 // S4 新增 answer = 他看到了某个问题的主题页（node 列放节点名、note 列放骨架/入选/折叠条数）。
 // 它是"完成感发生在点出之前"这条设计的唯一读数：答案页被看过多少次 vs 点出去多少次。
 const KINDS = new Set(["found", "not_found", "gap_wish", "search", "pick", "open",
-                       "search_sem", "search_sem_fail", "sem_pick", "answer"]);
+                       "search_sem", "search_sem_fail", "sem_pick", "answer", "search_gap"]);
 
 export default {
   async fetch(request, env) {

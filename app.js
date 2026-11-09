@@ -683,8 +683,12 @@ document.getElementById("exit-no").addEventListener("click", () => {
  * 前台不说"我们有/没有"，只列最接近的几个问题。
  */
 const SEMANTIC_URL = COLLECT_URL + "/semantic";
+// 低于这个相似度就不摆"你也许想问"——摆了是噪音，不是帮助。端点自己的 threshold 也是 0.6，
+// 但判断权留在前端：是我们决定"什么时候闭嘴"，不是端点替我们决定。
+const SUGGEST_FLOOR = 0.60;
 let SEM = { q: "", top: [], ms: 0, pending: false, err: "" };
 let semSeq = 0;
+let lastGapQ = null;   // 同一句话只记一次缺口，别让一次输入刷出一串事件
 
 function fetchSemantic(q) {
   if (!q || q.length > 60) { SEM = { q: "", top: [], ms: 0, pending: false, err: "" }; renderSuggest(); return; }
@@ -735,6 +739,22 @@ function renderSuggest() {
   const localNodes = new Set(matchedByQuery().map(it => it.node));
   // 关键词命中的就是语义最近的那个节点 ⟹ 没有新信息，不打扰
   if (localHits && localNodes.has(SEM.top[0].name)) { el.innerHTML = ""; return; }
+
+  /* 相似度地板（2026-11-09 补）。实测「血糖怎么控制」的最近节点是
+     「如何构建稳定现金流」0.527、「怎么写提示词才能少踩坑」0.512——**这不是建议，是噪音**，
+     把它摆出来等于告诉用户"我们没听懂还装懂"。
+     ⚠️ 这和"刻意忽略 confident 布尔"不矛盾：那条是不让向量去做**判定**（有没有答案），
+     这条是不让向量去**瞎猜**（这几个问题跟你问的根本不是一回事）。用原始分数、
+     地板写在前端，是为了这个数字看得见、能调。 */
+  if (SEM.top[0].score < SUGGEST_FLOOR) {
+    el.innerHTML =
+      `<div class="sg-label">这个问题我们还没有。</div>
+       <div class="sg-note">已经记下来了，正在去找合适的内容——我们要先看一遍、核对关键事实，
+         才会放上来，所以不会马上有。过一会儿回来搜同一句话就知道。</div>`;
+    // 记一条"库里没有这个问题"——这是内容缺口清单，也是补搜的触发输入。
+    if (lastGapQ !== state.q) { lastGapQ = state.q; emit("search_gap", { note: `top=${SEM.top[0].score}` }); }
+    return;
+  }
 
   const chips = SEM.top.map(t => {
     const where = nodeInLib(t.name);
