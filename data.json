@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共1620条",
+  "generated_note": "判定=合格的候选，共1624条",
   "topics": [
     "概念原理",
     "方法实操",
@@ -10,7 +10,7 @@
     {
       "id": "ai1",
       "label": "AI 与大模型",
-      "count": 1427
+      "count": 1431
     },
     {
       "id": "fin1",
@@ -27121,6 +27121,115 @@
       "topic": "方法实操",
       "node": "LLM预训练与监督微调原理",
       "category": "(地图缺口)LLM预训练与监督微调原理",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1ts4K6eEkN",
+      "video_id": "BV1ts4K6eEkN",
+      "title": "SFT训练的epoch数怎么选",
+      "original_title": "【SFT 实战】SFT 训练几个 epoch：真实配方分层、验证 loss 失灵、按下游指标挑",
+      "author": "古希腊掌管代码的神",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1ts4K6eEkN",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/ddd7f3c67b88bb6fd889f55d992c4b21212afa81.png",
+      "published_at": "2026-11-10T00:30:00+00:00",
+      "key_points": [
+        "同数据量下知名SFT工作epoch差1-16倍，网上'1~3轮'表无出处，应按总更新步数对比",
+        "数据重复学到新东西递减，4倍重复≈新数据但16倍后收益掉快",
+        "验证loss在SFT失效：OpenAI发现过第一epoch就升，奖励模型打分反而涨",
+        "实操：几万条1~3轮起点，每epoch存checkpoint，同测验证loss和下游指标，按后者选"
+      ],
+      "duration_s": 316.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解SFT训练中epoch数选择方法，对比知名工作差异、验证loss失效现象，提出按下游指标和数据量选择的实操框架",
+      "reason": "讲清了SFT epoch选择的方法论而非单纯数字堆砌，提供可复用的决策框架和实验验证逻辑。转写明确指出关键洞察。 | 引用:「最后他们训了16轮，按奖励模型的分数挑选模型…下游指标才是考试」",
+      "topic": "方法实操",
+      "node": "监督微调工程实战与超参选择",
+      "category": "(地图缺口)监督微调工程实战与超参选择",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1gRx86MEVF",
+      "video_id": "BV1gRx86MEVF",
+      "title": "大模型知识保鲜：分层、时间戳与体检指标",
+      "original_title": "【数据工程】模型知识的保鲜管理：分层、时间戳与两枚标签",
+      "author": "古希腊掌管代码的神",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1gRx86MEVF",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/02e38527b3cbee9d09238b832479010b7bd79546.png",
+      "published_at": "2026-11-09T10:00:00+00:00",
+      "key_points": [
+        "模型知识是快照天然过期，FreshQA仅12%题答案靠谱，更新知识代表新鲜度问题",
+        "分层管理：恒定知识（10年不坏）/周期知识（月年更新）/瞬时知识（按天更新），采集频率各异",
+        "增量更新省算力：Temporal Wiki实测拿相邻版本变化增量训，省12倍算力",
+        "打时间戳防幻觉：让模型学会'截至某时点'的表述而非删除，可验证时效性",
+        "双指标体检：过期率和新题答对率，前者抬头回滚，后者掉队补踩"
+      ],
+      "duration_s": 261.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解模型知识过期问题及分层管理方案，通过分层存放、时间戳标签、增量更新、双指标体检来防止幻觉并节省算力",
+      "reason": "讲清了模型知识过期的本质和分层管理方案，用具体指标和落地代码逻辑呈现可复用方法。转写显示时间戳的核心优势。 | 引用:「打时间戳而非删除过期数据，把限定日期和答案绑在一起，模型学会说截至某时点」",
+      "topic": "方法实操",
+      "node": "大模型知识时效性与分层管理",
+      "category": "(地图缺口)大模型知识时效性与分层管理",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1t3xt6fERf",
+      "video_id": "BV1t3xt6fERf",
+      "title": "RL对齐中KL的梯度方向：reward vs loss差异",
+      "original_title": "【RL 实战】KL 放奖励还是放损失：k1 梯度为零、k3 方向反，修法与取舍",
+      "author": "古希腊掌管代码的神",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1t3xt6fERf",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/8840cd70fff9097344981fca62cd00063707cd0a.png",
+      "published_at": "2026-11-09T04:00:00+00:00",
+      "key_points": [
+        "KL放reward经回报和GAE后梯度无偏，放loss中K1为零、K3反向，用玩具模型精确算证",
+        "逐token KL loss看不见未来，无法预防下一步跑偏，回报包含未来KL从第一步就能压制",
+        "修正方案三选：乘概率比、K3加可验证奖励推理、或去KL但继续监控",
+        "Meta DPO系列和TRL已实装修正，VER版或K3乘概率比"
+      ],
+      "duration_s": 268.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "通过精确梯度计算对比KL放入reward vs loss的差异，指出GRPO常见写法中K3梯度方向反，提出修正方案",
+      "reason": "讲清了RL工程中KL放置位置的梯度影响，不是概念介绍而是精确数学分析和实战修法。转写指出K3的具体缺陷。 | 引用:「K3的系数是一减概率比…对数比-4.6他给-98…正确梯度要上推，K3却往下压，方向反」",
+      "topic": "概念原理",
+      "node": "RL对齐中的KL散度与梯度优化",
+      "category": "(地图缺口)RL对齐中的KL散度与梯度优化",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1bVxt6tEdh",
+      "video_id": "BV1bVxt6tEdh",
+      "title": "指令内化：提示词蒸馏的收益、边界与成本评估",
+      "original_title": "【对齐工程】指令内化：上下文蒸馏的收益、三条边界与混合落地",
+      "author": "古希腊掌管代码的神",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1bVxt6tEdh",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/2531fadf61a7ed15d74a48f6cb1ad17a187fb0ee.png",
+      "published_at": "2026-11-08T10:00:00+00:00",
+      "key_points": [
+        "提示词成本问题：3000token每百万请求$3，加缓存还要$0.9，指令内化可归零",
+        "蒸馏原理：老师带提示词、学生不带，用KL散度拟合；推理时节省11倍token但质量略降",
+        "三条边界限制：不完美复制（53%时仍喜欢原模型）/需防遗忘（混6万样本）/样本少失效",
+        "蒸馏不防泄露：内化挡不住注入攻击，只能蒸馏稳定部分（语气格式），会变部分留提示词"
+      ],
+      "duration_s": 274.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解上下文蒸馏将长系统提示词内化进参数的方法、收益分析、三条边界与混合落地方案",
+      "reason": "讲清了上下文蒸馏的原理、收益和重要边界（不是无损、有安全风险），提供混合落地方案。转写显示对实战风险的清晰认识。 | 引用:「能确定的是提示词不在上下文里就没法被原样套出来…而放在上下文里的提示词确实会泄露」",
+      "topic": "方法实操",
+      "node": "指令内化与上下文蒸馏工程",
+      "category": "(地图缺口)指令内化与上下文蒸馏工程",
       "domain": "ai1"
     },
     {
