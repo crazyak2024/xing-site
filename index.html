@@ -45,15 +45,21 @@ button{font-family:inherit}
 /* 三条全是"不做什么"，所以紧跟一行"做什么"收口——否定负责立场，这一行负责说明白 */
 .manifesto-positive{font-size:var(--fs-sm);color:var(--sub);margin:var(--sp-2) 0 0;line-height:1.5}
 @media (max-width:899px){
-  .manifesto{display:flex;gap:10px;margin-top:var(--sp-3)}
-  .manifesto li{font-size:15px;letter-spacing:0}
-  .manifesto-positive{margin-top:var(--sp-1);font-size:var(--fs-xs)}
+  /* 手机首屏预算只有一屏：宣言从主视觉降级成一行小字，位置让给输入框和真实问题。
+     CY 2026-11-10 手机实测：原来要滚过六行宣言 + 两颗按钮才看得到内容。 */
+  .manifesto{display:flex;gap:7px;margin-top:6px}
+  .manifesto li{font-size:12px;letter-spacing:0;font-weight:600;color:var(--sub)}
+  .manifesto-positive{display:none}
+  .brand-panel{padding:12px 16px 6px}
+  .brand-panel h1{font-size:19px}
+  .brand-panel .tagline{display:inline-block;margin-left:8px}
 }
 /* 离开按钮区：面板上最响的一块，但只有两颗按钮和两行字——"极其简洁"是硬约束 */
-.exit{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.exit{margin-top:22px;padding-top:15px;border-top:1px solid var(--line);max-width:620px}
 .exit-lead{font-size:var(--fs-sm);color:#777;margin:0 0 9px;line-height:1.55}
 .exit-lead b{color:#1a1a1a;font-size:var(--fs-md)}
-.exit-btns{display:flex;flex-direction:column;gap:6px}
+.exit-btns{display:flex;gap:8px}
+.exit-btns .exit-btn{flex:1;text-align:center}
 .exit-btn{padding:8px 10px;font-size:var(--fs-sm);border-radius:7px;cursor:pointer;text-align:left;border:1px solid var(--line);background:#fff;color:#444}
 .exit-btn.ok{border-color:#38a169;color:#276749;font-weight:600}
 .exit-btn.ok:hover{background:#38a169;color:#fff}
@@ -90,6 +96,19 @@ button{font-family:inherit}
 .crumb.q{color:#777;cursor:default}
 .crumb-x{border:none;background:#e8e8e8;color:#666;border-radius:50%;width:15px;height:15px;font-size:var(--fs-xs);line-height:1;cursor:pointer;margin-left:3px;padding:0}
 #crumbs .sep{color:#bbb}
+
+/* 首屏问题清单：首屏的"证据"。它比宣言重要，所以给它卡片级的存在感，但不抢搜索框 */
+#home-q:empty{display:none}
+#home-q{margin:14px 0 4px}
+.hq-label{font-size:var(--fs-xs);color:#999;margin-bottom:8px}
+.hq-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:7px}
+@media (min-width:620px){.hq-list{grid-template-columns:1fr 1fr}}
+.hq{width:100%;display:flex;justify-content:space-between;align-items:center;gap:8px;
+  background:#fff;border:1px solid var(--line);border-radius:9px;padding:10px 12px;
+  cursor:pointer;text-align:left}
+.hq:hover{border-color:var(--accent)}
+.hq-q{font-size:var(--fs-lg);font-weight:500;color:#222;line-height:1.35}
+.hq-n{font-size:var(--fs-xs);color:#aaa;white-space:nowrap}
 
 /* 地图区 */
 #map{margin:12px 0 14px}
@@ -281,6 +300,8 @@ a.src:after{content:" →"}
     <!-- 主 slogan（CY 2026-11-07 08:1x 从四个候选里挑的这句）。
          三行堆叠排版是为了解决它唯一的弱点：三条全是否定、不说我们做什么。
          所以紧跟一行 manifesto-positive 收口。否定负责立场，那一行负责说明白。 -->
+    <!-- CY 2026-11-10：宣言是**主张**，可点的真实问题才是**证据**。
+         手机上它整块压成一行小字（见 @media max-width:899px），把首屏让给输入框和问题。 -->
     <ul class="manifesto">
       <li>不投喂</li>
       <li>不迎合</li>
@@ -288,29 +309,20 @@ a.src:after{content:" →"}
     </ul>
     <p class="manifesto-positive">你问，我们答，你走。</p>
 
-    <!-- 两个离开按钮：这是整个产品的成绩单，也是价值观最响的一句话。
-         两种离开都以关窗结束，传统网站分不出来、也不在乎（它们数的是停留时长）。
-         我们分得出来，因为我们只认一种成功。 -->
-    <div class="exit" id="exit">
-      <p class="exit-lead">别的网站怕你走。<br><b>我们等你走。</b></p>
-      <div class="exit-btns">
-        <button class="exit-btn ok" id="exit-ok">找到了，我走</button>
-        <button class="exit-btn no" id="exit-no">没找到，我走</button>
-      </div>
-      <p class="exit-note">走之前点一下。这是我们唯一的成绩单。</p>
-    </div>
-
     <div class="purity">不要账户 · 不认识你 · 没有第三方脚本 · 没有推荐算法</div>
     <div class="libnote">库内 <span id="lib-count">—</span> 条，全部通过质量判定</div>
   </aside>
 
   <div class="content-panel">
     <div class="searchbar">
-      <input id="q" type="text" placeholder="你想弄明白什么？比如：大模型为什么会幻觉">
+      <input id="q" type="text" placeholder="你想弄明白什么？">
     </div>
-    <p class="hint">按你自己的话问就行，用词不一样也能找到。搜不到是我们的问题——点左边那颗「没找到」告诉我们。</p>
+    <p class="hint">按你自己的话问就行，用词不一样也能找到。搜不到是我们的问题，不是你的。</p>
     <div id="scope-hint"></div>
     <div id="crumbs"></div>
+    <!-- 首屏的「这里已经答得比较全的问题」（CY 2026-11-10）：真实节点+真实条数，可点。
+         放在地图之前，因为它比地图更直接——地图要先理解结构，问题可以直接认。 -->
+    <div id="home-q"></div>
     <!-- 语义建议：用户的说法和我们的问题措辞对不上时，这里列最接近的几个问题。
          刻意**不说**"地图上没有"——用户没有"地图"这个概念（CY 2026-11-09 定的话术）。 -->
     <div id="suggest"></div>
@@ -326,6 +338,19 @@ a.src:after{content:" →"}
       <span id="result-count"></span>
     </div>
     <div id="results"></div>
+
+    <!-- 退出反馈（CY 2026-11-10 改）。原来它在左侧栏、**用户还没开始用**就请他评价体验——
+         那是把我们的度量需求摆在他的需求前面。现在它在结果**下面**，只在看完之后出现。
+         文案也从「找到了，我走／没找到，我走」改成人会说的话——他的原话：
+         「这根本不是正常的中文」。 -->
+    <div class="exit" id="exit" hidden>
+      <div class="exit-btns">
+        <button class="exit-btn ok" id="exit-ok">这个问题解决了</button>
+        <button class="exit-btn no" id="exit-no">没找到我要的</button>
+      </div>
+      <p class="exit-note">点一下我们才知道做得对不对。这是我们唯一看的指标——
+        找到答案就走，对我们是成功，不是流失。</p>
+    </div>
   </div>
 </div>
 

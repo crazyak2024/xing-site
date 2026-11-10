@@ -575,11 +575,59 @@ function renderResults() {
 function render() {
   renderCrumbs();
   if (typeof renderSuggest === "function") renderSuggest();
+  renderHomeQuestions();
   renderMap();
   renderScopeHint();
   renderAnswer();
   renderResults();
+  renderExitVisibility();
 }
+
+/* 退出反馈只在**他已经看到东西之后**出现（CY 2026-11-10）。
+   在首页就摆着两颗"你走了吗"按钮，是在他还没有体验时请他评价体验。 */
+function renderExitVisibility() {
+  const el = document.getElementById("exit");
+  if (!el) return;
+  const engaged = Boolean(state.q || state.node || state.topic);
+  el.hidden = !(engaged && DATA_LOADED);
+}
+
+/* 首屏的「最近有人在问」：宣言是主张，可点的真实问题才是证据。
+   取的是**真实节点 + 真实条数**，按条数排——不是编出来的示例问句。
+   刻意只在"什么都还没点"的首页出现；一旦开始搜/点，这块就让位给结果。 */
+function renderHomeQuestions() {
+  const host = document.getElementById("home-q");
+  if (!host) return;
+  if (state.q || state.node || state.topic || !DATA_LOADED) { host.innerHTML = ""; return; }
+  const byNode = new Map();
+  for (const it of DATA) {
+    if (!it.node) continue;
+    byNode.set(it.node, (byNode.get(it.node) || 0) + 1);
+  }
+  // 🔴 只按条数排会把「AI工具使用教程」「AI内容创作工具工作流」这类**不是问句**的节点顶上来
+  //   （2026-11-10 真机截图当场看到）。它们是判定器归类时开的类目名，不是人会问的问题。
+  //   首屏要的是"可点的真问题"，所以两道筛：
+  //   ① 优先有主题页的节点（那 31 个是真整理过答案骨架的，质量最高）
+  //   ② 其次才看名字是不是问句形状（怎么/为什么/能不能/…吗）
+  const isQuestion = n => /怎么|如何|为什么|什么|哪个|哪些|能不能|会不会|要不要|值不值|靠不靠|是不是|吗$|\?|？/.test(n);
+  const scored = [...byNode.entries()]
+    // 「(地图缺口)…」是判定器自动开的临时名，不是给人看的问题，首屏不摆
+    .filter(([n]) => !/地图缺口/.test(n))
+    .map(([n, c]) => ({ n, c, hasPage: PAGES.has(n), q: isQuestion(n) }))
+    // 有主题页的最优先 → 问句形状的次之 → 同档内才按条数
+    .sort((a, b) => (b.hasPage - a.hasPage) || (b.q - a.q) || (b.c - a.c));
+  const top = scored.filter(x => x.hasPage || x.q).slice(0, 6).map(x => [x.n, x.c]);
+  if (!top.length) { host.innerHTML = ""; return; }
+  host.innerHTML = `<div class="hq-label">这里已经答得比较全的问题</div>
+    <ul class="hq-list">${top.map(([n, c]) =>
+      `<li><button class="hq" data-node="${esc(n)}"><span class="hq-q">${esc(displayNode(n))}</span>
+        <span class="hq-n">${c} 条</span></button></li>`).join("")}</ul>`;
+  host.querySelectorAll(".hq").forEach(b =>
+    b.addEventListener("click", () => go({ node: b.dataset.node, q: "", topic: null })));
+}
+
+/* 节点名入库时带「07.」这类编号，那是我们的内部排序手段，不该出现在用户眼前 */
+function displayNode(n) { return String(n).replace(/^\d+\./, ""); }
 
 /* ---------- 弹窗 ---------- */
 function openModal(it) {
