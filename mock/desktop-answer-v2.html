@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<title>醒 · 桌面端答案页 mock v2（重画）</title>
+<style>
+/* v2：CY 2026-11-10 09:4x 否掉 v1 的两栏方案——
+   「我们找到的这几个视频是这个回答的主内容，主内容不应该放在右边的 Panel 上」
+   「整个版面上解释的文字太多了，就看起来很费劲」
+   「希望用户能够几秒的时间就能看明白整个网页的结构是什么」
+   「现在的 mobile 版做的比较好，很清楚。但是 web 版看上去就很复杂」
+   ⟹ 桌面不是"手机多加一栏"，是"手机那条动线，更宽"。主内容始终在主轴上。 */
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eceae4;font:14px/1.65 -apple-system,"PingFang SC",system-ui,sans-serif;
+  color:#1a1a1a;padding:26px 22px 36px}
+.cap{font-size:12.5px;color:#6b6b6b;margin:0 auto 10px;max-width:1120px;line-height:1.6}
+.cap b{color:#1a1a1a;font-size:14px;display:block;margin-bottom:3px}
+.cap em{font-style:normal;color:#b7791f}
+
+.screen{max-width:1120px;margin:0 auto;background:#fbfaf7;border:1px solid #d8d4cb;
+  border-radius:12px;overflow:hidden;box-shadow:0 8px 26px rgba(0,0,0,.10)}
+.chrome{height:30px;background:#f0ede6;border-bottom:1px solid #e3dfd5;display:flex;
+  align-items:center;gap:6px;padding:0 12px}
+.dot{width:9px;height:9px;border-radius:50%;background:#d5d1c7}
+.url{margin-left:10px;font-size:10.5px;color:#9a9a9a}
+
+.page{max-width:900px;margin:0 auto;padding:18px 24px 30px}
+
+.top{display:flex;align-items:center;gap:14px}
+.logo{font-size:16px;font-weight:700;letter-spacing:.06em}
+.ask{flex:1;background:#fff;border:1.5px solid #cfcabd;border-radius:10px;
+  padding:8px 13px;font-size:13.5px;color:#a5a5a5}
+.crumb{margin-top:11px;font-size:11.5px;color:#9a9a9a}
+.crumb a{color:#5a7ea8;text-decoration:none}
+
+h1{font-size:27px;font-weight:700;line-height:1.3;margin-top:17px;letter-spacing:.01em}
+
+/* ---- 区块：三个，每个一个短标题。标题是结构，不是说明文 ---- */
+.sec{margin-top:26px}
+.sh{display:flex;align-items:baseline;gap:8px;margin-bottom:11px}
+.sh .t{font-size:15px;font-weight:700;letter-spacing:.02em}
+.sh .n{font-size:12px;color:#a5a5a5}
+.q{width:15px;height:15px;border-radius:50%;border:1px solid #cfcabd;color:#a5a5a5;
+  font-size:10px;line-height:13px;text-align:center;cursor:help;flex:0 0 15px;
+  position:relative;top:-1px}
+
+.ans{background:#fff;border:1px solid #e6e2d8;border-radius:10px;padding:14px 18px}
+.ans ol{margin-left:18px}
+.ans li{font-size:14.5px;line-height:1.75;margin-bottom:8px}
+.ans li b{font-weight:600}
+.ans .more{margin-top:6px;font-size:13px;color:#2b6cb0;font-weight:600;cursor:pointer}
+
+/* ---- 视频：主内容，三列大卡片，在主轴上 ---- */
+.vgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px}
+.v{background:#fff;border:1px solid #e6e2d8;border-radius:10px;overflow:hidden}
+.vth{height:110px;background:#dcd9d1;display:flex;align-items:center;justify-content:center;
+  color:#a5a5a5;font-size:11px;position:relative}
+.vth .d{position:absolute;right:7px;bottom:7px;background:rgba(0,0,0,.62);color:#fff;
+  font-size:10px;padding:1px 5px;border-radius:3px}
+.vth .p{position:absolute;left:7px;top:7px;background:rgba(255,255,255,.92);
+  font-size:10px;padding:1px 6px;border-radius:3px;color:#555}
+.vb{padding:9px 11px 11px}
+.vt{font-size:13.5px;font-weight:600;line-height:1.42}
+.va{font-size:11px;color:#a5a5a5;margin-top:4px}
+.pts{margin-top:7px;display:flex;gap:3px}
+.pt{width:17px;height:17px;border-radius:50%;background:#eef3f8;color:#2b6cb0;
+  font-size:10.5px;line-height:17px;text-align:center;font-weight:600}
+.vfold{grid-column:1/-1;margin-top:3px;font-size:12.5px;color:#9a9a9a;text-align:center;
+  border:1px dashed #ddd8cc;border-radius:9px;padding:9px}
+
+/* ---- 相邻问题：一行三个，不写解释 ---- */
+.near{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px}
+.nb{background:#fff;border:1px solid #e6e2d8;border-radius:10px;padding:11px 13px}
+.nb .k{font-size:11px;color:#a5a5a5}
+.nb .nm{font-size:13.5px;font-weight:500;color:#2b6cb0;margin-top:3px;line-height:1.4}
+
+.minor{margin-top:20px;padding-top:13px;border-top:1px solid #e6e2d8;
+  display:flex;gap:20px;font-size:12.5px;color:#9a9a9a}
+.minor span b{color:#8a6d3b;font-weight:600}
+
+/* ---- ⓘ 展开后长什么样（示意，画在右边浮层里） ---- */
+.pop{position:absolute;right:26px;top:300px;width:232px;background:#2d2a26;color:#f1ede6;
+  border-radius:9px;padding:11px 13px;font-size:11.5px;line-height:1.65;
+  box-shadow:0 6px 18px rgba(0,0,0,.2)}
+.pop:before{content:"";position:absolute;left:-6px;top:16px;border:6px solid transparent;
+  border-right-color:#2d2a26;border-left:0}
+.pop b{display:block;font-size:11.5px;margin-bottom:4px;color:#fff}
+.wrap{position:relative}
+
+.note{max-width:1120px;margin:16px auto 0;background:#fff;border:1px solid #e6e2d8;
+  border-radius:10px;padding:14px 17px;font-size:12.5px;line-height:1.8}
+.note>b{display:block;font-size:13.5px;margin-bottom:6px}
+.note li{margin-left:17px;margin-bottom:5px}
+.note em{font-style:normal;color:#b7791f;font-weight:600}
+.old{color:#a33;text-decoration:line-through}
+</style></head><body>
+
+<p class="cap"><b>桌面端答案页 · 重画 mock v2</b>
+v1 的两栏作废（把主内容挤到了右边）。v2 的三件事：<em>视频回到主轴</em>、
+<em>解释文字全收进 ⓘ</em>、<em>三个区块标题让结构一眼可见</em>。
+内容是真的：「怎么写提示词才能少踩坑」这一页今天线上的数据。</p>
+
+<div class="screen wrap">
+  <div class="chrome"><i class="dot"></i><i class="dot"></i><i class="dot"></i>
+    <span class="url">醒 · 知识视频地图</span></div>
+
+  <div class="page">
+    <div class="top">
+      <div class="logo">醒</div>
+      <div class="ask">你想弄明白什么？</div>
+    </div>
+    <div class="crumb"><a>全部</a> › <a>AI 与大模型</a> › <a>方法实操</a> › 怎么写提示词才能少踩坑</div>
+
+    <h1>怎么写提示词才能少踩坑</h1>
+
+    <div class="sec">
+      <div class="sh"><span class="t">答案</span><span class="n">8 点</span><i class="q">?</i></div>
+      <div class="ans">
+        <ol>
+          <li><b>先定目标与验收：</b>说清楚要什么、怎么算做对了，比堆形容词有用</li>
+          <li><b>用数字和例子替代模糊词：</b>"简洁一点"换成"三句话内、每句不超过 20 字"</li>
+          <li><b>给角色和上下文：</b>它不知道你是谁、面向谁、在什么场景里用</li>
+        </ol>
+        <div class="more">展开剩下 5 点 ▾</div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sh"><span class="t">讲这个问题的视频</span><span class="n">7 个</span><i class="q">?</i></div>
+      <div class="vgrid">
+        <div class="v"><div class="vth">封面<span class="p">B站</span><span class="d">27:46</span></div>
+          <div class="vb"><div class="vt">提示词系统写法：从 Prompt 到 Context 的完整框架</div>
+            <div class="va">森虫虫进化中</div>
+            <div class="pts"><i class="pt">1</i><i class="pt">3</i><i class="pt">6</i><i class="pt">7</i></div></div></div>
+        <div class="v"><div class="vth">封面<span class="p">B站</span><span class="d">13:19</span></div>
+          <div class="vb"><div class="vt">向 AI 提问的五步框架：从指令到追问</div>
+            <div class="va">大吃一顿鲸</div>
+            <div class="pts"><i class="pt">1</i><i class="pt">4</i><i class="pt">6</i><i class="pt">7</i></div></div></div>
+        <div class="v"><div class="vth">封面<span class="p">B站</span><span class="d">08:29</span></div>
+          <div class="vb"><div class="vt">简化提示词指南：从目标和验证开始</div>
+            <div class="va">胖胖不胖的AI小岛</div>
+            <div class="pts"><i class="pt">5</i><i class="pt">7</i><i class="pt">8</i></div></div></div>
+        <div class="v"><div class="vth">封面<span class="p">B站</span><span class="d">06:53</span></div>
+          <div class="vb"><div class="vt">准确描述问题：用数字和例子替代模糊形容词</div>
+            <div class="va">李秋橙太阳</div>
+            <div class="pts"><i class="pt">2</i><i class="pt">3</i></div></div></div>
+        <div class="v"><div class="vth">封面<span class="p">视频号</span><span class="d">04:46</span></div>
+          <div class="vb"><div class="vt">提示词工程的三层递进模型</div>
+            <div class="va">—</div>
+            <div class="pts"><i class="pt">1</i><i class="pt">3</i><i class="pt">7</i><i class="pt">8</i></div></div></div>
+        <div class="v"><div class="vth">封面<span class="p">视频号</span><span class="d">01:58</span></div>
+          <div class="vb"><div class="vt">提示词调试循环：从模糊到结构化的迭代方法</div>
+            <div class="va">—</div>
+            <div class="pts"><i class="pt">1</i><i class="pt">2</i><i class="pt">3</i><i class="pt">5</i></div></div></div>
+        <div class="vfold">还有 32 条讲的是同一件事 ▾</div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sh"><span class="t">相邻的问题</span><i class="q">?</i></div>
+      <div class="near">
+        <div class="nb"><div class="k">↑ 更大的问题</div><div class="nm">怎么判断AI答案可不可信</div></div>
+        <div class="nb"><div class="k">↓ 先懂这个更容易</div><div class="nm">大模型为什么会幻觉</div></div>
+        <div class="nb"><div class="k">↔ 常被当成同一个</div><div class="nm">怎么用AI学全新领域</div></div>
+      </div>
+    </div>
+
+    <div class="minor">
+      <span><b>⚠ 2 处分歧</b> ▾</span>
+      <span>2 条没过关，没放上来 ▾</span>
+      <span>答完了，关掉就行。</span>
+    </div>
+  </div>
+
+  <div class="pop"><b>⟵ 点 ? 才出现（这是示意）</b>
+    这 8 点是读完这个问题下全部 60 条合格内容合并的，不是某一条视频的说法。
+    没有热度排序，也没有推荐算法。</div>
+</div>
+
+<div class="note">
+  <b>和 v1 比，改了什么</b>
+  <ul>
+    <li><em>① 视频回到主轴。</em>v1 把 7 个视频塞进右边 400px 的栏里——
+      <span class="old">主内容放次要位置</span>。v2 是<b>单条动线</b>：问题 → 答案 → 视频 → 相邻问题，
+      视频用三列大卡片占满主栏，和手机版同一条顺序，只是更宽。</li>
+    <li><em>② 解释文字全部收进 ?。</em>v1 版面上有 6 段解释句（「下面这段是把…合并成的一份」
+      「它们不是用来证明上面那段话的…」「这几条都是知识关系，不是看了这个的人还看了」…）。
+      v2 版面上<b>一句解释都没有</b>，全挂在三个 ? 后面，想知道才点。</li>
+    <li><em>③ 用直观的东西替代文字。</em>「讲了上面第 1、3、6、7 点」→ 四个小圆点 <b>1 3 6 7</b>；
+      平台和时长 → 封面上的角标；边的类型 → <b>↑ ↓ ↔</b> 加三个字。</li>
+    <li>④ <b>三个区块标题就是结构</b>：答案 / 讲这个问题的视频 / 相邻的问题。
+      扫一眼就知道这页有什么、自己在哪。次要的（分歧、没过关的、"关掉就行"）压到最底下一行灰字。</li>
+    <li>⑤ 主栏宽度从 v1 的满宽收到 <b>900px</b>——正文一行 40 字左右，不用回扫。</li>
+  </ul>
+</div>
+
+</body></html>
