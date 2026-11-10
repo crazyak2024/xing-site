@@ -531,6 +531,25 @@ let coverSeq = 0;
 
 /* covers：这条视频讲到了答案的第几点。用小圆点徽章而不是「对应上面第 1、2 点」那句话
    （CY 2026-11-10：「尽量用一些其他很直观的方式让用户理解这是什么」）。 */
+/* 封面加载失败的兜底（2026-11-10 Alpha 前评估修）。
+ * 原来写的是 `this.closest('.card-cover')?.remove()||this.remove()` —— DOM 里**没有**
+ * `.card-cover` 这个类（真实类名是 `.card-thumb`），所以兜底实际退化成"只删掉 <img>"，
+ * 留下一个纯黑 16:9 空框，而不是本来就准备好的"渐变+平台名"占位块。
+ * 为什么现在必须修：抖音封面是**签名 URL**，库里 110 条的签名在 2026-11-21 06:00–11:00
+ * 集体过期（当日实测），过期后一起 403 —— 那天会有 110 张卡片同时变黑框。
+ * 兜底做对了，那天只会退化成占位块，不会"看起来坏了"。 */
+function coverFail(img) {
+  const box = img.closest(".card-thumb") || img.parentElement;
+  img.remove();
+  if (!box || box.querySelector(":scope > span:not(.plat-badge):not(.dur-badge)")) return;
+  box.classList.add("noimg");
+  const plat = box.querySelector(".plat-badge");
+  const s = document.createElement("span");
+  s.textContent = plat ? plat.textContent : "";
+  box.insertBefore(s, box.firstChild);
+}
+window.coverFail = coverFail;
+
 function cardHtml(it, whyNote, covers) {
   const dur = fmtDuration(it.duration_s);
   const hasImg = !!it.cover_url;
@@ -549,7 +568,7 @@ function cardHtml(it, whyNote, covers) {
       ? `<img src="${esc(it.cover_url)}"${coverSrcset(it.cover_url)} alt=""
              ${coverSeq++ < EAGER_COVERS ? `loading="eager" fetchpriority="high"` : `loading="lazy"`}
              decoding="async" referrerpolicy="no-referrer"
-             onerror="this.closest('.card-cover')?.remove()||this.remove()">`
+             onerror="coverFail(this)">`
       : `<span>${esc(PLATFORM_CN[it.platform] || it.platform)}</span>`}
         <span class="plat-badge">${esc(PLATFORM_CN[it.platform] || it.platform)}</span>
         ${dur ? `<span class="dur-badge">${dur}</span>` : ""}
@@ -625,7 +644,7 @@ function renderResults() {
         ${q ? `<button class="btn-primary" id="want-this">我要这个 →</button>` : ""}
         <button class="linklike" id="reset-all">回到知识地图</button>
       </div>
-      <div class="empty-note">内容库还在扩充中——只有通过质量判定的才会上线，宁可少不放水。
+      <div class="empty-note">内容库还在扩充中——没过质量判定的不会上线。
         ${SEM.q === q && SEM.top.length && SEM.top[0].score >= SUGGEST_FLOOR
         ? `上面列出了我们认为最接近的几个问题，点一下就能看。` : ""}</div></div>`;
     el.querySelector("#reset-all").addEventListener("click", () => {

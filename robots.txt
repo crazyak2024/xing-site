@@ -1,0 +1,9 @@
+# 醒 · 知识视频地图
+# 这个站是按问题组织的知识视频索引，欢迎抓取正文页面。
+# 2026-11-10：/mock/ 和 /collector/ 已从仓库里移走（内部设计稿与 Worker 源码不该公开），
+# 这两条留着挡住缓存与历史快照里的旧路径。
+User-agent: *
+Disallow: /mock/
+Disallow: /collector/
+Allow: /
+Sitemap: https://crazyak2024.github.io/xing-site/

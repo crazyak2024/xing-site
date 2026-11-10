@@ -14,6 +14,21 @@
 <link rel="dns-prefetch" href="https://p3-sign.douyinpic.com">
 <link rel="dns-prefetch" href="https://wxapp.tc.qq.com">
 <meta name="description" content="一张可点击的中文知识视频地图：按问题组织，经过质量筛选，找到就走。">
+<!-- 图标与分享卡（2026-11-10 Alpha 前评估补）。原来 /favicon.ico 是 404 ⟹ 标签页一张白纸；
+     没有 og:* ⟹ 转到微信/飞书只显示一行裸链接，朋友点开之前不知道这是什么。
+     og:image 用 Playwright 截的 1200×630 卡（site/og.png），不是手画的。 -->
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="醒">
+<meta property="og:title" content="醒 · 知识视频地图">
+<meta property="og:description" content="不投喂 · 不迎合 · 不留你。按问题组织的中文知识视频索引：你问，我们答，你走。">
+<meta property="og:url" content="https://crazyak2024.github.io/xing-site/">
+<meta property="og:image" content="https://crazyak2024.github.io/xing-site/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="醒 · 知识视频地图">
+<meta name="twitter:description" content="不投喂 · 不迎合 · 不留你。按问题组织的中文知识视频索引。">
+<meta name="twitter:image" content="https://crazyak2024.github.io/xing-site/og.png">
 <style>
 :root{
   --ink:#1a1a1a;--sub:#666;--mute:#999;--faint:#bbb;
@@ -393,7 +408,11 @@ a.src:after{content:" →"}
     </ul>
     <p class="manifesto-positive">你问，我们答，你走。</p>
 
-    <div class="purity">不要账户 · 不认识你 · 没有第三方脚本 · 没有推荐算法</div>
+    <div class="purity">不要账户 · 不认识你 · 没有第三方脚本 · 没有推荐算法
+      <!-- 2026-11-10 Alpha 前评估补的这一句：上面四条都为真（BI 是我们自己的 Worker、自己的域、
+           不落 IP/UA/cookie），但封面图和播放画面是直连 B站/抖音/腾讯 的 ——
+           平台那边看得到有人在看。不写出来，用户会把这四条读成"看视频也没人知道"，那就是误导。 -->
+      <br>封面和播放画面直接来自原平台，平台那边看得到。</div>
     <div class="libnote">库内 <span id="lib-count">—</span> 条，全部通过质量判定</div>
   </aside>
 
@@ -438,7 +457,13 @@ a.src:after{content:" →"}
   <div class="about">
     传统视频站的成功是你留下来。<b>我们的成功是你走掉。</b>
     所以这里没有无限滚动、没有自动连播、没有「猜你喜欢」，也没有账户和浏览档案。
-    我们只做三件事：按问题组织、核对关键事实、去掉重复，然后把你送回原作者那里。
+    我们只做三件事：按问题组织、挡掉标题党和明显讲错的、去掉重复，然后把你送回原作者那里。
+    <!-- 2026-11-10 Alpha 前评估改的这两句。原文是「核对关键事实」+「宁可少不放水」。
+         对照本机复审台账：已复核 898 条里只有 295 条判 ok，229 条带**中低级**事实错误仍在线
+         （上线闸只挡 high 级，这是定好的口径，不是 bug）。
+         「核对关键事实」会被读成"每条都核过"——那是页面在替我们夸口，和 08:2x 修掉的
+         "库里有 1620 条却写着没有内容"是同一类问题，只是这次夸的是质量。 -->
+    库里有一半多的内容做过第二道事实复核，剩下的还没逐条查过——看到讲错的，点一下「没找到我要的」。
     当前处于技术验证阶段，内容持续扩充中。
   </div>
 </footer>
