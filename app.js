@@ -1002,10 +1002,14 @@ function renderLane(d) {
       宁可明天继续也不超支。你这句话已经记下了。</div></div>`;
     return;
   }
-  // 库里本来就有（环 0 命中）
+  // 库里本来就有（环 0 命中）。
+  // ⚠️ 2026-11-10 第三方评审实测：这里原写"下面这些都已经核对过事实"——但环0给的是**存量
+  // 库内容**，不是刚核完的新内容；第二道事实复核只覆盖了库里约一半（见 index.html 页脚）。
+  // 口径要和"慢道新建内容"（下面 building/done 分支，那里确实逐条新核过）分开说清。
   if (d.state === "skipped" && items.length) {
     box.innerHTML = `<div class="lane ok"><div class="lane-head">其实我们有——是我们的搜索没搭上你的说法</div>
-      <div class="lane-sub">${esc(d.note || "")}。下面这些都已经核对过事实。</div>
+      <div class="lane-sub">${esc(d.note || "")}。下面这些都过了质量判定；
+      已知的事实错误会被挡住，但不是每一条都做过逐句复核。</div>
       <div class="lane-cards grid">${items.map(laneCardHtml).join("")}</div></div>`;
     bindLaneCards(box);
     return;
@@ -1259,11 +1263,15 @@ function renderSuggest() {
      这条是不让向量去**瞎猜**（这几个问题跟你问的根本不是一回事）。用原始分数、
      地板写在前端，是为了这个数字看得见、能调。 */
   if (SEM.top[0].score < SUGGEST_FLOOR) {
+    // 2026-11-10 第三方评审(fable/xhigh)实测抓到：这里原来写"已经记下来了，正在去找合适的
+    // 内容……过一会儿回来搜同一句话就知道"——但这个分支只 emit `search_gap`，全代码库没有
+    // 任何东西消费这张表；真正触发本机守护进程去搜的是下面「我要这个」按钮打的 /rtsearch。
+    // 用户照它说的"过一会儿回来"，看到的还是一样的结果——这就是页面在替我们撒谎。
     el.innerHTML =
       `<div class="sg-label">这个问题我们还没有。</div>
-       <div class="sg-note">已经记下来了，正在去找合适的内容——我们要先看一遍、核对关键事实，
-         才会放上来，所以不会马上有。过一会儿回来搜同一句话就知道。</div>`;
-    // 记一条"库里没有这个问题"——这是内容缺口清单，也是补搜的触发输入。
+       <div class="sg-note">点下面结果区的「我要这个」会让我们现在就去找——不点的话，
+         这句话只是被记在缺口清单里，不会自动有人处理。</div>`;
+    // 记一条"库里没有这个问题"——仅用于内容缺口清单，不会触发搜索（见上）。
     maybeRecordGap(state.q, SEM.top[0].score, "none");
     return;
   }
