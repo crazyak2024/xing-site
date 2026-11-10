@@ -80,6 +80,84 @@ button{font-family:inherit}
 .content-panel{flex:1;min-width:0;padding:0 14px 40px}
 @media (min-width:900px){.content-panel{padding:20px 20px 40px;border-left:1px solid var(--line)}}
 
+/* ====== 答案页 v2（CY 2026-11-10 09:5x 批）======
+   桌面不是"手机多加一栏"，是"手机那条动线，更宽"。进了一个具体问题之后：
+   左边的品牌栏和整片主题标签云都让路（它们是"还没决定看什么"时的工具），
+   主栏居中收到 900px——正文一行约 40 字，不用回扫。 */
+body.focused #map,
+body.focused #home-q{display:none}
+/* ⚠️ 品牌栏**压成一行，不是整块藏掉**：藏掉之后页面上没有站名、也没有回首页的入口，
+   用户不知道自己在哪儿（第一版就是这么退化的，真机截图当场看出来）。
+   宣言/纯净度声明/库存数这些"还没开始用"才需要的东西收起来，站名留着。 */
+body.focused .manifesto,
+body.focused .manifesto-positive,
+body.focused .purity,
+body.focused .libnote{display:none}
+@media (min-width:900px){
+  body.focused .layout{flex-direction:column;max-width:940px}
+  body.focused .brand-panel{width:auto;position:static;padding:16px 20px 0}
+  body.focused .brand-panel h1{display:inline-block;font-size:18px;cursor:pointer}
+  body.focused .brand-panel .tagline{display:inline-block;margin-left:9px}
+  body.focused .content-panel{border-left:0;padding-top:10px}
+}
+
+/* 区块：三个短标题就是这一页的结构（准则 15：3 秒看得出这页有什么） */
+.sec{margin:var(--sp-3) 0 0}
+.sh{display:flex;align-items:baseline;gap:8px;margin-bottom:10px}
+.sh .t{font-size:15px;font-weight:700;letter-spacing:.02em}
+.sh .n{font-size:var(--fs-xs);color:var(--faint)}
+
+/* 「?」：版面上不写解释句，解释挂在问号后面 */
+.qm{width:15px;height:15px;flex:0 0 15px;border-radius:50%;border:1px solid var(--line);
+  background:#fff;color:#a5a5a5;font-size:10px;line-height:1;padding:0;cursor:help;
+  position:relative;top:1px}
+.qm:hover{color:#444;border-color:#999}
+.qpop{display:inline-block;max-width:330px;margin-left:7px;vertical-align:top;
+  background:#2d2a26;color:#f1ede6;border-radius:8px;padding:9px 12px;
+  font-size:var(--fs-xs);line-height:1.65;white-space:pre-wrap;
+  box-shadow:0 6px 18px rgba(0,0,0,.2)}
+
+/* 答案 */
+.ans{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 18px}
+.ans ol{margin:0 0 0 18px}
+.ans li{font-size:var(--fs-md);line-height:1.75;margin-bottom:8px}
+.ans-more{margin-top:4px;padding:0;border:0;background:none;color:var(--accent);
+  font-size:var(--fs-sm);font-weight:600;cursor:pointer}
+
+/* 视频讲到了第几点：小圆点徽章，替掉原来「对应上面第 1、2 点」那句话 */
+.pts{display:flex;gap:3px;margin:6px 0 2px}
+.pt{width:17px;height:17px;border-radius:50%;background:#eef3f8;color:var(--accent);
+  font-size:10.5px;line-height:17px;text-align:center;font-weight:600;font-style:normal}
+.vfold{display:block;width:100%;margin-top:10px;background:none;color:var(--faint);
+  border:1px dashed var(--line);border-radius:9px;padding:9px;font-size:var(--fs-sm);cursor:pointer}
+.grid-rest{margin-top:10px}
+
+/* 相邻的问题：一行三个，不写解释 */
+.near{display:grid;grid-template-columns:1fr;gap:9px}
+@media (min-width:760px){.near{grid-template-columns:1fr 1fr 1fr}}
+.nb{text-align:left;background:#fff;border:1px solid var(--line);border-radius:10px;
+  padding:10px 12px;cursor:pointer;display:block}
+.nb:hover{border-color:#bbb}
+.nb .k{display:block;font-size:var(--fs-xs);color:var(--faint)}
+.nb .nm{display:block;font-size:var(--fs-sm);font-weight:500;color:var(--accent);margin-top:3px;line-height:1.4}
+
+/* 页脚一行灰字：次要的东西压到最底 */
+.pagefoot{margin-top:var(--sp-3);padding-top:12px;border-top:1px solid var(--line);
+  display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;
+  font-size:var(--fs-xs);color:var(--faint)}
+.pagefoot .warn{color:#8a6d3b;font-weight:600}
+.pagefoot .done{color:#555;font-weight:600}
+
+/* ⚠️ `.toolbar` 自己是 display:flex，比 [hidden] 的 display:none 更具体 ⟹ 设了 hidden
+   也照样显示（实测：主题页上那行"怎么排的"一直在）。这条补上。 */
+.toolbar[hidden]{display:none}
+
+/* 主题页的视频卡片不再列要点：答案区已经把这些点合并着给过一遍了，
+   卡片上再列三条等于同一件事说两遍（CY 2026-11-10：「文字还是尽量少一点」）。
+   要点没有丢——点开弹窗里仍然是默认展开的主体。 */
+body.focused .card .kp-mini,
+body.focused .card .summary{display:none}
+
 /* 搜索框是内容区唯一的"大件"：地图是浏览入口，它是提问入口，两者都该一眼看到 */
 .searchbar input{width:100%;padding:12px 14px;font-size:16px;border:1px solid #d6d3cc;border-radius:10px;background:var(--card);color:var(--ink)}
 .searchbar input::placeholder{color:#b4b0a8}
@@ -291,29 +369,11 @@ a.src:after{content:" →"}
    但刻意**不**用大标题压住全页——它是"答案"，不是"栏目"。 */
 #answer:empty{display:none}
 #answer{margin:4px 0 14px}
-.ans{background:#fff;border:1px solid var(--line);border-left:3px solid var(--c);border-radius:9px;padding:13px 15px 11px}
-.ans-q{font-size:var(--fs-xl);font-weight:700;margin:0 0 2px;line-height:1.4}
-.ans-lead{font-size:var(--fs-xs);color:var(--mute);margin:0 0 9px}
-.ans ol{margin:0;padding-left:20px}
-.ans ol li{font-size:var(--fs-lg);line-height:1.62;margin-bottom:6px;color:#222}
-.ans-foot{font-size:var(--fs-xs);color:#999;margin:10px 0 0;padding-top:9px;border-top:1px dashed var(--line);line-height:1.6}
-.ans-foot b{color:#276749;font-size:var(--fs-sm)}
-/* 分歧块：这是我们能给、聊天机器人给不了的东西——"这个问题上说法不一致"本身是答案的一部分 */
-.ans-disputed{margin-top:10px;background:#fffaf0;border:1px solid #f0e2c8;border-radius:7px;padding:9px 11px}
-.ans-disputed .dh{font-size:var(--fs-sm);font-weight:600;color:#975a16;margin-bottom:5px}
-.ans-disputed li{font-size:var(--fs-sm);color:#5f4a1f;line-height:1.55;margin-bottom:5px}
-.ans-disputed ul{margin:0;padding-left:17px}
-.ans-disputed .sides{color:#8a7a52;font-size:var(--fs-xs)}
-/* 证据区的标签行 */
-.ev-head{display:flex;align-items:baseline;gap:7px;margin:14px 0 7px}
-.ev-head .t{font-size:var(--fs-md);font-weight:600;color:#333}
-.ev-head .n{font-size:var(--fs-xs);color:#aaa}
-.ev-role{font-size:var(--fs-xs);color:#666;background:#f6f6f4;border-radius:5px;padding:4px 7px;margin:0 0 6px;line-height:1.5}
-.ev-role .cov{color:#2b6cb0}
-.ev-stale{font-size:var(--fs-xs);color:#975a16;margin-top:3px}
-.ev-more{width:100%;margin-top:10px;padding:9px;font-size:var(--fs-sm);color:#666;background:#fff;border:1px dashed var(--line);border-radius:8px;cursor:pointer;text-align:center}
-.ev-more:hover{border-color:#bbb;color:#333}
-.ev-foldnote{font-size:var(--fs-xs);color:#aaa;margin:6px 0 0;line-height:1.5}
+/* v2 起这一块只剩左边那道主题色竖条——答案框本身的样式在上面「答案页 v2」段里。
+   原来这里还有 .ans-q/.ans-lead/.ans-foot/.ans-disputed/.ev-* 共 20 条规则，
+   对应的那些元素 v2 已经不渲染了（标题进了区块头、两段解释进了 ?、分歧进了页脚、
+   "证据"整块废弃）。留着死样式会让下一个人以为那些东西还在。 */
+.ans{border-left:3px solid var(--c)}
 </style>
 </head>
 <body>

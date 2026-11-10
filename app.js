@@ -323,71 +323,138 @@ function topicOfNode(n) {
   return hit ? hit.topic : null;
 }
 
+/* ---------- 「?」：版面上不写解释句，解释挂在问号后面（CY 2026-11-10 09:4x 批 v2） ----------
+ * 他的原话：「整个版面上解释的文字太多了，就看起来很费劲…文字多的地方也应该把它收起来，
+ * 变成个问号之类的」「希望用户能够几秒的时间就能看明白整个网页的结构是什么」。
+ * ⚠️ 这不和"诚实是功能"冲突：诚实要的是**那句话存在且查得到**，不是糊在他脸上。
+ * 判准：删掉这句，用户会做错什么吗？不会 ⟹ 收进 ?。
+ */
+const HINTS = {};   // key -> 纯文本（渲染时填，因为里面有实时数字）
+
+function hintBtn(key) { return `<button class="qm" data-hint="${esc(key)}" aria-label="说明">?</button>`; }
+
+function closeHint() { document.querySelectorAll(".qpop").forEach(n => n.remove()); }
+
+document.addEventListener("click", e => {
+  const b = e.target.closest?.(".qm");
+  if (!b) { closeHint(); return; }
+  const open = b.nextElementSibling?.classList?.contains("qpop");
+  closeHint();
+  if (open) return;
+  const pop = document.createElement("span");
+  pop.className = "qpop";
+  pop.textContent = HINTS[b.dataset.hint] || "";
+  b.after(pop);
+  e.stopPropagation();
+});
+
+/* 答案区。v2 起它只有三样东西：区块标题 + 答案本身 + 展开/收起。
+   原来摊在这里的两段解释（"下面就是答案，我们读完了…" / "答完了。关掉就行…下面N条是它的证据"）
+   一句进了 ?、一句进了页脚灰字行。"证据"这个词整体废弃——那些视频是答案的**来源**，
+   不是答案的**验证**（真伪核验走的是 recheck 查外部事实那条路）。 */
+const ANSWER_PEEK = 3;      // 默认露几点（CY：「给个3行左右，用户想看就展开」）
+let ansExpanded = false;
+
 function renderAnswer() {
   const el = document.getElementById("answer");
   if (!el) return;
   const p = currentPage();
   if (!p || !(p.outline || []).length) { el.innerHTML = ""; lastAnswerNode = null; return; }
   const r = p.receipt || {};
-  const disputed = (p.disputed || []).length ? `
-    <div class="ans-disputed">
-      <div class="dh">这个问题上，内容之间有分歧——我们不替你选边</div>
-      <ul>${p.disputed.map(d => `<li>${esc(deIdentify(d.claim || ""))}
-        ${d.sides ? `<div class="sides">${esc(deIdentify(d.sides))}</div>` : ""}</li>`).join("")}</ul>
-    </div>` : "";
-  el.innerHTML = `<div class="ans" style="--c:${topicColor(topicOfNode(p.node))}">
-      <p class="ans-q">${esc(p.node)}</p>
-      <p class="ans-lead">下面就是答案。我们读完了这个问题下全部 ${r.qualified} 条合格内容，
-        把它们讲的合并成一份——不是某一条视频的说法。</p>
-      <ol>${p.outline.map(x => `<li>${esc(deIdentify(x))}</li>`).join("")}</ol>
-      ${disputed}
-      <p class="ans-foot"><b>答完了。关掉就行。</b>
-        还想看讲述过程，下面 ${r.picked} 条视频是它的证据——我们从 ${r.qualified} 条里挑的，
-        ${r.folded ? `另有 ${r.folded} 条讲的是同一件事，默认折起来了` : "没有多余的重复"}${
-    r.rejected ? `；还有 ${r.rejected} 条没过关，没放上来` : ""}。</p>
+  const pts = p.outline;
+  const shown = ansExpanded ? pts : pts.slice(0, ANSWER_PEEK);
+  const rest = pts.length - shown.length;
+  HINTS.answer = `这 ${pts.length} 点是读完这个问题下全部 ${r.qualified} 条合格内容合并的，`
+    + `不是某一条视频的说法。没有热度排序，也没有推荐算法。`;
+  el.innerHTML = `<div class="sec" style="--c:${topicColor(topicOfNode(p.node))}">
+      <div class="sh"><span class="t">答案</span><span class="n">${pts.length} 点</span>${hintBtn("answer")}</div>
+      <div class="ans">
+        <ol${ansExpanded ? "" : ' class="peek"'}>${shown.map(x =>
+    `<li>${esc(deIdentify(x))}</li>`).join("")}</ol>
+        ${pts.length > ANSWER_PEEK
+      ? `<button class="ans-more" id="ans-more">${rest
+        ? `展开剩下 ${rest} 点 ▾` : "收起 ▴"}</button>` : ""}
+      </div>
     </div>`;
+  const more = el.querySelector("#ans-more");
+  if (more) more.addEventListener("click", () => { ansExpanded = !ansExpanded; renderAnswer(); });
   if (lastAnswerNode !== p.node) {
     lastAnswerNode = p.node;
-    emit("answer", { note: `outline=${p.outline.length} picked=${r.picked} folded=${r.folded || 0}` });
+    emit("answer", { note: `outline=${pts.length} picked=${r.picked} folded=${r.folded || 0}` });
   }
 }
 
-/** 证据区：picks 按审计顺序一条条给，每条上面写清它在这个答案里负责哪一段。 */
+/* 相邻的问题 + 页脚那一行灰字。两块都只在主题页出现，排在视频之后（mock v2 的顺序）。 */
+function tailHtml(p) {
+  const r = p.receipt || {};
+  /* 每种关系最多给一条。**不去重会三条全是"它是这个更大问题的一块"**（实测本页就是），
+     那等于把"相邻的问题"这块的意义抹掉——它要回答的是"从这里还能往哪三个方向走"，
+     不是"列三条边"。四种关系按这个顺序优先：先给向上的大问题，再给前置，再给易混，最后给实例。 */
+  const ORDER = ["answers_part_of", "prereq", "confusable_with", "instance_of"];
+  const all = ((DATA_EDGES && (DATA_EDGES[p.category] || DATA_EDGES[p.node])) || [])
+    .filter(e => EDGE_CN[e.type]);
+  const edges = ORDER.map(t => all.find(e => e.type === t)).filter(Boolean).slice(0, 3);
+  HINTS.near = "这几条是知识关系（它是谁的一块、要先懂什么、常被和谁搞混），"
+    + "不是「看了这个的人还看了」——所以每条都说得出为什么。";
+  const near = edges.length ? `<div class="sec">
+      <div class="sh"><span class="t">相邻的问题</span>${hintBtn("near")}</div>
+      <div class="near">${edges.map(e => `<button class="nb" data-near="${esc(e.dst)}">
+        <span class="k">${EDGE_CN[e.type].mark} ${EDGE_CN[e.type].k}</span>
+        <span class="nm">${esc(displayNode(e.dst))}</span></button>`).join("")}</div>
+    </div>` : "";
+  const dis = (p.disputed || []).length;
+  HINTS.disputed = dis ? (p.disputed || []).map(d =>
+    `· ${deIdentify(d.claim || "")}\n  ${deIdentify(d.sides || "")}`).join("\n\n") : "";
+  return `${near}
+    <div class="pagefoot">
+      ${dis ? `<span class="warn">⚠ ${dis} 处分歧</span>${hintBtn("disputed")}` : ""}
+      ${r.rejected ? `<span>${r.rejected} 条没过关，没放上来</span>` : ""}
+      <span class="done">答完了，关掉就行。</span>
+    </div>`;
+}
+
+/* 视频区。**它是这一页的主内容**（CY 2026-11-10 09:4x：「我们找到的这几个视频是这个回答的
+ * 主内容，主内容不应该放在右边的 Panel 上」），所以用和搜索结果同一套大卡片，占满主栏。
+ * v1 曾把它塞进右侧 400px 的栏——并排的代价是层级消失，左右两栏视觉上天然等权。
+ *
+ * 每条上面原来那段「对应上面第 1、2 点 · 它负责讲机制 · 只有它讲了…」整段去掉，
+ * 换成卡片角上的小圆点徽章（准则 14：能用直观形式表达的，不用文字）。
+ * 入选理由没有丢——仍在卡片的 title 上，鼠标停住看得到。 */
 function renderEvidence(el, items, page) {
   const byId = new Map(items.map(it => [it.id, it]));
   const staleWhy = new Map((page.stale || []).map(s => [s.id, s.why]));
   const picks = (page.picks || []).filter(p => byId.has(p.id));
   const restRows = (page.order || []).filter(o => o.bucket !== "pick" && byId.has(o.id));
 
-  const evBlock = (p) => {
-    const it = byId.get(p.id);
-    const cov = (p.covers || []).length
-      ? `<span class="cov">对应上面第 ${p.covers.map(i => i + 1).join("、")} 点</span> · ` : "";
-    const why = staleWhy.get(p.id);
-    return `<div class="ev">
-        <p class="ev-role">${cov}${esc(p.role || "")}${
-      p.unique ? `<br>只有它讲了：${esc(p.unique)}` : ""}
-        ${why ? `<div class="ev-stale">⏳ 可能过时：${esc(why)}</div>` : ""}</p>
-        <div class="grid">${cardHtml(it)}</div>
-      </div>`;
-  };
+  HINTS.videos = `这 ${picks.length} 条不是用来证明上面那段话的——它们是同一个问题，`
+    + `别人讲给你听的版本。每条角上的数字，是它讲到了上面第几点。`
+    + `从 ${(page.receipt || {}).qualified || items.length} 条合格内容里挑的，按阅读顺序排，没有热度排序。`;
+
+  const covers = new Map(picks.map(p => [p.id, p.covers || []]));
+  const whyOf = (p) => [p.role, p.unique ? `只有它讲了：${p.unique}` : "",
+    staleWhy.get(p.id) ? `⏳ 可能过时：${staleWhy.get(p.id)}` : ""].filter(Boolean).join(" · ");
 
   el.innerHTML = `
-    <div class="ev-head"><span class="t">证据</span>
-      <span class="n">${picks.length} 条，按读的顺序</span></div>
-    ${picks.map(evBlock).join("")}
-    ${restRows.length ? (evExpanded
-      ? `<div class="ev-head"><span class="t">这个问题下其余的内容</span>
-           <span class="n">${restRows.length} 条</span></div>
-         <p class="ev-foldnote">没入选不代表不好——多数是和上面某一条讲的同一件事。
-           每条都有一句为什么没入选，鼠标停在卡片上能看到。</p>
-         <div class="grid">${restRows.map(o =>
+    <div class="sec">
+      <div class="sh"><span class="t">讲这个问题的视频</span>
+        <span class="n">${picks.length} 个</span>${hintBtn("videos")}</div>
+      <div class="grid">${picks.map(p =>
+    cardHtml(byId.get(p.id), whyOf(p), covers.get(p.id))).join("")}</div>
+      ${restRows.length ? (evExpanded
+      ? `<div class="grid grid-rest">${restRows.map(o =>
         cardHtml(byId.get(o.id), o.reason)).join("")}</div>`
-      : `<button class="ev-more" id="ev-more">其余 ${restRows.length} 条（多数与上面重复）…</button>`)
-    : ""}`;
+      : `<button class="vfold" id="ev-more">还有 ${restRows.length} 条讲的是同一件事 ▾</button>`)
+    : ""}
+    </div>
+    ${tailHtml(page)}`;
 
   const more = el.querySelector("#ev-more");
   if (more) more.addEventListener("click", () => { evExpanded = true; renderResults(); });
+  el.querySelectorAll("[data-near]").forEach(b => b.addEventListener("click", () => {
+    ENTRY_EDGE = `near:${page.node}`;          // 从答案页顺着边走，和弹窗里那条同一个口径
+    emit("edge_follow", { note: ENTRY_EDGE });
+    go({ node: b.dataset.near, topic: null, q: "" });
+  }));
   el.querySelectorAll(".card").forEach(c => c.addEventListener("click", () =>
     openModal(DATA.find(it => it.id === c.dataset.id))));
 }
@@ -462,7 +529,9 @@ function modalCover(url) {
 const EAGER_COVERS = 6;
 let coverSeq = 0;
 
-function cardHtml(it, whyNote) {
+/* covers：这条视频讲到了答案的第几点。用小圆点徽章而不是「对应上面第 1、2 点」那句话
+   （CY 2026-11-10：「尽量用一些其他很直观的方式让用户理解这是什么」）。 */
+function cardHtml(it, whyNote, covers) {
   const dur = fmtDuration(it.duration_s);
   const hasImg = !!it.cover_url;
   const kps = (it.key_points || []).slice(0, 3);
@@ -494,6 +563,9 @@ function cardHtml(it, whyNote) {
           ${eng.join("")}
           ${it.author ? `<span class="author">@${esc(it.author)}</span>` : ""}
         </div>
+        ${(covers || []).length
+      ? `<div class="pts" title="它讲到了答案的第 ${covers.map(i => i + 1).join("、")} 点">${
+        covers.map(i => `<i class="pt">${i + 1}</i>`).join("")}</div>` : ""}
         ${body}
       </div>
     </div>`;
@@ -507,17 +579,24 @@ function renderResults() {
 
   /* 主题页命中时走证据视图。只在**没有搜索词**时走——有搜索词说明他在这个节点里再找
      某个具体说法，那时该按命中度排，不该按编辑顺序排。 */
+  /* 排序规则那一行原来是常驻的长说明句。v2 起收进 `?`（CY：版面上解释的文字太多了）。
+     它仍然在页面上、仍然查得到——只是默认不占版面。 */
   const page = currentPage();
-  const sortNote = document.querySelector(".sort-note");
+  const bar = document.querySelector(".toolbar");
   if (page && !state.q && items.length) {
-    // 列表视图那句"B站优先/按标题排"在这一页是错的：这里的顺序是编辑判断过的阅读序
-    if (sortNote) sortNote.textContent =
-      "这一页的顺序是编辑判断：先给答案，再按阅读顺序给证据。每条为什么入选、为什么没入选都有记录。没有热度排序。";
+    HINTS.sort = "这一页的顺序是编辑判断：先给答案，再按阅读顺序给视频。"
+      + "每条为什么入选、为什么没入选都有记录。没有热度排序。";
+    if (bar) bar.hidden = true;   // 主题页自己带区块标题，不需要这条工具栏
     renderEvidence(el, items, page);
     return;
   }
-  if (sortNote) sortNote.textContent =
-    "同一问题内：B站优先（讲得通常更完整），其余按标题排序；有搜索词时标题命中的排前面。没有热度排序，也没有推荐算法。";
+  HINTS.sort = "同一问题内：B站优先（讲得通常更完整），其余按标题排序；"
+    + "有搜索词时标题命中的排前面。没有热度排序，也没有推荐算法。";
+  if (bar) {
+    bar.hidden = false;
+    const note = bar.querySelector(".sort-note");
+    if (note) note.innerHTML = `怎么排的${hintBtn("sort")}`;
+  }
 
   // 🔴 **数据还没到 ≠ 我们没有内容**（CY 2026-11-10 08:2x 手机首开实测报的 bug）。
   // data.json 压缩后 960KB，从美西机器直连都要 2.9 秒；他在飞书内置浏览器里等的那段时间，
@@ -602,7 +681,16 @@ function render() {
   renderScopeHint();
   renderAnswer();
   renderResults();
+  /* 进了一个具体问题 ⟹ 品牌栏和主题标签云让路，主栏居中收窄（准则 10）。
+     它们是"还没决定看什么"时的工具；已经决定了，留着只是噪音。 */
+  document.body.classList.toggle("focused", Boolean(currentPage()) && !state.q);
 }
+
+/* 站名点一下回首页。focused 态下它是页面上**唯一**的回去入口（面包屑的「全部」是另一个，
+   但人找"回首页"第一个点的永远是站名）。 */
+document.querySelector(".brand-panel h1")?.addEventListener("click", () => {
+  if (document.body.classList.contains("focused")) go({ node: null, topic: null, q: "" });
+});
 
 /* 首屏的「最近有人在问」：宣言是主张，可点的真实问题才是证据。
    取的是**真实节点 + 真实条数**，按条数排——不是编出来的示例问句。
