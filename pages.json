@@ -902,53 +902,57 @@
     },
     {
       "category": "07.怎么写提示词才能少踩坑",
-      "coverage": "骨架0-4、6、7 被覆盖；其中0（AI不读心）和2（量化约束）被多条交叉印证。漏了第5条（提示词不是越长越好、分层按需披露优于前置全量）——只有 UzFfBgAAxL-BBHsTJTePk8zT…（提示词拆四部分）、UzFfBgAAxMijCDg7Iw2C…（三转向/延迟加载）和 《简化提示词指南：从目标和验证开始》（Claude Code系统提示删80%无降质）讲到，但它们各自要么太短要么偏工程向，没进picks；漏了第8条（别套神级模板、从第一性原理定制）——《第一性原理：拆解需求本质而非盲套提示词模板》 和 《让AI自己写提示词，生成个性化智能体》 讲得清楚，但属于思维心法层、与「少踩坑」的操作目标距离较远。若要补成6条，优先补 《简化提示词指南：从目标和验证开始》（同时覆盖5和6，且有可核验锚点）。",
+      "coverage": "覆盖骨架 0、1、2、3、4、5、7；漏第 6 条（长对话上下文满溢后的交班与接力）。该点在本节点只有 《向AI提问的五步框架：从指令到追问》、《AI稳定输出三件套：长对话降质解决方案》、《上下文满导致遗漏：整理后开新对话》 讲，但它们整体属于『上下文/长对话管理』节点，建议挂到那里而不是在本节点再加一条。",
       "disputed": [
         {
-          "claim": "提示词应该写得详尽完整，还是尽量短？",
-          "sides": "《提示词三步法/五步法：从简单指令到高定需求》/《提示词系统写法从Prompt到Context的完整框架》/UzFfBgAAxJimfHYKOAeM… 主张「细节越完整输出越贴近需求」「缺一项效果就打折」；《简化提示词指南：从目标和验证开始》、UzFfBgAAxL-BBHsTJTePk8zT…、UzFfBgAAxMijCDg7Iw2C… 反过来主张「越长不代表越好」，矛盾指令让模型浪费算力仲裁，并以 Claude Code 系统提示删80%+编码评测无降质为证；UzFfBgAAxLyvGGdvWSSC… 的中间立场是「加约束性价比最高」。实践上取决于模型等级——《提示词三步法/五步法：从简单指令到高定需求》 自己也说推理式模型不需面面俱到。"
+          "claim": "提示词应该写得尽量详尽，还是越短越好",
+          "sides": "《提示词三步法/五步法：从简单指令到高定需求》 与『万能四件套』(UzFfBgAAxJimfHYKOAeM…) 主张细节越完整输出越贴需求；《简化提示词指南：从目标和验证开始》、UzFfBgAAxL-BBHsTJTeP…、UzFfBgAAxMijCDg7Iw2C… 主张系统提示膨胀会让模型花算力仲裁矛盾指令，删 80% 反而不掉分、应按需分层披露"
         },
         {
-          "claim": "角色设定（role prompting）到底有多重要？",
-          "sides": "《提示词6步公式：角色到参考示例的完整框架》/《AI提问优化：角色定义四步法》 把角色列为第一关键步骤，甚至主张虚构详细角色背景、用名人；UzFfBgAAxMijCDg7Iw2C… 和 UzFfBgAAxOCiVB4sU06M… 则认为「穷举检查清单比角色设定更稳定高效」「用专家真正用的工具方法，而非靠角色扮演营造氛围」。注意前两条是 2023-2024 年的内容。"
+          "claim": "角色扮演/身份设定到底是不是最关键的一步",
+          "sides": "《提示词6步公式：角色到参考示例的完整框架》 说第 1 步角色定位最关键、用巴菲特鲁迅这类知名人物效果更好，《AI提问优化：角色定义四步法》 甚至要虚构学历履历；UzFfBgAAxMijCDg7Iw2C… 说穷举检查清单在真实生产中比角色设定更稳定，UzFfBgAAxOCiVB4sU06M… 说要给专家真用的方法而非角色扮演营造氛围"
         },
         {
-          "claim": "顶级提示词应该由人写还是由AI生成？",
-          "sides": "《AI生成提示词的四步工作法》（Lyra四阶段）与 《让AI自己写提示词，生成个性化智能体》 主张「AI最懂AI，让它反向采访你生成提示词」；《第一性原理：拆解需求本质而非盲套提示词模板》 主张先用第一性原理拆到需求本质，否则仍是换皮模板。两者可叠加而非真对立：用AI生成但必须注入自己的领域细节（《AI生成提示词的四步工作法》 自己也承认 Lyra 缺行业洞察）。"
+          "claim": "现成提示词模板能不能直接用",
+          "sides": "《五个AI图像生成创意插画提示词》、《ChatGPT电商产品作图五大提示词》 直接甩可复制模板；《第一性原理：拆解需求本质而非盲套提示词模板》、《让AI自己写提示词，生成个性化智能体》、UzFfBgAAxPOHfCcJBSG9… 说套网上神级提示词会『泯然于众人』、固化模板必过时作废"
+        },
+        {
+          "claim": "好提示词该由人写还是由 AI 生成",
+          "sides": "《AI生成提示词的四步工作法》 称顶级提示词由 AI 生成而非人写（Lyra 反向采访法）；《提示词工程核心方法论与实战调优技巧》 称提示词是 AGI 时代的编程语言、人必须掌握这项基本技能"
         }
       ],
       "domain": "ai1",
-      "editor_note": "这个节点量大质次：56条里有效主张其实只有7-8个簇，重复极严重——「三条铁律防幻觉」一个簇就有6条几乎逐字相同的短视频（点赞从153185到0不等，但信息量完全一致，这正是为什么不能按热度排），「角色+任务+格式+约束四件套」一个簇有8条以上。三个坑要注意：①大量候选是**跨模态污染**——《AI字体设计的正确打开方式：参考学习而非文生图堆砌》、《AI样机生成的正确方法：审美定调+智能替换而非模板》、《AI学习特定画风的标准方法：从参考拆解到风格指令》、《AI如何理解空间位置：从画面坐标而非人物视角》、《五个AI图像生成创意插画提示词》、《ChatGPT电商产品作图五大提示词》、《从视频反推AI生成提示词的方法》 讲的是文生图/视频/样机的提示词，和「写提示词少踩坑」的文本语境不是一回事，不应混进同一节点，建议拆出「图像/视频提示词」子节点。②**疑似卖课引流/营销话术**：《五个AI图像生成创意插画提示词》（送模板+去水印教程）、《ChatGPT电商产品作图五大提示词》（五大提示词速成）、《提示词工程核心方法论与实战调优技巧》（时长111065秒≈31小时，疑似录播合集/直播回放，且开场即「提示词=AGI时代的编程语言，提示工程师=AGI时代的程序员」属典型焦虑营销）均已排除。③**时长元数据可疑**：《提示词工程核心方法论与实战调优技巧》 的 111065s 几乎确定是抓取错误或长直播，入库前该校验。真正信息密度高的反而是零赞的微信视频号短条（UzFfBgAAxMGEMFBNTB-I 的调试循环、UzFfBgAAxOGvWChUIm2M 的风险分级），说明本节点的互动数与质量基本不相关，排序绝不能依赖它。",
+      "editor_note": "这个节点同质化极严重：60 条候选里真正不同的主张大约只有 8–10 个。两个最大的重复簇是（a）『五要素/四件套/六步公式/三步法』的同义改写，至少 10 条；（b）『防幻觉三条铁律』（不确定就说不确定 + 信心打分 + 要来源），至少 7 条互为翻译版，连话术顺序都一致，疑似同一套脚本跨平台搬运。另有约 10 条（字体/样机/灰模/画风/Seedance/电商作图/视频反推）是生图生视频专用技巧，挂错节点，其中 《AI字体设计的正确打开方式：参考学习而非文生图堆砌》、《AI样机生成的正确方法：审美定调+智能替换而非模板》、《AI学习特定画风的标准方法：从参考拆解到风格指令》 三条本身也是同一主张（用 3–5 张参考让 AI 拆解规律）。明显的坑：《提示词工程核心方法论与实战调优技巧》 时长 11 万秒（≈30 小时）更像课程录播而非单条回答，且用『提示工程师=AGI 时代程序员、不学就落后』定调，有卖课/焦虑营销味，不入选；《AI生成提示词的四步工作法》 的『百万验证：顶级提示词由 AI 生成而非人写』是绝对化表述；全节点没有任何一条给出可复现的 A/B 对照，出现的数字（37%→92%、效率提升 3-5 倍、专业十倍、删 80% 不掉分）里只有 《简化提示词指南：从目标和验证开始》 那条指向可查的公开实践，其余均无出处，引用时需自行核实。另有 《AI写作中消除AI味的提示词指令》（消除 AI 味）和 《向AI提问的五步框架：从指令到追问》/《AI稳定输出三件套：长对话降质解决方案》（长对话降质与交班）质量不低，但各自属于『怎么去掉 AI 味』和『上下文管理』两个相邻节点，建议改挂过去而不是在本节点占位。",
       "node": "怎么写提示词才能少踩坑",
       "order": [
         {
           "bucket": "pick",
           "id": "wechat_channels:export/UzFfBgAAxMGEMFBNTB-Ik8zT4DCK4TORNx_LVl-xwlW5MiAetw",
-          "reason": "编辑判断·入选最小互补集：两分钟速览版的「少踩坑清单」：直接给出调试循环+五条检查清单+四种常见翻车形状｜覆盖骨架[0, 1, 2, 6]｜独有：把常见翻车（目标模糊/过长/自相矛盾/格式不明）和「写→跑→只改最差处，四轮通常够」的调试循环说成可直接执行的闭环",
+          "reason": "编辑判断·入选最小互补集：入口速览：直接按『常见翻车清单 + 四轮调试循环』给出最短可执行路径，两分钟拿走方法｜覆盖骨架[1, 2, 4, 7]｜独有：把『目标模糊/过长/自相矛盾/格式不明』列成翻车清单，并给出写→跑→只改最差处→再跑的四轮收敛节奏",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
-          "id": "bilibili:BV1SreE6dEJr",
-          "reason": "编辑判断·入选最小互补集：主干深讲：从单句Prompt到完整Context的系统框架，六个维度逐一拆解｜覆盖骨架[0, 1, 2, 4, 6]｜独有：六边形框架（任务/指标/边界/样本/规则/验收）+ 把「怎么说」转向「让AI看什么」的Context Engineering定位",
+          "id": "bilibili:BV1ToV76NECH",
+          "reason": "编辑判断·入选最小互补集：69 秒即抄即用的约束段：压住模型的夸赞顺从与瞎猜，先把回答可信度托住｜覆盖骨架[3]｜独有：候选里唯一明确要求压制『过度夸赞、盲目认同用户观点』的，而不只是防编造",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
           "id": "bilibili:BV1hAM26KEcb",
-          "reason": "编辑判断·入选最小互补集：单点攻坚：专治「说不清楚」这一个最高频的坑，给列数字法和举例子法｜覆盖骨架[2, 4]｜独有：指出真正的难点不是知道要去掉形容词，而是先把自己心里的那把尺子量化出来",
+          "reason": "编辑判断·入选最小互补集：专题深讲：把『形容词→数字和例子』这一条讲到可操作，是最高频踩坑点的单点加深｜覆盖骨架[2]｜独有：指出真正的难点不是知道该换掉形容词，而是先把自己心里那把尺子量化清楚",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
-          "id": "wechat_channels:export/UzFfBgAAxOGvWChUIm2Mk8zT4DCKhC6lC9LpdX-lHU2OefH0aw",
-          "reason": "编辑判断·入选最小互补集：防幻觉模块：解释AI为什么会硬凑，并给出可直接粘贴的三句约束｜覆盖骨架[3]｜独有：给出风险分级（引用类任务幻觉风险最高、写作类最低）和「人类偏好结构化反而强化了AI的自信」这一成因",
+          "id": "bilibili:BV1SreE6dEJr",
+          "reason": "编辑判断·入选最小互补集：系统长讲：从单句 Prompt 到完整 Context 的框架课，补齐结构与验收这一层｜覆盖骨架[0, 1, 5, 7]｜独有：六边形框架把『验收标准』和『排除旧信息』提到与任务并列的一维，而非只谈怎么描述需求",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
-          "id": "bilibili:BV1yiXTBxE7n",
-          "reason": "编辑判断·入选最小互补集：长任务收尾：解决提示词写对了但聊久了还是跑偏的问题，讲交班与三层规则｜覆盖骨架[3, 7]｜独有：把长对话降质拆成记忆断裂/逻辑跑偏/幻觉三重症状，并用「强制交班+新窗口」对症",
+          "id": "bilibili:BV1mfxr6PEDW",
+          "reason": "编辑判断·入选最小互补集：反向纠偏：当你已经会堆要素后，用它来删——减法、自验证、过期指令审计｜覆盖骨架[4, 7]｜独有：给了可核验锚点：Claude Code 系统提示词删 80%+ 后编码评测无性能下降，并给出 /effort、/doctor audit 的具体操作路径",
           "source": "editorial_lm"
         },
         {
@@ -976,10 +980,10 @@
           "source": "editorial_lm"
         },
         {
-          "bucket": "rest",
+          "bucket": "redundant",
           "id": "bilibili:BV1cChqzqEWm",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《提示词系统写法从Prompt到Context的完整框架》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
@@ -995,20 +999,38 @@
         },
         {
           "bucket": "rest",
-          "id": "bilibili:BV1JrX7YWEem",
+          "id": "bilibili:BV1KNt362ECq",
           "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
           "source": "deterministic_rule"
         },
         {
           "bucket": "redundant",
-          "id": "bilibili:BV1HSbi62EnL",
-          "reason": "编辑判断·主张层面与《AI稳定输出三件套：长对话降质解决方案》重复，默认折叠",
+          "id": "bilibili:BV1yiXTBxE7n",
+          "reason": "编辑判断·主张层面与《向AI提问的五步框架：从指令到追问》重复，默认折叠",
           "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1JrX7YWEem",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1xRbY61Ekh",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1HSbi62EnL",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
           "bucket": "redundant",
           "id": "bilibili:BV1ib421E7Sy",
-          "reason": "编辑判断·主张层面与《提示词工程核心方法论与实战调优技巧》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《提示词系统写法从Prompt到Context的完整框架》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -1030,16 +1052,28 @@
           "source": "deterministic_rule"
         },
         {
-          "bucket": "rest",
+          "bucket": "redundant",
           "id": "bilibili:BV1VEA8zYE6f",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《提示词6步公式：角色到参考示例的完整框架》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "bilibili:BV1uDB9BaEsi",
-          "reason": "编辑判断·主张层面与《AI应用的提示词与上下文工程基础》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《提示词系统写法从Prompt到Context的完整框架》重复，默认折叠",
           "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1Wogf6vEKZ",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1JKhG61Ehn",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
           "bucket": "rest",
@@ -1048,27 +1082,15 @@
           "source": "deterministic_rule"
         },
         {
-          "bucket": "rest",
+          "bucket": "redundant",
           "id": "bilibili:BV1DeAve7EkP",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
-        },
-        {
-          "bucket": "rest",
-          "id": "bilibili:BV1mfxr6PEDW",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《逆向提示词：从他人成果反推设计思路》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "bilibili:BV1t596YPEek",
           "reason": "编辑判断·主张层面与《AI生成提示词的四步工作法》重复，默认折叠",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "redundant",
-          "id": "bilibili:BV1ToV76NECH",
-          "reason": "编辑判断·主张层面与《AI的三句咒语：承认边界、自我评分、亮出证据》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -1078,16 +1100,22 @@
           "source": "deterministic_rule"
         },
         {
-          "bucket": "rest",
+          "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxPyDMEMTdQ7ujMzT4DCK5U0hcUjJaN80UpETQIVU3w",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《提示词工程基础：清晰表达如何优化AI输出》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
           "bucket": "rest",
           "id": "douyin:7566554653261958452",
           "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
           "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxOGvWChUIm2Mk8zT4DCKhC6lC9LpdX-lHU2OefH0aw",
+          "reason": "编辑判断·主张层面与《三条铁律让豆包诚实输出》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
           "bucket": "rest",
@@ -1098,13 +1126,13 @@
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxJWrFAkLCET2k8zT4DCKPY9ghMM1Yo5wAQZw3omW0g",
-          "reason": "编辑判断·主张层面与《AI的三句咒语：承认边界、自我评分、亮出证据》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《用提示词让AI停止编造》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "douyin:7652180035524893870",
-          "reason": "编辑判断·主张层面与《AI的三句咒语：承认边界、自我评分、亮出证据》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《通过提示词约束优化AI回答质量》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -1114,10 +1142,10 @@
           "source": "editorial_lm"
         },
         {
-          "bucket": "redundant",
+          "bucket": "rest",
           "id": "wechat_channels:export/UzFfBgAAxP6ILH5kWEuJk8zT4DCKMiHVxa5ACG2oGeMFCr6C8A",
-          "reason": "编辑判断·主张层面与《AI稳定输出三件套：长对话降质解决方案》重复，默认折叠",
-          "source": "editorial_lm"
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
           "bucket": "rest",
@@ -1140,7 +1168,7 @@
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxMGHGFhfVi-_k8zT4DCKWqCVpy95-1Q-zAnY1TjpEw",
-          "reason": "编辑判断·主张层面与《提示词不是越长越好，拆成四部分》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《提示词6步公式：角色到参考示例的完整框架》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -1156,57 +1184,57 @@
           "source": "editorial_lm"
         },
         {
-          "bucket": "rest",
+          "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxL-BBHsTJTePk8zT4DCKZN9_rgfHNncChT8hmc5jbg",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《简化提示词指南：从目标和验证开始》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxLyvGGdvWSSCk8zT4DCKD3wWfWKIRuz7ZXQZCISchw",
-          "reason": "编辑判断·主张层面与《多模型通用提示词编写规范》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《提示词6步公式：角色到参考示例的完整框架》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
-          "bucket": "rest",
+          "bucket": "redundant",
           "id": "douyin:7643009556318014761",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《提示词工程基础：清晰表达如何优化AI输出》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "douyin:7477208108171857162",
-          "reason": "编辑判断·主张层面与《提示词工程核心方法：角色、指令、背景、思考》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《提示词6步公式：角色到参考示例的完整框架》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7685690069608402222",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7621117842859003186",
+          "reason": "编辑判断·主张层面与《提示词工程基础：清晰表达如何优化AI输出》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
-          "id": "douyin:7685690069608402222",
-          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "rest",
-          "id": "douyin:7621117842859003186",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
-        },
-        {
-          "bucket": "rest",
           "id": "douyin:7599967007982783770",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《提示词6步公式：角色到参考示例的完整框架》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxPOHfCcJBSG9k8zT4DCKxgfQyHjWe-GGqqieVNJAUg",
-          "reason": "编辑判断·主张层面与《提示词系统写法从Prompt到Context的完整框架》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《提示词的万能四件套框架》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxJimfHYKOAeMk8zT4DCKRg6dikvtiLRyCK4cjR2m-g",
-          "reason": "编辑判断·主张层面与《提示词系统写法从Prompt到Context的完整框架》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《提示词6步公式：角色到参考示例的完整框架》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -1216,21 +1244,21 @@
           "source": "editorial_lm"
         },
         {
-          "bucket": "redundant",
-          "id": "wechat_channels:export/UzFfBgAAxLOnIAILWA64k8zT4DCKKQKpElvlsmW4dZ_8MGycCA",
-          "reason": "编辑判断·主张层面与《提示词的万能四件套框架》重复，默认折叠",
-          "source": "editorial_lm"
-        },
-        {
           "bucket": "rest",
-          "id": "wechat_channels:export/UzFfBgAAxMijCDg7Iw2Ck8zT4DCKCY0UzwHwFOJTjm1bhOMc4w",
+          "id": "wechat_channels:export/UzFfBgAAxLOnIAILWA64k8zT4DCKKQKpElvlsmW4dZ_8MGycCA",
           "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
           "source": "deterministic_rule"
         },
         {
           "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxMijCDg7Iw2Ck8zT4DCKCY0UzwHwFOJTjm1bhOMc4w",
+          "reason": "编辑判断·主张层面与《简化提示词指南：从目标和验证开始》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
           "id": "douyin:7657921060280601897",
-          "reason": "编辑判断·主张层面与《一条终极指令让AI停止乱编》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《通过提示词约束优化AI回答质量》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -1259,75 +1287,72 @@
         }
       ],
       "outline": [
-        "AI不会读心：模糊输入→概率最大的平庸输出，提示词的作用是把需求翻译成可执行约束",
-        "基础结构骨架：角色/身份 + 任务目标 + 背景上下文 + 输出格式 + 约束禁忌 + 示例（n-shot）",
-        "把模糊形容词换成可核验的量化约束（数量、字数、结构、具体例子）",
-        "防幻觉与反顺从的约束：禁止编造、承认不确定、标注信心与来源、不许盲目夸赞",
-        "用示例/参考样本替代描述（1-2个范例胜过十句要求），以及从参考反推提示词",
-        "不要堆长提示词：指令自相矛盾和系统提示膨胀会浪费模型仲裁成本，分层按需披露优于前置全量",
-        "迭代调试而非一次写成：写→跑→找最差处→只改那处→再跑，并让AI自述理解/采访你/自检验收",
-        "长任务的上下文管理：窗口满溢导致遗漏跑偏，需分阶段交班、结构化总结后开新对话",
-        "别套网上的神级模板：模板会过时且结果大众脸，要从需求本质出发定制"
+        "先接受前提：AI 不读心，只做概率补全——模糊输入必然返回最大众、最平庸的结果，变量在你的输入而不在模型",
+        "打好基础骨架：角色/身份、任务目标、背景上下文、输出格式、约束边界、参考示例，缺哪一项结果就打折",
+        "把模糊形容词换成可核验的具体约束（条数、字数、结构、期限），且一个真实示例胜过十个形容词",
+        "加反幻觉与反奉承约束：不确定就说不确定、结论标注依据与可验证来源、禁止盲目夸赞和顺从用户观点",
+        "提示词不是越长越好：指令自相矛盾、系统提示膨胀会让模型把算力花在仲裁上，该删冗余、按需披露",
+        "重心从『怎么说』转到『让 AI 看什么』：项目背景、历史样本、长期规则这类 Context 比措辞更决定结果",
+        "管好长任务的上下文：窗口装满会丢前文导致跑偏，要分阶段交班、整理结构化文档后开新窗接力",
+        "把写提示词当调试而不是许愿：写→跑→定位最差的一处→只改那里→再跑；同时给出『怎么确认做到了』的自验证标准；别照搬网上模板，不确定时让 AI 反过来采访你"
       ],
       "picks": [
         {
           "covers": [
-            0,
-            1,
-            2,
-            6
-          ],
-          "id": "wechat_channels:export/UzFfBgAAxMGEMFBNTB-Ik8zT4DCK4TORNx_LVl-xwlW5MiAetw",
-          "role": "两分钟速览版的「少踩坑清单」：直接给出调试循环+五条检查清单+四种常见翻车形状",
-          "unique": "把常见翻车（目标模糊/过长/自相矛盾/格式不明）和「写→跑→只改最差处，四轮通常够」的调试循环说成可直接执行的闭环"
-        },
-        {
-          "covers": [
-            0,
             1,
             2,
             4,
-            6
+            7
           ],
-          "id": "bilibili:BV1SreE6dEJr",
-          "role": "主干深讲：从单句Prompt到完整Context的系统框架，六个维度逐一拆解",
-          "unique": "六边形框架（任务/指标/边界/样本/规则/验收）+ 把「怎么说」转向「让AI看什么」的Context Engineering定位"
-        },
-        {
-          "covers": [
-            2,
-            4
-          ],
-          "id": "bilibili:BV1hAM26KEcb",
-          "role": "单点攻坚：专治「说不清楚」这一个最高频的坑，给列数字法和举例子法",
-          "unique": "指出真正的难点不是知道要去掉形容词，而是先把自己心里的那把尺子量化出来"
+          "id": "wechat_channels:export/UzFfBgAAxMGEMFBNTB-Ik8zT4DCK4TORNx_LVl-xwlW5MiAetw",
+          "role": "入口速览：直接按『常见翻车清单 + 四轮调试循环』给出最短可执行路径，两分钟拿走方法",
+          "unique": "把『目标模糊/过长/自相矛盾/格式不明』列成翻车清单，并给出写→跑→只改最差处→再跑的四轮收敛节奏"
         },
         {
           "covers": [
             3
           ],
-          "id": "wechat_channels:export/UzFfBgAAxOGvWChUIm2Mk8zT4DCKhC6lC9LpdX-lHU2OefH0aw",
-          "role": "防幻觉模块：解释AI为什么会硬凑，并给出可直接粘贴的三句约束",
-          "unique": "给出风险分级（引用类任务幻觉风险最高、写作类最低）和「人类偏好结构化反而强化了AI的自信」这一成因"
+          "id": "bilibili:BV1ToV76NECH",
+          "role": "69 秒即抄即用的约束段：压住模型的夸赞顺从与瞎猜，先把回答可信度托住",
+          "unique": "候选里唯一明确要求压制『过度夸赞、盲目认同用户观点』的，而不只是防编造"
         },
         {
           "covers": [
-            3,
+            2
+          ],
+          "id": "bilibili:BV1hAM26KEcb",
+          "role": "专题深讲：把『形容词→数字和例子』这一条讲到可操作，是最高频踩坑点的单点加深",
+          "unique": "指出真正的难点不是知道该换掉形容词，而是先把自己心里那把尺子量化清楚"
+        },
+        {
+          "covers": [
+            0,
+            1,
+            5,
             7
           ],
-          "id": "bilibili:BV1yiXTBxE7n",
-          "role": "长任务收尾：解决提示词写对了但聊久了还是跑偏的问题，讲交班与三层规则",
-          "unique": "把长对话降质拆成记忆断裂/逻辑跑偏/幻觉三重症状，并用「强制交班+新窗口」对症"
+          "id": "bilibili:BV1SreE6dEJr",
+          "role": "系统长讲：从单句 Prompt 到完整 Context 的框架课，补齐结构与验收这一层",
+          "unique": "六边形框架把『验收标准』和『排除旧信息』提到与任务并列的一维，而非只谈怎么描述需求"
+        },
+        {
+          "covers": [
+            4,
+            7
+          ],
+          "id": "bilibili:BV1mfxr6PEDW",
+          "role": "反向纠偏：当你已经会堆要素后，用它来删——减法、自验证、过期指令审计",
+          "unique": "给了可核验锚点：Claude Code 系统提示词删 80%+ 后编码评测无性能下降，并给出 /effort、/doctor audit 的具体操作路径"
         }
       ],
       "provenance": {
-        "input_hash": "00669e34038a4286",
+        "input_hash": "6bece553a7b565ff",
         "model": "opus"
       },
       "receipt": {
-        "folded": 24,
+        "folded": 30,
         "picked": 5,
-        "qualified": 56,
+        "qualified": 60,
         "rejected": 2,
         "rejected_why": [
           "违反硬性排除项。视频用\"我重生了这一世我定要成为最牛逼的程序员\"的短剧情节+反转叙事讲解提示词概念。虽贴AI外壳，但本质",
@@ -1337,27 +1362,35 @@
       "stale": [
         {
           "id": "bilibili:BV1DQ4y1g7P4",
-          "why": "2023-12 的提示词/RAG/微调选型框架。当时的「提示词有天花板、要上微调」判断已被长上下文+Context Engineering+Agent 工具调用大幅改写，成本与能力边界的结论已不适用。"
+          "why": "2023-12 的提示词/RAG/微调选型框架，其『提示词有天花板、要靠微调改风格』的成本与能力边界判断已被长上下文与新一代模型大幅改写"
         },
         {
           "id": "douyin:7275718799872003386",
-          "why": "2023-09，还在用「组合泛化能力」这类研究期话术讨论提示工程，与现在的实操方法脱节。"
+          "why": "2023-09 用『组合泛化能力』框架解释提示工程，术语与评判方式都已脱离当下实践，对今天怎么写提示词没有可操作指导"
         },
         {
           "id": "bilibili:BV1ww411W7CA",
-          "why": "2023-11 的「虚构角色背景四步法」。新一代模型对冗长虚构履历的收益显著下降，这类堆身份的写法现在已属低效甚至反效果。"
+          "why": "2023-11 的虚构角色履历四步法；现代模型对编造的学历背景基本不敏感，这套做法已被更稳的清单化约束取代"
         },
         {
-          "id": "bilibili:BV1ib421E7Sy",
-          "why": "2024-07 的六步公式，仍把「扮巴菲特/马斯克/鲁迅这类名人效果更好」当核心技巧，这条经验在现行模型上已不稳定。"
+          "id": "douyin:7477208108171857162",
+          "why": "引用的『CoT 让准确率从 37% 升至 92%』是早期数学基准的旧数字，当下推理模型默认内置思维链，再手写 think step by step 收益已大幅缩小"
         },
         {
-          "id": "bilibili:BV1JrX7YWEem",
-          "why": "2025-03 讲 markdown 星号井号怎么去掉。国内平台渲染支持已普遍改善，且主流模型已可直接遵循纯文本指令，问题本身在消失。"
+          "id": "bilibili:BV1cChqzqEWm",
+          "why": "把『只需说 think step by step』当显著增益手段，在已内置推理的模型上基本失效，仅 Context 部分仍成立"
         },
         {
-          "id": "bilibili:BV1wNPNeSES9",
-          "why": "2025-02，以「Deep Seek 是推理式AI的代表」作为模型分级依据，模型选型已完全换代。"
+          "id": "bilibili:BV1vSEezQEAk",
+          "why": "核心结论是『超长文档会被拒绝、提示词越长计算效率越低』，在长上下文模型普及后这个约束已显著放宽，会误导用户不敢给背景资料"
+        },
+        {
+          "id": "douyin:7675211337529642281",
+          "why": "5 套具体生图风格模板强绑当时的模型版本和出图习惯，且附『去水印教程』，模板随模型迭代即废"
+        },
+        {
+          "id": "douyin:7701207527211535679",
+          "why": "电商作图五大固定指令同样绑定特定模型版本的出图行为，属于短效模板而非方法"
         }
       ]
     },
