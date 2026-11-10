@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共1159条",
+  "generated_note": "判定=合格的候选，共1164条",
   "topics": [
     "概念原理",
     "方法实操",
@@ -10,7 +10,7 @@
     {
       "id": "ai1",
       "label": "AI 与大模型",
-      "count": 966
+      "count": 971
     },
     {
       "id": "fin1",
@@ -31401,6 +31401,146 @@
       "topic": "时效选择",
       "node": "大模型版本与选型指南",
       "category": "(地图缺口)大模型版本与选型指南",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1E1eh6kEUg",
+      "video_id": "BV1E1eh6kEUg",
+      "title": "WorkBuddy聊天记录AI分析四个实战场景",
+      "original_title": "【WorkBuddy新功能】一键让AI分析你的聊天记录",
+      "author": "森虫虫进化中",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1E1eh6kEUg",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/7b62413476709f93b98acb9c2a644f0eb9011213.jpg",
+      "published_at": "2026-09-19T13:16:59+00:00",
+      "key_points": [
+        "工具核心价值：免去截屏和手工整理，一键转发聊天给AI完成分析",
+        "情感冲突分析：AI识别对话分歧点、双方不满处、冲突升级句，量化各方责任比例",
+        "群聊快速扫描：80+条消息33秒内提取核心话题和涉己提及，无需手动爬楼",
+        "工作任务解析：从领导长文自动提取任务清单、优先级、截止时间和注意事项",
+        "使用前置条件：需WorkBuddy 5.5.0+版本，仅支持macOS和Windows系统"
+      ],
+      "duration_s": 369.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "演示WorkBuddy如何将微信聊天记录导入AI分析，涵盖情感冲突判决、群聊内容摘要、任务拆解三个日常应用场景，降低信息处理门槛。",
+      "reason": "视频通过实际场景展示了聊天分析工具的具体应用流程。转写明确表述'把聊天记录选定然后发给沃克巴蒂让他去分析''沃克巴迪用33秒就帮我总结了一下'，体现了实际操作方法。 | 引用:「把聊天记录转发到任务窗口直接把聊天内容整个端过去让沃克巴迪进行分析和处理」",
+      "topic": "方法实操",
+      "node": "AI工具使用教程",
+      "category": "(地图缺口)AI工具使用教程",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1SreE6dEJr",
+      "video_id": "BV1SreE6dEJr",
+      "title": "提示词系统写法从Prompt到Context的完整框架",
+      "original_title": "【超详细】提示词到底怎么写？从Prompt到Context，一次性讲明白～",
+      "author": "森虫虫进化中",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1SreE6dEJr",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/af74cb1eabd5b1fd0430409e82c1667ab0397dc6.jpg",
+      "published_at": "2026-09-15T05:13:59+00:00",
+      "key_points": [
+        "三层提示词差异：单句模糊vs清晰任务边界vs完整Context，效果差别巨大",
+        "六边形框架：任务、指标、边界、样本、规则、验收六个维度确保AI理解完整",
+        "Context核心价值：承载项目背景、汇报样本、长期规则、排除旧信息，影响AI决策",
+        "Prompt已进化：从'怎么说'进化到'让AI看什么'，这是Context Engineering本质",
+        "反馈迭代循环：用样本和反馈多轮调整，直到AI输出符合交付标准"
+      ],
+      "duration_s": 1666.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "系统讲解提示词编写的完整方法论包括任务拆解、六边形结构、上下文搭建、反馈校准，并用真实项目（20页报告转5分钟汇报）演示全流程。",
+      "reason": "转写展示了系统的方法论体系和实施流程。直接引述'先对任务进行拆解再搭建一个六边形的提示词''用反馈和样本去校准结果'，并以真实项目案例逐步演示。 | 引用:「先对任务进行拆解再搭建一个六边形的提示词给对上下文排除过期信息然后用反馈和样本去校准结果」",
+      "topic": "方法实操",
+      "node": "怎么写提示词才能少踩坑",
+      "category": "07.怎么写提示词才能少踩坑",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV15Z4967EMa",
+      "video_id": "BV15Z4967EMa",
+      "title": "用WorkBuddy和资料库构建AI长期知识积累体系",
+      "original_title": "【零基础·共9期】WorkBuddy完整教程（六）｜用WorkBuddy和资料库建立AI第二大脑",
+      "author": "森虫虫进化中",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV15Z4967EMa",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/30f92b8173975e03c72a8c97c2cc9332e28a14dd.jpg",
+      "published_at": "2026-08-27T12:10:57+00:00",
+      "key_points": [
+        "问题根源：AI每个新任务独立运作，历史上下文不自动跟进，导致重复整理信息",
+        "第二大脑定义：保存项目方案、会议纪要、成功复盘等可重用资产，强调'以后还能用'",
+        "三层循环模式：调用历史→完成任务→筛选确认→沉淀积累，形成螺旋式增长",
+        "WorkBuddy长期记忆：官方自动提取事实、偏好、关系、跟进事项，无需额外工具",
+        "建立关键：按需调用重于囤积数量，定期编辑和删除保持库的活跃度"
+      ],
+      "duration_s": 1505.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解AI工具中如何通过资料库建立'第二大脑'保存长期背景和经验，使新任务能继承历史积累，而非重复从零开始理解项目背景。",
+      "reason": "转写明确讲述问题（聊了很久的项目重开时背景丢失）、解决方案（资料库建立长期知识层）、实施三层循环方法。引述'我既不能永远依赖一个无限长的聊天窗口也不希望每开一个任务就重新整理'体现了设计思想。 | 引用:「我既不能永远的依赖一个无限长的聊天窗口也不希望每开一个任务就重新整理一遍过去所有的资料」",
+      "topic": "方法实操",
+      "node": "AI工具使用教程",
+      "category": "(地图缺口)AI工具使用教程",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1SH8L6MEAp",
+      "video_id": "BV1SH8L6MEAp",
+      "title": "DeepSeek Harness vs Hermes+Codex AI编程工具对比",
+      "original_title": "超火爆DeepSeek Harness 5天16万⭐：从0到1安装、玩法、插件能力、真实项目实测，一次真正讲懂Harness｜Hermes+Codex还有必要吗",
+      "author": "森虫虫进化中",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1SH8L6MEAp",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/57f343366a7c0ad5d37db087b8dc85f6ef342cc7.jpg",
+      "published_at": "2026-08-18T23:20:00+00:00",
+      "key_points": [
+        "Harness本质：不是模型而是Agent编排框架，提供工具调用、权限边界、任务拆解等执行层能力",
+        "为什么需要：模型虽聪明但无电脑、无权限、无边界，需工具链才能真正进入项目干活",
+        "分工关系：Codex精于编码、Hermes负责记忆与自动化、Harness是通用编排框架",
+        "开源填补：弥补了开源模型缺少完整Agent工具链的空白，大幅降低自建门槛",
+        "选型要点：无长期记忆需求用Codex、需多Agent协作和流程自动化则三者结合"
+      ],
+      "duration_s": 1698.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解DeepSeek Harness开源框架的核心架构与能力、安装流程、与Hermes+Codex等工具的功能差异、以及在真实项目中的性能表现对标。",
+      "reason": "转写详细解释了'Harness它到底是什么'的核心概念和'为什么deep sick还要自己做Harness'的动机，并系统对标了Hermes/Codex的能力差异。（注：内容涉及2024年8月具体时间点，属时效类信息） | 引用:「一个模型从会回答问题变成真的可以进入到一个项目里面连续的干活中间其实还缺了非常多的东西」",
+      "topic": "时效选择",
+      "node": "AI编程工具选型",
+      "category": "(地图缺口)AI编程工具选型",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1dbxY6QEXF",
+      "video_id": "BV1dbxY6QEXF",
+      "title": "推理引擎DeepInfer：大模型成本优化机制",
+      "original_title": "美国政府禁用 DeepSeek，它开源的 DeepInfer 到底是什么？",
+      "author": "洛洛川ZHIN",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1dbxY6QEXF",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/df5a38f9f58e959a6054af77c3c56a6cfb7e9742.jpg",
+      "published_at": "2026-10-30T13:48:26+00:00",
+      "key_points": [
+        "推理引擎改变成本和速度，不改模型能力，类似厨房vs菜谱概念",
+        "缓存命中决定成本：万token0.02元命中，1元未命中，相差50倍",
+        "开源不仅代码，更是生产优化方法如缓存复用、算子调度等",
+        "生产级规模验证：日扛155万亿token流量，非实验室演示",
+        "实用前提：开源引擎需补充K-V缓存系统等才能商用"
+      ],
+      "duration_s": 863.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲推理引擎改变调用成本但不改模型能力，缓存命中影响成本差50倍，开源生产优化方法而非仅代码的罕见意义。",
+      "reason": "讲推理引擎降低模型调用成本的原理机制：'每百万token0.02元命中缓存，未命中1元，成本直接相差50倍'，为生产系统优化原理讲解非操作教程。 | 引用:「每百万token0.02元命中缓存，未命中1元，成本直接相差50倍」",
+      "topic": "概念原理",
+      "node": "大模型推理框架与引擎优化",
+      "category": "(地图缺口)大模型推理框架与引擎优化",
       "domain": "ai1"
     }
   ]
