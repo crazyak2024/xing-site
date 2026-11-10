@@ -3000,61 +3000,57 @@
     },
     {
       "category": "21.现在该用哪个大模型",
-      "coverage": "覆盖骨架 1（场景对号入座）、2（成本）、3（榜单与宣传的可信度）、4（上下文/硬件权衡，仅从显存与速度侧覆盖）、5（开源 vs 闭源两面）、6（分层与组合）。漏 0（模型与 AI 软件的层次区分、七类模型分工）和 7（免费与低价获取路径）——这两点可分别去 《AI模型分类与选型指南》 和 《2026年AI免费与低价替代方案完整指南》 单独补，但它们信息密度低/时效性弱，不值得占主集合名额。骨架 4 中'上下文档位怎么选'这一面在全部候选里只有一条讲，且那条已过时（见 stale）。",
+      "coverage": "覆盖骨架 0,1,2,3,4,5,6,7（全部8条）。其中要点4（上下文长度与计费权衡）只被第1条以'百万上下文成标配'一句带过，深度不足——《2026主流大模型上下文档位选型指南》（上下文档位选型）和 《GPT-5.6版本对比：Soul/Terra/Luna能力与成本差异》（超272k token翻倍计费）是该点的补充料，但为控制集合规模未入选；要点2的开源真实总成本一面由第4条间接涉及，《开源vs闭源：成本与适用场景对比》 的'机器50万+人力50万'具体数字未进入集合。",
       "disputed": [
         {
-          "claim": "上下文到底多长才够用、长上下文值不值",
-          "sides": "《2026主流大模型上下文档位选型指南》 认为 8K 是大众黄金档、32K 已是企业门槛，越长越不划算；《前沿大模型的技术方案与选型建议》 称百万 Token 已成标配；《GPT-5.6版本对比：Soul/Terra/Luna能力与成本差异》 给出中间事实——确实支持 105 万 token，但超 272k 输入直接翻倍计费，长不等于便宜"
+          "claim": "写作/创作场景到底该用通用大模型还是垂直网文工具",
+          "sides": "《AI写作大模型排名评测》 与 《AI写小说工具排名对比》 称专业网文工具（绝文/少文/绍文）明显优于通用大模型；《2026大模型写作能力排名》 与 《6款AI模型网文创作能力对比评测》 则认为 Gemini 4 系列文笔第一、通用模型配合审核搭配即可，不提垂直工具"
         },
         {
-          "claim": "开源模型是不是更省钱",
-          "sides": "《13款开源模型本地部署横评与选型指南》 与 《国产三大开源大模型特点与选择指南》 把开源当性价比首选；《开源vs闭源：成本与适用场景对比》 算出机器+人力约百万、总成本超过调 API，且开源占七成流量却不到三成收入"
+          "claim": "中国模型与美国顶级模型的真实差距",
+          "sides": "wechat_channels:...UzFfBgAAxMyHNFgMAWfPk8zT4DCKH70hAMd3La8bCCojBvD-GQ 称性能差距仅2.7%、4.4个月即可追平；《2026年全球AI助手能力评测与选型建议》 则指国产模型在风格、逻辑深度、表达上仍有明显短板（豆包浅显、文心表达不清）"
         },
         {
-          "claim": "中美顶级模型差距与国产模型可用度",
-          "sides": "《中美大模型性能与性价比对标分析》 称性能差距仅 2.7%、国产调用量已反超；《2026年全球AI助手能力评测与选型建议》 则称豆包回答浅显、文心表达不清，国外仍是基石"
+          "claim": "开源自部署是否真的省钱",
+          "sides": "《2026年AI免费与低价替代方案完整指南》 与 wechat_channels:...UzFfBgAAxNOnMG5IdE35k8zT4DCKGKOq0ux7r_eVBpBwlgAj6w 强调开源/免费额度性价比最高；《开源vs闭源：成本与适用场景对比》 反驳机器50万+人力50万，总成本超过直接调API"
         },
         {
-          "claim": "写作/文笔第一是谁",
-          "sides": "《2026大模型写作能力排名》 判 Gemini 4 Argon 文笔第一；《8个主流大模型对比与选型指南》 判 Claude 是文字质感天花板"
-        },
-        {
-          "claim": "厂商宣称的 Token 节省幅度是否可信",
-          "sides": "《Swift 1.5模型实测评估：省Token与能力平衡》 实测 Swift 1.5 仅省 6%，官方宣传 58%；同场景下参数更少的另一款反而 Token 用量最少"
+          "claim": "厂商宣传的省Token幅度是否可信",
+          "sides": "《Swift 1.5模型实测评估：省Token与能力平衡》 实测Swift 1.5仅省6%，远低于官方宣称的58%节省——与各家官方口径直接冲突"
         }
       ],
       "domain": "ai1",
-      "editor_note": "这个节点的最大问题是'排名多、方法少'：29 条里有十来条是把几个模型名并列打分的清单，彼此在主张层面高度重复，且几乎没有可核验的评测方法、提示词或样本，只有 《13款开源模型本地部署横评与选型指南》、《Swift 1.5模型实测评估：省Token与能力平衡》、wechat 的前沿技术方案三条给了可追的测法或口径。第二个坑是时效半衰期极短——同一问题下 1 月和 11 月的结论互相打脸，所以本节点必须按发布时间加重权，热度高的旧榜单应直接折叠。第三个坑是语音转写导致的型号名严重失真（Qwen 3.8 / 千文3.8 / Cloud Opus / Fable 5 / 绍文-绝文-少文 / Gemini 2.0 与 4.0 并存），任何具体型号名都不能原样对外引用，需回查官方命名。第四，网文/写作工具那一簇（《AI网文工具选型对比评测》、《AI写小说工具排名对比》、《AI写作大模型排名评测》 等）带明显工具带货与引流倾向，且讲的是'写小说用哪个产品'而非'用哪个模型'，不进主集合。另有 4 条实际跑题，应移出本节点：《Claude Methods打爆评测天花板的启示》（METR 评测）、《XAI与SpaceX：马斯克的AI战略调整》（XAI 战略）、《Fable 5的能力突破与安全设计》（Fable 5 安全设计）、《腾讯混元世界模型评测：3D场景生成能力》（世界模型评测），wechat 的混元4 发布与定价（UzFfBgAAxI2ISF1-Y0qJk8zT4DCKsvGzBYioRCgBp-ksG9j0Fg）属单品新闻。想补细节可加 《中英文调用大模型的成本与效果权衡》（中英文 token 税的具体比例），但它是优化项不是选型主干。",
+      "editor_note": "这个节点的料很多但质量分布极不均匀，主要有四个坑。第一，严重同质化：至少10条是'几大模型各有所长+按场景选'的同一套话术，用词不同而主张完全重合，其中微信视频号那批短视频（90-130秒、赞0）信息密度最低，几乎全部可折叠。第二，时间错乱：节点对时间高度敏感（模型选型、价格、版本），但候选里混杂了2025-02到2026-11的料，且多条微信视频号条目发布时间未知、型号口径互相矛盾（同时出现GPT-6、GPT-5.6、Gemini 2.0/4.0、Claude Opus与'Cloud Opus'），无法建立统一的时间基准，读者容易把旧结论当现状。第三，大量候选其实不回答这个问题：XAI/SpaceX战略（《XAI与SpaceX：马斯克的AI战略调整》）、混元世界模型3D生成（《腾讯混元世界模型评测：3D场景生成能力》）、Fable 5安全设计（《Fable 5的能力突破与安全设计》）、METR评测天花板（《Claude Methods打爆评测天花板的启示》）属于行业动态而非选型指南，混在这里会稀释答案。第四，写作/网文那一簇（5条抖音短视频，赞586-4186）互动数很高但主张高度重复且带工具引流倾向（反复点名绝文/少文/笔零A等付费工具），按无毒原则不予入选，高赞在此不构成理由。所选5条的组合逻辑是：方法论（怎么读榜）→ 场景分流（选哪个）→ 本地部署实测（自己跑的硬门槛）→ 分层架构（也许不该选大模型）→ 可靠性冷水（选完也得验）。唯一明显缺口是上下文长度与阶梯计费这一条，现有候选里只有一条过时的档位指南和一条抖音版本对比提到，建议补料。",
       "node": "现在该用哪个大模型",
       "order": [
         {
           "bucket": "pick",
-          "id": "wechat_channels:export/UzFfBgAAxMiCECBrRmKqk8zT4DCKQ_nupTIfvbzgnC5n--pHHw",
-          "reason": "编辑判断·入选最小互补集：110 秒速览：一屏把 8 家主流模型的长处对号入座，先给出'能直接走'的答案｜覆盖骨架[1, 6]｜独有：（无独有点，靠覆盖面入选）",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "pick",
           "id": "wechat_channels:export/UzFfBgAAxMepHGdtQiyCk8zT4DCK-7yyy-bYKqBjai8hyJiT2w",
-          "reason": "编辑判断·入选最小互补集：方法论层：教你怎么看榜单、怎么按成本/速度/能力三维度自己判断，而不是背别人的排名｜覆盖骨架[1, 2, 3]｜独有：三种榜单排序方法各自的失真来源；推理时长可调（想得久更准但更贵更慢）是选型变量",
+          "reason": "编辑判断·入选最小互补集：方法论入口：先教怎么读榜单、理解MoE激活参数和推理档位，再谈选型三维度（成本/速度/能力）｜覆盖骨架[0, 5, 4]｜独有：榜单三种排序口径（盲测ELO/硬考题/综合指数）各自的偏差来源",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
-          "id": "bilibili:BV1jpnn66Edz",
-          "reason": "编辑判断·入选最小互补集：转换思路：把'选哪个'换成'怎么分层用'，降延迟同时降成本｜覆盖骨架[6, 2]｜独有：用决策小模型前置自动分类，只把复杂任务放给大模型；语言检测/实体识别/向量嵌入有 MB 级 CPU 可跑选项",
+          "id": "bilibili:BV1Q2iXBtEme",
+          "reason": "编辑判断·入选最小互补集：按场景分流的主力清单：代码/学术/综合/成本四条路径对应到具体模型及其性格缺陷｜覆盖骨架[1, 2]｜独有：逐个模型的风格与翻车倾向（如Grok性格极端、文心审核导致表达不清）",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
           "id": "bilibili:BV1emKb6sE93",
-          "reason": "编辑判断·入选最小互补集：19 分钟深讲 + 可复现实测：本地部署这条路的具体操作与硬件门槛｜覆盖骨架[5, 4]｜独有：双卡低于 20 token/秒直接淘汰的体感红线；9B 参数段性价比最优、Q4 量化版得分最高的实测结论",
+          "reason": "编辑判断·入选最小互补集：本地部署的可执行横评：13款开源模型按参数档分组实测，给出淘汰线与性价比段位｜覆盖骨架[3]｜独有：双卡低于20token/秒直接淘汰的体感硬门槛，以及9B段性价比最优的实测结论",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
-          "id": "douyin:7704700444011057266",
-          "reason": "编辑判断·入选最小互补集：对上一条泼冷水：最新一条，给出开源自建的真实账单，防止照着横评一头扎进自建坑｜覆盖骨架[5, 2]｜独有：开源自建机器约 50 万 + 人力约 50 万，总成本反而超过直接调 API；下载模型到真正用起来隔着一整套企业级架构",
+          "id": "bilibili:BV1jpnn66Edz",
+          "reason": "编辑判断·入选最小互补集：反转视角：很多场景根本不该选大模型，用决策模型前置+专精小模型分层降本降延迟｜覆盖骨架[6, 2]｜独有：决策模型做任务分类前置、MB级轻量模型CPU可跑的分层架构落地方式",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "bilibili:BV1ogcfzCEcA",
+          "reason": "编辑判断·入选最小互补集：冷水与验收：在真实财经数据场景实测五款国产AI全数翻车，给选型装上可靠性边界｜覆盖骨架[7]｜独有：版本迭代后幻觉率未降反升的实测对照，以及明确排除条件仍被违反的指令遵循失败",
           "source": "editorial_lm"
         },
         {
@@ -3070,22 +3066,16 @@
           "source": "deterministic_rule"
         },
         {
-          "bucket": "rest",
-          "id": "bilibili:BV1Q2iXBtEme",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
-        },
-        {
           "bucket": "redundant",
           "id": "bilibili:BV1pmJy6mEP4",
           "reason": "编辑判断·主张层面与《2026大模型写作能力排名》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
-          "bucket": "rest",
+          "bucket": "redundant",
           "id": "bilibili:BV13ZnY6NEwi",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《前沿大模型的技术方案与选型建议》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
           "bucket": "rest",
@@ -3100,10 +3090,10 @@
           "source": "deterministic_rule"
         },
         {
-          "bucket": "redundant",
+          "bucket": "rest",
           "id": "bilibili:BV1NvnU6KEm7",
-          "reason": "编辑判断·主张层面与《13款开源模型本地部署横评与选型指南》重复，默认折叠",
-          "source": "editorial_lm"
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
           "bucket": "rest",
@@ -3120,7 +3110,7 @@
         {
           "bucket": "redundant",
           "id": "bilibili:BV1aYrnB1EPL",
-          "reason": "编辑判断·主张层面与《8个主流大模型对比与选型指南》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《2026年全球AI助手能力评测与选型建议》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -3138,32 +3128,38 @@
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxKqnIBpMO32QjMzT4DCKqcspIftDu9KyycPhfk7sjA",
-          "reason": "编辑判断·主张层面与《8个主流大模型对比与选型指南》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《2026年全球AI助手能力评测与选型建议》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
-          "id": "douyin:7681668070007807482",
-          "reason": "编辑判断·主张层面与《AI网文工具选型对比评测》重复，默认折叠",
+          "id": "wechat_channels:export/UzFfBgAAxMiCECBrRmKqk8zT4DCKQ_nupTIfvbzgnC5n--pHHw",
+          "reason": "编辑判断·主张层面与《2026年全球AI助手能力评测与选型建议》重复，默认折叠",
           "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7681668070007807482",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
           "bucket": "redundant",
           "id": "douyin:7678643214076680817",
-          "reason": "编辑判断·主张层面与《AI网文工具选型对比评测》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《AI写作大模型排名评测》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
-          "bucket": "rest",
+          "bucket": "redundant",
           "id": "douyin:7678647639394800314",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《AI写作大模型排名评测》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
-          "bucket": "rest",
+          "bucket": "redundant",
           "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAA5oszH80HSQAAAAstQy6ubaLX4KHWvLEZgBPEvKIgWWp0SqqJzNPgMIqsNbwXrWmNNualfoB_Ta40",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《13款开源模型本地部署横评与选型指南》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
           "bucket": "rest",
@@ -3172,10 +3168,10 @@
           "source": "deterministic_rule"
         },
         {
-          "bucket": "redundant",
+          "bucket": "rest",
           "id": "douyin:7696844013965544738",
-          "reason": "编辑判断·主张层面与《13款开源模型本地部署横评与选型指南》重复，默认折叠",
-          "source": "editorial_lm"
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
           "bucket": "rest",
@@ -3186,14 +3182,20 @@
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxIagRDVbKHCOjMzT4DCKhNqsXpgv4nuYmqNripQW2Q",
-          "reason": "编辑判断·主张层面与《8个主流大模型对比与选型指南》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《2026年全球AI助手能力评测与选型建议》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxNOnMG5IdE35k8zT4DCKGKOq0ux7r_eVBpBwlgAj6w",
-          "reason": "编辑判断·主张层面与《8个主流大模型对比与选型指南》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《2026年全球AI助手能力评测与选型建议》重复，默认折叠",
           "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7704700444011057266",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
           "bucket": "rest",
@@ -3203,34 +3205,42 @@
         }
       ],
       "outline": [
-        "先分清层次：大模型 ≠ AI 软件/产品，且模型按用途分化（语言推理、编程、多模态、专精小模型），选型前要知道自己选的是哪一层",
-        "按任务场景对号入座：代码/写作/长文本/多模态/实时资讯各有不同头部，没有单一全能最优",
-        "成本维度：同档位 API 单价可差一个量级，还有超上下文阈值翻倍计费、中英文 token 税、推理模式加价",
-        "榜单与宣传怎么看：盲测 ELO / 硬考题 / 综合指数各有失真，厂商宣称的节省与实测常不符，参数规模不等于实际能力",
-        "上下文长度不是越长越好：显存、并发、速度、成本同向恶化，按真实任务选档位",
-        "开源自建 vs 闭源 API：要算硬件门槛（显存、token/s 流畅线）、量化、人力与架构的真实总成本，而不是只看'免费'",
-        "不必只选一个：分层架构（小模型前置分流 + 大模型兜底）、多模型组合（主笔 + 审核）常优于单选",
-        "低成本获取路径：免费额度、学生优惠、免费 Serverless API 及其隐含代价（限频、数据被用于训练）"
+        "选型的前提：模型≠产品，同一软件可切换/组合多个模型，先分清引擎与整车",
+        "按任务类型分流：代码、学术写作、长文本、多模态、创作各有不同的头部模型",
+        "按成本分流：闭源API开箱即用 vs 开源自部署的真实总成本（机器+人力+运维）",
+        "按部署约束分流：本地跑要看参数档位、量化、显存与token/秒吞吐的硬门槛",
+        "上下文长度与计费的权衡：超长上下文不是越长越好，有阶梯涨价与速度/并发代价",
+        "榜单怎么读：盲测ELO/硬考题/综合指数三种口径的偏差，以及MoE激活参数、推理档位调节",
+        "分层架构替代单模型选型：小模型/决策模型前置，复杂任务才上大模型",
+        "可靠性边界：幻觉与指令遵循在真实业务数据上会翻车，关键结论必须人工核验"
       ],
       "picks": [
         {
           "covers": [
-            1,
-            6
+            0,
+            5,
+            4
           ],
-          "id": "wechat_channels:export/UzFfBgAAxMiCECBrRmKqk8zT4DCKQ_nupTIfvbzgnC5n--pHHw",
-          "role": "110 秒速览：一屏把 8 家主流模型的长处对号入座，先给出'能直接走'的答案",
-          "unique": ""
+          "id": "wechat_channels:export/UzFfBgAAxMepHGdtQiyCk8zT4DCK-7yyy-bYKqBjai8hyJiT2w",
+          "role": "方法论入口：先教怎么读榜单、理解MoE激活参数和推理档位，再谈选型三维度（成本/速度/能力）",
+          "unique": "榜单三种排序口径（盲测ELO/硬考题/综合指数）各自的偏差来源"
         },
         {
           "covers": [
             1,
-            2,
+            2
+          ],
+          "id": "bilibili:BV1Q2iXBtEme",
+          "role": "按场景分流的主力清单：代码/学术/综合/成本四条路径对应到具体模型及其性格缺陷",
+          "unique": "逐个模型的风格与翻车倾向（如Grok性格极端、文心审核导致表达不清）"
+        },
+        {
+          "covers": [
             3
           ],
-          "id": "wechat_channels:export/UzFfBgAAxMepHGdtQiyCk8zT4DCK-7yyy-bYKqBjai8hyJiT2w",
-          "role": "方法论层：教你怎么看榜单、怎么按成本/速度/能力三维度自己判断，而不是背别人的排名",
-          "unique": "三种榜单排序方法各自的失真来源；推理时长可调（想得久更准但更贵更慢）是选型变量"
+          "id": "bilibili:BV1emKb6sE93",
+          "role": "本地部署的可执行横评：13款开源模型按参数档分组实测，给出淘汰线与性价比段位",
+          "unique": "双卡低于20token/秒直接淘汰的体感硬门槛，以及9B段性价比最优的实测结论"
         },
         {
           "covers": [
@@ -3238,55 +3248,53 @@
             2
           ],
           "id": "bilibili:BV1jpnn66Edz",
-          "role": "转换思路：把'选哪个'换成'怎么分层用'，降延迟同时降成本",
-          "unique": "用决策小模型前置自动分类，只把复杂任务放给大模型；语言检测/实体识别/向量嵌入有 MB 级 CPU 可跑选项"
+          "role": "反转视角：很多场景根本不该选大模型，用决策模型前置+专精小模型分层降本降延迟",
+          "unique": "决策模型做任务分类前置、MB级轻量模型CPU可跑的分层架构落地方式"
         },
         {
           "covers": [
-            5,
-            4
+            7
           ],
-          "id": "bilibili:BV1emKb6sE93",
-          "role": "19 分钟深讲 + 可复现实测：本地部署这条路的具体操作与硬件门槛",
-          "unique": "双卡低于 20 token/秒直接淘汰的体感红线；9B 参数段性价比最优、Q4 量化版得分最高的实测结论"
-        },
-        {
-          "covers": [
-            5,
-            2
-          ],
-          "id": "douyin:7704700444011057266",
-          "role": "对上一条泼冷水：最新一条，给出开源自建的真实账单，防止照着横评一头扎进自建坑",
-          "unique": "开源自建机器约 50 万 + 人力约 50 万，总成本反而超过直接调 API；下载模型到真正用起来隔着一整套企业级架构"
+          "id": "bilibili:BV1ogcfzCEcA",
+          "role": "冷水与验收：在真实财经数据场景实测五款国产AI全数翻车，给选型装上可靠性边界",
+          "unique": "版本迭代后幻觉率未降反升的实测对照，以及明确排除条件仍被违反的指令遵循失败"
         }
       ],
       "provenance": {
-        "input_hash": "cfc18e662c5e66d4",
+        "input_hash": "6a2a88d1a5beb28c",
         "model": "opus"
       },
       "receipt": {
-        "folded": 9,
+        "folded": 10,
         "picked": 5,
-        "qualified": 29,
+        "qualified": 30,
         "rejected": 0,
         "rejected_why": []
       },
       "stale": [
         {
-          "id": "bilibili:BV1Q2iXBtEme",
-          "why": "发布于 2026-01，是本节点点赞最高（1.17 万）的一条，但其型号结论（GPT 全能基石、Claude 无多模态）已被同节点 10-11 月的候选推翻（GPT-6、Gemini 4、多模态成竞争维度）。热度不等于现在可用，故不进 picks"
+          "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAA5oszH80HSQAAAAstQy6ubaLX4KHWvLEZgBPEvKIgWWp0SqqJzNPgMIqsNbwXrWmNNualfoB_Ta40",
+          "why": "2025-02 发布，距今超20个月。参数档位与显存换算的物理关系仍成立，但举例的DeepSeek版本、1.5-14B/32-70B/671B的推荐分档已被MoE架构与新一代小模型大幅改写"
         },
         {
-          "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAA5oszH80HSQAAAAstQy6ubaLX4KHWvLEZgBPEvKIgWWp0SqqJzNPgMIqsNbwXrWmNNualfoB_Ta40",
-          "why": "2025-02-25 发布，近两年前。1.5B/7B/70B/671B 的档位叙事与当下 MoE 稀疏激活（总参数大、每次只激活几十亿）的主流结构不匹配，显存估算口径也已过时；只有'参数与显存非线性'这一条还成立"
+          "id": "bilibili:BV1Q2iXBtEme",
+          "why": "2026-01 发布，模型代次已换（当时的GPT/Gemini/Claude版本与现在不同），具体版本号与价格结论需打折；但'按场景分流'的框架和各家性格判断仍有效，故仍入选并需配合新料读"
+        },
+        {
+          "id": "bilibili:BV1aYrnB1EPL",
+          "why": "2026-01 发布，国内五大工具的能力版图在10个月内已大幅变化（豆包已升2.1、夸克AI重构），具体结论不可直接采信"
+        },
+        {
+          "id": "wechat_channels:export/UzFfBgAAxNOnMG5IdE35k8zT4DCKGKOq0ux7r_eVBpBwlgAj6w",
+          "why": "发布时间未知且混用了GPT-6与Gemini 2.0这类跨代次型号，内部版本口径不自洽，无法判断其时效基准"
         },
         {
           "id": "bilibili:BV1RrgQ6aEQU",
-          "why": "2026-07 的 4K/8K/16K/32K 档位划分，与同节点 10-11 月候选说的'百万 Token 成标配'脱节；其权衡逻辑（越长越慢越贵）仍有效，但具体档位数字已不能照用"
+          "why": "2026-07 发布，以4K/8K/16K/32K为主要档位讨论上下文选型；而同节点内多条新料已显示百万token成为标配，其档位框架严重落后于当前市场"
         },
         {
-          "id": "douyin:7661983184120237348",
-          "why": "GPT-5.6 三版本的分档与计费细节是单版本快照，模型版本迭代后价格与阈值随时失效；只有'超阈值翻倍计费'这个结构性坑值得留"
+          "id": "bilibili:BV17z5x6kEb4",
+          "why": "2026-05 的单次评测事件（METR测不准），作为选型依据已被后续模型迭代覆盖"
         }
       ]
     },
