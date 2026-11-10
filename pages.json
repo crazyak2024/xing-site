@@ -3134,62 +3134,64 @@
     },
     {
       "category": "21.现在该用哪个大模型",
-      "coverage": "下标自0起。覆盖 0、1、2、3（机制层面：档位/价差/激活参数，但未覆盖'超阈值翻倍计费'与中英文 token 税的具体条款）、4、5、6。漏掉第7条（幻觉与能力边界）——全节点里只有 《国产AI工具工作能力对标测评》 正面讲了这点但已偏旧且限于国产工具；第3条的具体计费条款散落在 《GPT-5.6版本对比：Soul/Terra/Luna能力与成本差异》（GPT-5.6 的 272k 翻倍计费）和 《中英文调用大模型的成本与效果权衡》（中英文 token 税）里，两条都因版本代次或口径太窄没进 picks。",
+      "coverage": "覆盖骨架 0、1、2、3、4、5、6；漏掉第 7 条（免费与低价获取途径），该点只有 《2026年AI免费与低价替代方案完整指南》 讲，但它整条的主张几乎全是渠道罗列、与选型判断关系弱，且免费额度政策最易失效，为控制条数未入选，需要白嫖方案的用户可单独看它。",
       "disputed": [
         {
-          "claim": "该不该上超长上下文",
-          "sides": "《2026主流大模型上下文档位选型指南》 说 8K 是大众黄金档、越长越亏；wechat《前沿大模型…》说百万 token 已成标配；《GPT-5.6版本对比：Soul/Terra/Luna能力与成本差异》 说超 272k 输入直接翻倍计费、百万上下文并不便宜"
+          "claim": "开源自部署到底省不省钱",
+          "sides": "《开源vs闭源：成本与适用场景对比》 说开源免费只是表象，机器50万+人力50万，总成本反超直接买API；wechat .../UzFfBgAAxNOnMG5I... 与 .../UzFfBgAAxKqnIBpM... 则把\"DeepSeek开源免费、本地部署省钱\"当作省钱首选路径；《13款开源模型本地部署横评与选型指南》 从个人双卡视角给出可落地的省钱档位。实质分歧在企业规模 vs 个人单机。"
         },
         {
-          "claim": "跑分/榜单能不能作为选型依据",
-          "sides": "wechat《腾讯混元4…》《2026年编程大模型…》直接按分数与排名推荐；《大模型编程能力对比：Deep Seek v3、Gemini 2.5与主流模型实测》、《国产AI工具工作能力对标测评》 实测显示官方基准第一的模型工程题全败、迭代后幻觉反升"
+          "claim": "上下文该选多长",
+          "sides": "《2026主流大模型上下文档位选型指南》 主张8K是大众黄金档、16K才是个人进阶、32K起才够企业；而 wechat .../UzFfBgAAxMepHGdt... 称百万Token已成标配，《GPT-5.6版本对比：Soul/Terra/Luna能力与成本差异》 的GPT-5.6三档均支持105万token，wechat .../UzFfBgAAxNOnMG5I... 称Kimi已到2000万字。前者的档位划分明显停留在更早的小上下文时代。"
         },
         {
-          "claim": "开源自部署是否更省钱",
-          "sides": "《13款开源模型本地部署横评与选型指南》 与多条国产测评把开源免费当性价比最优；《开源vs闭源：成本与适用场景对比》 算出机器50万+人力50万，总成本高于直接调 API"
+          "claim": "官方基准排名能不能作为选型依据",
+          "sides": "《大模型编程能力对比：Deep Seek v3、Gemini 2.5与主流模型实测》 实测Gemini 2.5 Pro基准第一但编程题全败，结论是别信排行榜；《Kimi K3.1 Pro vs Opus 5.5首发测评：性价比对标分析》 同样发现Kimi跑分9项领先而真实中文写作落后6分；但 wechat .../UzFfBgAAxI2ISF1... 等多条直接以跑分/测试得分作为\"开源第一\"的推荐理由。wechat .../UzFfBgAAxMepHGdt... 给了折中解释：不同榜单口径的可信度本身就不一样。"
         },
         {
-          "claim": "国产模型是否已追平头部闭源",
-          "sides": "wechat《中美大模型…》称差距仅 2.7%、价格为 Claude 的 1/3–1/5；《Kimi K3.1 Pro vs Opus 5.5首发测评：性价比对标分析》 实测 Kimi K3.1 跑分9项领先但中文创意写作比 Opus 5.5 低 6 分"
-        },
-        {
-          "claim": "省 token 的官方宣传是否可信",
-          "sides": "官方宣称 Swift 1.5 省 58% token；《Swift 1.5模型实测评估：省Token与能力平衡》 实测只省 6%，且参数更少的千文3.8 Flash 用量更低"
+          "claim": "中文还是英文提示更划算",
+          "sides": "《中英文调用大模型的成本与效果权衡》 一条内部就有张力：英文tokenizer更省、英文推理可能效果更好，但国产模型中文反而更省token（思考模式省21%-27%），结论是国外模型需权衡、国产模型优先中文，不能一概而论。节点内没有第二条视频验证这组数据。"
         }
       ],
       "domain": "ai1",
-      "editor_note": "这个节点看着有 36 条，实际能回答'现在该用哪个'的只有不到 10 条。三类噪声占了大半：①产业/战略叙事（《XAI与SpaceX：马斯克的AI战略调整》 的马斯克XAI、《Claude Methods打爆评测天花板的启示》 的METR评测、《Fable 5的能力突破与安全设计》 的Fable 5安全设计）讲行业趋势，不给选型依据；②单模型首发测评（Kimi K3.1、GPT-6.1 Terra/Sol、6.1 vs 6.2、Flint、Swift 1.5、混元4、混元世界模型）信息密度不低但各说一款、无横向可比口径，且发布即过期；③AI写作/网文工具排名扎堆 5 条（douyin 三条几乎逐点重复），且垂直工具（绍文/笔零/绝文）部分带明显引流味，不宜进 picks。另两个坑：《2026年AI免费与低价替代方案完整指南》 的免费额度方案里'数据被用于训练'是实质代价，想白用的人要先看清；全节点价格、档位名、排名类数字普遍无时间戳（多条 wechat 发布时间未知），任何涉及钱和版本号的结论都要去官方价目页复核，不要照抄视频。整体质量：方法论层（怎么选）可用且较稳；事实层（谁第一、多少钱）腐败极快。",
+      "editor_note": "这个节点量大质中偏下。37条里真正讲\"怎么选\"的只有少数，一多半是品牌清单型内容（豆包/DeepSeek/Kimi/Claude/Gemini各一句定性），彼此只是换词复述，折叠掉9条几乎不损失信息。两个明显的坑：一是时效，节点内容高度时间敏感，却混进了2025年的O3/Gemini 2.5和2026年初的测评，其中最火的一条（赞1.1万）恰恰最旧，按互动数排序会把用户带到过期结论上；二是写作/网文那一簇（《AI写作大模型排名评测》、《AI网文工具选型对比评测》、《AI写小说工具排名对比》）在对比完通用模型后一致导向\"绝文/少文AI/笔零A/绍文\"等垂直付费工具\"表现最佳\"，有引流嫌疑，均未入选。另外有若干条是贴着节点但答的不是这个问题：《XAI与SpaceX：马斯克的AI战略调整》（XAI战略）、《Claude Methods打爆评测天花板的启示》（METR评测天花板）、《腾讯混元世界模型评测：3D场景生成能力》（混元世界模型）、《Fable 5的能力突破与安全设计》（Fable 5安全设计），属行业观察而非选型。真正缺的内容是\"把自己的真实任务做成一套可复现对拍\"的具体操作，节点内只有《大模型编程能力对比：Deep Seek v3、Gemini 2.5与主流模型实测》和《13款开源模型本地部署横评与选型指南》沾到边，前者已过时，后者只覆盖本地部署场景。",
       "node": "现在该用哪个大模型",
       "order": [
         {
           "bucket": "pick",
           "id": "wechat_channels:export/UzFfBgAAxMepHGdtQiyCk8zT4DCK-7yyy-bYKqBjai8hyJiT2w",
-          "reason": "编辑判断·入选最小互补集：最新的选型总框架：先告诉你榜单怎么读、模型结构与推理档位怎么影响成本，再给三维度选型法｜覆盖骨架[0, 2, 3, 1]｜独有：拆解三种榜单排序方法（盲测ELO/硬考题/综合指数）各自的偏差来源",
+          "reason": "编辑判断·入选最小互补集：最新的选型框架速览：先教你怎么读榜单，再给成本/速度/能力三维度的决策口径｜覆盖骨架[1, 2, 4, 6]｜独有：把榜单三种口径（盲测ELO/硬考题/综合指数）的偏差说清，并指出推理强度可调（Opus Reasoning、GPT-6 Pro）本身就是一个选型变量",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
-          "id": "wechat_channels:export/UzFfBgAAxMiCECBrRmKqk8zT4DCKQ_nupTIfvbzgnC5n--pHHw",
-          "reason": "编辑判断·入选最小互补集：两分钟速览：国产+全球共8个主流模型的长短板与场景对位，拿来快速锁定候选｜覆盖骨架[1]｜独有：明确给出'工具无高低、多工具组合优于单一工具'的结论性对位表",
+          "id": "bilibili:BV1CTej6gEqB",
+          "reason": "编辑判断·入选最小互补集：成本侧的可操作判据：用能力—成本矩阵把\"性价比\"变成能算的东西｜覆盖骨架[2, 6]｜独有：帕雷托前沿线作为理性选型法，加上同分数模型价差10倍的具体数字锚点",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "bilibili:BV13ZnY6NEwi",
+          "reason": "编辑判断·入选最小互补集：长篇深讲，补底层心智模型：模型和软件是两回事，七类模型各管一段｜覆盖骨架[0, 5]｜独有：\"模型=发动机、软件=整车\"，一个软件可切换多模型或组合多个专用模型完成一个任务",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
           "id": "bilibili:BV1jpnn66Edz",
-          "reason": "编辑判断·入选最小互补集：可直接落地的省钱架构：用决策模型+专精小模型分层，只把复杂任务交给大模型｜覆盖骨架[6, 3]｜独有：语言检测/实体识别/向量嵌入有 MB 级 CPU 可跑的替代，翻译这类任务不该调大模型",
+          "reason": "编辑判断·入选最小互补集：反向视角：很多任务根本不该调大模型，给出分层架构的具体做法｜覆盖骨架[5, 2]｜独有：用决策模型前置自动分类，只把复杂任务转交大模型，同时降延迟和成本",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
           "id": "bilibili:BV1emKb6sE93",
-          "reason": "编辑判断·入选最小互补集：要自部署时的实测依据：13款开源模型按参数分组实跑，给出淘汰线与性价比档位｜覆盖骨架[5, 2]｜独有：以'双卡低于20 token/秒直接淘汰'为硬门槛，并指出9B参数段性价比最优",
+          "reason": "编辑判断·入选最小互补集：带具体操作的开源本地部署横评，回答\"自己跑该选哪个档位\"｜覆盖骨架[3, 4]｜独有：可核验的硬淘汰线——双卡低于20token/秒直接不可用、流畅需50-100token/秒，并点出9B段性价比最优",
           "source": "editorial_lm"
         },
         {
-          "bucket": "pick",
+          "bucket": "rest",
           "id": "bilibili:BV1RrgQ6aEQU",
-          "reason": "编辑判断·入选最小互补集：上下文档位的取舍清单：按任务复杂度选 8K/16K/32K，并说明长上下文的代价｜覆盖骨架[4]｜独有：把上下文长度与显存占用、并发数、推理速度、成本的连锁代价讲清楚",
-          "source": "editorial_lm"
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
           "bucket": "rest",
@@ -3198,22 +3200,16 @@
           "source": "deterministic_rule"
         },
         {
-          "bucket": "redundant",
+          "bucket": "rest",
           "id": "bilibili:BV1Q2iXBtEme",
-          "reason": "编辑判断·主张层面与《8个主流大模型对比与选型指南》重复，默认折叠",
-          "source": "editorial_lm"
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
           "bucket": "redundant",
           "id": "bilibili:BV1pmJy6mEP4",
           "reason": "编辑判断·主张层面与《2026大模型写作能力排名》重复，默认折叠",
           "source": "editorial_lm"
-        },
-        {
-          "bucket": "rest",
-          "id": "bilibili:BV13ZnY6NEwi",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
         },
         {
           "bucket": "rest",
@@ -3236,7 +3232,7 @@
         {
           "bucket": "redundant",
           "id": "bilibili:BV1vWxK63Euy",
-          "reason": "编辑判断·主张层面与《Kimi K3.1 Pro vs Opus 5.5首发测评：性价比对标分析》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《GPT-6.1与GPT-6.2实测对比：性能与成本权衡》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -3306,10 +3302,16 @@
           "source": "deterministic_rule"
         },
         {
-          "bucket": "rest",
+          "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxKqnIBpMO32QjMzT4DCKqcspIftDu9KyycPhfk7sjA",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《国内外六大主流大模型对标评测指南》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "wechat_channels:export/UzFfBgAAxMiCECBrRmKqk8zT4DCKQ_nupTIfvbzgnC5n--pHHw",
+          "reason": "编辑判断·主张层面与《2026年全球AI助手能力评测与选型建议》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
           "bucket": "rest",
@@ -3348,15 +3350,15 @@
           "source": "deterministic_rule"
         },
         {
-          "bucket": "rest",
+          "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxMyHNFgMAWfPk8zT4DCKH70hAMd3La8bCCojBvD-GQ",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《大模型性价比怎么选？能力-成本矩阵决策法》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxIagRDVbKHCOjMzT4DCKhNqsXpgv4nuYmqNripQW2Q",
-          "reason": "编辑判断·主张层面与《8个主流大模型对比与选型指南》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《国内5大AI工具的核心差异》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -3379,70 +3381,72 @@
         }
       ],
       "outline": [
-        "先分清层级：模型 ≠ 产品/软件，一个软件可切换或组合多个模型；模型按任务分类（语言推理/编程/多模态/嵌入等），换模型风格与效果会完全变",
-        "场景→模型的主映射：代码选 Claude Opus/Codex 系，长文本选 Kimi/GLM，多模态与学术写作选 Gemini，综合兜底选 GPT 系，成本优先选 DeepSeek/国产开源",
-        "不要照抄榜单：盲测ELO/硬考题/综合指数三种排法口径不同，官方基准第一常在真实工程题上翻车，必须用自己的场景复测",
-        "成本机制比单价更重要：每百万 token 价差可达十几倍，推理档位（max/Pro/Reasoning）翻倍消耗，上下文超阈值后输入输出加价，中英文 tokenizer 还有 token 税",
-        "上下文长度要按场景选，不是越长越好：长上下文带来显存、并发、延迟、成本的全面代价",
-        "自部署/开源路线的真实门槛：参数量—显存—速度（token/秒）关系、量化档位、哪些参数段性价比最高，以及机器+人力的总成本是否真比 API 便宜",
-        "别单模型一把梭：用小模型/路由模型前置分类，复杂任务才上大模型；多模型互审（主笔+审核）优于单一工具",
-        "能力边界与风险：数值/财报类任务幻觉严重、版本迭代后幻觉未必下降，关键结论必须人工核验"
+        "先定场景再选模型：代码/写作/多模态/长文本各有不同最优解，不存在单一\"最强模型\"",
+        "怎么读榜单：盲测ELO、硬考题、综合指数三种口径含义不同，官方基准第一常与实测不符，最终要用自己的任务对拍",
+        "成本怎么算：同分数模型价格可差10倍，上下文超阈值翻倍计费、推理档位（Pro/max）成倍吃额度，应按帕雷托前沿选而非追跑分",
+        "闭源API还是开源自部署：开源省授权费但硬件+人力可能反超API账单，私有化与定制才是自部署的真正理由",
+        "规模与上下文档位：参数量—显存—生成速度是非线性关系，上下文不是越长越好，按任务定档",
+        "不必只选一个：小模型/决策模型前置分层、多模型组合工作流（主笔+审核）、专精模型往往比通用大模型更划算",
+        "当前格局与时效：通用能力趋同、中美差距收窄、国产性价比明显，但模型代际几个月一换，任何结论都要看发布日期",
+        "低成本获取途径：免费额度、学生认证、开放API等先试后买的办法"
       ],
       "picks": [
         {
           "covers": [
-            0,
+            1,
             2,
-            3,
-            1
+            4,
+            6
           ],
           "id": "wechat_channels:export/UzFfBgAAxMepHGdtQiyCk8zT4DCK-7yyy-bYKqBjai8hyJiT2w",
-          "role": "最新的选型总框架：先告诉你榜单怎么读、模型结构与推理档位怎么影响成本，再给三维度选型法",
-          "unique": "拆解三种榜单排序方法（盲测ELO/硬考题/综合指数）各自的偏差来源"
+          "role": "最新的选型框架速览：先教你怎么读榜单，再给成本/速度/能力三维度的决策口径",
+          "unique": "把榜单三种口径（盲测ELO/硬考题/综合指数）的偏差说清，并指出推理强度可调（Opus Reasoning、GPT-6 Pro）本身就是一个选型变量"
         },
         {
           "covers": [
-            1
+            2,
+            6
           ],
-          "id": "wechat_channels:export/UzFfBgAAxMiCECBrRmKqk8zT4DCKQ_nupTIfvbzgnC5n--pHHw",
-          "role": "两分钟速览：国产+全球共8个主流模型的长短板与场景对位，拿来快速锁定候选",
-          "unique": "明确给出'工具无高低、多工具组合优于单一工具'的结论性对位表"
+          "id": "bilibili:BV1CTej6gEqB",
+          "role": "成本侧的可操作判据：用能力—成本矩阵把\"性价比\"变成能算的东西",
+          "unique": "帕雷托前沿线作为理性选型法，加上同分数模型价差10倍的具体数字锚点"
         },
         {
           "covers": [
-            6,
-            3
+            0,
+            5
           ],
-          "id": "bilibili:BV1jpnn66Edz",
-          "role": "可直接落地的省钱架构：用决策模型+专精小模型分层，只把复杂任务交给大模型",
-          "unique": "语言检测/实体识别/向量嵌入有 MB 级 CPU 可跑的替代，翻译这类任务不该调大模型"
+          "id": "bilibili:BV13ZnY6NEwi",
+          "role": "长篇深讲，补底层心智模型：模型和软件是两回事，七类模型各管一段",
+          "unique": "\"模型=发动机、软件=整车\"，一个软件可切换多模型或组合多个专用模型完成一个任务"
         },
         {
           "covers": [
             5,
             2
           ],
-          "id": "bilibili:BV1emKb6sE93",
-          "role": "要自部署时的实测依据：13款开源模型按参数分组实跑，给出淘汰线与性价比档位",
-          "unique": "以'双卡低于20 token/秒直接淘汰'为硬门槛，并指出9B参数段性价比最优"
+          "id": "bilibili:BV1jpnn66Edz",
+          "role": "反向视角：很多任务根本不该调大模型，给出分层架构的具体做法",
+          "unique": "用决策模型前置自动分类，只把复杂任务转交大模型，同时降延迟和成本"
         },
         {
           "covers": [
+            3,
             4
           ],
-          "id": "bilibili:BV1RrgQ6aEQU",
-          "role": "上下文档位的取舍清单：按任务复杂度选 8K/16K/32K，并说明长上下文的代价",
-          "unique": "把上下文长度与显存占用、并发数、推理速度、成本的连锁代价讲清楚"
+          "id": "bilibili:BV1emKb6sE93",
+          "role": "带具体操作的开源本地部署横评，回答\"自己跑该选哪个档位\"",
+          "unique": "可核验的硬淘汰线——双卡低于20token/秒直接不可用、流畅需50-100token/秒，并点出9B段性价比最优"
         }
       ],
       "provenance": {
-        "input_hash": "8edd95d126164971",
+        "input_hash": "5ecb45f415037eb7",
         "model": "opus"
       },
       "receipt": {
-        "folded": 9,
+        "folded": 11,
         "picked": 5,
-        "qualified": 36,
+        "qualified": 37,
         "rejected": 1,
         "rejected_why": [
           "时效性内容涉及模型版本与订阅等级信息。转写提到'GPT6昨天正式发布，要用最新模型必须升级成plus以上会员'，但未给具"
@@ -3450,36 +3454,32 @@
       },
       "stale": [
         {
-          "id": "bilibili:BV1UAZSYTE74",
-          "why": "2025-04 的 DeepSeek v3/Gemini 2.5/O3-mini 对比，模型代次已换两三轮，结论只剩'别信榜单'这个方法论"
+          "id": "bilibili:BV1Q2iXBtEme",
+          "why": "2026-01发布，赞1.1万是全节点最高，但讲的是\"Claude无多模态、GPT仍是基石\"这一代格局，当前已是GPT-6.x/Opus 5.5/Gemini 4/Kimi K3.1时代，热度最高但结论最过期，典型的\"按热度排会排错\"的例子"
         },
         {
           "id": "bilibili:BV17hVBzXEo9",
-          "why": "2025-05 的 O3/O4-mini-high 评测，这些型号已非当前可选项"
+          "why": "2025-05，对比对象是O3/O4-mini-high/Gemini 2.5 Pro，这些型号已退场，只有\"分算法题和工程题两维度、每题三次重试\"的评测方法还有参考价值"
+        },
+        {
+          "id": "bilibili:BV1UAZSYTE74",
+          "why": "2025-04，测的是DeepSeek v3与Gemini 2.5，型号结论全部失效；\"榜单≠实际应用能力\"的方法论结论仍成立（因此仍放进 disputed 引用）"
         },
         {
           "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAA5oszH80HSQAAAAstQy6ubaLX4KHWvLEZgBPEvKIgWWp0SqqJzNPgMIqsNbwXrWmNNualfoB_Ta40",
-          "why": "2025-02 的本地部署指南，1.5B/70B/671B 稠密档位划分已被 MoE 稀疏激活模型取代，显存估算口径过时"
-        },
-        {
-          "id": "bilibili:BV1Q2iXBtEme",
-          "why": "2026-01 的全局评测，点赞最高（11680）但当时的 Claude 无多模态、GPT 价格结论都已随 GPT-6 系列和 Gemini 4 失效"
+          "why": "2025-02，1.5B-14B/32-70B/671B的档位划分与70B需43GB显存的算法仍可借鉴，但型号与MoE时代的激活参数逻辑已对不上（现在同体量激活参数差一个数量级）"
         },
         {
           "id": "douyin:7661983184120237348",
-          "why": "2026-07 的 GPT-5.6 三档位，当前已是 6.1/6.2，具体档位名与价格表需重新核对（计费机制仍可参考）"
+          "why": "GPT-5.6三版本对比，现已迭代到GPT-6.2，版本/档位名与价格全部换了一轮；\"超272k token输入翻倍计费\"这类计费陷阱的提醒形式仍值得知道，但数字不可直接用"
         },
         {
-          "id": "wechat_channels:export/UzFfBgAAxNOnMG5IdE35k8zT4DCKGKOq0ux7r_eVBpBwlgAj6w",
-          "why": "仍在说'Gemini 2.0 多模态领先'，日期未知但明显落后于 Gemini 4 时代"
+          "id": "bilibili:BV1RrgQ6aEQU",
+          "why": "2026-07发布却以4K/8K/16K/32K划档，与同节点多条\"百万token已是标配\"的证据直接冲突，上下文成本随长度上升的原理还对，具体档位建议已过时"
         },
         {
           "id": "bilibili:BV1ogcfzCEcA",
-          "why": "2026-03 的国产工具翻车实测，涉及的版本已多轮迭代，幻觉结论需重测"
-        },
-        {
-          "id": "wechat_channels:export/UzFfBgAAxMyHNFgMAWfPk8zT4DCKH70hAMd3La8bCCojBvD-GQ",
-          "why": "日期未知的中美对标，引用的 OpenRouter 月度排名与价格比随时失效，不能当现价依据"
+          "why": "2026-03的国产工具财报实测，\"幻觉率未降反升\"的结论是基于当时版本，型号已迭代多轮；但它提出的\"涉及精确数据时集体翻车\"这个风险类别本身没过期"
         }
       ]
     },
