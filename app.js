@@ -521,8 +521,11 @@ function renderResults() {
     const want = el.querySelector("#want-this");
     if (want) want.addEventListener("click", () => {
       recordExit("gap_wish", `${q} [from=empty]`);
-      want.outerHTML = `<span class="want-ok"><b>记下了。</b>这句话比一万次点击有用——
-        我们会去找能正面回答它的内容，核对过事实才会放上来。</span>`;
+      want.outerHTML = `<span class="want-ok"><b>记下了，正在去找。</b>
+        这句话比一万次点击有用——下面十几秒内会先出现我们刚找到的线索，
+        核对过事实的版本再过几分钟补上来。</span>`;
+      // 缺口车道（CY 2026-11-10）：按钮不再只是"记一笔"，它真的会让本机去搜。
+      startLane(q);
     });
     return;
   }
@@ -700,6 +703,113 @@ function emit(kind, extra) {
 }
 
 function recordExit(kind, note) { emit(kind, note ? { note } : undefined); }
+
+/* ======================= 缺口车道（CY 2026-11-10 批「把补搜做起来」） =======================
+ *
+ * 点「我要这个」之后真的会发生事情：
+ *   前端 POST /rtsearch → 云端只记一行"有人要这个" → **CY 那台 Mac 上的守护进程**每 1.5 秒
+ *   来认领 → 它够得到数据网关（Cloudflare 边缘够不到，11-08 实测）→ 搜 B站/抖音 →
+ *   结果写回云端 → 这里轮询到就显示。
+ *
+ * 为什么前端要轮询而不是等一个长请求：中间那一跳在**另一台机器**上，一个挂着的 HTTP
+ * 请求扛不住本机重启/断网/被回收。轮询的代价只是每 1.5 秒一个小请求，而好处是任何一端
+ * 挂掉都只表现为"状态停住"，不是"页面一直转圈"。
+ *
+ * 实测时间（2026-11-10 首跑）：**首条线索 7.4 秒**（B站 先回），两站全到 20.9 秒，$0.021。
+ *
+ * ⚠️ 视觉纪律：快道给的是**未核验**内容，必须套在 .lane 那个琥珀色框里、并明说还没核过。
+ * 站上写着"不装懂"，把未核验的东西混进已核验卡片流里就是当场作废那句话。
+ */
+const LANE_POLL_MS = 1500;
+const LANE_MAX_MS = 6 * 60 * 1000;   // 6 分钟后停止轮询：慢道再久也不该让页面一直转
+let LANE = { q: "", timer: null, t0: 0, state: "" };
+
+function startLane(q) {
+  if (!COLLECT_URL || !q) return;
+  if (LANE.timer) clearInterval(LANE.timer);
+  LANE = { q, timer: null, t0: Date.now(), state: "new" };
+  renderLane({ state: "new", results: [] });
+  const ask = () => {
+    fetch(`${COLLECT_URL}/rtsearch`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ q }),
+    }).then(r => r.json()).then(d => {
+      if (LANE.q !== q) return;                       // 用户已经换了搜索词，丢弃旧响应
+      LANE.state = d.state || "";
+      renderLane(d);
+      const over = Date.now() - LANE.t0 > LANE_MAX_MS;
+      if (["done", "skipped", "failed"].includes(d.state) || d.budget_exceeded || over) {
+        clearInterval(LANE.timer); LANE.timer = null;
+      }
+    }).catch(() => { /* 一次网络抖动不该把整条车道掐掉，下一轮再问 */ });
+  };
+  ask();
+  LANE.timer = setInterval(ask, LANE_POLL_MS);
+}
+
+function laneItemHtml(it) {
+  const site = { bilibili: "B站", douyin: "抖音", wechat_channels: "视频号" }[it.platform] || it.platform;
+  const mins = it.duration_s ? `${Math.round(it.duration_s / 60)} 分钟` : "";
+  const who = it.author ? ` · ${esc(it.author)}` : "";
+  const link = it.link
+    ? `<a href="${esc(it.link)}" target="_blank" rel="noopener">${esc(it.title)}</a>`
+    : esc(it.title);
+  return `<li>${link}<div class="lane-meta">${site}${who}${mins ? " · " + mins : ""}</div></li>`;
+}
+
+function renderLane(d) {
+  const host = document.getElementById("results");
+  if (!host) return;
+  let box = document.getElementById("lane");
+  if (!box) { box = document.createElement("div"); box.id = "lane"; host.appendChild(box); }
+  const items = Array.isArray(d.results) ? d.results : [];
+  const secs = Math.round((Date.now() - LANE.t0) / 1000);
+
+  if (d.budget_exceeded) {
+    box.innerHTML = `<div class="lane"><div class="lane-head">今天的补内容额度用完了</div>
+      <div class="lane-sub">这不是搪塞：去平台找一次要真花钱，我们给它设了每天的硬上限，
+      宁可明天继续也不超支。你这句话已经记下了。</div></div>`;
+    return;
+  }
+  // 库里本来就有（环 0 命中）⟹ 给的是**已核验**内容，不该套"未核验"的话术
+  if (d.state === "skipped" && items.length) {
+    box.innerHTML = `<div class="lane"><div class="lane-head">其实我们有——是我们的搜索没搭上你的说法</div>
+      <div class="lane-sub">${esc(d.note || "")}。下面这些是已经核对过事实的。</div>
+      <ul class="lane-list">${items.map(laneItemHtml).join("")}</ul></div>`;
+    return;
+  }
+  if (d.state === "skipped") {
+    box.innerHTML = `<div class="lane"><div class="lane-head">这个我们不打算收</div>
+      <div class="lane-sub">${esc(d.note || "它不在「醒」要做的范围里")}。
+      与其给你一堆沾边的东西，不如说清楚我们没有。</div></div>`;
+    return;
+  }
+  if (d.state === "failed") {
+    box.innerHTML = `<div class="lane"><div class="lane-head">没找成——是我们这边的问题</div>
+      <div class="lane-sub">去平台搜的那一跳失败了，不是"这个问题没有内容"。
+      已经记下，稍后会自己重试。</div></div>`;
+    return;
+  }
+  if (!items.length) {
+    box.innerHTML = `<div class="lane"><div class="lane-head">
+      <span class="lane-spin"></span>正在去 B站 和抖音找「${esc(LANE.q)}」…</div>
+      <div class="lane-sub">一般 10–20 秒出第一批线索（已等 ${secs} 秒）。
+      这一步是真的在搜，不是动画。</div></div>`;
+    return;
+  }
+  const wip = d.state === "done"
+    ? `<div class="lane-wip">核对过事实的版本已经上线了——<button class="linklike"
+         onclick="location.reload()">刷新一下</button>就能看到。</div>`
+    : `<div class="lane-wip"><span class="lane-spin"></span>这个知识点还在完善中：
+         我们正在把上面这些（以及更多）取回来转成文字、按判据筛一遍、核对事实，
+         大约还要 5–10 分钟。筛过的版本会直接进知识地图。</div>`;
+  box.innerHTML = `<div class="lane">
+    <div class="lane-head">刚找到的线索（${items.length} 条，<b>还没核过</b>）</div>
+    <div class="lane-sub">这些是 ${secs} 秒前从平台搜回来的，我们<b>还没有</b>核对里面的事实，
+      也还没判断它有没有正面回答你的问题——先给你，是因为空着更没用。</div>
+    <ul class="lane-list">${items.map(laneItemHtml).join("")}</ul>
+    ${wip}</div>`;
+}
 
 function exitSaid(html, cls) {
   document.getElementById("exit").innerHTML =
