@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共1915条",
+  "generated_note": "判定=合格的候选，共1916条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1162,7 +1162,7 @@
     {
       "id": "ai1",
       "label": "AI 与大模型",
-      "count": 1722
+      "count": 1723
     },
     {
       "id": "fin1",
@@ -53079,6 +53079,33 @@
       "topic": "概念原理",
       "node": "AI Agent核心概念与生态系统",
       "category": "(地图缺口)AI Agent核心概念与生态系统",
+      "domain": "ai1"
+    },
+    {
+      "id": "douyin:7653422253523578609",
+      "video_id": "7653422253523578609",
+      "title": "大模型蒸馏：知识转移与成本优势",
+      "original_title": "一条视频搞懂AI蒸馏，模型界的抄捷径？#人工智能 #大模型 #模型蒸馏 #深度学习 #姜学长",
+      "author": "清华姜学长",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7653422253523578609",
+      "cover_url": "https://p3-sign.douyinpic.com/tos-cn-p-0015c000-ce/o4RBXTLbjQGfHjFAVkRgeKIrUZgv7vwJ8rfNqC~tplv-dy-resize-walign-adapt-aq:540:q75.webp?lk3s=138a59ce&x-expires=1795561200&x-signature=07Qh4dA7oPdotDMWtEn83hvep5A%3D&from=327834062&s=PackSourceEnum_AWEME_DETAIL&se=false&sc=cover&biz_tag=aweme_video&l=202611110755440EA42D77D7D677CB6EE2",
+      "published_at": "2026-06-20T10:27:10+00:00",
+      "key_points": [
+        "蒸馏用软标签（概率分布）而非硬标签传递大模型知识，保留暗知识与决策逻辑",
+        "三大优势：数据效率提升、传递无法文字化的判断能力、成本仅为原训练的10%",
+        "操作原理：调用大模型API收集输出分布作为训练标签，小模型学决策方式而非答案",
+        "实际案例：DeepSeek用蒸馏以600万美元成本实现与OpenAI相当的模型性能"
+      ],
+      "duration_s": 343.818,
+      "likes": 2964,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解模型蒸馏的原理：通过软标签（概率分布）而非硬标签传递大模型的决策逻辑到小模型，用厨师传艺类比说明蒸馏如何让小模型以10%成本获得80%能力。",
+      "reason": "原文系统讲解蒸馏的概念、原理与实施方式。视频通过化学术语类比、软硬标签对比、成本分析等多维度阐述，内容准确无误，无焦虑营销或伪知识，满足口播自足且条件清晰的要求。 | 引用:「蒸馏就是让小模型去模仿概率分布而不是背标准答案，学到的是思维方式而非答案」",
+      "topic": "概念原理",
+      "node": "大模型蒸馏原理与应用",
+      "category": "(地图缺口)大模型蒸馏原理与应用",
       "domain": "ai1"
     }
   ]
