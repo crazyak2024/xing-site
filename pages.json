@@ -141,74 +141,76 @@
     },
     {
       "category": "02.Transformer的注意力机制在算什么",
-      "coverage": "骨架 0–7 全部被覆盖：0（主干速览+深讲）、1（打底视频）、2（打底+速览）、3/4（速览+数值演示+深讲，三种颗粒度）、5（速览+深讲）、6（速览浅讲绝对编码、深讲给 RoPE）、7（KV 缓存）。两处偏薄：要点 1 里的\"向量加减做语义运算\"只有打底视频点了一句、没有深挖；要点 7 只覆盖了 KV 缓存这一面，平方复杂度与长文本成本在全部候选里只有 《注意力机制与长文档成本的技术解析》 讲，但它夹带厂商方案宣传、故未入选。",
+      "coverage": "五条合起来覆盖骨架 0–7 全部八条：动机(0)=pick3，词向量前置(1)=pick2，核心加权融合(2)=pick1/pick3，QKV 角色(3)=pick1/pick2，五步算式(4)=pick1 粗讲 + pick4 细讲(含缩放理由与 mask 时机)，多头(5)=pick3 直观 + pick4 严谨(拼接+残差)，位置编码(6)=pick3 直观(快慢波) + pick4 严谨(RoPE)，工程代价(7)=pick5。唯一的缺口：骨架 7 里「复杂度随长度平方增长」这一半没人正面讲——全节点只有 《注意力机制与长文档成本的技术解析》 明确提了 O(n²)，但那条带明显厂商产品宣传（见 notes），不值得为半个要点收进来。另外无人讲注意力的可解释性/注意力图可视化，也无人讲 GQA/MQA 等现行多头变体。",
       "disputed": [
         {
+          "claim": "位置信息是「嵌入里自带」还是「单独加/旋转进去」",
+          "sides": "《Transformer论文详解》 说每个词的 embedding 同时编码词义与位置；《位置编码：让Transformer理解词序信息》 与 《Transformer推理流程详解：注意力机制与多头计算》 则明确词嵌入本身无位置信息，必须另加绝对位置编码或用 RoPE 旋转。后者是通行实现，前者是把两步讲糊了"
+        },
+        {
           "claim": "RoPE 旋转的是哪两个向量",
-          "sides": "《位置编码：让Transformer理解词序信息》 说\"通过旋转 Q、V 体现位置\"；wechat 《Transformer推理流程详解》(…xLuCfCseCTKC…) 说旋转 Q、K 的向量对使不同距离产生角度差。后者与原论文一致，前者的 V 应为 K，属讲错。"
+          "sides": "《位置编码：让Transformer理解词序信息》 说旋转 Q、V；《Transformer推理流程详解：注意力机制与多头计算》 说旋转 Q、K。只有旋转 Q、K 才能让注意力分数反映相对距离，前者应为口误/讲错"
         },
         {
-          "claim": "位置信息是不是直接长在 embedding 里",
-          "sides": "《Transformer论文详解》 称\"每个词的 embedding 同时编码词义与位置信息\"；多数候选（《位置编码：让Transformer理解词序信息》、wechat …xLuCfCseCTKC…、《Transformer：从RNN到注意力机制的演进》）说词嵌入本身无位置，位置是另外的位置编码相加或在 Q/K 上旋转注入。后者是对的。"
-        },
-        {
-          "claim": "位置编码的当前主流做法",
-          "sides": "《Transformer的编码器、解码器与自注意力机制》、《Transformer原理：注意力机制与架构设计》、wechat …xK2GTBBoLw-F… 一律只讲正弦/余弦绝对位置编码加到词嵌入；《位置编码：让Transformer理解词序信息》、wechat …xLuCfCseCTKC… 指出现在主流是 RoPE 相对位置。"
-        },
-        {
-          "claim": "层数与\"理解深度\"的关系",
-          "sides": "wechat 《从分词到Transformer》(UzFfAgtgekIE…) 说\"DeepSeek V3 有 61 层，层数越多理解越深\"；其余候选（如 wechat …xPauaAFhH1mM…）只说多层逐层加工，不给单调结论。前者是把规模当能力的过度简化。"
+          "claim": "层数与「理解深度」的关系",
+          "sides": "wechat_channels:export/UzFfAgtgekIEAQ... 称「层数越多理解越深」；其余讲解（如 wechat_channels:export/UzFfBgAAxPauaAFhH1mM...）只说多层逐层加工，不给单调结论。前者是未加限定的因果化表述"
         }
       ],
       "domain": "ai1",
-      "editor_note": "这个节点候选极度同质：30 条里有 20 条是同一个模板——「RNN 顺序处理慢→自注意力同时看全句→QKV 像搜索引擎的问/标签/内容→多头从语法/逻辑/人物多角度看」，用词不同但主张完全一致，其中微信视频号那批尤其像同源改写（有两条 1455s 的内容与 《Transformer注意力机制如何工作》 高度疑似同一条片子跨平台分发）。质量坑三处：①位置编码是全节点错误率最高的地方，既有把 RoPE 说成旋转 Q/V 的，也有把位置信息说成天然长在 embedding 里的，建议阅读时以 wechat《Transformer推理流程详解》为准；②绝大多数视频只停在「算相似度、加权求和」的比喻层，真正给出 √d 为何要除、mask 为何在 softmax 前、输出为何要残差的只有一条；③工程侧（平方复杂度、KV 缓存、长上下文成本）在这个节点几乎是空白，唯一讲成本的那条夹带厂商方案宣传，已排除。另有两条内容本身不错但不属于本节点：《Transformer架构的矩阵原理与自注意力》（矩阵乘法/AAᵀ 对称矩阵的线性代数底子，可作为前置节点的候选）、《多模态大模型的视觉编码》（ViT 视觉 patch 编码，属多模态节点）。微信视频号全部候选点赞为 0 且多数发布时间未知，本节点无法用互动数或时效破平，判定主要靠具体性与机制正确性。",
+      "editor_note": "这个节点是全库最拥挤也最同质的节点之一：31 条里有 19 条讲的是同一套叙事（RNN 慢且长依赖衰减 → 自注意力全并行 → QKV 问答比喻 → 多头多角度），换了词但主张一字不差，直接折叠掉。真正有增量的只有三类——给出可核验实现细节的（√D 的理由、mask 在 Softmax 前、RoPE 旋转、残差）、讲工程代价的（KV cache、显存、O(n²)）、补数学前置的。\n\n几个坑：①wechat 系列全部 赞=0 且多数无发布时间，热度和时效两个信号都不可用，只能靠内容判，所以本节点基本没动用点赞破平。②《Transformer原理：注意力机制与架构设计》 时长 43647s（12 小时）、赞 0，是录播合集而非讲解视频，不适合作为节点答案投放。③《注意力机制与长文档成本的技术解析》 是唯一正面讲 O(n²) 复杂度的，但点赞仅 6，且主体内容是百度 SRSWA/HateGate/TokenServe 的产品介绍——有厂商宣传成分，知识骨架价值被稀释，故未入选，骨架 7 的复杂度那一半因此留空，建议另找一条中立讲长上下文复杂度的补上。④《多模态大模型的视觉编码》 讲的是 ViT 视觉编码与多模态接驳，虽然用到多头注意力，但属于另一个节点，不该挂在这里。⑤douyin:7681883263703077019 一类的矩阵乘法/线性映射讲解质量不错但不直接回答本题，宜挂到前置数学节点而不是占本节点的位。⑥wechat_channels:export/UzFfBgAAxP2HLB9zbjiO 只讲参数规模与文字接龙，没有涉及注意力，与本节点无关。\n\n整体质量：直观比喻层面严重过剩，实现层面严重稀缺——只有 1 条（pick4）真正把缩放、mask、RoPE、残差讲对讲全。它是本节点的单点依赖，如果要加强这个节点，优先补第二条同等深度的实现层视频，而不是再多一条讲「Q 问 K 答」的。",
       "node": "Transformer的注意力机制在算什么",
       "order": [
         {
           "bucket": "pick",
-          "id": "douyin:7655985615095221514",
-          "reason": "编辑判断·入选最小互补集：打底：先把\"词=高维坐标\"这件事讲实，否则后面的点积相似度是空话｜覆盖骨架[1, 2]｜独有：给出嵌入空间的可核验规模（约 5 万词条 → 12288 维）并演示语义方向是自发涌现的（国王-男人+女人≈女王、情感词自动聚类）",
+          "id": "douyin:7687290902934523155",
+          "reason": "编辑判断·入选最小互补集：3 分钟速览：用最短篇幅把「注意力到底在算什么」一次说完，适合进节点先看这条定锚｜覆盖骨架[2, 3, 4]｜独有：把每个 token 的「双重身份」说清——用自己的 Q 去查别人，同时用自己的 K/V 等别人来查",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "douyin:7589929287071845682",
+          "reason": "编辑判断·入选最小互补集：补前置：在讲注意力之前先把词向量空间讲透，解释「相似度」这个词到底在量什么｜覆盖骨架[1, 3]｜独有：用向量加减（王后=国王-男人+女人）直观演示语义在坐标空间里是可运算的",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
           "id": "douyin:7676700398304627365",
-          "reason": "编辑判断·入选最小互补集：主干速览：9 分钟把动机→三步算式→多头→位置编码整条链路串完，先看它就能形成框架｜覆盖骨架[0, 2, 3, 4, 5, 6]｜独有：把 RNN 的慢+长依赖衰减 与 CNN 的感受野受限 并列为注意力要同时解决的两个问题，而不是只骂 RNN",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "pick",
-          "id": "bilibili:BV1Rz4y1g7J7",
-          "reason": "编辑判断·入选最小互补集：动手算：从随机初始化的 WQ/WK/WV 开始把一遍数值完整推到输出，用来验证自己是否真看懂公式｜覆盖骨架[3, 4]｜独有：完整的数值级演示（矩阵逐步相乘、除 √d、softmax、乘 V），不是示意图层面的比喻",
+          "reason": "编辑判断·入选最小互补集：骨架主干：从 RNN/CNN 的缺陷讲到注意力三步、多头 8 套、位置编码，一条打通整条动机链｜覆盖骨架[0, 2, 4, 5, 6]｜独有：同时对比 RNN（慢+长依赖衰减）和 CNN（能并行但感受野受限），说明注意力是一次解决两个问题",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
           "id": "wechat_channels:export/UzFfBgAAxLuCfCseCTKCk8zT4DCKitVYfZv5kQQj8lOmB-JlRQ",
-          "reason": "编辑判断·入选最小互补集：深讲细节：补齐速览里被略过的三个真实机制——缩放的原因、RoPE、因果 mask 与残差｜覆盖骨架[3, 4, 5, 6]｜独有：明确 RoPE 是在 Q、K 的向量对上按位置旋转从而产生角度差（此处正确，其他候选讲错），并指出 mask 是 softmax 之前置 -∞、多头拼接后要与原向量残差相加",
+          "reason": "编辑判断·入选最小互补集：深讲实现层：把前面几条一句话带过的细节全部落地，是本节点技术锚点最硬的一条｜覆盖骨架[4, 5, 6]｜独有：给出 √D 的真实理由（维度大时防止 Softmax 权重过度集中）、RoPE 按位置旋转使距离对应角度差、mask 置 -∞ 的时机在 Softmax 之前、以及多头拼接后乘输出矩阵并做残差相加",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
           "id": "douyin:7688992585808956706",
-          "reason": "编辑判断·入选最小互补集：落到工程：注意力算完之后在推理时意味着什么，解释 KV 缓存与显存代价｜覆盖骨架[7]｜独有：讲清为什么只缓存 K/V 不缓存 Q——旧位置的查询已完成，后续需要的是旧位置\"被新位置查询\"",
+          "reason": "编辑判断·入选最小互补集：工程落地：解释注意力在真实推理时怎么省算力，补上纯原理视频都不讲的那一块｜覆盖骨架[4, 7]｜独有：讲清为什么缓存 K、V 而不缓存 Q——旧位置的查询已完成，后续需要的是旧位置被新位置查询",
           "source": "editorial_lm"
         },
         {
-          "bucket": "rest",
+          "bucket": "redundant",
           "id": "bilibili:BV1U8htzsEZL",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《Transformer：从RNN到注意力机制的演进》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "bilibili:BV1PSxYzJEkf",
-          "reason": "编辑判断·主张层面与《自注意力QKV计算：完整数值演示》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《Transformer推理流程详解：注意力机制与多头计算》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "bilibili:BV1fJ4m1s7zf",
+          "reason": "编辑判断·主张层面与《Transformer：从RNN到注意力机制的演进》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1Ut42137Dq",
           "reason": "编辑判断·主张层面与《Transformer：从RNN到注意力机制的演进》重复，默认折叠",
           "source": "editorial_lm"
         },
@@ -221,19 +223,25 @@
         {
           "bucket": "redundant",
           "id": "bilibili:BV16f1mB7Ebj",
-          "reason": "编辑判断·主张层面与《自注意力QKV计算：完整数值演示》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《自注意力机制：从查询到信息融合》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
-          "id": "wechat_channels:export/UzFfBgAAxP2HLB9zbjiOk8zT4DCK5sTZlEU2XBaXeFJvKvpOQA",
-          "reason": "编辑判断·主张层面与《Transformer进化史：从RNN到多头注意力的突破》重复，默认折叠",
+          "id": "bilibili:BV1Rz4y1g7J7",
+          "reason": "编辑判断·主张层面与《Transformer推理流程详解：注意力机制与多头计算》重复，默认折叠",
           "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "wechat_channels:export/UzFfBgAAxP2HLB9zbjiOk8zT4DCK5sTZlEU2XBaXeFJvKvpOQA",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxIGiPEtdDgLzk8zT4DCKOA2J-p7GKvPsQ8NnaZ6UuA",
-          "reason": "编辑判断·主张层面与《Transformer：从RNN到注意力机制的演进》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《从词向量到Transformer》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -245,7 +253,7 @@
         {
           "bucket": "redundant",
           "id": "douyin:7672660733494807547",
-          "reason": "编辑判断·主张层面与《Transformer：从RNN到注意力机制的演进》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《自注意力机制：从查询到信息融合》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -257,44 +265,38 @@
         {
           "bucket": "redundant",
           "id": "douyin:7680387069427846415",
-          "reason": "编辑判断·主张层面与《Transformer架构全讲解》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《从词向量到Transformer》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "douyin:7671477443236056335",
-          "reason": "编辑判断·主张层面与《Transformer：从RNN到注意力机制的演进》重复，默认折叠",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "redundant",
-          "id": "douyin:7589929287071845682",
-          "reason": "编辑判断·主张层面与《大模型的语言理解机制》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《自注意力机制：从查询到信息融合》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxJqFUHodLDHCk8zT4DCKmJjnC16AnO-xJCFFZXy0MQ",
-          "reason": "编辑判断·主张层面与《Transformer：从RNN到注意力机制的演进》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《从分词到Transformer：大模型处理文本的全过程》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
-          "bucket": "redundant",
+          "bucket": "rest",
           "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAADLoouE4NgAAAAAstQy6ubaLX4KHWvLEZgBPEjoFYQAlJX6KOzNPgMIqG3Gh50J3UcEOQgSzoqHN9",
-          "reason": "编辑判断·主张层面与《Transformer：从RNN到注意力机制的演进》重复，默认折叠",
-          "source": "editorial_lm"
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
-          "bucket": "redundant",
+          "bucket": "rest",
           "id": "douyin:7673870413914590504",
-          "reason": "编辑判断·主张层面与《大模型的语言理解机制》重复，默认折叠",
-          "source": "editorial_lm"
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
-          "bucket": "redundant",
+          "bucket": "rest",
           "id": "douyin:7688005140527222042",
-          "reason": "编辑判断·主张层面与《Transformer推理流程详解：注意力机制与多头计算》重复，默认折叠",
-          "source": "editorial_lm"
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
           "bucket": "rest",
@@ -305,7 +307,13 @@
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxPauaAFhH1mMk8zT4DCKF10rVhubTTsRe0wmA0l8TA",
-          "reason": "编辑判断·主张层面与《Transformer：从RNN到注意力机制的演进》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《从分词到Transformer：大模型处理文本的全过程》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7655985615095221514",
+          "reason": "编辑判断·主张层面与《Transformer论文详解》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -317,7 +325,7 @@
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxLulKB5xSH6Mk8zT4DCKUO2QUE022XeBiSHjgnBm3g",
-          "reason": "编辑判断·主张层面与《Transformer：从RNN到注意力机制的演进》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《自注意力对RNN的超越》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -334,87 +342,81 @@
         },
         {
           "bucket": "redundant",
-          "id": "douyin:7687290902934523155",
-          "reason": "编辑判断·主张层面与《自注意力QKV计算：完整数值演示》重复，默认折叠",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxKqiIA87e1Skk8zT4DCKYK36Q8ptuzpJr870uaCtzQ",
-          "reason": "编辑判断·主张层面与《Transformer：从RNN到注意力机制的演进》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《自注意力对RNN的超越》重复，默认折叠",
           "source": "editorial_lm"
         }
       ],
       "outline": [
-        "为什么要有注意力：RNN/LSTM 必须等前一个词算完才能算下一个，无法并行；且远距离两词的信息要经所有中间词中转、层层衰减",
-        "前提是词向量：token 先查嵌入表变成高维空间的坐标，语义近的词坐标近，所以\"相似度\"才有数学意义",
-        "注意力算的核心对象：词与词的相关性权重——词义不自含而由上下文判决（\"苹果\"是水果还是公司、\"他\"指谁）",
-        "QKV 的角色分工：同一个向量经 WQ/WK/WV 三个权重矩阵变成三份身份，Q 是我要问什么、K 是我可被匹配的标签、V 是我真正交出的内容",
-        "一次注意力的完整算式：Q·Kᵀ 点积得分 → 除以 √d 缩放防 softmax 过度集中 → （因果 mask 把未来位置置 -∞）→ softmax 归成权重 → 加权求和 V，得到被上下文改写过的新表示",
-        "多头：单组 QKV 只给一套权重即一个理解角度，多头用多组参数并行看语法/指代/远距等不同关系，拼接后再线性变换（并与原向量残差相加）",
-        "位置编码的必要性：纯加权求和对词序不敏感，必须另外注入位置——老式正弦余弦绝对编码加到词嵌入上，当前主流 RoPE 把位置旋转进 Q/K 让分数自带相对距离",
-        "工程后果：注意力复杂度随序列长度平方增长；生成时旧位置的 K/V 不变可缓存复用（Q 不缓存），换来速度但吃显存"
+        "为什么需要注意力：RNN/LSTM 必须顺序计算、无法并行，且远距离信息要经中间词层层中转而衰减；注意力让任意两个 token 一步直连且全并行",
+        "前置表示：文本切成 token 后映射为高维词向量，语义相近则空间位置相近，词间关联可用点积/余弦相似度量化",
+        "注意力核心算的是什么：每个词对全句所有词算一遍相关度，归一化成一组和为 1 的权重，再按权重加权求和，得到一个被上下文改写过的新表示（由此实现一词多义消歧、代词指代）",
+        "QKV 三个角色及其来源：同一个输入向量乘三组可训练权重矩阵 WQ/WK/WV，变成 Q（我要查什么）、K（我的可匹配标签）、V（我真正提供的内容）",
+        "逐步算式：Q×Kᵀ 得分 → 除以 √d 缩放（防止维度大时 softmax 过度集中）→ 因果 mask 把未来位置置 -∞ → softmax 转概率 → 乘 V 加权求和",
+        "多头注意力：单套 QKV 只有一个视角，多头用多组独立 QKV 并行各看一类关系（语法、指代、远距、情绪），输出拼接后再线性变换融合（原版 Base 用 8 头）",
+        "词序问题：纯加权求和本身丢失顺序信息，需要位置编码补——绝对位置用正弦/余弦向量加到词嵌入上，相对位置用 RoPE 在 Q、K 上按位置旋转",
+        "工程代价与优化：注意力复杂度随序列长度平方增长；推理时旧位置的 K、V 不变可缓存（KV cache）换取速度，代价是显存占用"
       ],
       "picks": [
         {
           "covers": [
-            1,
-            2
+            2,
+            3,
+            4
           ],
-          "id": "douyin:7655985615095221514",
-          "role": "打底：先把\"词=高维坐标\"这件事讲实，否则后面的点积相似度是空话",
-          "unique": "给出嵌入空间的可核验规模（约 5 万词条 → 12288 维）并演示语义方向是自发涌现的（国王-男人+女人≈女王、情感词自动聚类）"
+          "id": "douyin:7687290902934523155",
+          "role": "3 分钟速览：用最短篇幅把「注意力到底在算什么」一次说完，适合进节点先看这条定锚",
+          "unique": "把每个 token 的「双重身份」说清——用自己的 Q 去查别人，同时用自己的 K/V 等别人来查"
+        },
+        {
+          "covers": [
+            1,
+            3
+          ],
+          "id": "douyin:7589929287071845682",
+          "role": "补前置：在讲注意力之前先把词向量空间讲透，解释「相似度」这个词到底在量什么",
+          "unique": "用向量加减（王后=国王-男人+女人）直观演示语义在坐标空间里是可运算的"
         },
         {
           "covers": [
             0,
             2,
-            3,
             4,
             5,
             6
           ],
           "id": "douyin:7676700398304627365",
-          "role": "主干速览：9 分钟把动机→三步算式→多头→位置编码整条链路串完，先看它就能形成框架",
-          "unique": "把 RNN 的慢+长依赖衰减 与 CNN 的感受野受限 并列为注意力要同时解决的两个问题，而不是只骂 RNN"
+          "role": "骨架主干：从 RNN/CNN 的缺陷讲到注意力三步、多头 8 套、位置编码，一条打通整条动机链",
+          "unique": "同时对比 RNN（慢+长依赖衰减）和 CNN（能并行但感受野受限），说明注意力是一次解决两个问题"
         },
         {
           "covers": [
-            3,
-            4
-          ],
-          "id": "bilibili:BV1Rz4y1g7J7",
-          "role": "动手算：从随机初始化的 WQ/WK/WV 开始把一遍数值完整推到输出，用来验证自己是否真看懂公式",
-          "unique": "完整的数值级演示（矩阵逐步相乘、除 √d、softmax、乘 V），不是示意图层面的比喻"
-        },
-        {
-          "covers": [
-            3,
             4,
             5,
             6
           ],
           "id": "wechat_channels:export/UzFfBgAAxLuCfCseCTKCk8zT4DCKitVYfZv5kQQj8lOmB-JlRQ",
-          "role": "深讲细节：补齐速览里被略过的三个真实机制——缩放的原因、RoPE、因果 mask 与残差",
-          "unique": "明确 RoPE 是在 Q、K 的向量对上按位置旋转从而产生角度差（此处正确，其他候选讲错），并指出 mask 是 softmax 之前置 -∞、多头拼接后要与原向量残差相加"
+          "role": "深讲实现层：把前面几条一句话带过的细节全部落地，是本节点技术锚点最硬的一条",
+          "unique": "给出 √D 的真实理由（维度大时防止 Softmax 权重过度集中）、RoPE 按位置旋转使距离对应角度差、mask 置 -∞ 的时机在 Softmax 之前、以及多头拼接后乘输出矩阵并做残差相加"
         },
         {
           "covers": [
+            4,
             7
           ],
           "id": "douyin:7688992585808956706",
-          "role": "落到工程：注意力算完之后在推理时意味着什么，解释 KV 缓存与显存代价",
-          "unique": "讲清为什么只缓存 K/V 不缓存 Q——旧位置的查询已完成，后续需要的是旧位置\"被新位置查询\""
+          "role": "工程落地：解释注意力在真实推理时怎么省算力，补上纯原理视频都不讲的那一块",
+          "unique": "讲清为什么缓存 K、V 而不缓存 Q——旧位置的查询已完成，后续需要的是旧位置被新位置查询"
         }
       ],
       "provenance": {
-        "input_hash": "109ffd5288403a76",
+        "input_hash": "add2fbdfc183667f",
         "model": "opus"
       },
       "receipt": {
-        "folded": 21,
+        "folded": 19,
         "picked": 5,
-        "qualified": 30,
+        "qualified": 31,
         "rejected": 2,
         "rejected_why": [
           "虽讲述原理完整，但前两分钟夹入'抖音精选作者周边福利参与活动'等明显营销内容，构成广告伪装，违反内容纯度要求 | 引用:",
@@ -423,24 +425,16 @@
       },
       "stale": [
         {
-          "id": "bilibili:BV1fJ4m1s7zf",
-          "why": "2024-02 的架构叙事仍以 encoder-decoder + 正弦余弦绝对位置编码为默认，与当前主流的 decoder-only + RoPE 脱节"
+          "id": "bilibili:BV1Ut42137Dq",
+          "why": "2024-03，内容停在 2017 原版论文叙事（含八位作者署名八卦），位置编码只到正余弦，完全没有因果 mask、RoPE、KV cache 等现在实际遇到的实现层概念"
         },
         {
-          "id": "bilibili:BV1U8htzsEZL",
-          "why": "同样停在 encoder-decoder + 正弦余弦位置编码；且 43647s（12 小时）、赞 0，像录播/合集抓取物，不具备答题形态"
+          "id": "bilibili:BV1fJ4m1s7zf",
+          "why": "2024-02，只讲编码器-解码器+正余弦位置编码的原版形态；现在主流是 decoder-only，按它的框架理解当下模型会对不上"
         },
         {
           "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAADLoouE4NgAAAAAstQy6ubaLX4KHWvLEZgBPEjoFYQAlJX6KOzNPgMIqG3Gh50J3UcEOQgSzoqHN9",
-          "why": "用 DeepSeek V3 的层数/参数量作为核心锚点，属时效性强的型号数据，且\"层数越多理解越深\"的推论会随版本迭代失效"
-        },
-        {
-          "id": "wechat_channels:export/UzFfBgAAxP2HLB9zbjiOk8zT4DCK5sTZlEU2XBaXeFJvKvpOQA",
-          "why": "以 GPT-3 1750 亿参数为叙事起点，且 24 分钟里基本没进入注意力本身，只停在\"文字接龙\"层面"
-        },
-        {
-          "id": "douyin:7703780787179616683",
-          "why": "绑定某厂商具体方案（SRSWA / HateGate / TokenServe）的技术解析，产品名与做法随版本迅速过时，不适合当作机制层答案"
+          "why": "以 DeepSeek V3 的 61 层/6710 亿参数作为论据，这类具体型号数字会随版本迭代失效，且「层数越多理解越深」的推论本身站不住"
         }
       ]
     },
