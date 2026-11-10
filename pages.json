@@ -3291,8 +3291,10 @@
         "folded": 10,
         "picked": 5,
         "qualified": 30,
-        "rejected": 0,
-        "rejected_why": []
+        "rejected": 1,
+        "rejected_why": [
+          "时效性内容涉及模型版本与订阅等级信息。转写提到'GPT6昨天正式发布，要用最新模型必须升级成plus以上会员'，但未给具"
+        ]
       },
       "stale": [
         {
