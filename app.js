@@ -46,6 +46,7 @@ const TOPIC_HINT = {
 };
 
 let DATA = [];          // 当前领域内的内容（下面所有渲染都只看这个）
+let DATA_LOADED = false; // data.json 到底回来没有——用来分辨"还没到"和"真没有"
 let ALL_DATA = [];      // 全部内容（跨领域）
 let TOPICS = [];
 let DOMAIN_LIST = [];   // [{id,label,count}]，只含真有合格内容的领域
@@ -496,6 +497,18 @@ function renderResults() {
   if (sortNote) sortNote.textContent =
     "同一问题内：B站优先（讲得通常更完整），其余按标题排序；有搜索词时标题命中的排前面。没有热度排序，也没有推荐算法。";
 
+  // 🔴 **数据还没到 ≠ 我们没有内容**（CY 2026-11-10 08:2x 手机首开实测报的 bug）。
+  // data.json 压缩后 960KB，从美西机器直连都要 2.9 秒；他在飞书内置浏览器里等的那段时间，
+  // 页面上写的是"这里还没有内容"——**库里有 1620 条，这句话是在替我们自己撒谎**，
+  // 而且和"真的搜不到"长得一模一样（他的原话：好像需要我输入一个搜索词内容才会出来）。
+  // 加载中必须说加载中。彻底的修法是拆包（首屏只要地图，不要 1620 条正文），那属于
+  // 首页改版，这里先把假话去掉。
+  if (!DATA_LOADED) {
+    el.innerHTML = `<div class="empty"><span class="lane-spin"></span>正在把内容载入…
+      <div class="empty-note">第一次打开要下载整个内容库（约 1MB），网络慢时要等几秒。
+      这里一会儿就会出现知识地图。</div></div>`;
+    return;
+  }
   if (!items.length) {
     /* 空态的主按钮是「我要这个」（CY 2026-11-10 选 bz1 第二件）。
      * 病例：他 11-09 21:46 搜「如何控制血糖」，语义分 0.838、库里真有 42 条，但结果区
@@ -1050,6 +1063,7 @@ function loadData(attempt = 1) {
     .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
     .then(d => {
       ALL_DATA = d.items || [];
+      DATA_LOADED = true;
       TOPICS = d.topics || [...new Set(ALL_DATA.map(i => i.topic))];
       DOMAIN_LIST = d.domains || [];
       applyDomain();
@@ -1057,6 +1071,7 @@ function loadData(attempt = 1) {
     })
     .catch(err => {
       if (attempt < 3) return setTimeout(() => loadData(attempt + 1), 800 * attempt);
+      DATA_LOADED = true;   // 别卡在"加载中"——失败要说失败
       document.getElementById("results").innerHTML =
         `<div class="empty">内容没加载出来（${esc(String(err.message || err))}）。<br>
          <button class="linklike" onclick="location.reload()">重新加载</button>
