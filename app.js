@@ -406,6 +406,39 @@ function fmtNum(n) {
   if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, "") + "k";
   return String(n);
 }
+/* ---------- 封面图瘦身（CY 2026-11-10 报"结果页图片加载有点慢"后实测） ----------
+ * 实测同一张 B站 封面（i0.hdslb.com/bfs/archive/...jpg，直连不带 Referer）：
+ *   原图（我们一直在用的）**377.6KB** · @320w 11.0KB · @480w **17.4KB**
+ *   · @672w 24.8KB · @960w 35.8KB  ⟹ 带缩放参数省 **95%**。
+ * 而 B站 占 959/1208 = 68% 的卡片，卡片显示宽度最多 ~380px（layout max-width 1180 / 3 列）
+ * ——也就是说**我们一直在下载 4-8 倍于显示尺寸的图，再让浏览器缩小**。这是慢的主因，
+ * 不是网络差。
+ * 做法：B站 走 srcset 三档让浏览器自己按 DPR×显示宽选最小够用的那档；抖音 URL 本身已带
+ * `tplv-dy-resize...:540:q75.webp`（实测 16.3KB，已压过）不动；视频号 `wxapp.tc.qq.com
+ * /stodownload` 是微信带签名的下载端点，**没有缩放参数可加**（加任何 query 都会破坏
+ * encfilekey 签名），只能原样用。
+ * ⚠️ 不做"我们自己转存一份缩略图"：那是把别人的图托管到自己站上，撞项目自己定的
+ * "不自行托管内容"边界。加参数只是让**对方的 CDN** 给我们小一点的那份。
+ */
+const BILI_SRCSET = [480, 672, 960];
+/** B站 封面 → srcset/sizes 属性串；非 B站 返回空串（原样用 src）。 */
+function coverSrcset(url) {
+  // 只认 hdslb.com 的 /bfs/ 原图路径，且 URL 里还没有 `@` 参数段（有就是上游已处理过）
+  if (!/^https?:\/\/i\d+\.hdslb\.com\/bfs\//.test(url) || url.includes("@")) return "";
+  const set = BILI_SRCSET.map(w => `${esc(url)}@${w}w_${Math.round(w * 9 / 16)}h_1c.webp ${w}w`).join(", ");
+  // sizes 必须和 .grid 的断点一致（index.html: 640px→2列, 1080px→3列），否则浏览器会选错档
+  return ` srcset="${set}" sizes="(min-width:1080px) 380px, (min-width:640px) 50vw, 100vw"`;
+}
+/** 弹窗里的大图：CSS 限 max-height 50vh，960w 足够（35.8KB vs 原图 377.6KB）。 */
+function modalCover(url) {
+  if (!/^https?:\/\/i\d+\.hdslb\.com\/bfs\//.test(url) || url.includes("@")) return url;
+  return url + "@960w_540h_1c.webp";
+}
+/* 首屏那几张不该 lazy——lazy 对**视口内**的图只是多一次布局往返，
+   而它们正是用户唯一在等的东西。只给前 N 张 eager+high，其余照旧 lazy。 */
+const EAGER_COVERS = 6;
+let coverSeq = 0;
+
 function cardHtml(it, whyNote) {
   const dur = fmtDuration(it.duration_s);
   const hasImg = !!it.cover_url;
@@ -421,7 +454,9 @@ function cardHtml(it, whyNote) {
       ${whyNote ? `title="${esc(whyNote)}"` : ""}>
       <div class="card-thumb${hasImg ? "" : " noimg"}">
         ${hasImg
-      ? `<img src="${esc(it.cover_url)}" alt="" loading="lazy" referrerpolicy="no-referrer"
+      ? `<img src="${esc(it.cover_url)}"${coverSrcset(it.cover_url)} alt=""
+             ${coverSeq++ < EAGER_COVERS ? `loading="eager" fetchpriority="high"` : `loading="lazy"`}
+             decoding="async" referrerpolicy="no-referrer"
              onerror="this.closest('.card-cover')?.remove()||this.remove()">`
       : `<span>${esc(PLATFORM_CN[it.platform] || it.platform)}</span>`}
         <span class="plat-badge">${esc(PLATFORM_CN[it.platform] || it.platform)}</span>
@@ -444,6 +479,7 @@ function cardHtml(it, whyNote) {
 function renderResults() {
   const el = document.getElementById("results");
   const items = filtered();
+  coverSeq = 0;   // 每次重渲染都重新数"前 6 张"，否则翻几次筛选后全部退回 lazy
   document.getElementById("result-count").textContent = items.length ? `${items.length}条` : "";
 
   /* 主题页命中时走证据视图。只在**没有搜索词**时走——有搜索词说明他在这个节点里再找
@@ -461,12 +497,32 @@ function renderResults() {
     "同一问题内：B站优先（讲得通常更完整），其余按标题排序；有搜索词时标题命中的排前面。没有热度排序，也没有推荐算法。";
 
   if (!items.length) {
-    el.innerHTML = `<div class="empty">这里还没有内容。<br>
-      <button class="linklike" id="reset-all">回到知识地图</button> 看看现在有什么。
-      <div class="empty-note">内容库还在扩充中——只有通过质量判定的才会上线，宁可少不放水。</div></div>`;
+    /* 空态的主按钮是「我要这个」（CY 2026-11-10 选 bz1 第二件）。
+     * 病例：他 11-09 21:46 搜「如何控制血糖」，语义分 0.838、库里真有 42 条，但结果区
+     * 按字面过滤后是 0 条 —— 而空态里唯一的出路是"回到知识地图"。想告诉我们"我要这个"
+     * 的入口在**左栏**那个「没找到，我走」里，不在他眼睛看的地方。
+     * ⟹ 把缺口入口搬到他真正盯着的那块空白上，并且做成主按钮而不是链接。
+     * 注意：这里 emit 的是 `gap_wish`（和左栏同一个事件类型，后台已有消费形状），
+     * note 带 `from=empty` 以便区分来源——不新造事件名，省掉一次 schema 变更。 */
+    const q = state.q;
+    el.innerHTML = `<div class="empty">这里还没有内容。
+      ${q ? `<div class="empty-q">你搜的是「${esc(q)}」</div>` : ""}
+      <div class="empty-acts">
+        ${q ? `<button class="btn-primary" id="want-this">我要这个 →</button>` : ""}
+        <button class="linklike" id="reset-all">回到知识地图</button>
+      </div>
+      <div class="empty-note">内容库还在扩充中——只有通过质量判定的才会上线，宁可少不放水。
+        ${SEM.q === q && SEM.top.length && SEM.top[0].score >= SUGGEST_FLOOR
+        ? `上面列出了我们认为最接近的几个问题，点一下就能看。` : ""}</div></div>`;
     el.querySelector("#reset-all").addEventListener("click", () => {
       document.getElementById("q").value = "";
       go({ q: "", topic: null, node: null });
+    });
+    const want = el.querySelector("#want-this");
+    if (want) want.addEventListener("click", () => {
+      recordExit("gap_wish", `${q} [from=empty]`);
+      want.outerHTML = `<span class="want-ok"><b>记下了。</b>这句话比一万次点击有用——
+        我们会去找能正面回答它的内容，核对过事实才会放上来。</span>`;
     });
     return;
   }
@@ -530,7 +586,8 @@ function openModal(it) {
     ? `<iframe class="modal-embed" src="${embedFn(it.video_id)}" allow="autoplay; fullscreen" allowfullscreen scrolling="no" frameborder="0"></iframe>
        <p class="modal-tip">播放器是${PLATFORM_CN[it.platform] || it.platform}官方的，它自带的那些按钮我们改不掉。点进播放区后 Escape 可能失效（跨站 iframe 限制），用右上角 ✕ 关闭。</p>`
     : `<div class="modal-cover-wrap">
-         ${it.cover_url ? `<img class="modal-cover" src="${it.cover_url}" alt=""
+         ${it.cover_url ? `<img class="modal-cover" src="${esc(modalCover(it.cover_url))}" alt=""
+              decoding="async" referrerpolicy="no-referrer"
               onerror="this.closest('.modal-cover-wrap')?.remove()||this.remove()">` : ""}
          <div><a class="modal-openlink" href="${it.link}" target="_blank" rel="noopener">在${PLATFORM_CN[it.platform] || it.platform}中打开观看</a></div>
          <p class="modal-tip">视频号的官方嵌入只支持微信小程序内，网页做不到，这是平台限制。</p>
@@ -683,12 +740,74 @@ document.getElementById("exit-no").addEventListener("click", () => {
  * 前台不说"我们有/没有"，只列最接近的几个问题。
  */
 const SEMANTIC_URL = COLLECT_URL + "/semantic";
-// 低于这个相似度就不摆"你也许想问"——摆了是噪音，不是帮助。端点自己的 threshold 也是 0.6，
-// 但判断权留在前端：是我们决定"什么时候闭嘴"，不是端点替我们决定。
+/* 相似度两档地板（CY 2026-11-10 选 bz1 后改；原来只有一个 0.60）。
+ * 为什么必须分两档：他 11-09 21:43 真机搜「如何控制血压」，实测最近节点 **0.636**
+ * ——刚好过了旧地板 ⟹ 走 chips 分支，于是①一条缺口都没记（库里其实完全没有血压内容）
+ * ②把**血糖**的节点当建议摆了出来，跨病种假自信，正好违反项目"不装懂"的招牌。
+ * 一个阈值要同时回答两个不同的问题，必然有一边错：
+ *   < FLOOR(0.60)        我们**没听懂** → 什么都不摆，记缺口
+ *   FLOOR..SURE(0.75)    我们**听懂了但库里多半没有** → 摆最接近的，但明说没把握，**同时记缺口**
+ *   >= SURE(0.75)        我们**有把握** → 正常摆建议，不记缺口
+ * 0.75 这个数是从实测挑的：「如何控制血糖」0.838（库里真有 42 条）要落在确信区，
+ * 「如何控制血压」0.636（库里没有）要落在没把握区。两个真实样本把这条线夹在中间。
+ */
 const SUGGEST_FLOOR = 0.60;
+const SUGGEST_SURE = 0.75;
 let SEM = { q: "", top: [], ms: 0, pending: false, err: "" };
 let semSeq = 0;
+
+/* ---------- 缺口只记完整问句（bz1 第三件） ----------
+ * 病例：11-09 的缺口表里记进了 `如何k血压 0.564` / `如何kong zhi血压 0.535` /
+ * `如何控制xue t 0.504` —— 全是中文输入法拼一半时 debounce 触发的中间态。
+ * 缺口清单的用途是"去补什么内容"，喂进去的若是打字碎片，补搜就会去搜不存在的词
+ * ⟹ **清单在收集噪音、同时漏掉真问题**（他真正打完的那两句一条没记）。
+ * 三道闸，缺一不可：
+ *  ① 静默期 1.2s（不是 chips 那个 160ms）——人打完一句话到按回车/停手，远长于 1.2s；
+ *     打字中间态活不过 1.2s。这是最有效的一道。
+ *  ② 长度 ≥ 4（"血糖"两个字不是问句，是关键词）
+ *  ③ 中文里混着裸拉丁串 ⟹ 拼音中间态，拒。但技术词是合法的（"AI是什么"），
+ *     所以走白名单：混排时每个拉丁片段都得在白名单里才放行。
+ * ④ 延迟期满还要复核 q 仍等于 state.q——否则记的是一句已经被改掉的话。
+ */
+const GAP_QUIET_MS = 1200;
+const GAP_MIN_LEN = 4;
+// 中文语境里合法的裸拉丁词（会继续加；不在表里的混排一律当拼音中间态拒掉）
+const LATIN_OK = new Set(["ai", "agi", "llm", "gpt", "chatgpt", "claude", "api", "mcp", "rag",
+  "sql", "python", "js", "css", "html", "etf", "roe", "roi", "pe", "pb", "gdp", "cpi", "ppi",
+  "pmi", "reits", "qdii", "ipo", "cto", "ceo", "cfo", "hr", "okr", "kpi", "crm",
+  "saas", "app", "ui", "ux", "seo", "nas", "vpn", "usb", "cpu", "gpu", "ssd", "ram", "iphone",
+  "ios", "mac", "windows", "linux", "excel", "ppt", "word", "notion", "obsidian"]);
+/* ⚠️ 单字母**一律**不进白名单（第一版放了 "a"/"k" 想照顾「A股」「K线」，单测当场抓到
+   「如何k血压」被放行——那正是 CY 缺口表里的碎片之一：拼音首字母和这些写法同形）。
+   正解是把固定搭配整体当中文剔掉，再要求剩下的裸拉丁串长度 ≥2 且在白名单里。 */
+const CJK_LATIN_PAIRS = /[aA]股|[kK]线|[bB]站|[tT]恤|[xX]光|[nN]号|[pP]图/g;
+
+/** 这串输入看起来是一句打完的话，而不是输入法中间态？ */
+function looksComplete(q) {
+  const s = (q || "").trim();
+  if (s.length < GAP_MIN_LEN) return false;
+  const hasCJK = /[一-龥]/.test(s);
+  const latins = (s.replace(CJK_LATIN_PAIRS, "").match(/[a-zA-Z]+/g)) || [];
+  // 中文里夹着裸拉丁串：每段都得 ≥2 字母且是认得的词，否则就是拼音没上屏
+  if (hasCJK && latins.length && !latins.every(w => w.length >= 2 && LATIN_OK.has(w.toLowerCase()))) return false;
+  // 末尾挂着单个字母（"如何控制xue t" 的 t）——即便前面都认得，也是正在打的状态
+  if (hasCJK && /(^|[^a-zA-Z])[a-zA-Z]$/.test(s)) return false;
+  return true;
+}
+
+let gapTimer = null;
 let lastGapQ = null;   // 同一句话只记一次缺口，别让一次输入刷出一串事件
+/** 想记一条内容缺口——过完三道闸、静默 1.2s 后才真的 emit。band 让后台能分级消费。 */
+function maybeRecordGap(q, score, band) {
+  clearTimeout(gapTimer);
+  if (!looksComplete(q) || q === lastGapQ) return;
+  gapTimer = setTimeout(() => {
+    // 复核：这 1.2s 里他可能又改了话，也可能已经被别的分支记过
+    if (q !== state.q || q === lastGapQ) return;
+    lastGapQ = q;
+    emit("search_gap", { note: `top=${score} band=${band}` });
+  }, GAP_QUIET_MS);
+}
 
 function fetchSemantic(q) {
   if (!q || q.length > 60) { SEM = { q: "", top: [], ms: 0, pending: false, err: "" }; renderSuggest(); return; }
@@ -752,9 +871,15 @@ function renderSuggest() {
        <div class="sg-note">已经记下来了，正在去找合适的内容——我们要先看一遍、核对关键事实，
          才会放上来，所以不会马上有。过一会儿回来搜同一句话就知道。</div>`;
     // 记一条"库里没有这个问题"——这是内容缺口清单，也是补搜的触发输入。
-    if (lastGapQ !== state.q) { lastGapQ = state.q; emit("search_gap", { note: `top=${SEM.top[0].score}` }); }
+    maybeRecordGap(state.q, SEM.top[0].score, "none");
     return;
   }
+
+  /* 没把握区（0.60–0.75）：听懂了、但库里多半不是他要的那个。
+     既然没把握就**说出来**——摆建议但措辞下调，且一样记缺口。
+     这是"不装懂"在代码里的落点：同样的 chips，换一句不同的开场白。 */
+  const unsure = SEM.top[0].score < SUGGEST_SURE;
+  if (unsure) maybeRecordGap(state.q, SEM.top[0].score, "weak");
 
   const chips = SEM.top.map(t => {
     const where = nodeInLib(t.name);
@@ -766,9 +891,13 @@ function renderSuggest() {
   }).join("");
   const allGap = SEM.top.every(t => !nodeInLib(t.name));
   el.innerHTML =
-    `<div class="sg-label">你想问的，也许是这几个问题：</div>
-     <div class="chips">${chips}</div>` +
-    (allGap ? `<div class="sg-note">这些问题很重要，但我们现在还没有干净的答案，会继续寻找。</div>` : "");
+    (unsure
+      ? `<div class="sg-label unsure">你问的这个，我们没有直接的答案。下面这几个问题<b>可能</b>沾边，
+           也可能不是一回事——你自己判断：</div>`
+      : `<div class="sg-label">你想问的，也许是这几个问题：</div>`) +
+    `<div class="chips">${chips}</div>` +
+    (allGap ? `<div class="sg-note">这些问题很重要，但我们现在还没有干净的答案，会继续寻找。</div>`
+      : unsure ? `<div class="sg-note">你那句话已经记进内容缺口清单了，我们会去找正面回答它的内容。</div>` : "");
   el.querySelectorAll("[data-sg]").forEach(b => b.addEventListener("click", () => {
     const d = b.dataset.sgDomain || null;
     if (d && state.domain && d !== state.domain) { state.domain = d; applyDomain(); }

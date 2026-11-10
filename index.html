@@ -4,6 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>醒 · 知识视频地图</title>
+<!-- 封面图分布在 5 个第三方 CDN 上（B站 3 个轮询域名 + 抖音 + 视频号）。每个域名第一次用都要
+     DNS + TCP + TLS 三次往返，而这三次发生在 data.json 下载完、第一张 <img> 插进 DOM 之后
+     ——即**串在关键路径上**。preconnect 把它提前到解析 <head> 的那一刻并行做掉。
+     (CY 2026-11-10 报图片慢，和封面瘦身一起改) -->
+<link rel="preconnect" href="https://i0.hdslb.com" crossorigin>
+<link rel="preconnect" href="https://i1.hdslb.com" crossorigin>
+<link rel="preconnect" href="https://i2.hdslb.com" crossorigin>
+<link rel="dns-prefetch" href="https://p3-sign.douyinpic.com">
+<link rel="dns-prefetch" href="https://wxapp.tc.qq.com">
 <meta name="description" content="一张可点击的中文知识视频地图：按问题组织，经过质量筛选，找到就走。">
 <style>
 :root{
@@ -168,8 +177,17 @@ button{font-family:inherit}
 .summary{font-size:var(--fs-sm);color:#333;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
 .empty{color:var(--sub);text-align:center;padding:34px 0;font-size:var(--fs-md)}
-.empty-note{font-size:var(--fs-xs);color:#aaa;margin-top:8px}
+.empty-note{font-size:var(--fs-xs);color:#aaa;margin-top:8px;line-height:1.6}
 .linklike{border:none;background:none;padding:0;cursor:pointer;color:var(--accent);font-size:inherit;text-decoration:underline}
+/* 空态的缺口入口（bz1 第二件）：「我要这个」是主按钮，"回到知识地图"降为次要链接 */
+.empty-q{font-size:var(--fs-sm);color:#555;margin-top:6px}
+.empty-acts{display:flex;flex-direction:column;align-items:center;gap:9px;margin-top:14px}
+.btn-primary{padding:9px 20px;font-size:var(--fs-sm);font-weight:600;border-radius:7px;cursor:pointer;
+  border:1px solid #38a169;background:#38a169;color:#fff}
+.btn-primary:hover{background:#2f855a;border-color:#2f855a}
+.want-ok{display:block;max-width:420px;margin:0 auto;font-size:var(--fs-sm);color:#276749;line-height:1.6}
+/* 没把握区的建议标题（bz1 第一件）：和确信区同样的 chips，但这句话要看得出我们在犹豫 */
+#suggest .sg-label.unsure{color:#8a6d3b;line-height:1.6}
 
 footer{padding:14px 16px 30px;color:var(--sub);font-size:var(--fs-sm);border-top:1px solid var(--line)}
 .about{font-size:var(--fs-sm);color:#888;line-height:1.6;max-width:720px;margin:0 auto}
