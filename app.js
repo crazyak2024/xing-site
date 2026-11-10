@@ -581,16 +581,6 @@ function render() {
   renderScopeHint();
   renderAnswer();
   renderResults();
-  renderExitVisibility();
-}
-
-/* 退出反馈只在**他已经看到东西之后**出现（CY 2026-11-10）。
-   在首页就摆着两颗"你走了吗"按钮，是在他还没有体验时请他评价体验。 */
-function renderExitVisibility() {
-  const el = document.getElementById("exit");
-  if (!el) return;
-  const engaged = Boolean(state.q || state.node || state.topic);
-  el.hidden = !(engaged && DATA_LOADED);
 }
 
 /* 首屏的「最近有人在问」：宣言是主张，可点的真实问题才是证据。
@@ -685,8 +675,10 @@ function openModal(it) {
       <!-- 所有视频站在这个位置放"相关推荐"。我们在这个位置放一句"没有下一条"。
            这是整个产品最结构性的一处叛逆：连播的入口被我们拿掉了，不是忘了做。 -->
       <p class="no-next">没有「下一条」。看完回地图，或者直接关掉。</p>
+      ${exitBlockHtml()}
     </div>`;
   document.getElementById("modal-overlay").classList.add("open");
+  bindExitButtons(m, it.id);
   emit("open", { item: it.id, has_points: !!(it.key_points && it.key_points.length) });
   m.querySelector(".modal-close").addEventListener("click", closeModal);
   // 弹窗里也能跳地图——看完一条顺着它所在的位置继续找，是这个产品的主循环
@@ -816,7 +808,12 @@ function emit(kind, extra) {
     .catch(() => { /* 发不出去就留在队列里，下次补发；绝不因为 BI 影响用户 */ });
 }
 
-function recordExit(kind, note) { emit(kind, note ? { note } : undefined); }
+function recordExit(kind, note, itemId) {
+  const extra = {};
+  if (note) extra.note = note;
+  if (itemId) extra.item = itemId;   // 哪条视频下面按的（v3 把按钮搬进详情页后才有这个）
+  emit(kind, Object.keys(extra).length ? extra : undefined);
+}
 
 /* ======================= 缺口车道（CY 2026-11-10 批「把补搜做起来」） =======================
  *
@@ -881,7 +878,8 @@ function renderLane(d) {
   if (d.state === "skipped" && items.length) {
     box.innerHTML = `<div class="lane ok"><div class="lane-head">其实我们有——是我们的搜索没搭上你的说法</div>
       <div class="lane-sub">${esc(d.note || "")}。下面这些都已经核对过事实。</div>
-      <div class="lane-cards">${items.map(laneCardHtml).join("")}</div></div>`;
+      <div class="lane-cards grid">${items.map(laneCardHtml).join("")}</div></div>`;
+    bindLaneCards(box);
     return;
   }
   if (d.state === "skipped") {
@@ -914,53 +912,89 @@ function renderLane(d) {
           : `我们找了一圈，<b>没有一条过得了判定</b>——不是没找到，是找到的都不够格。
              与其凑数给你，不如说实话。`}</div>`;
   box.innerHTML = `<div class="lane ${building ? "" : "ok"}">${head}
-    ${items.length ? `<div class="lane-cards">${items.map(laneCardHtml).join("")}</div>` : ""}
+    ${items.length ? `<div class="lane-cards grid">${items.map(laneCardHtml).join("")}</div>` : ""}
     </div>`;
+  bindLaneCards(box);
 }
 
-/* 已核验内容的卡片：刻意和结果列表里的卡片同一个样子——它们是同一等公民 */
+/* 补搜出来的内容：**用的就是结果列表那张卡片**（CY 2026-11-10 09:2x 报
+   「我顶上去为什么会跳出呢？应该还是跟其他的一样，嵌入到我们的网页上才对呀」）。
+   原来这里自己写了一张卡、标题是个 `target=_blank` 的外链 ⟹ 点一下人就离开站了，
+   而站内明明有内嵌播放器（B站/抖音都能嵌，只有视频号不行）。
+   补搜来的内容不在 data.json 里（那份要刷新页面才更新），所以单独记一份 id→item，
+   否则点开时 `DATA.find()` 找不到它、弹窗会是空的。 */
+const LANE_ITEMS = new Map();
+
 function laneCardHtml(it) {
-  const site = { bilibili: "B站", douyin: "抖音", wechat_channels: "视频号" }[it.platform] || it.platform;
-  const mins = it.duration_s ? ` · ${Math.round(it.duration_s / 60)} 分钟` : "";
-  const who = it.author ? ` · ${esc(it.author)}` : "";
-  const link = it.link
-    ? `<a href="${esc(it.link)}" target="_blank" rel="noopener">${esc(it.title)}</a>`
-    : esc(it.title);
-  return `<div class="lane-card">${it.cover
-      ? `<img class="lane-thumb" src="${esc(it.cover)}" alt="" loading="lazy" decoding="async">` : ""}
-    <div><div class="lane-ct">${link}</div>
-      <div class="lane-cm">${site}${who}${mins}</div></div></div>`;
+  if (it && it.id) LANE_ITEMS.set(String(it.id), it);
+  return cardHtml(it);
+}
+
+/* 补搜卡片的点击：先查补搜自己那份，再退回 DATA（环 0 命中的内容两边都有） */
+function bindLaneCards(box) {
+  box.querySelectorAll(".card").forEach(c => c.addEventListener("click", () =>
+    openModal(LANE_ITEMS.get(String(c.dataset.id)) || DATA.find(it => it.id === c.dataset.id))));
+}
+
+/* ---------- 「这个问题解决了 / 没找到我要的」 ----------
+ * 位置变过两次，第二次是 CY 2026-11-10 09:2x 定的：
+ *   v1 左侧栏常驻   → 他还没开始用就请他评价（我们的度量需求摆在他的需求前面）
+ *   v2 结果列表下面 → **补搜还在跑、一条结果都没给**，底下就问他"解决了吗"
+ *   v3（现在）只在详情页底部 —— 他的原话：「他点开某个视频，观看完了之后才有这两个
+ *       Button 给出来」。判准很简单：**问之前，我们得先真的给过他东西。**
+ * 所以它跟着弹窗生成、跟着弹窗消失，不再是一个常驻的页面元素。 */
+const PRIVACY_NOTE = COLLECT_URL
+  ? "匿名记一条到我们自己的服务器（这台设备这次访问的编号，关掉网页就失效，拼不出你是谁）。"
+  : "只记在你这台设备上，没有上传——这一版还没有后端。";
+
+function exitBlockHtml() {
+  return `<div class="exit" id="exit">
+    <div class="exit-btns">
+      <button class="exit-btn ok" id="exit-ok">这个问题解决了</button>
+      <button class="exit-btn no" id="exit-no">没找到我要的</button>
+    </div>
+    <p class="exit-note">点一下我们才知道做得对不对。这是我们唯一看的指标——
+      找到答案就走，对我们是成功，不是流失。</p>
+  </div>`;
 }
 
 function exitSaid(html, cls) {
-  document.getElementById("exit").innerHTML =
-    `<p class="exit-said ${cls || ""}">${html}</p>
-     <p class="exit-note">${COLLECT_URL ? "匿名记一条到我们自己的服务器（这台设备这次访问的编号，关掉网页就失效，拼不出你是谁）。" : "只记在你这台设备上，没有上传——这一版还没有后端。"}</p>`;
+  const el = document.getElementById("exit");
+  if (!el) return;
+  el.innerHTML = `<p class="exit-said ${cls || ""}">${html}</p>
+     <p class="exit-note">${PRIVACY_NOTE}</p>`;
 }
 
-document.getElementById("exit-ok").addEventListener("click", () => {
-  recordExit("found");
-  exitSaid(`<b>记下了。</b><br>这是我们唯一的成功。<br>不用收藏，有下一个问题再来。`);
-});
-
-document.getElementById("exit-no").addEventListener("click", () => {
-  recordExit("not_found");
-  document.getElementById("exit").innerHTML =
-    `<p class="exit-said bad"><b>记下了——这是我们的失败，不是你的。</b><br>你想找的是什么？</p>
-     <div class="exit-ask">
-       <input id="exit-want" type="text" placeholder="一句话就行" maxlength="80">
-       <button id="exit-send">送出</button>
-     </div>
-     <p class="exit-note">它会进我们的内容缺口清单${COLLECT_URL ? "（匿名，只认这次访问的设备编号，拼不出你是谁）" : "——只记在你这台设备上，没有上传，这一版还没有后端"}。</p>`;
-  const input = document.getElementById("exit-want");
-  const send = () => {
-    recordExit("gap_wish", input.value.trim());
-    exitSaid(`<b>收到。</b><br>这句话比一万次点击有用。`, "bad");
-  };
-  document.getElementById("exit-send").addEventListener("click", send);
-  input.addEventListener("keydown", e => { if (e.key === "Enter") send(); });
-  input.focus();
-});
+/* itemId：现在这两颗按钮长在某条视频下面，所以要记下是**哪条**让他解决/没解决的。
+   原来在页面级时记不到这个，只知道"他在这一页按了"。 */
+function bindExitButtons(root, itemId) {
+  const ok = root.querySelector("#exit-ok");
+  const no = root.querySelector("#exit-no");
+  if (!ok || !no) return;
+  ok.addEventListener("click", () => {
+    recordExit("found", "", itemId);
+    exitSaid(`<b>记下了。</b><br>这是我们唯一的成功。<br>不用收藏，有下一个问题再来。`);
+  });
+  no.addEventListener("click", () => {
+    recordExit("not_found", "", itemId);
+    const el = document.getElementById("exit");
+    el.innerHTML =
+      `<p class="exit-said bad"><b>记下了——这是我们的失败，不是你的。</b><br>你想找的是什么？</p>
+       <div class="exit-ask">
+         <input id="exit-want" type="text" placeholder="一句话就行" maxlength="80">
+         <button id="exit-send">送出</button>
+       </div>
+       <p class="exit-note">它会进我们的内容缺口清单${COLLECT_URL ? "（匿名，只认这次访问的设备编号，拼不出你是谁）" : "——只记在你这台设备上，没有上传，这一版还没有后端"}。</p>`;
+    const input = document.getElementById("exit-want");
+    const send = () => {
+      recordExit("gap_wish", input.value.trim(), itemId);
+      exitSaid(`<b>收到。</b><br>这句话比一万次点击有用。`, "bad");
+    };
+    document.getElementById("exit-send").addEventListener("click", send);
+    input.addEventListener("keydown", e => { if (e.key === "Enter") send(); });
+    input.focus();
+  });
+}
 
 /* ---------- 语义搜索接入（S1 · CY 批 vr2 第二件，2026-11-09） ----------
  * 为什么必须接：前台原来只做关键词子串匹配，用户换个说法就 0 命中
