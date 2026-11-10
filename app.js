@@ -105,6 +105,27 @@ function fmtAge(s) {
 function esc(s) {
   return (s || "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
+/* 把漏进文案的**内部视频 ID** 换成那条视频的标题（CY 定过的红线：界面上不出现内部名）。
+ * 2026-11-10 实测：33 个主题页里 **10 页、35 处**，全在"内容之间有分歧"那一段，长这样
+ *   《AI幻觉原理与分类详解》说…UzFfBgAAxLOmbER1 与 UzFfBgAAxMii 则强调…
+ * 真因在生成那头：视频号那批内容没有干净标题可引，模型就拿 ID 当名字用了。
+ * 这里是**渲染层的兜底**（立刻生效、不用花钱重跑），生成层的机检另外加。
+ * 刻意不做"直接删掉"：删了会留下「与　则强调」这种断句，比留着 ID 更难读。 */
+const ID_IN_PROSE = /UzFfB[A-Za-z0-9_-]{6,}|\b\d{17,19}\b|\bBV[0-9A-Za-z]{8,}\b/g;
+
+function deIdentify(s) {
+  if (!s) return s;
+  return String(s).replace(ID_IN_PROSE, tok => {
+    // 两件事都要处理：① 文案里的 ID 常被截断 ② 视频号的 video_id 在库里带 `export/` 前缀
+    //（`export/UzFfBgAAx…`），拿原串直接比会一条都对不上、全退化成"另一条内容"。
+    const hit = (ALL_DATA.length ? ALL_DATA : DATA).find(it => {
+      const v = String(it.video_id || "").split("/").pop();
+      return v && (v.startsWith(tok) || tok.startsWith(v));
+    });
+    return hit ? `《${hit.title}》` : "另一条内容";
+  });
+}
+
 function topicColor(t) { return TOPIC_COLOR[t] || "#718096"; }
 function hitsQuery(it, q) {
   if (!q) return true;
@@ -311,14 +332,14 @@ function renderAnswer() {
   const disputed = (p.disputed || []).length ? `
     <div class="ans-disputed">
       <div class="dh">这个问题上，内容之间有分歧——我们不替你选边</div>
-      <ul>${p.disputed.map(d => `<li>${esc(d.claim || "")}
-        ${d.sides ? `<div class="sides">${esc(d.sides)}</div>` : ""}</li>`).join("")}</ul>
+      <ul>${p.disputed.map(d => `<li>${esc(deIdentify(d.claim || ""))}
+        ${d.sides ? `<div class="sides">${esc(deIdentify(d.sides))}</div>` : ""}</li>`).join("")}</ul>
     </div>` : "";
   el.innerHTML = `<div class="ans" style="--c:${topicColor(topicOfNode(p.node))}">
       <p class="ans-q">${esc(p.node)}</p>
       <p class="ans-lead">下面就是答案。我们读完了这个问题下全部 ${r.qualified} 条合格内容，
         把它们讲的合并成一份——不是某一条视频的说法。</p>
-      <ol>${p.outline.map(x => `<li>${esc(x)}</li>`).join("")}</ol>
+      <ol>${p.outline.map(x => `<li>${esc(deIdentify(x))}</li>`).join("")}</ol>
       ${disputed}
       <p class="ans-foot"><b>答完了。关掉就行。</b>
         还想看讲述过程，下面 ${r.picked} 条视频是它的证据——我们从 ${r.qualified} 条里挑的，
