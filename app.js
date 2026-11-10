@@ -987,14 +987,43 @@ function startLane(q) {
 }
 
 
+/* 补搜结果的**形状闸**。
+ * 云端那份缓存活 24 小时 —— 比写它的那版代码活得久。CY 2026-11-10 15:1x 实测：
+ * 搜「如何控制血压」点「我要这个」**秒出 6 张卡**（＝缓存命中，没真去搜），
+ * 但「都是空图片，不能点击」。真因是那 6 条是当天 08:0x 旧版（"快道先给未核验线索"
+ * 那一版，08:22 已被推翻）写进缓存的**旧形状**：封面字段叫 `cover` 不叫 `cover_url`，
+ * 而且整条**没有 `id`** ⟹ cardHtml 认不出封面（退化成灰底平台名占位块）、
+ * `data-id="undefined"` ⟹ 点击时 `openModal(undefined)` 第一行就 return。
+ * 一张死卡，而上面那句还在说"下面这些都过了质量判定"。
+ *
+ * 判据做成机械的：**渲染不出完整卡片的条目，一条都不渲染**。
+ * 旧缓存、将来再改字段、上游少给一列，都只会让它少显示、不会显示成死卡。
+ * 并且"全被挡下"要**说出来**（走下面那个"我们这边的问题"分支），不能静默变成"没有内容"
+ * ——那会和"真的没有"同形。*/
+const LANE_REQUIRED = ["id", "platform", "title", "link"];
+function laneUsable(it) {
+  return !!it && LANE_REQUIRED.every(k => typeof it[k] === "string" && it[k].length > 0);
+}
+
 function renderLane(d) {
   const host = document.getElementById("results");
   if (!host) return;
   let box = document.getElementById("lane");
   if (!box) { box = document.createElement("div"); box.id = "lane"; host.appendChild(box); }
-  const items = Array.isArray(d.results) ? d.results : [];
+  const raw = Array.isArray(d.results) ? d.results : [];
+  const items = raw.filter(laneUsable);
   const secs = Math.round((Date.now() - LANE.t0) / 1000);
   const step = (d.note || "").split("｜").slice(-1)[0] || "";
+
+  // 有结果、但一条都渲染不出来 ⟹ 是我们这边的问题（旧缓存/字段漂移），照实说。
+  // 不能掉进下面的分支——那些会说成"这个我们不打算收"或"没有一条过得了判定"，
+  // 两句都把我们的 bug 说成了内容的问题。
+  if (raw.length && !items.length) {
+    box.innerHTML = `<div class="lane"><div class="lane-head">我们这边出了点问题</div>
+      <div class="lane-sub">找到的内容我们自己读不出来了（旧的缓存格式），所以不给你看
+      半张卡。已经记下，刷新或稍后再点一次就会重新去找。</div></div>`;
+    return;
+  }
 
   if (d.budget_exceeded) {
     box.innerHTML = `<div class="lane"><div class="lane-head">今天的补内容额度用完了</div>
