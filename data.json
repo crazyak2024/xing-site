@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共1533条",
+  "generated_note": "判定=合格的候选，共1536条",
   "topics": [
     "概念原理",
     "方法实操",
@@ -10,7 +10,7 @@
     {
       "id": "ai1",
       "label": "AI 与大模型",
-      "count": 1340
+      "count": 1343
     },
     {
       "id": "fin1",
@@ -28863,6 +28863,84 @@
       "topic": "方法实操",
       "node": "AI内容创作工具工作流",
       "category": "(地图缺口)AI内容创作工具工作流",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1toJ36YEnm",
+      "video_id": "BV1toJ36YEnm",
+      "title": "Coze与Dify：低代码Agent构建实战",
+      "original_title": "零基础Coze与Dify教程，Agent智能体项目实战，coze|dify搭建部署",
+      "author": "尚硅谷",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1toJ36YEnm",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/21efaa8580366b63e5e02c49967aeb18ff5addba.jpg",
+      "published_at": "2026-06-16T02:00:00+00:00",
+      "key_points": [
+        "Coze面向零基础个人、Dify面向开发者，可根据需求选择对应平台",
+        "从具体业务场景出发讲解Agent的构建配置与部署步骤",
+        "低代码方式让非程序员也能快速提升工作效率"
+      ],
+      "duration_s": 55298.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲两大AI Agent低代码平台的功能与定位差异，通过电商等实际场景展示如何构建、配置、部署Agent的完整流程",
+      "reason": "转写明确讲\"以三大业务场景进行案例实战，在实际工作中如何使用agent去构建部署\"，讲清了实战应用的完整方法论 | 引用:「以三大业务场景进行案例实战，告诉大家在实际的工作当中如何使用agent去构建部署」",
+      "topic": "方法实操",
+      "node": "AI工具使用教程",
+      "category": "(地图缺口)AI工具使用教程",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1RPET6tEp2",
+      "video_id": "BV1RPET6tEp2",
+      "title": "氛围编程：AI工具高效协作的方法论",
+      "original_title": "零基础Vibe Coding教程，vibecoding实战，Claude Code+Codex+Cursor",
+      "author": "尚硅谷",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1RPET6tEp2",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/e507896b24e04e4c181699124f61d217508c203b.jpg",
+      "published_at": "2026-06-09T02:00:00+00:00",
+      "key_points": [
+        "氛围编程用自然语言表达需求，省去编程语言学习阶段",
+        "理解LLM loop机制，学会高效协作而非简单问答",
+        "不同模型缓存率差异大，需根据成本与场景选型"
+      ],
+      "duration_s": 48790.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解\"氛围编程\"新范式，用自然语言驱动开发，深入讲述LLM循环机制与与AI高效协作的工程实践",
+      "reason": "转写明确讲\"掌握agent方法论\"\"理解什么叫LLM loop\"\"学会如何与AI高效协作\"，讲清了AI编程工具的方法论与实践 | 引用:「理解什么叫LLM loop这叫大语言模型循环的工作机制学会如何与AI高效协作」",
+      "topic": "方法实操",
+      "node": "AI工具使用教程",
+      "category": "(地图缺口)AI工具使用教程",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1MRJmzSEaa",
+      "video_id": "BV1MRJmzSEaa",
+      "title": "深度学习原理：神经网络的分层特征提取机制",
+      "original_title": "深度学习教程，深度学习项目实战，零基础学习PyTorch神经网络|RNN|CNN|GRU",
+      "author": "尚硅谷",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1MRJmzSEaa",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/a2688ef748d5b32e68ce2e510ebe7b73d63f2293.jpg",
+      "published_at": "2025-09-25T02:00:00+00:00",
+      "key_points": [
+        "深度学习分层提取：浅层边缘→纹理部件→深层语义本质，自动整合推理",
+        "数据量与算力提升是深度学习从理论到产业爆发的关键条件",
+        "掌握深度学习原理能创造AI应用而非仅使用，理解其局限性"
+      ],
+      "duration_s": 117220.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解深度学习如何通过多层神经网络分层提取特征，解释为何增加深度能应对复杂任务，展示其在AI时代的核心作用",
+      "reason": "转写明确讲\"分层次的自动提取特征，先提取浅层边缘特征再提取纹理部件\"，讲清了深度学习分层提取的核心机制 | 引用:「分层次的自动提取各种特征先提取浅层的边缘特征再提取纹理部件组成」",
+      "topic": "概念原理",
+      "node": "神经网络基础架构与学习机制",
+      "category": "(地图缺口)神经网络基础架构与学习机制",
       "domain": "ai1"
     },
     {
