@@ -84,8 +84,11 @@ export default {
       "VALUES (?,?,?,?,?,?,?,?,?,?,?)");
 
     const rows = [];
+    const dropped = [];   // 被白名单挡下的 kind：**要回报，不能静默**——
+    // 2026-11-09 两次踩同一个坑：前端发了新 kind、白名单忘了加，端点照回 ok:true，
+    // 于是"事件没落库"和"没人来过"完全同形，只能靠事后查库才发现。回报它，一眼可辨。
     for (const e of events) {
-      if (!KINDS.has(e?.kind)) continue;          // 未知事件类型直接丢，别让端点变成任意写入口
+      if (!KINDS.has(e?.kind)) { dropped.push(String(e?.kind).slice(0, 30)); continue; }
       rows.push(stmt.bind(
         e.kind,
         str(e.vid, 40), str(e.q, 120), str(e.topic, 40), str(e.node, 80),
@@ -93,9 +96,9 @@ export default {
         str(e.note, 200), str(e.item, 80),
         str(e.at, 40), now));
     }
-    if (!rows.length) return json(CORS, { ok: true, n: 0 });
+    if (!rows.length) return json(CORS, { ok: true, n: 0, dropped, kinds: KINDS.size });
     try { await env.DB.batch(rows); } catch (e) { return json(CORS, { ok: false, err: "db" }, 500); }
-    return json(CORS, { ok: true, n: rows.length });
+    return json(CORS, { ok: true, n: rows.length, dropped });
   },
 };
 

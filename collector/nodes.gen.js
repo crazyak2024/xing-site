@@ -2,7 +2,7 @@
 // 源：pipeline/domains.py（正式节点）+ pipeline/node_phrasings.py（典型问法）
 //     + xing.db 里判定器自动开的「地图缺口」节点（**那 43% 的内容就挂在这里**）。
 // 改完源或库里新增缺口节点后，重跑生成脚本并重新部署 Worker。
-// 生成时：163 个节点（正式 35 + 缺口 128），共 233 条索引文本，覆盖 792 条合格内容。
+// 生成时：177 个节点（正式 45 + 缺口 132），共 267 条索引文本，覆盖 834 条合格内容。
 export const NODES = [
  {
   "domain": "ai1",
@@ -269,6 +269,18 @@ export const NODES = [
   ]
  },
  {
+  "domain": "hea1",
+  "id": "51",
+  "kind": "map",
+  "name": "血糖是怎么升上去又降下来的",
+  "n": 8,
+  "texts": [
+   "血糖是怎么升上去又降下来的",
+   "吃完饭血糖为什么会飙",
+   "血糖升高又降下来是什么机制"
+  ]
+ },
+ {
   "domain": "ai1",
   "id": "15",
   "kind": "map",
@@ -293,6 +305,18 @@ export const NODES = [
   ]
  },
  {
+  "domain": "hea1",
+  "id": "57",
+  "kind": "map",
+  "name": "血糖怎么测才测得准",
+  "n": 6,
+  "texts": [
+   "血糖怎么测才测得准",
+   "家用血糖仪准不准",
+   "什么时候测血糖才有意义"
+  ]
+ },
+ {
   "domain": "fin1",
   "id": "42",
   "kind": "map",
@@ -302,6 +326,42 @@ export const NODES = [
    "黄金美元股债的相对位置怎么看",
    "金价和美元什么关系",
    "股票债券黄金怎么比较"
+  ]
+ },
+ {
+  "domain": "hea1",
+  "id": "52",
+  "kind": "map",
+  "name": "胰岛素抵抗到底是怎么回事",
+  "n": 5,
+  "texts": [
+   "胰岛素抵抗到底是怎么回事",
+   "胰岛素抵抗是什么意思",
+   "为什么胰岛素不管用了"
+  ]
+ },
+ {
+  "domain": "hea1",
+  "id": "53",
+  "kind": "map",
+  "name": "升糖指数（GI）在说什么",
+  "n": 5,
+  "texts": [
+   "升糖指数（GI）在说什么",
+   "GI值高低有什么区别",
+   "低升糖食物是指什么"
+  ]
+ },
+ {
+  "domain": "hea1",
+  "id": "55",
+  "kind": "map",
+  "name": "怎么吃才能让餐后血糖更平稳",
+  "n": 5,
+  "texts": [
+   "怎么吃才能让餐后血糖更平稳",
+   "怎么吃餐后血糖不飙",
+   "吃饭顺序对血糖有影响吗"
   ]
  },
  {
@@ -341,6 +401,18 @@ export const NODES = [
   ]
  },
  {
+  "domain": "hea1",
+  "id": "59",
+  "kind": "map",
+  "name": "控糖一定要戒主食吗",
+  "n": 3,
+  "texts": [
+   "控糖一定要戒主食吗",
+   "控糖要不要戒米饭",
+   "不吃主食能降血糖吗"
+  ]
+ },
+ {
   "domain": "fin1",
   "id": "40",
   "kind": "map",
@@ -365,6 +437,30 @@ export const NODES = [
   ]
  },
  {
+  "domain": "hea1",
+  "id": "54",
+  "kind": "map",
+  "name": "糖尿病前期意味着什么",
+  "n": 2,
+  "texts": [
+   "糖尿病前期意味着什么",
+   "空腹血糖偏高算不算糖尿病",
+   "糖尿病前期要不要紧"
+  ]
+ },
+ {
+  "domain": "hea1",
+  "id": "58",
+  "kind": "map",
+  "name": "无糖食品真的不升血糖吗",
+  "n": 2,
+  "texts": [
+   "无糖食品真的不升血糖吗",
+   "无糖饮料能不能喝",
+   "代糖会不会升血糖"
+  ]
+ },
+ {
   "domain": "ai1",
   "id": "09",
   "kind": "map",
@@ -386,6 +482,30 @@ export const NODES = [
    "经济衰退是怎么判断出来的",
    "怎么看出经济要不行了",
    "衰退有哪些信号"
+  ]
+ },
+ {
+  "domain": "hea1",
+  "id": "56",
+  "kind": "map",
+  "name": "运动是怎么影响血糖的",
+  "n": 1,
+  "texts": [
+   "运动是怎么影响血糖的",
+   "运动能不能降血糖",
+   "饭后走路有用吗"
+  ]
+ },
+ {
+  "domain": "hea1",
+  "id": "60",
+  "kind": "map",
+  "name": "连续血糖仪值不值得用",
+  "n": 1,
+  "texts": [
+   "连续血糖仪值不值得用",
+   "动态血糖仪值不值得买",
+   "CGM有必要用吗"
   ]
  },
  {
@@ -1245,8 +1365,18 @@ export const NODES = [
   ]
  },
  {
-  "domain": "fin1",
+  "domain": "hea1",
   "id": "g086",
+  "kind": "gap",
+  "name": "一型和二型糖尿病的病因与进展差异",
+  "n": 1,
+  "texts": [
+   "一型和二型糖尿病的病因与进展差异"
+  ]
+ },
+ {
+  "domain": "fin1",
+  "id": "g087",
   "kind": "gap",
   "name": "三角套利与套汇交易",
   "n": 1,
@@ -1256,7 +1386,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g087",
+  "id": "g088",
   "kind": "gap",
   "name": "人民币升值与国内通缩的政策协同",
   "n": 1,
@@ -1266,7 +1396,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g088",
+  "id": "g089",
   "kind": "gap",
   "name": "估值指标对比：市盈率与股债利差",
   "n": 1,
@@ -1276,7 +1406,7 @@ export const NODES = [
  },
  {
   "domain": "ai1",
-  "id": "g089",
+  "id": "g090",
   "kind": "gap",
   "name": "低代码AI平台功能演示",
   "n": 1,
@@ -1285,8 +1415,28 @@ export const NODES = [
   ]
  },
  {
+  "domain": "hea1",
+  "id": "g091",
+  "kind": "gap",
+  "name": "低碳饮食与血糖指标的适配性",
+  "n": 1,
+  "texts": [
+   "低碳饮食与血糖指标的适配性"
+  ]
+ },
+ {
+  "domain": "hea1",
+  "id": "g092",
+  "kind": "gap",
+  "name": "低血糖的症状与识别",
+  "n": 1,
+  "texts": [
+   "低血糖的症状与识别"
+  ]
+ },
+ {
   "domain": "fin1",
-  "id": "g090",
+  "id": "g093",
   "kind": "gap",
   "name": "凯恩斯货币需求三动机理论",
   "n": 1,
@@ -1296,7 +1446,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g091",
+  "id": "g094",
   "kind": "gap",
   "name": "利率市场化的机制与演进",
   "n": 1,
@@ -1306,7 +1456,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g092",
+  "id": "g095",
   "kind": "gap",
   "name": "利率期货基础",
   "n": 1,
@@ -1316,7 +1466,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g093",
+  "id": "g096",
   "kind": "gap",
   "name": "可转换债券的会计处理与记录",
   "n": 1,
@@ -1326,7 +1476,7 @@ export const NODES = [
  },
  {
   "domain": "ai1",
-  "id": "g094",
+  "id": "g097",
   "kind": "gap",
   "name": "合成数据在大模型训练中的应用与风险",
   "n": 1,
@@ -1336,7 +1486,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g095",
+  "id": "g098",
   "kind": "gap",
   "name": "名义利率与实际利率的计算",
   "n": 1,
@@ -1346,7 +1496,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g096",
+  "id": "g099",
   "kind": "gap",
   "name": "名义收益率与实际收益率的计算",
   "n": 1,
@@ -1356,7 +1506,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g097",
+  "id": "g100",
   "kind": "gap",
   "name": "国际货币体系与美元霸权",
   "n": 1,
@@ -1366,7 +1516,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g098",
+  "id": "g101",
   "kind": "gap",
   "name": "国际货币体系与美元霸权地位",
   "n": 1,
@@ -1376,7 +1526,7 @@ export const NODES = [
  },
  {
   "domain": "ai1",
-  "id": "g099",
+  "id": "g102",
   "kind": "gap",
   "name": "大模型安全漏洞与防御",
   "n": 1,
@@ -1386,7 +1536,7 @@ export const NODES = [
  },
  {
   "domain": "ai1",
-  "id": "g100",
+  "id": "g103",
   "kind": "gap",
   "name": "大模型安全防护与指令注入风险",
   "n": 1,
@@ -1396,7 +1546,7 @@ export const NODES = [
  },
  {
   "domain": "ai1",
-  "id": "g101",
+  "id": "g104",
   "kind": "gap",
   "name": "大模型实际应用对比与使用技巧",
   "n": 1,
@@ -1406,7 +1556,7 @@ export const NODES = [
  },
  {
   "domain": "ai1",
-  "id": "g102",
+  "id": "g105",
   "kind": "gap",
   "name": "大模型生成参数调优指南",
   "n": 1,
@@ -1416,7 +1566,7 @@ export const NODES = [
  },
  {
   "domain": "ai1",
-  "id": "g103",
+  "id": "g106",
   "kind": "gap",
   "name": "大模型量化与压缩",
   "n": 1,
@@ -1426,7 +1576,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g104",
+  "id": "g107",
   "kind": "gap",
   "name": "央行利率政策工具与传导机制",
   "n": 1,
@@ -1436,7 +1586,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g105",
+  "id": "g108",
   "kind": "gap",
   "name": "如何构建稳定现金流",
   "n": 1,
@@ -1446,7 +1596,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g106",
+  "id": "g109",
   "kind": "gap",
   "name": "宏观杠杆率的成因与降杠杆机制",
   "n": 1,
@@ -1456,7 +1606,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g107",
+  "id": "g110",
   "kind": "gap",
   "name": "宏观经济政策的目标与调控机制",
   "n": 1,
@@ -1466,7 +1616,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g108",
+  "id": "g111",
   "kind": "gap",
   "name": "宏观经济调控的四大目标",
   "n": 1,
@@ -1476,7 +1626,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g109",
+  "id": "g112",
   "kind": "gap",
   "name": "康波周期与经济周期规律",
   "n": 1,
@@ -1486,7 +1636,7 @@ export const NODES = [
  },
  {
   "domain": "ai1",
-  "id": "g110",
+  "id": "g113",
   "kind": "gap",
   "name": "扩散模型生成机制与文图转换原理",
   "n": 1,
@@ -1496,7 +1646,7 @@ export const NODES = [
  },
  {
   "domain": "ai1",
-  "id": "g111",
+  "id": "g114",
   "kind": "gap",
   "name": "提示词工程与上下文工程基础",
   "n": 1,
@@ -1506,7 +1656,7 @@ export const NODES = [
  },
  {
   "domain": "ai1",
-  "id": "g112",
+  "id": "g115",
   "kind": "gap",
   "name": "提示词工程概念与基础",
   "n": 1,
@@ -1516,7 +1666,7 @@ export const NODES = [
  },
  {
   "domain": "ai1",
-  "id": "g113",
+  "id": "g116",
   "kind": "gap",
   "name": "文本生成模型长文创作能力对比",
   "n": 1,
@@ -1526,7 +1676,7 @@ export const NODES = [
  },
  {
   "domain": "ai1",
-  "id": "g114",
+  "id": "g117",
   "kind": "gap",
   "name": "本地大模型运行工具对比与选型",
   "n": 1,
@@ -1536,7 +1686,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g115",
+  "id": "g118",
   "kind": "gap",
   "name": "汇率套算与跨货币转换",
   "n": 1,
@@ -1546,7 +1696,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g116",
+  "id": "g119",
   "kind": "gap",
   "name": "波动率指数的概念与应用",
   "n": 1,
@@ -1556,7 +1706,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g117",
+  "id": "g120",
   "kind": "gap",
   "name": "离岸与在岸人民币的区别",
   "n": 1,
@@ -1566,7 +1716,7 @@ export const NODES = [
  },
  {
   "domain": "ai1",
-  "id": "g118",
+  "id": "g121",
   "kind": "gap",
   "name": "程序员转向AI四层能力补充模型",
   "n": 1,
@@ -1575,8 +1725,18 @@ export const NODES = [
   ]
  },
  {
+  "domain": "hea1",
+  "id": "g122",
+  "kind": "gap",
+  "name": "糖尿病诊断标准的临床应用与更新",
+  "n": 1,
+  "texts": [
+   "糖尿病诊断标准的临床应用与更新"
+  ]
+ },
+ {
   "domain": "fin1",
-  "id": "g119",
+  "id": "g123",
   "kind": "gap",
   "name": "经济衰退期的消费结构变化",
   "n": 1,
@@ -1586,7 +1746,7 @@ export const NODES = [
  },
  {
   "domain": "ai1",
-  "id": "g120",
+  "id": "g124",
   "kind": "gap",
   "name": "网站反爬虫与数据隐私保护",
   "n": 1,
@@ -1596,7 +1756,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g121",
+  "id": "g125",
   "kind": "gap",
   "name": "股债比指标：判断股市高低估",
   "n": 1,
@@ -1606,7 +1766,7 @@ export const NODES = [
  },
  {
   "domain": "ai1",
-  "id": "g122",
+  "id": "g126",
   "kind": "gap",
   "name": "节点式AI创作工具对比选型",
   "n": 1,
@@ -1616,7 +1776,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g123",
+  "id": "g127",
   "kind": "gap",
   "name": "融资结构与经济观察的四个指标",
   "n": 1,
@@ -1626,7 +1786,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g124",
+  "id": "g128",
   "kind": "gap",
   "name": "财务报表的编制",
   "n": 1,
@@ -1636,7 +1796,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g125",
+  "id": "g129",
   "kind": "gap",
   "name": "财政政策与货币政策工具体系",
   "n": 1,
@@ -1646,7 +1806,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g126",
+  "id": "g130",
   "kind": "gap",
   "name": "资产收益率的概念与应用",
   "n": 1,
@@ -1656,7 +1816,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g127",
+  "id": "g131",
   "kind": "gap",
   "name": "资产负债表衰退与货币流向机制",
   "n": 1,
@@ -1666,7 +1826,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g128",
+  "id": "g132",
   "kind": "gap",
   "name": "银行商业模式与利差收入",
   "n": 1,
@@ -1676,7 +1836,7 @@ export const NODES = [
  },
  {
   "domain": "ai1",
-  "id": "g129",
+  "id": "g133",
   "kind": "gap",
   "name": "高级提示词工程与系统提示词提取",
   "n": 1,
@@ -1686,7 +1846,7 @@ export const NODES = [
  },
  {
   "domain": "fin1",
-  "id": "g136",
+  "id": "g140",
   "kind": "gap",
   "name": "实际利率如何影响黄金价格",
   "n": 1,
@@ -1696,7 +1856,7 @@ export const NODES = [
  },
  {
   "domain": "ai1",
-  "id": "g138",
+  "id": "g142",
   "kind": "gap",
   "name": "（地图缺口）AI应用层生态与Agent关系",
   "n": 1,
