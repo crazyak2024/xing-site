@@ -61,7 +61,10 @@ function cors(request) {
 // S4 新增 answer = 他看到了某个问题的主题页（node 列放节点名、note 列放骨架/入选/折叠条数）。
 // 它是"完成感发生在点出之前"这条设计的唯一读数：答案页被看过多少次 vs 点出去多少次。
 const KINDS = new Set(["found", "not_found", "gap_wish", "search", "pick", "open",
-                       "search_sem", "search_sem_fail", "sem_pick", "answer", "search_gap"]);
+                       "search_sem", "search_sem_fail", "sem_pick", "answer", "search_gap",
+                       // 第 ④ 屏（2026-11-10）：edge_follow = 顺着哪条关系走的；
+                       // not_for_me = 边纠错**唯一**的信号源，note 里带入口边。
+                       "edge_follow", "not_for_me"]);
 
 export default {
   async fetch(request, env) {
@@ -175,6 +178,9 @@ async function rtSearch(request, env, CORS) {
   // （同一个人每 1.5 秒轮询一次，每次都 INSERT 会把 updated_at 刷成"永远新鲜"，
   //   上面那条 10 分钟孤儿回收就永远不会触发）。
   if (lane && lane.state !== "new") {
+    // ⚠️ building 期间缓存里**已经有**已核完的那几条（守护进程每核完一条就写一次），
+    //   这里必须把它们带回去——否则"边跑边给"在前端看起来还是"全跑完才给"。
+    //   走到这里说明上面的 TTL 分支没命中（第一条还没落），回空是对的。
     return json(CORS, { ok: true, verified: false, cached: false,
                         state: lane.state, note: lane.note, results: [] });
   }
@@ -243,8 +249,8 @@ async function laneClaim(request, env, CORS) {
   // 改成直接收尾成 done：宁可少说一句"还在完善"，不可让页面永远显示"5–10 分钟后回来"。
   const staleSlow = new Date(Date.now() - 30 * 60 * 1000).toISOString();
   await env.DB.prepare(
-    "UPDATE gap_lane SET state='done', note=COALESCE(note,'')||' [慢道超时收尾]' " +
-    "WHERE state='fast_done' AND updated_at < ?").bind(staleSlow).run();
+    "UPDATE gap_lane SET state='done', note=COALESCE(note,'')||' [建到一半超时，先收尾]' " +
+    "WHERE state IN ('building','fast_done') AND updated_at < ?").bind(staleSlow).run();
 
   const rows = await env.DB.prepare(
     "SELECT q_norm, q, created_at FROM gap_lane WHERE state='new' ORDER BY created_at LIMIT ?"
@@ -271,11 +277,15 @@ async function laneResult(request, env, CORS) {
   // 状态机（CY 2026-11-10 07:5x 追加要求：慢道的进度必须让用户在页面上看得到）：
   //   new       刚有人要
   //   working   本机认领了，正在跑快道
-  //   fast_done 快道出结果了（未核验线索已可看），**慢道还在跑** → 前端显示"还在完善中，约 5–10 分钟"
+  //   building  正在为这个问题建知识点：**已核完的已经推上去了**，还有几条在处理
+  //             （CY 2026-11-10 08:22 推翻了原来的 fast_done ——那是"先给未核验的"，
+  //              他的原话：「不能因为快就给差的内容…可以边跑边给，只是全跟不全的差别」。
+  //              ⟹ 变的是**完整度**不是**质量**，results 里永远只有已核验的。）
+  //   fast_done 旧名，等价于 building，保留只为了不让在途的旧守护进程写入失败
   //   done      慢道也完成（核验过的内容已上站）
   //   skipped   判定不值得补（撞禁区 / 库里本来就有），没花钱
   //   failed    上游挂了，不是"没有结果"
-  const state = ["working", "fast_done", "done", "skipped", "failed"].includes(body?.state)
+  const state = ["working", "building", "fast_done", "done", "skipped", "failed"].includes(body?.state)
     ? body.state : "done";
   const note = str(body?.note, 200);
   const nowIso = new Date().toISOString();

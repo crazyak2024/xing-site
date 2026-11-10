@@ -48,6 +48,7 @@ const TOPIC_HINT = {
 let DATA = [];          // 当前领域内的内容（下面所有渲染都只看这个）
 let DATA_LOADED = false; // data.json 到底回来没有——用来分辨"还没到"和"真没有"
 let ALL_DATA = [];      // 全部内容（跨领域）
+let DATA_EDGES = {};    // 知识地图的边：{节点名: [{type,dst,why}]}，详情页用
 let TOPICS = [];
 let DOMAIN_LIST = [];   // [{id,label,count}]，只含真有合格内容的领域
 const state = { q: "", topic: null, node: null, domain: null };
@@ -535,8 +536,8 @@ function renderResults() {
     if (want) want.addEventListener("click", () => {
       recordExit("gap_wish", `${q} [from=empty]`);
       want.outerHTML = `<span class="want-ok"><b>记下了，正在去找。</b>
-        这句话比一万次点击有用——下面十几秒内会先出现我们刚找到的线索，
-        核对过事实的版本再过几分钟补上来。</span>`;
+        我们会去找能正面回答它的内容，<b>核对过事实才会放上来</b>——
+        所以是分钟级的，每核完一条就会出现一条。</span>`;
       // 缺口车道（CY 2026-11-10）：按钮不再只是"记一笔"，它真的会让本机去搜。
       startLane(q);
     });
@@ -680,6 +681,7 @@ function openModal(it) {
       ${points}
       ${it.reason ? `<div class="modal-reason">入选依据：${esc(it.reason)}</div>` : ""}
       <a class="src" href="${it.link}" target="_blank" rel="noopener">在原平台看原作者的完整内容</a>
+      ${edgeBlockHtml(it)}
       <!-- 所有视频站在这个位置放"相关推荐"。我们在这个位置放一句"没有下一条"。
            这是整个产品最结构性的一处叛逆：连播的入口被我们拿掉了，不是忘了做。 -->
       <p class="no-next">没有「下一条」。看完回地图，或者直接关掉。</p>
@@ -694,7 +696,58 @@ function openModal(it) {
   m.querySelectorAll("[data-jump-node]").forEach(b => b.addEventListener("click", () => {
     closeModal(); go({ node: b.dataset.jumpNode, topic: b.dataset.topic });
   }));
+  // 顺着一条关系走：**记下他是从哪条边进去的**（见下面 ENTRY_EDGE 的注释）
+  m.querySelectorAll("[data-edge]").forEach(b => b.addEventListener("click", () => {
+    ENTRY_EDGE = b.dataset.edge;
+    emit("edge_follow", { note: b.dataset.edge });
+    closeModal(); go({ node: b.dataset.edgeDst, q: "", topic: null });
+  }));
+  // 「这不是我想找的」：边纠错**唯一**的信号源
+  const nf = m.querySelector("#modal-notfound");
+  if (nf) nf.addEventListener("click", () => {
+    emit("not_for_me", { note: `${ENTRY_EDGE || "直接进入"} → ${it.node || ""}`, item: it.id });
+    nf.outerHTML = `<span class="nf-ok">记下了。我们会去查：把你带到这儿的那条关系是不是连错了。</span>`;
+  });
   m.focus();
+}
+
+/* 他是顺着**哪条关系**走到当前节点的。设计文档 v3 砍掉了人工边复核队列，
+   改成「用户否定驱动」：按下「这不是我想找的」时记录 (入口边 · 当前节点 · 原问句)，
+   只有被否定命中的边才送 LM 复核。⟹ 不记这个，那条按钮就只是礼貌用语，
+   整个边纠错回路没有输入。 */
+let ENTRY_EDGE = "";
+
+/* 四种边翻成人话。**界面上永远不出现 answers_part_of 这类内部名**——
+   用户没有"边"这个概念，他只需要知道"顺着这条走会到哪、为什么"。 */
+const EDGE_CN = {
+  answers_part_of: { k: "它是这个更大问题的一块", mark: "↑" },
+  prereq:          { k: "先懂这个会更容易",       mark: "↓" },
+  confusable_with: { k: "常被当成同一个问题",     mark: "↔" },
+  instance_of:     { k: "具体到某个东西上",       mark: "•" },
+};
+
+function edgeBlockHtml(it) {
+  const all = (DATA_EDGES && (DATA_EDGES[it.category] || DATA_EDGES[it.node])) || [];
+  // 一条边没有就整块不出现——空着一个"相关问题"标题比没有更糟
+  if (!all.length) return "";
+  const rows = all.slice(0, 5).map(e => {
+    const cn = EDGE_CN[e.type];
+    if (!cn) return "";
+    return `<div class="edge-row"><span class="edge-mark">${cn.mark}</span>
+      <div><div class="edge-k">${cn.k}</div>
+        <button class="edge-nm" data-edge="${esc(e.type)}:${esc(it.category || it.node)}"
+                data-edge-dst="${esc(e.dst)}">${esc(displayNode(e.dst))}</button>
+        <div class="edge-why">因为：${esc(e.why)}</div></div></div>`;
+  }).join("");
+  if (!rows) return "";
+  return `<div class="edge-box">
+    <div class="edge-head">这个问题在地图上的位置</div>
+    <div class="edge-self">${esc(displayNode(it.node || it.category || ""))}</div>
+    ${rows}
+    <p class="edge-note">这几条都是<b>知识关系</b>，不是"看了这个的人还看了"——
+      所以每条后面都说得出"因为"。</p>
+    <button class="edge-nf" id="modal-notfound">这不是我想找的</button>
+  </div>`;
 }
 function closeModal() {
   document.getElementById("modal-overlay").classList.remove("open");
@@ -808,15 +861,6 @@ function startLane(q) {
   LANE.timer = setInterval(ask, LANE_POLL_MS);
 }
 
-function laneItemHtml(it) {
-  const site = { bilibili: "B站", douyin: "抖音", wechat_channels: "视频号" }[it.platform] || it.platform;
-  const mins = it.duration_s ? `${Math.round(it.duration_s / 60)} 分钟` : "";
-  const who = it.author ? ` · ${esc(it.author)}` : "";
-  const link = it.link
-    ? `<a href="${esc(it.link)}" target="_blank" rel="noopener">${esc(it.title)}</a>`
-    : esc(it.title);
-  return `<li>${link}<div class="lane-meta">${site}${who}${mins ? " · " + mins : ""}</div></li>`;
-}
 
 function renderLane(d) {
   const host = document.getElementById("results");
@@ -825,6 +869,7 @@ function renderLane(d) {
   if (!box) { box = document.createElement("div"); box.id = "lane"; host.appendChild(box); }
   const items = Array.isArray(d.results) ? d.results : [];
   const secs = Math.round((Date.now() - LANE.t0) / 1000);
+  const step = (d.note || "").split("｜").slice(-1)[0] || "";
 
   if (d.budget_exceeded) {
     box.innerHTML = `<div class="lane"><div class="lane-head">今天的补内容额度用完了</div>
@@ -832,17 +877,17 @@ function renderLane(d) {
       宁可明天继续也不超支。你这句话已经记下了。</div></div>`;
     return;
   }
-  // 库里本来就有（环 0 命中）⟹ 给的是**已核验**内容，不该套"未核验"的话术
+  // 库里本来就有（环 0 命中）
   if (d.state === "skipped" && items.length) {
-    box.innerHTML = `<div class="lane"><div class="lane-head">其实我们有——是我们的搜索没搭上你的说法</div>
-      <div class="lane-sub">${esc(d.note || "")}。下面这些是已经核对过事实的。</div>
-      <ul class="lane-list">${items.map(laneItemHtml).join("")}</ul></div>`;
+    box.innerHTML = `<div class="lane ok"><div class="lane-head">其实我们有——是我们的搜索没搭上你的说法</div>
+      <div class="lane-sub">${esc(d.note || "")}。下面这些都已经核对过事实。</div>
+      <div class="lane-cards">${items.map(laneCardHtml).join("")}</div></div>`;
     return;
   }
   if (d.state === "skipped") {
     box.innerHTML = `<div class="lane"><div class="lane-head">这个我们不打算收</div>
       <div class="lane-sub">${esc(d.note || "它不在「醒」要做的范围里")}。
-      与其给你一堆沾边的东西，不如说清楚我们没有。</div></div>`;
+      与其给你一堆沾边的，不如说清楚我们没有。</div></div>`;
     return;
   }
   if (d.state === "failed") {
@@ -851,25 +896,40 @@ function renderLane(d) {
       已经记下，稍后会自己重试。</div></div>`;
     return;
   }
-  if (!items.length) {
-    box.innerHTML = `<div class="lane"><div class="lane-head">
-      <span class="lane-spin"></span>正在去 B站 和抖音找「${esc(LANE.q)}」…</div>
-      <div class="lane-sub">一般 10–20 秒出第一批线索（已等 ${secs} 秒）。
-      这一步是真的在搜，不是动画。</div></div>`;
-    return;
-  }
-  const wip = d.state === "done"
-    ? `<div class="lane-wip">核对过事实的版本已经上线了——<button class="linklike"
-         onclick="location.reload()">刷新一下</button>就能看到。</div>`
-    : `<div class="lane-wip"><span class="lane-spin"></span>这个知识点还在完善中：
-         我们正在把上面这些（以及更多）取回来转成文字、按判据筛一遍、核对事实，
-         大约还要 5–10 分钟。筛过的版本会直接进知识地图。</div>`;
-  box.innerHTML = `<div class="lane">
-    <div class="lane-head">刚找到的线索（${items.length} 条，<b>还没核过</b>）</div>
-    <div class="lane-sub">这些是 ${secs} 秒前从平台搜回来的，我们<b>还没有</b>核对里面的事实，
-      也还没判断它有没有正面回答你的问题——先给你，是因为空着更没用。</div>
-    <ul class="lane-list">${items.map(laneItemHtml).join("")}</ul>
-    ${wip}</div>`;
+
+  /* 建设中 / 建完。⚠️ 这里的每一条**都是已核验的**（CY 2026-11-10 08:22 推翻了
+     "先给未核验线索"那一版）：变的是"现在几条 / 最后几条"，不是"核没核"。
+     所以它们用的是和平时一样的卡片，没有琥珀框、没有"还没核过"这类话术。 */
+  const building = d.state !== "done";
+  const head = building
+    ? `<div class="lane-head"><span class="lane-spin"></span>正在为你建这个知识点</div>
+       <div class="lane-sub">${items.length
+          ? `已经核完 <b>${items.length}</b> 条，放在下面了。`
+          : `还没有核完的——每核完一条就会出现一条。`}
+          ${step ? `当前：${esc(step)}（已等 ${secs} 秒）` : ""}<br>
+          核一条要取视频、转成文字、判断讲得对不对、再核对事实，所以是分钟级的。</div>`
+    : `<div class="lane-head">这个知识点建好了</div>
+       <div class="lane-sub">${items.length
+          ? `${items.length} 条，全部核对过事实。它们已经进了知识地图，下次直接搜得到。`
+          : `我们找了一圈，<b>没有一条过得了判定</b>——不是没找到，是找到的都不够格。
+             与其凑数给你，不如说实话。`}</div>`;
+  box.innerHTML = `<div class="lane ${building ? "" : "ok"}">${head}
+    ${items.length ? `<div class="lane-cards">${items.map(laneCardHtml).join("")}</div>` : ""}
+    </div>`;
+}
+
+/* 已核验内容的卡片：刻意和结果列表里的卡片同一个样子——它们是同一等公民 */
+function laneCardHtml(it) {
+  const site = { bilibili: "B站", douyin: "抖音", wechat_channels: "视频号" }[it.platform] || it.platform;
+  const mins = it.duration_s ? ` · ${Math.round(it.duration_s / 60)} 分钟` : "";
+  const who = it.author ? ` · ${esc(it.author)}` : "";
+  const link = it.link
+    ? `<a href="${esc(it.link)}" target="_blank" rel="noopener">${esc(it.title)}</a>`
+    : esc(it.title);
+  return `<div class="lane-card">${it.cover
+      ? `<img class="lane-thumb" src="${esc(it.cover)}" alt="" loading="lazy" decoding="async">` : ""}
+    <div><div class="lane-ct">${link}</div>
+      <div class="lane-cm">${site}${who}${mins}</div></div></div>`;
 }
 
 function exitSaid(html, cls) {
@@ -1111,6 +1171,7 @@ function loadData(attempt = 1) {
     .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
     .then(d => {
       ALL_DATA = d.items || [];
+      DATA_EDGES = d.edges || {};
       DATA_LOADED = true;
       TOPICS = d.topics || [...new Set(ALL_DATA.map(i => i.topic))];
       DOMAIN_LIST = d.domains || [];
