@@ -70,6 +70,9 @@ export default {
     const url = new URL(request.url);
     if (url.pathname === "/rtsearch") return rtSearch(request, env, CORS);
     if (url.pathname === "/semantic") return semantic(request, env, CORS, url);
+    // 缺口车道（CY 2026-11-10）：本机守护进程用的两个端点，带 LANE_KEY 鉴权。
+    if (url.pathname === "/gaplane/claim") return laneClaim(request, env, CORS);
+    if (url.pathname === "/gaplane/result") return laneResult(request, env, CORS);
     if (request.method !== "POST") return new Response("POST only", { status: 405, headers: CORS });
 
     let body;
@@ -156,11 +159,24 @@ async function rtSearch(request, env, CORS) {
 
   // ① 缓存命中：免费，且是"归一化到问题"而不是"归一化到字面"——这正是线㉚ 说的真正杠杆，
   //    但这一版只做了字面 trim+lower 的归一化，没有做语义归并（那需要 LLM，快道等不起）。
+  //
+  // **这同时也是前端的轮询端点**：它要的不只是结果，还有"慢道做到哪了"——CY 2026-11-10
+  // 要求页面上必须显示"这个知识点还在完善中，约 5–10 分钟"。所以状态和结果一起回。
+  const lane = await env.DB.prepare(
+    "SELECT state, note, updated_at FROM gap_lane WHERE q_norm=?").bind(qNorm).first();
   const cached = await env.DB.prepare(
     "SELECT results, cost_usd, created_at FROM rt_cache WHERE q_norm=?").bind(qNorm).first();
   if (cached && (Date.now() - new Date(cached.created_at).getTime()) < CACHE_TTL_MS) {
     return json(CORS, { ok: true, verified: false, cached: true,
+                        state: lane ? lane.state : "done", note: lane ? lane.note : null,
                         results: JSON.parse(cached.results) });
+  }
+  // 已经在队列里但快道还没出结果 ⟹ 直接回当前状态，**不要再入队一次**
+  // （同一个人每 1.5 秒轮询一次，每次都 INSERT 会把 updated_at 刷成"永远新鲜"，
+  //   上面那条 10 分钟孤儿回收就永远不会触发）。
+  if (lane && lane.state !== "new") {
+    return json(CORS, { ok: true, verified: false, cached: false,
+                        state: lane.state, note: lane.note, results: [] });
   }
 
   // ② 硬预算闸：读当天已花 → 判断 → 不够就直接拒绝，不尝试"先搜后扣"
@@ -171,75 +187,120 @@ async function rtSearch(request, env, CORS) {
     return json(CORS, { ok: true, verified: false, budget_exceeded: true, results: [] });
   }
 
-  // ③ 真实调用 Quorum（只打快道两站，不碰视频号——它取流贵、这里又不取流只搜索，没必要碰）
+  // ③ **入队，而不是在边缘直接搜**（CY 2026-11-10 · 架构改向）
   //
-  // ⚠️ 2026-11-09 修（CY 批 vr2 第一件）：这一段原来把每站的失败整个吞掉
-  //   （`if (!r.ok) continue` + 空 catch），于是**两站全挂时仍然返回
-  //   `{ok:true, results:[]}`，和"搜索成功但真的没有结果"一模一样**；更糟的是它还把这个
-  //   空结果**写进了 rt_cache**，让一次瞬时故障在 TTL 内污染后续所有同词查询。
-  //   现在：逐站记下失败原因；**一站都没成功就返回 ok:false + 502，且不写缓存、不记预算**
-  //   （什么都没花）；部分成功则 ok:true 带 partial + errors。
-  //   这个 bug 的根因是边缘够不到本机数据网关（通路已定为"出站轮询"，还没建）——
-  //   但"够不到"必须说出来，不能装成"没有结果"。
-  let totalCost = 0;
-  const results = [];
-  const errors = [];
-  let okPlatforms = 0;
-  for (const platform of PLATFORMS_FAST) {
-    try {
-      const r = await fetch(`${env.QUORUM_URL}/v1/search/videos`, {
-        method: "POST",
-        headers: { "X-API-Key": env.QUORUM_API_KEY, "Content-Type": "application/json" },
-        body: JSON.stringify({ platform, keyword: qRaw }),
-      });
-      if (!r.ok) { errors.push({ platform, err: `http_${r.status}` }); continue; }
-      const data = await r.json();
-      okPlatforms += 1;
-      // 真实响应形状（curl 实测）：{schema_version, data:[...items], meta:{cost_usd,...}}
-      // ——不是 python SDK SearchPage 的 .items/.cost_usd 属性名，那是客户端包装后的名字。
-      totalCost += data?.meta?.cost_usd || 0;
-      for (const it of (data?.data || []).slice(0, 8)) {
-        const title = it.caption || it.title || "";
-        const dur = it.duration_s;
-        const likes = it.stats?.likes;
-        if (!cheapFilterJs(title, dur, likes)) continue;
-        results.push({ platform, title: title.slice(0, 80), link: it.url || "",
-                       cover: it.media?.cover_url || "", duration_s: dur || null });
-      }
-    } catch (e) {
-      // 单站失败不拖垮另一站，但**必须留痕**：吞掉异常正是 11-09 那个假绿的来源。
-      errors.push({ platform, err: (e && e.name) || "fetch_failed",
-                    msg: String((e && e.message) || e).slice(0, 120) });
-    }
-  }
+  // 这里原来是「Worker 直接 fetch 本机 Quorum」，**它从第一天起就不可能成功**：
+  // Quorum 跑在 CY 那台 Mac 的 127.0.0.1 上，Cloudflare 的边缘节点物理上够不到。
+  // 11-09 我把"吞掉失败"修成"大声报 502"，但那只是让假绿变成真红——通路本身仍然是断的。
+  // 现在换成：**边缘只负责记下"有人要这个"，由本机守护进程出站来取**（它在 127.0.0.1
+  // 这一侧，当然够得到 Quorum）。边缘不再花钱、不再碰上游，预算闸的执行点随之搬到本机。
+  //
+  // 🔑 **为什么这不会慢**（CY 2026-11-10 07:47 当场纠正了我的 30–90 秒）：拉和推的差别
+  // 只是"本机多久问一次"这个参数，不是物理限制。实测本机↔边缘裸往返 0.94–1.49 秒，
+  // 守护进程每 1.5 秒问一次 ⟹ 它在 ~1–2.5 秒内就知道有活。真正吃时间的是平台搜索本身
+  // （实测抖音 14.8s / B站 6.3s，并行取大者）。端到端 8–17 秒，正是原设计说的 10–15 秒。
+  const nowIso = new Date().toISOString();
+  await env.DB.prepare(
+    "INSERT INTO gap_lane (q_norm, q, state, created_at, updated_at) VALUES (?,?,'new',?,?) " +
+    // 已经在队列里就只刷新 updated_at（让"还有人在要"这件事可见），**不要**把 working/done
+    // 打回 new——否则同一个人多点两下会让本机重复付费搜同一个词。
+    "ON CONFLICT(q_norm) DO UPDATE SET updated_at=excluded.updated_at"
+  ).bind(qNorm, qRaw.slice(0, 60), nowIso, nowIso).run();
 
-  // ③.5 一站都没成功 ⟹ 这不是"没有结果"，是"我们没搜到任何上游"。
-  //     不写缓存（否则污染 TTL 内的同词查询）、不记预算（什么都没花）、HTTP 502。
-  if (okPlatforms === 0) {
-    return json(CORS, { ok: false, err: "upstream_unreachable",
-                        searched: PLATFORMS_FAST, errors, results: [] }, 502);
-  }
+  const st = await env.DB.prepare(
+    "SELECT state FROM gap_lane WHERE q_norm=?").bind(qNorm).first();
+  return json(CORS, { ok: true, verified: false, cached: false,
+                      state: st ? st.state : "new", results: [] });
+}
 
-  // ④ 落账：缓存结果 + 记花费（即使零结果也要记，因为搜索调用已经花了钱）
-  await env.DB.batch([
+/* ============ 缺口车道：本机守护进程的两个端点（CY 2026-11-10） ============
+ *
+ * 为什么要鉴权：这两个端点能读走"有人在要什么"、能往缓存里写内容。事件收集那个端点
+ * 对匿名流量开放是刻意的（它只能往 ev 表写白名单 kind），这两个不行。
+ * LANE_KEY 用 `wrangler secret put LANE_KEY` 下发，不进仓库、不进 wrangler.toml。
+ */
+function laneAuth(request, env) {
+  const k = request.headers.get("X-Lane-Key") || "";
+  return Boolean(env.LANE_KEY) && k === env.LANE_KEY;
+}
+
+async function laneClaim(request, env, CORS) {
+  if (!laneAuth(request, env)) return json(CORS, { ok: false, err: "unauthorized" }, 401);
+  if (request.method !== "POST") return json(CORS, { ok: false, err: "POST only" }, 405);
+  let body = {};
+  try { body = await request.json(); } catch (e) { /* 空 body 等于默认值 */ }
+  const max = Math.min(Math.max(parseInt(body?.max, 10) || 3, 1), 20);
+
+  // 认领 = 先读后改，中间不能被另一个守护进程插进来。D1 单请求内串行，且我们按 q_norm
+  // 精确 UPDATE ... WHERE state='new'，拿到的行数就是真正归自己的那几行。
+  // 同时把 **卡住的 working 行放回 new**（本机被 kill / 断网 / run 被 90 分钟上限掐掉都会
+  // 留下孤儿）——10 分钟没动静就当它死了，否则那个问题会永远停在 working，而用户侧看起来
+  // 是"一直在找"，这正是"0 件和本来就没有同形"的那类静默失败。
+  const stale = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+  await env.DB.prepare(
+    "UPDATE gap_lane SET state='new' WHERE state='working' AND updated_at < ?").bind(stale).run();
+  // 卡住的 fast_done（快道已出结果、慢道死在半路）**不回 new**——那会让本机重新付费搜同一个词。
+  // 改成直接收尾成 done：宁可少说一句"还在完善"，不可让页面永远显示"5–10 分钟后回来"。
+  const staleSlow = new Date(Date.now() - 30 * 60 * 1000).toISOString();
+  await env.DB.prepare(
+    "UPDATE gap_lane SET state='done', note=COALESCE(note,'')||' [慢道超时收尾]' " +
+    "WHERE state='fast_done' AND updated_at < ?").bind(staleSlow).run();
+
+  const rows = await env.DB.prepare(
+    "SELECT q_norm, q, created_at FROM gap_lane WHERE state='new' ORDER BY created_at LIMIT ?"
+  ).bind(max).all();
+  const items = rows?.results || [];
+  if (items.length) {
+    const nowIso = new Date().toISOString();
+    await env.DB.batch(items.map(r => env.DB.prepare(
+      "UPDATE gap_lane SET state='working', updated_at=? WHERE q_norm=? AND state='new'"
+    ).bind(nowIso, r.q_norm)));
+  }
+  return json(CORS, { ok: true, n: items.length, items });
+}
+
+async function laneResult(request, env, CORS) {
+  if (!laneAuth(request, env)) return json(CORS, { ok: false, err: "unauthorized" }, 401);
+  if (request.method !== "POST") return json(CORS, { ok: false, err: "POST only" }, 405);
+  let body;
+  try { body = await request.json(); } catch (e) { return json(CORS, { ok: false, err: "bad json" }, 400); }
+  const qNorm = (body?.q_norm || "").trim();
+  if (!qNorm) return json(CORS, { ok: false, err: "q_norm required" }, 400);
+  const results = Array.isArray(body?.results) ? body.results.slice(0, 12) : [];
+  const cost = Number.isFinite(body?.cost_usd) ? body.cost_usd : 0;
+  // 状态机（CY 2026-11-10 07:5x 追加要求：慢道的进度必须让用户在页面上看得到）：
+  //   new       刚有人要
+  //   working   本机认领了，正在跑快道
+  //   fast_done 快道出结果了（未核验线索已可看），**慢道还在跑** → 前端显示"还在完善中，约 5–10 分钟"
+  //   done      慢道也完成（核验过的内容已上站）
+  //   skipped   判定不值得补（撞禁区 / 库里本来就有），没花钱
+  //   failed    上游挂了，不是"没有结果"
+  const state = ["working", "fast_done", "done", "skipped", "failed"].includes(body?.state)
+    ? body.state : "done";
+  const note = str(body?.note, 200);
+  const nowIso = new Date().toISOString();
+
+  const ops = [
     env.DB.prepare(
+      "UPDATE gap_lane SET state=?, note=?, updated_at=? WHERE q_norm=?"
+    ).bind(state, note, nowIso, qNorm),
+  ];
+  // failed 不写缓存：否则一次瞬时故障会在 24h TTL 内把这个词钉死成"没有结果"
+  // （这正是 11-09 修过的那个坑，换个位置会再咬一次）。
+  if (state !== "failed") {
+    ops.push(env.DB.prepare(
       "INSERT INTO rt_cache (q_norm, results, cost_usd, created_at) VALUES (?,?,?,?) " +
       "ON CONFLICT(q_norm) DO UPDATE SET results=excluded.results, cost_usd=excluded.cost_usd, created_at=excluded.created_at"
-    ).bind(qNorm, JSON.stringify(results), totalCost, new Date().toISOString()),
-    env.DB.prepare(
+    ).bind(qNorm, JSON.stringify(results), cost, nowIso));
+  }
+  if (cost > 0) {
+    ops.push(env.DB.prepare(
       "INSERT INTO rt_budget (day, spent_usd) VALUES (?,?) " +
       "ON CONFLICT(day) DO UPDATE SET spent_usd = spent_usd + ?"
-    ).bind(day, totalCost, totalCost),
-  ]);
-
-  return json(CORS, {
-    ok: true, verified: false, cached: false, cost_usd: totalCost, results,
-    // 成功但零结果 ≠ 失败：把"搜了哪几站、几站成功、哪几站报了什么错"一起给出去，
-    // 让前端和日后的监控能分辨这两件事（而不是都看成 results: []）。
-    searched: PLATFORMS_FAST, ok_platforms: okPlatforms,
-    partial: okPlatforms < PLATFORMS_FAST.length,
-    errors,
-  });
+    ).bind(today(), cost, cost));
+  }
+  await env.DB.batch(ops);
+  return json(CORS, { ok: true, state, n: results.length });
 }
 
 /* ============ 语义搜索（CY 2026-11-09 01:15「能用就用」批 Workers AI） ============

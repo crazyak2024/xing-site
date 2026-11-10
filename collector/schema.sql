@@ -31,3 +31,17 @@ CREATE TABLE IF NOT EXISTS rt_budget (
   day        TEXT PRIMARY KEY,   -- YYYY-MM-DD（UTC，Worker 环境没有本地时区）
   spent_usd  REAL NOT NULL DEFAULT 0
 );
+
+-- 缺口车道（CY 2026-11-10 批「把补搜做起来」）：边缘只负责记下"有人要这个"，
+-- 本机守护进程出站认领、跑快道/慢道、回写结果。为什么不是边缘直接搜：Quorum 跑在
+-- CY 那台 Mac 的 127.0.0.1，Cloudflare 边缘物理上够不到（11-08 实测，不是代码 bug）。
+-- q_norm 与 rt_cache 同一把钥匙（trim+lower），两张表天然对齐。
+CREATE TABLE IF NOT EXISTS gap_lane (
+  q_norm     TEXT PRIMARY KEY,
+  q          TEXT NOT NULL,
+  state      TEXT NOT NULL,      -- new / working / fast_done / done / skipped / failed
+  note       TEXT,               -- 判定理由、花费、慢道进展，给人看的一句话
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS gap_lane_state ON gap_lane(state, created_at);
