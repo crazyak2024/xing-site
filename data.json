@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共1743条",
+  "generated_note": "判定=合格的候选，共1746条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1162,7 +1162,7 @@
     {
       "id": "ai1",
       "label": "AI 与大模型",
-      "count": 1550
+      "count": 1553
     },
     {
       "id": "fin1",
@@ -26888,6 +26888,34 @@
       "domain": "ai1"
     },
     {
+      "id": "bilibili:BV1tupq63Egi",
+      "video_id": "BV1tupq63Egi",
+      "title": "词嵌入技术的神经网络实现原理",
+      "original_title": "深度学习原理：词嵌入技术",
+      "author": "chao人不会飞-b站版",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1tupq63Egi",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/8ce1bffef18167c77e5cd27620c3a38b1ed03d6f.jpg",
+      "published_at": "2026-10-13T12:29:39+00:00",
+      "key_points": [
+        "计算机只处理数值，词嵌入是自然语言→向量的转换桥梁",
+        "近义词向量应接近，学会一词后自动理解其近义词",
+        "多维表示解决一词多义：不同语境中词义对应不同维度",
+        "词嵌入底层是神经网络，权重值就是最终的嵌入向量",
+        "通过预测任务训练，让近义词在向量空间位置相近"
+      ],
+      "duration_s": 324.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解自然语言如何通过词嵌入转为数值向量，近义词向量接近便于模型迁移学习，用多维表示处理一词多义，展示神经网络如何通过训练获得嵌入向量。",
+      "reason": "讲解了词嵌入基本概念和实现机制，用具体例子说明为何近义词向量需接近：'学会了很好之后，同样也它的近义词很棒也就会使用'；展示神经网络权重如何对应嵌入向量，原理讲述清晰完整。 | 引用:「学会了很好之后，同样也它的近义词很棒也就会使用」",
+      "topic": "概念原理",
+      "node": "神经网络基础架构与学习机制",
+      "category": "(地图缺口)神经网络基础架构与学习机制",
+      "domain": "ai1"
+    },
+    {
       "id": "bilibili:BV1gyHh6FEoP",
       "video_id": "BV1gyHh6FEoP",
       "title": "Herdr：开源AI Agent终端管家工具",
@@ -27090,6 +27118,61 @@
       "comments": null,
       "summary": "讲解安装和配置Codex及MCP工具实现浏览器自动化，涵盖表单填充、导航、登录、快照、下载等任务的自动执行方法",
       "reason": "视频系统讲述了Codex浏览器自动化的完整配置流程，包括官网安装、MCP工具配置等步骤，解释了各环节的功能连接，提供了可复现的方法而非纯点击教程。 | 引用:「首先确定已安装Codex，如果没有就到官网安装，安装完成后需要安装MCP」",
+      "topic": "方法实操",
+      "node": "AI工具使用教程",
+      "category": "(地图缺口)AI工具使用教程",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1yEKs6ZEm4",
+      "video_id": "BV1yEKs6ZEm4",
+      "title": "用AI从网课视频自动生成结构化图文笔记",
+      "original_title": "物理化学生物数学英语笔记，别再手动抄板书了！AI笔记一键生成图文笔记，效率提升10倍",
+      "author": "一键AI笔记侠",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1yEKs6ZEm4",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/209d9199984826fc227bd5c142d55408292b642f.jpg",
+      "published_at": "2026-07-20T15:54:35+00:00",
+      "key_points": [
+        "自动化流程：视频输入→知识点识别→关键画面截图→结构化排版输出",
+        "效率提升：手工1小时缩减到5分钟，节省时间用于做题复习",
+        "结构化呈现：分级标题、截图嵌入、公式排版，模仿教科书版式",
+        "明确定位：笔记是辅助工具，需先完整学习再用AI快闪复习",
+        "AI有局限：可能识别错误，需用户自行核对公式和关键概念"
+      ],
+      "duration_s": 150.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "展示AI笔记工具如何将视频课程自动转为图文笔记，涵盖知识点切分、关键画面截图、公式排版等流程，讲解效率提升及使用建议，强调AI辅助而非替代的定位。",
+      "reason": "讲解完整工作流程从视频到笔记输出，具体说明各环节功能；强调使用方法论，建议先完整学习再复习；明确AI局限：'虽然加了纠错步骤但还是建议你自己再核对一遍'。 | 引用:「AI按知识点切分内容自动识别板书文字关键画面自动截图嵌进去」",
+      "topic": "方法实操",
+      "node": "AI工具使用教程",
+      "category": "(地图缺口)AI工具使用教程",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1MCjE6yEFv",
+      "video_id": "BV1MCjE6yEFv",
+      "title": "Sub2api多账号AI管理工具的Docker部署",
+      "original_title": "使用Codex4分钟部署Sub2api，并对多个GPT账号进行管理",
+      "author": "东北23333",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1MCjE6yEFv",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/45a2e697778dd0a0cf9873ebacd44768235f91bf.jpg",
+      "published_at": "2026-06-20T03:47:11+00:00",
+      "key_points": [
+        "Sub2api是账号聚合管理工具，集成多个GPT、Claude、Gemini账号，通过统一API接口分发调度",
+        "核心功能包括自动账号切换、用量统计、均衡分配，单账号额度耗尽时自动转换避免中断",
+        "Docker是部署前置条件，需验证安装状态与运行状态才能进行部署",
+        "部署流程为官网获取项目、解压、Docker启动运行，可用Code编辑器辅助操作"
+      ],
+      "duration_s": 2095.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "介绍Sub2api工具统一管理多个GPT/Claude账号的功能与Docker部署方法，实现自动切换和负载均衡以突破单账号额度限制。",
+      "reason": "属于AI工具实践应用范畴。原文'能够把cloud或者说OpenAI的那个JPG账号或者JGEMINI这些账号就是统一的进行管理分发和调度'明确说明了工具价值与应用场景，前段讲清功能和动机，后段详述部署具体步骤，符合讲清可迁移方法论的工具教程标准。 | 引用:「能够把cloud或者说OpenAI的那个JPG账号或者JGEMINI这些账号就是统一的进行管理分发和调度」",
       "topic": "方法实操",
       "node": "AI工具使用教程",
       "category": "(地图缺口)AI工具使用教程",
