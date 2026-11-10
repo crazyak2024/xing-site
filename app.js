@@ -155,6 +155,99 @@ function countBy(items, key) {
   return m;
 }
 
+/* ================= 地址栏：每一屏都有自己的地址 =================
+ * CY 2026-11-10 15:2x：「所有结果页与视频页都应该有分享链接」「等待页也应该有让用户
+ * 晚点回来的入口」。这两件缺的是**同一个东西**：在此之前，这个站从头到尾只有一个网址
+ * ——搜什么、点进哪个问题、打开哪条视频，地址栏一个字都不变。于是：
+ *   · 想把一条视频发给朋友 ⟹ 只能发首页，朋友落地后还得自己再搜一遍
+ *   · 补搜要跑几分钟 ⟹ 用户只能守着那一页，关掉就找不回来了
+ * 用 replaceState 而不是 pushState：地址栏永远反映"你正在看什么"（分享要的就是这个），
+ * 但不往历史里塞一堆中间态——那会让后退键变成"退一格筛选"，而站上的回退入口
+ * 是面包屑和站名，不是浏览器后退。*/
+const URL_KEYS = ["d", "q", "topic", "node"];
+
+function shareUrl(videoId, lane) {
+  const p = new URLSearchParams();
+  if (state.domain) p.set("d", state.domain);
+  if (state.q) p.set("q", state.q);
+  if (state.topic) p.set("topic", state.topic);
+  if (state.node) p.set("node", state.node);
+  if (videoId) p.set("v", videoId);
+  if (lane) p.set("lane", "1");   // 只有"等待页"给出的地址带它：回来要接着看进度
+  const s = p.toString();
+  return location.origin + location.pathname + (s ? "?" + s : "");
+}
+
+function syncUrl(videoId) {
+  try { history.replaceState(null, "", shareUrl(videoId)); } catch (e) { /* 老浏览器就算了 */ }
+}
+
+/* 进站时把地址里的状态装回去。**在 data.json 到之前只装进 state，不做任何校验**——
+   节点/领域要等数据到了才知道存不存在，这里提前判会把合法链接判成坏链接。 */
+let PENDING_VIDEO = null;   // ?v= 指定的视频，等 data.json 到了再打开
+let PENDING_LANE = null;    // ?lane=1：他是从"等待页"存的地址回来的
+function restoreFromUrl() {
+  const p = new URLSearchParams(location.search);
+  if (!p.toString()) return;
+  if (p.get("d")) state.domain = p.get("d");
+  if (p.get("q")) state.q = p.get("q").trim().toLowerCase();
+  if (p.get("topic")) state.topic = p.get("topic");
+  if (p.get("node")) state.node = p.get("node");
+  PENDING_VIDEO = p.get("v") || null;
+  PENDING_LANE = p.get("lane") === "1" ? state.q : null;
+  const box = document.getElementById("q");
+  if (box && state.q) box.value = state.q;
+}
+
+/* 复制链接。clipboard API 在 https 下才有，GitHub Pages 是 https；
+   失败要**看得见地失败**（按钮上写"复制不了，长按地址自己拷"），不能假装复制了。 */
+function copyText(text) {
+  if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+  return new Promise((res, rej) => {
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    const ok = document.execCommand && document.execCommand("copy");
+    ta.remove();
+    ok ? res() : rej(new Error("execCommand failed"));
+  });
+}
+
+/* 分享按钮。手机上优先用系统分享面板（能直接发给微信/飞书里的人），
+   没有就退回复制链接——两条路都要给出可见回执，不能点完没反应。 */
+function shareBtnHtml(videoId, label, lane) {
+  return `<button class="share-btn" type="button" data-share="${esc(videoId || "")}"
+    ${lane ? 'data-share-lane="1"' : ""} title="复制这一页的地址">${esc(label || "分享")}</button>`;
+}
+
+function bindShareButtons(root) {
+  (root || document).querySelectorAll("[data-share]").forEach(b => {
+    if (b.dataset.bound) return;
+    b.dataset.bound = "1";
+    b.addEventListener("click", async ev => {
+      ev.stopPropagation();           // 卡片里的分享按钮不该顺手把卡片点开
+      const url = shareUrl(b.dataset.share || null, b.dataset.shareLane === "1");
+      const title = document.title;
+      /* ⚠️ 这里**故意不记 BI**：云端事件表有 kind 白名单，`share` 不在里面，发过去会被
+         静默丢掉（worker.js KINDS）。要记"分享了几次"得先在白名单加一行再部署 Worker
+         —— 那是一次生产部署，等 CY 下次批 Worker 部署时顺手加，不在这一版偷偷塞。*/
+      if (navigator.share) {
+        try { await navigator.share({ title, url }); return; }
+        catch (e) { if (e && e.name === "AbortError") return; /* 用户自己取消，别再弹复制 */ }
+      }
+      try {
+        await copyText(url);
+        const old = b.textContent;
+        b.textContent = "已复制链接";
+        b.classList.add("ok");
+        setTimeout(() => { b.textContent = old; b.classList.remove("ok"); }, 1800);
+      } catch (e) {
+        b.textContent = "复制不了，长按地址栏自己拷";
+      }
+    });
+  });
+}
+
 /* ---------- 状态改写（地图上每一次点击都走这里） ---------- */
 function go(patch) {
   // 换节点就把"其余N条"收回去：展开状态属于那一页，不该跟着导航走
@@ -175,7 +268,12 @@ function renderCrumbs() {
   if (state.topic) parts.push(`<button class="crumb" data-go="topic" style="color:${topicColor(state.topic)}">${esc(state.topic)}</button>`);
   if (state.node) parts.push(`<span class="crumb current">${esc(state.node)}</span>`);
   if (state.q) parts.push(`<span class="crumb q">搜索「${esc(state.q)}」<button class="crumb-x" data-go="clearq" title="清除搜索词">×</button></span>`);
-  el.innerHTML = parts.length > 1 ? parts.join(`<span class="sep">›</span>`) : "";
+  /* 分享按钮挂在面包屑这一行：**凡是面包屑出现的地方，就是"你正在看某一页"**
+     （搜索结果 / 主题 / 具体问题三种都算），首页没有面包屑也就不该有分享——
+     首页的地址人人都有。这样一个位置就覆盖了"所有结果页"，不必每种视图各加一个。 */
+  el.innerHTML = parts.length > 1
+    ? parts.join(`<span class="sep">›</span>`) + shareBtnHtml(null, "分享这一页")
+    : "";
   el.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => {
     if (b.dataset.go === "all") go({ topic: null, node: null });
     if (b.dataset.go === "topic") go({ node: null });
@@ -259,7 +357,7 @@ function renderMap() {
         </div>
       </div>`;
     }).join("");
-    if (!rows.length) html = `<div class="map-label">没有命中任何问题节点，换个说法试试，或点上面的「全部」回到地图。</div>`;
+    if (!rows.length) html = `<div class="map-label">没命中任何问题。换个说法，或点「全部」回地图。</div>`;
   }
 
   el.innerHTML = domainBarHtml() + html;
@@ -644,7 +742,7 @@ function renderResults() {
         ${q ? `<button class="btn-primary" id="want-this">我要这个 →</button>` : ""}
         <button class="linklike" id="reset-all">回到知识地图</button>
       </div>
-      <div class="empty-note">内容库还在扩充中——没过质量判定的不会上线。
+      <div class="empty-note">没过质量判定的不会上线。
         ${SEM.q === q && SEM.top.length && SEM.top[0].score >= SUGGEST_FLOOR
         ? `上面列出了我们认为最接近的几个问题，点一下就能看。` : ""}</div></div>`;
     el.querySelector("#reset-all").addEventListener("click", () => {
@@ -654,9 +752,9 @@ function renderResults() {
     const want = el.querySelector("#want-this");
     if (want) want.addEventListener("click", () => {
       recordExit("gap_wish", `${q} [from=empty]`);
-      want.outerHTML = `<span class="want-ok"><b>记下了，正在去找。</b>
-        我们会去找能正面回答它的内容，<b>核对过事实才会放上来</b>——
-        所以是分钟级的，每核完一条就会出现一条。</span>`;
+      // 文案一句话就够（CY 2026-11-10 15:3x：「页面上文案需要简洁有力，不要长篇大论」）。
+      // 下面的进度条自己会说在干什么，这里再解释一遍流程是重复占版面。
+      want.outerHTML = `<span class="want-ok"><b>记下了，正在去找。</b></span>`;
       // 缺口车道（CY 2026-11-10）：按钮不再只是"记一笔"，它真的会让本机去搜。
       startLane(q);
     });
@@ -703,6 +801,9 @@ function render() {
   /* 进了一个具体问题 ⟹ 品牌栏和主题标签云让路，主栏居中收窄（准则 10）。
      它们是"还没决定看什么"时的工具；已经决定了，留着只是噪音。 */
   document.body.classList.toggle("focused", Boolean(currentPage()) && !state.q);
+  // 地址栏跟着这一屏走（弹窗自己会再调一次带 ?v= 的）
+  syncUrl(document.getElementById("modal-overlay")?.classList.contains("open") ? MODAL_ID : null);
+  bindShareButtons();
 }
 
 /* 站名点一下回首页。focused 态下它是页面上**唯一**的回去入口（面包屑的「全部」是另一个，
@@ -778,6 +879,7 @@ function openModal(it) {
   m.innerHTML = `
     <div class="modal-head">
       <h2>${esc(it.title)}</h2>
+      ${shareBtnHtml(it.id, "分享")}
       <button class="modal-close" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
@@ -806,6 +908,11 @@ function openModal(it) {
       ${exitBlockHtml()}
     </div>`;
   document.getElementById("modal-overlay").classList.add("open");
+  /* 打开一条视频 ⟹ 地址栏变成这条视频自己的地址（?v=…）。发给朋友，他落地就在这条上，
+     不用再搜一遍。关掉时再退回这一页的地址。 */
+  MODAL_ID = it.id || null;
+  syncUrl(MODAL_ID);
+  bindShareButtons(m);
   bindExitButtons(m, it.id);
   emit("open", { item: it.id, has_points: !!(it.key_points && it.key_points.length) });
   m.querySelector(".modal-close").addEventListener("click", closeModal);
@@ -869,9 +976,12 @@ function edgeBlockHtml(it) {
     <button class="edge-nf" id="modal-notfound">这不是我想找的</button>
   </div>`;
 }
+let MODAL_ID = null;      // 当前打开的是哪条视频（地址栏的 ?v= 跟着它走）
 function closeModal() {
   document.getElementById("modal-overlay").classList.remove("open");
   document.getElementById("modal-content").innerHTML = "";
+  MODAL_ID = null;
+  syncUrl(null);
 }
 
 /* ---------- 两种离开 ----------
@@ -1020,15 +1130,13 @@ function renderLane(d) {
   // 两句都把我们的 bug 说成了内容的问题。
   if (raw.length && !items.length) {
     box.innerHTML = `<div class="lane"><div class="lane-head">我们这边出了点问题</div>
-      <div class="lane-sub">找到的内容我们自己读不出来了（旧的缓存格式），所以不给你看
-      半张卡。已经记下，刷新或稍后再点一次就会重新去找。</div></div>`;
+      <div class="lane-sub">结果我们自己读不出来了。刷新再点一次。</div></div>`;
     return;
   }
 
   if (d.budget_exceeded) {
     box.innerHTML = `<div class="lane"><div class="lane-head">今天的补内容额度用完了</div>
-      <div class="lane-sub">这不是搪塞：去平台找一次要真花钱，我们给它设了每天的硬上限，
-      宁可明天继续也不超支。你这句话已经记下了。</div></div>`;
+      <div class="lane-sub">找一次要花钱，每天有硬上限。明天继续，你这句话已记下。</div></div>`;
     return;
   }
   // 库里本来就有（环 0 命中）。
@@ -1036,46 +1144,56 @@ function renderLane(d) {
   // 库内容**，不是刚核完的新内容；第二道事实复核只覆盖了库里约一半（见 index.html 页脚）。
   // 口径要和"慢道新建内容"（下面 building/done 分支，那里确实逐条新核过）分开说清。
   if (d.state === "skipped" && items.length) {
+    // 解释句收进 `?`（版面上只留结论）：已知的事实错误会被挡掉，但不是每条都逐句复核过。
+    HINTS.laneok = "这些是库里已有的内容，都过了质量判定。已知的事实错误会被挡住，"
+      + "但库里只有一半多做过第二道逐句事实复核。";
     box.innerHTML = `<div class="lane ok"><div class="lane-head">其实我们有——是我们的搜索没搭上你的说法</div>
-      <div class="lane-sub">${esc(d.note || "")}。下面这些都过了质量判定；
-      已知的事实错误会被挡住，但不是每一条都做过逐句复核。</div>
+      <div class="lane-sub">${esc(d.note || "")}。都过了质量判定${hintBtn("laneok")}</div>
       <div class="lane-cards grid">${items.map(laneCardHtml).join("")}</div></div>`;
     bindLaneCards(box);
     return;
   }
   if (d.state === "skipped") {
     box.innerHTML = `<div class="lane"><div class="lane-head">这个我们不打算收</div>
-      <div class="lane-sub">${esc(d.note || "它不在「醒」要做的范围里")}。
-      与其给你一堆沾边的，不如说清楚我们没有。</div></div>`;
+      <div class="lane-sub">${esc(d.note || "它不在「醒」要做的范围里")}。</div></div>`;
     return;
   }
   if (d.state === "failed") {
     box.innerHTML = `<div class="lane"><div class="lane-head">没找成——是我们这边的问题</div>
-      <div class="lane-sub">去平台搜的那一跳失败了，不是"这个问题没有内容"。
-      已经记下，稍后会自己重试。</div></div>`;
+      <div class="lane-sub">去平台搜那一跳挂了，不是没有内容。已记下，会重试。</div></div>`;
     return;
   }
 
   /* 建设中 / 建完。⚠️ 这里的每一条**都是已核验的**（CY 2026-11-10 08:22 推翻了
      "先给未核验线索"那一版）：变的是"现在几条 / 最后几条"，不是"核没核"。
      所以它们用的是和平时一样的卡片，没有琥珀框、没有"还没核过"这类话术。 */
+  /* 文案一律短句（CY 2026-11-10 15:3x：「页面上文案需要简洁有力，不要长篇大论」）。
+     判准：**这一句他拿来干什么**——进度要一眼看出"还在动、到哪了"，结果要一眼看出
+     "有没有、几条"。流程怎么跑、为什么慢，是解释，不占版面。 */
   const building = d.state !== "done";
   const head = building
-    ? `<div class="lane-head"><span class="lane-spin"></span>正在为你建这个知识点</div>
+    ? `<div class="lane-head"><span class="lane-spin"></span>正在建这个知识点</div>
+       <div class="lane-sub">${items.length ? `已核完 <b>${items.length}</b> 条。` : `还在核第一条。`}
+          ${step ? `${esc(step)}（${secs} 秒）` : ""}</div>`
+    : `<div class="lane-head">${items.length ? "建好了" : "一条都没过判定"}</div>
        <div class="lane-sub">${items.length
-          ? `已经核完 <b>${items.length}</b> 条，放在下面了。`
-          : `还没有核完的——每核完一条就会出现一条。`}
-          ${step ? `当前：${esc(step)}（已等 ${secs} 秒）` : ""}<br>
-          核一条要取视频、转成文字、判断讲得对不对、再核对事实，所以是分钟级的。</div>`
-    : `<div class="lane-head">这个知识点建好了</div>
-       <div class="lane-sub">${items.length
-          ? `${items.length} 条，全部核对过事实。它们已经进了知识地图，下次直接搜得到。`
-          : `我们找了一圈，<b>没有一条过得了判定</b>——不是没找到，是找到的都不够格。
-             与其凑数给你，不如说实话。`}</div>`;
+          ? `${items.length} 条，已核对事实，已进地图。`
+          : `找到了内容，但没有一条够格。不凑数。`}</div>`;
+  /* 「晚点回来」的入口（CY 2026-11-10 15:2x：「等待页也应该有让用户晚点回来的入口」）。
+   * 建一个知识点是分钟级的，**不该要求人守在这一页**——而在此之前关掉页面就等于白等：
+   * 地址栏没有这个问题的任何痕迹，回来只能从头搜一遍、还不知道上次跑到哪了。
+   * 现在给的是**这一问的专属地址**（带 lane=1）：存下来、几分钟后打开，它会自己接着
+   * 显示进度或结果。刻意不做"留邮箱通知你"——这个产品没有账户、不建档案，
+   * 一个地址是我们能给的、最轻也最诚实的东西。*/
+  const back = building
+    ? `<div class="lane-back">${shareBtnHtml(null, "复制地址，晚点回来", true)}
+         <span class="lane-back-note">不用守着。</span></div>`
+    : "";
   box.innerHTML = `<div class="lane ${building ? "" : "ok"}">${head}
     ${items.length ? `<div class="lane-cards grid">${items.map(laneCardHtml).join("")}</div>` : ""}
-    </div>`;
+    ${back}</div>`;
   bindLaneCards(box);
+  bindShareButtons(box);
 }
 
 /* 补搜出来的内容：**用的就是结果列表那张卡片**（CY 2026-11-10 09:2x 报
@@ -1298,8 +1416,7 @@ function renderSuggest() {
     // 用户照它说的"过一会儿回来"，看到的还是一样的结果——这就是页面在替我们撒谎。
     el.innerHTML =
       `<div class="sg-label">这个问题我们还没有。</div>
-       <div class="sg-note">点下面结果区的「我要这个」会让我们现在就去找——不点的话，
-         这句话只是被记在缺口清单里，不会自动有人处理。</div>`;
+       <div class="sg-note">想现在就要，点下面的「我要这个」。</div>`;
     // 记一条"库里没有这个问题"——仅用于内容缺口清单，不会触发搜索（见上）。
     maybeRecordGap(state.q, SEM.top[0].score, "none");
     return;
@@ -1326,8 +1443,8 @@ function renderSuggest() {
            也可能不是一回事——你自己判断：</div>`
       : `<div class="sg-label">你想问的，也许是这几个问题：</div>`) +
     `<div class="chips">${chips}</div>` +
-    (allGap ? `<div class="sg-note">这些问题很重要，但我们现在还没有干净的答案，会继续寻找。</div>`
-      : unsure ? `<div class="sg-note">你那句话已经记进内容缺口清单了，我们会去找正面回答它的内容。</div>` : "");
+    (allGap ? `<div class="sg-note">这些还没有干净的答案，我们在找。</div>`
+      : unsure ? `<div class="sg-note">已记进缺口清单。</div>` : "");
   el.querySelectorAll("[data-sg]").forEach(b => b.addEventListener("click", () => {
     const d = b.dataset.sgDomain || null;
     if (d && state.domain && d !== state.domain) { state.domain = d; applyDomain(); }
@@ -1376,6 +1493,17 @@ function loadData(attempt = 1) {
       DOMAIN_LIST = d.domains || [];
       applyDomain();
       render();
+      /* 地址里带 ?v= ⟹ 把那条视频直接打开（分享链接的落点）。
+         **必须等 data.json 到了才找得到**，所以放在这里而不是进站时。
+         找不到就安静地留在它所在的那一页——别弹错，链接可能指向已下架的内容。 */
+      if (PENDING_VIDEO) {
+        const it = ALL_DATA.find(x => x.id === PENDING_VIDEO);
+        PENDING_VIDEO = null;
+        if (it) openModal(it);
+      }
+      /* ?lane=1 ⟹ 他是从"等待页"存的地址回来的：接着显示那一问的进度/结果。
+         （后端对已在队列里的问题只回状态、不会再花钱搜一遍。） */
+      if (PENDING_LANE) { const q = PENDING_LANE; PENDING_LANE = null; startLane(q); }
     })
     .catch(err => {
       if (attempt < 3) return setTimeout(() => loadData(attempt + 1), 800 * attempt);
@@ -1399,5 +1527,6 @@ function loadPages() {
     .catch(() => { /* 没有主题页就当没有，列表视图照常工作 */ });
 }
 
+restoreFromUrl();   // 必须在 loadData 之前：它一回来就 render，那时 state 得已经是地址里的样子
 loadData();
 loadPages();

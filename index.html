@@ -189,6 +189,16 @@ body.focused .card .summary{display:none}
 .crumb.q{color:#777;cursor:default}
 .crumb-x{border:none;background:#e8e8e8;color:#666;border-radius:50%;width:15px;height:15px;font-size:var(--fs-xs);line-height:1;cursor:pointer;margin-left:3px;padding:0}
 #crumbs .sep{color:#bbb}
+/* 分享按钮（CY 2026-11-10 15:2x 要的）。灰描边、不抢主按钮——它是出口不是号召：
+   我们要的是他把东西带走，不是他在这儿多点两下。面包屑行里靠右，弹窗头里在 ✕ 左边。 */
+.share-btn{margin-left:auto;border:1px solid var(--line);background:#fff;color:#666;
+  border-radius:999px;padding:2px 10px;font-size:var(--fs-xs);cursor:pointer;line-height:1.6;white-space:nowrap}
+.share-btn:hover{border-color:var(--accent);color:var(--accent)}
+.share-btn.ok{border-color:#2f855a;color:#2f855a}
+.modal-head .share-btn{margin-left:auto;align-self:center}
+.lane-back{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.lane-back .share-btn{margin-left:0}
+.lane-back-note{font-size:var(--fs-xs);color:#5a7a66}
 
 /* 首屏问题清单：首屏的"证据"。它比宣言重要，所以给它卡片级的存在感，但不抢搜索框 */
 #home-q:empty{display:none}
@@ -412,7 +422,7 @@ a.src:after{content:" →"}
       <!-- 2026-11-10 Alpha 前评估补的这一句：上面四条都为真（BI 是我们自己的 Worker、自己的域、
            不落 IP/UA/cookie），但封面图和播放画面是直连 B站/抖音/腾讯 的 ——
            平台那边看得到有人在看。不写出来，用户会把这四条读成"看视频也没人知道"，那就是误导。 -->
-      <br>封面和播放画面直接来自原平台，平台那边看得到。</div>
+      <br>封面和播放来自原平台，平台那边看得到。</div>
     <div class="libnote">库内 <span id="lib-count">—</span> 条，全部通过质量判定</div>
   </aside>
 
@@ -420,7 +430,7 @@ a.src:after{content:" →"}
     <div class="searchbar">
       <input id="q" type="text" placeholder="你想弄明白什么？">
     </div>
-    <p class="hint">按你自己的话问就行，用词不一样也能找到。搜不到是我们的问题，不是你的。</p>
+    <p class="hint">用你自己的话问。搜不到是我们的问题。</p>
     <div id="scope-hint"></div>
     <div id="crumbs"></div>
     <!-- 首屏的「这里已经答得比较全的问题」（CY 2026-11-10）：真实节点+真实条数，可点。
@@ -454,17 +464,16 @@ a.src:after{content:" →"}
 </div>
 
 <footer>
+  <!-- 2026-11-10 15:3x CY：「页面上文案需要简洁有力，不要长篇大论」。
+       原来这里是五行一整段灰字（他截图里那片）。留下的判准：**哪一句他看完会改变行为**
+       —— ① 我们的成功是你走掉（整个产品的立场，一句顶五句）② 没有哪几样东西（可验证的承诺，
+       不是形容词）③ 质量口径（不能夸口，这是 Alpha 前评估改过的那两句，**不许改回去**：
+       已复核 898 条里只有 295 条判 ok，229 条中低级事实错误仍在线，上线闸只挡 high）。
+       被删的是"我们只做三件事…"那句流程自述——它解释我们怎么干活，不改变任何人的下一步。 -->
   <div class="about">
-    传统视频站的成功是你留下来。<b>我们的成功是你走掉。</b>
-    所以这里没有无限滚动、没有自动连播、没有「猜你喜欢」，也没有账户和浏览档案。
-    我们只做三件事：按问题组织、挡掉标题党和明显讲错的、去掉重复，然后把你送回原作者那里。
-    <!-- 2026-11-10 Alpha 前评估改的这两句。原文是「核对关键事实」+「宁可少不放水」。
-         对照本机复审台账：已复核 898 条里只有 295 条判 ok，229 条带**中低级**事实错误仍在线
-         （上线闸只挡 high 级，这是定好的口径，不是 bug）。
-         「核对关键事实」会被读成"每条都核过"——那是页面在替我们夸口，和 08:2x 修掉的
-         "库里有 1620 条却写着没有内容"是同一类问题，只是这次夸的是质量。 -->
-    库里有一半多的内容做过第二道事实复核，剩下的还没逐条查过——看到讲错的，点一下「没找到我要的」。
-    当前处于技术验证阶段，内容持续扩充中。
+    <b>我们的成功是你走掉。</b>
+    没有无限滚动、自动连播、猜你喜欢，也没有账户和浏览档案。
+    <br>一半多的内容做过第二道事实复核，其余还没逐条查——看到讲错的，点「没找到我要的」。
   </div>
 </footer>
 <script src="app.js"></script>
