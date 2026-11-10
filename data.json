@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共954条",
+  "generated_note": "判定=合格的候选，共958条",
   "topics": [
     "概念原理",
     "方法实操",
@@ -10,7 +10,7 @@
     {
       "id": "ai1",
       "label": "AI 与大模型",
-      "count": 746
+      "count": 750
     },
     {
       "id": "fin1",
@@ -25784,6 +25784,118 @@
       "topic": "概念原理",
       "node": "RAG到底是怎么工作的",
       "category": "23.RAG到底是怎么工作的",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1A8H56vEHi",
+      "video_id": "BV1A8H56vEHi",
+      "title": "AI视频剪辑工作流：规则与脚本的协作",
+      "original_title": "剪了上百条视频后，我把这套剪辑流程\"喂\"给了 AI",
+      "author": "Tech指南",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1A8H56vEHi",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/badc011ce664cec9654d53a7b6aa4f8c8c323e1d.jpg",
+      "published_at": "2026-10-25T09:48:09+00:00",
+      "key_points": [
+        "视频后期最耗时的是重复劳动：删口误、压气口、加字幕卡点，一条10分钟片子要8-9小时",
+        "核心方案：规则手册（白话文档）+脚本工具（执行删除、检查工具），不是一键自动而是定规则让AI干活",
+        "工作流五步：素材准备→文字转录→剪切重录→写分镜→渲染检查，每步由AI执行用户拍板",
+        "AI学习机制：每剪一刀按声音检查不切词中间，用越多越懂你的口气和剪辑风格",
+        "可控性保证：通过对话框用大白话调整，不是黑箱自由发挥，关键决定权在用户"
+      ],
+      "duration_s": 924.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解将剪辑经验规则化后交给AI执行，通过规则手册+脚本工具自动化口误删除、气口压缩、动画包装等重复劳动，AI接触越多越懂用户风格。",
+      "reason": "转写清晰讲明AI在视频剪辑中的角色定位与工作流程，说明了为什么要这样做、怎么避免全自动的风险。引用原文：'我能不能把这些经验写下来交给AI去执行呢...我只负责定好规矩...剩下的交给AI'（20字） | 引用:「这套东西的核心...它并不是一个按钮...它是两样东西：一套规则手册加上一堆小工具。规则手册就是一本用大白话写的文档...小工具负责具体的干活」",
+      "topic": "方法实操",
+      "node": "AI内容创作工具工作流",
+      "category": "(地图缺口)AI内容创作工具工作流",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1SkpZ6uEzB",
+      "video_id": "BV1SkpZ6uEzB",
+      "title": "本地与云端声音克隆MCP接入指南",
+      "original_title": "让 AI Agent 用上你的声音！本地 vs 云端 MCP 声音克隆教程",
+      "author": "Tech指南",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1SkpZ6uEzB",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/904347184d7d6e55b48aa4baa888caea1d8ef1c4.jpg",
+      "published_at": "2026-10-13T02:20:00+00:00",
+      "key_points": [
+        "MCP（Model Context Protocol）让AI Agent无需网页切换就能调用声音克隆，一句话完成列音色、提交任务、查进度、下载",
+        "本地路线：Voicebox免费开源，数据完全不出机器，但安装模型需下载数G、显卡要50系以上",
+        "云端路线：Voice Magic配置更快、效果通常更好、对本机设备无要求，适合日常出片",
+        "使用场景：录10-20秒声音样本一次，之后所有口播文案都能用你声音念，口误不用逐句重录",
+        "MCP配置：在Claude/Code等工具里配置MCP服务，整个流程在对话框里完成无需切换软件"
+      ],
+      "duration_s": 904.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解用MCP协议将声音克隆工具集成到AI Agent的两条路线：本地部署Voicebox（数据不离机，对显卡有要求）和云端Voice Magic（配置快效果好但需网络），录一次样本后AI可用你的声音朗读所有文案。",
+      "reason": "转写直接讲了两条路线的选择标准（本地vs云端权衡）和具体配置步骤，说明了MCP的实际作用。引用原文：'你录一条十几20秒的声音样本之后...所有的口播文案AI agent都能用你的声音去念出来...拍视频时说错话也不用逐句重录'（28字） | 引用:「在Claude Code甚至是Codex之类的AI agent的工具里配置好MCP服务之后...在AI agent的对话框里一句话就能完成工具的调用...给他们分配不同的声音克隆任务」",
+      "topic": "方法实操",
+      "node": "AI工具使用教程",
+      "category": "(地图缺口)AI工具使用教程",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1Hgao6yEDL",
+      "video_id": "BV1Hgao6yEDL",
+      "title": "本地部署Qwen 3.8+DeepSeek框架实战",
+      "original_title": "27B 本地模型能当生产力吗？Qwen 3.8 + DeepSeek Harness 四个任务实录，翻车后我换了 DeepSeek v4 flash",
+      "author": "Tech指南",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1Hgao6yEDL",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/3fb2a902f93a75ff7a05af88937908a97d74e30c.jpg",
+      "published_at": "2026-09-30T04:07:19+00:00",
+      "key_points": [
+        "千问3.8 27B参数能力：原生多模态，部分测试超Claude 3.5，用量化版本最小16G可在高端消费显卡跑",
+        "部署流程：LM Studio下载→搜索千问3.8→选4bit/5bit/6bit/8bit量化版本→局域网内连DeepSeek框架",
+        "实测能力：聊天流畅准确，图片识别细节完整（认出麦克风、领夹等），但编码任务容易中途崩溃",
+        "本地vs云端权衡：完全免费无成本，数据不出机器，但遇冷能力会失手（视频中写声音插件写到一半崩了）",
+        "量化精度影响：4bit最小体积但效果可能欠佳，8bit效果最好但体积翻倍，需根据显卡显存选择"
+      ],
+      "duration_s": 820.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解在M1Mac/Windows上部署千问27B开源模型并配合DeepSeek Harness框架完成四个实战任务，展示本地模型的能力边界（聊天和图像识别可以、复杂编码会失败）。",
+      "reason": "转写讲了具体部署步骤、参数选择和实际任务对比，说明了本地27B模型的实用能力和限制条件。引用原文：'千文3.82107B...我本地部署好之后...本想让他帮我写一个deep sick honeys的声音提醒插件...结果写到一半...他崩了...只能换deep sk v4flash来救场'（32字） | 引用:「千问开源才没几天...整个社区就炸锅了...第一是他的能力够用...以前的本地模型是能跑但是干不了活...这一次它是能跑还能干活」",
+      "topic": "方法实操",
+      "node": "AI工具使用教程",
+      "category": "(地图缺口)AI工具使用教程",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1SThe6sE39",
+      "video_id": "BV1SThe6sE39",
+      "title": "快判题AI与聊天大模型的根本区别",
+      "original_title": "Jev 是什么？3 分钟看懂 TypeSafe 的「快判题 AI」",
+      "author": "Tech指南",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1SThe6sE39",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/18815c0b15f259155face072d559e80cb3881250.jpg",
+      "published_at": "2026-09-21T04:46:38+00:00",
+      "key_points": [
+        "心理学启发：聊天大模型是\"慢思考\"陪你慢慢聊，JAVE是\"快思考\"机器快速拍板的判断脑",
+        "输出形式根本差异：聊天逐字蹦出数分钟，JAVE一次性填好固定表格，不会出现表外选项",
+        "响应速度：同难度判断JAVE 0.07-0.5秒，聊天模型往往需几十秒到几分钟",
+        "输出质量：每项标注把握程度百分比，像体检报告的参考区间，老实交代不确定因素",
+        "应用场景限制：会员续费识别、挂号分流、电商退货分类、内容违规审核等有标准答案的事，不适合头脑风暴和故事创作"
+      ],
+      "duration_s": 199.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解TypeSafe的JAVE产品与大模型聊天的本质不同：JAVE专做固定表格快速判断，响应延迟仅0.07-0.5秒且准确度稳定，每项标注把握程度，适合自动化流程而非创意输出。",
+      "reason": "转写直接对比了产品的设计目标、工作机制、输出形式和适用场景，清晰讲明了JAVE与聊天大模型的根本差异。引用原文：'聊天大模型更像是陪你慢慢聊的慢思考...而JAVE练的是判得准...一次把整张表填完...官方称延迟只有0.07到0.5秒'（28字） | 引用:「他更像是一个柜台专员...你递过去一张情况说明...他只在固定的表格里勾选意图、紧急程度、该不该升级人工...并且每一项还会标上我有几成把握」",
+      "topic": "概念原理",
+      "node": "AI Agent产品功能介绍",
+      "category": "(地图缺口)AI Agent产品功能介绍",
       "domain": "ai1"
     }
   ]
