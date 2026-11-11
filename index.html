@@ -152,7 +152,15 @@ button{font-family:inherit}
    2026-11-10 16:5x 曾把它从页脚搬进左栏，理由是"首页挂着一千多条内容，页脚在几十屏
    之外等于没写"——那个理由**今天不成立了**：首页不再铺内容（体验审查 §1），页脚就在
    第二屏，承诺和它的边界重新摆在了同一处。 */
-.purity{font-size:var(--fs-xs);color:var(--faint);margin-top:10px;line-height:1.6;max-width:720px}
+/* 🔴 `margin:10px auto 0` 里的 `auto` 是 2026-11-11 04:2x 补的，CY 一句「0.11 一上来的
+   主页就有问题，你自己看」。病根：页脚在 `.layout`（max-width:1180 居中）**之外**，
+   自己横跨整个视口；`.about` 写了 `margin:0 auto` 所以居中，`.purity` 只写了 `max-width`
+   **没写 auto** ⟹ 它贴在页脚的左内边距上，而旁边那句承诺在页面正中 ——
+   两块本该"承诺 + 它的边界"挨在一起的文字，被拉到屏幕两头，看起来像掉出版心的残留。
+   🔑 **它在窄屏上看不出来**（宽度不够时居中和靠左几乎同一个位置），所以手机回归套件
+   一直是绿的；这是 11-10 16:5x 把它从左栏搬回页脚时漏掉的一行。
+   ⟹ 判据必须在**桌面宽度**上量"和 .about 的中心对齐"，见 tests/site/footer_align.py。 */
+.purity{font-size:var(--fs-xs);color:var(--faint);margin:10px auto 0;line-height:1.6;max-width:720px}
 .libnote{font-size:var(--fs-xs);color:var(--faint-2);margin-top:6px}
 @media (max-width:899px){.libnote{display:none}}
 
@@ -473,6 +481,51 @@ body.mine-mode #map,body.mine-mode #home-q,body.mine-mode #suggest,
 body.mine-mode #answer,body.mine-mode #family-rule,body.mine-mode #crumbs{display:none}
 .mine-head{display:flex;align-items:baseline;gap:12px;margin:var(--sp-3) 0 var(--sp-2)}
 .mine-head b{font-size:var(--fs-xl)}
+/* ── 补搜的页内浮层（#lane-float / .lane-toast）──
+   🔴 **2026-11-11 04:4x 查实：这个浮层从 11-10 上线起就一行 CSS 都没有。**
+   markup 有、逻辑有、判据也有（lane_toast.py 全绿），**唯独没有样式** ⟹ 它一直是
+   文档流末尾的一个裸 `div`，吊在整页最下面、贴着左边界，文字还被切掉半个字。
+   CY 11-11 的截图里那个"在左边的跳转入口"就是它——他以为那是入口，其实那是一个
+   **没穿衣服的提示框**。
+   🔑 **为什么判据没拦住**：`lane_toast.py` 验的是 DOM 在不在、文案对不对、两个阶段能不能
+   各自关掉——**从不验几何**。"元素存在"和"元素长在该在的地方"是两件事，而只验前者的判据
+   会在后者彻底崩掉时照样全绿。⟹ 已给它补上位置判据。
+   z-index 60：在正文之上、在弹窗（100）之下——提示永远不该盖住用户正在读的那条内容。 */
+#lane-float:empty{display:none}
+.lane-toast{position:fixed;z-index:60;right:16px;bottom:16px;
+  max-width:min(360px,calc(100vw - 32px));display:flex;align-items:stretch;
+  background:var(--card);border:var(--hair) solid var(--line);border-radius:var(--radius);
+  box-shadow:0 6px 20px rgba(0,0,0,.14);overflow:hidden}
+.lane-toast.done{border-color:var(--ok)}
+.lf-body{flex:1;min-width:0;text-align:left;padding:10px 12px;font:inherit;
+  font-size:var(--fs-sm);color:var(--ink);background:none;border:0;cursor:pointer;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lf-body:hover{color:var(--accent)}
+.lf-close{flex:0 0 32px;background:none;border:0;border-left:var(--hair) solid var(--line);
+  color:var(--faint-2);font-size:16px;line-height:1;cursor:pointer}
+.lf-close:hover{color:var(--ink-3)}
+/* 手机上横跨底部：右下角那个尺寸在 390 宽的屏上只剩半句话 */
+@media (max-width:899px){.lane-toast{right:10px;left:10px;bottom:10px;max-width:none}}
+
+/* ── 「我要补的」（CY 2026-11-11 04:1x）──
+   入口与收藏同形（同一个 .mine-btn），区别只在**正在补的时候那颗呼吸点**：
+   这份清单会自己变，收藏不会。 */
+#asks-entry:not(:empty){margin-top:10px}
+#asks-entry .lane-spin{margin-right:5px;vertical-align:baseline}
+.ask-list{display:flex;flex-direction:column;gap:6px}
+.ask-row{display:flex;align-items:stretch;gap:6px}
+.ask-go{flex:1;min-width:0;text-align:left;padding:10px 12px;cursor:pointer;
+  border:var(--hair) solid var(--line);border-radius:var(--radius);background:var(--card);
+  display:flex;flex-direction:column;gap:3px;font:inherit;color:var(--ink)}
+.ask-go:hover{border-color:var(--mute)}
+.ask-q{font-size:var(--fs-md);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ask-st{font-size:var(--fs-sm);color:var(--mute)}
+/* 跑完的那条压暗一档：清单里同时有"在动的"和"已经结束的"，不分层会一样抢眼 */
+.ask-row.done .ask-q{color:var(--ink-3)}
+.ask-del{width:34px;flex:0 0 34px;cursor:pointer;font-size:18px;line-height:1;
+  border:var(--hair) solid var(--line);border-radius:var(--radius);
+  background:var(--card);color:var(--faint-2)}
+.ask-del:hover{color:var(--warn);border-color:var(--warn)}
 .mine-gone{margin-top:14px;font-size:var(--fs-sm);color:var(--warn);line-height:1.6}
 .verbtn{background:none;border:none;padding:0;margin-left:8px;font:inherit;color:var(--mute-2);
   text-decoration:underline;text-underline-offset:3px;cursor:pointer}
@@ -579,6 +632,12 @@ a.src:after{content:" →"}
     <!-- 版本号也从页脚搬上来，理由同上。它在手机上**不隐藏**：它是用户确认"我看到的是
          哪一版"的唯一入口，藏起来就等于没有。 -->
     <div class="verline" id="verline"></div>
+    <!-- 「我要补的」：用户让我们去找的问题，存在他自己的浏览器里，由他自己删
+         （CY 2026-11-11 04:1x：「它就应该在我左边或者某个地方，被我管理起来，
+         这是核心的价值啊」）。摆在收藏**上面**是因为它会动——正在补的那条带一颗呼吸点，
+         而收藏是静态的；会动的东西放在下面会让人一直往下瞟。
+         没有请求时这里是空的（同收藏：空入口只会让人点进去扑空）。 -->
+    <div id="asks-entry"></div>
     <!-- 我的收藏入口：放左栏（和版本号同理——首页很长，底部等于没有）。
          没有收藏时这里是空的：空的入口只会让人点进去扑空。 -->
     <div id="mine-entry"></div>

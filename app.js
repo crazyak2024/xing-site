@@ -51,7 +51,7 @@ let ALL_DATA = [];      // 全部内容（跨领域）
 let DATA_EDGES = {};    // 知识地图的边：{节点名: [{type,dst,why}]}，详情页用
 let TOPICS = [];
 let DOMAIN_LIST = [];   // [{id,label,count}]，只含真有合格内容的领域
-const state = { q: "", topic: null, node: null, domain: null, mine: false };
+const state = { q: "", topic: null, node: null, domain: null, mine: false, asks: false };
 
 /* 哪些主题行在 S1/S2 被手动展开过（CY 2026-11-08 10:5x：「section下tag太多了，无法阅读了，
    而且把视频推到太下面」）。不进 state/URL——只是这一屏的临时展示状态，换个主题/搜索词
@@ -176,6 +176,7 @@ function shareUrl(videoId, lane) {
   if (lane) p.set("lane", "1");   // 只有"等待页"给出的地址带它：回来要接着看进度
   if (REL_OPEN) p.set("rel", "1");
   if (state.mine) p.set("mine", "1");  // 更新记录面板也有自己的地址（可以直接发"看我们改了什么"）
+  if (state.asks) p.set("asks", "1");  // 「我要补的」也要能用地址回来（他刷新丢掉入口就是这件事）
   const s = p.toString();
   return location.origin + location.pathname + (s ? "?" + s : "");
 }
@@ -199,6 +200,7 @@ function restoreFromUrl() {
   PENDING_LANE = p.get("lane") === "1" ? state.q : null;
   PENDING_REL = p.get("rel") === "1";
   if (p.get("mine") === "1") state.mine = true;
+  if (p.get("asks") === "1") state.asks = true;
   const box = document.getElementById("q");
   if (box && state.q) box.value = state.q;
 }
@@ -254,6 +256,14 @@ function bindShareButtons(root) {
 
 /* ---------- 状态改写（地图上每一次点击都走这里） ---------- */
 function go(patch) {
+  /* 两个面板（我的收藏 / 我要补的）是**旁路视图**：任何一次真的去看内容的导航都该关掉它们。
+     少了这一条就会出现"在收藏页里搜了个词，结果还停在收藏页"——两边各自记得画自己，
+     但没人负责在离开时关门。`mine` 本来就有这个毛病，`asks` 进来之前先一起补上。
+     显式写了 mine/asks 的调用（比如从首页点进"我要补的"）以调用方为准。 */
+  if (["q", "node", "topic", "domain"].some(k => k in patch)) {
+    if (!("mine" in patch)) patch.mine = false;
+    if (!("asks" in patch)) patch.asks = false;
+  }
   // 换节点就把"其余N条"收回去：展开状态属于那一页，不该跟着导航走
   if ("node" in patch && patch.node !== state.node) evExpanded = false;
   mapExpanded = false;   // 地图的展开同理：换了一屏就该重新收起
@@ -910,14 +920,15 @@ function render() {
   renderHomeQuestions();
   renderScopeHint();
   renderAnswer();
-  if (state.mine) { renderMine(); } else { renderResults(); }
+  refreshAsksUI();
+  if (state.asks) { renderAsks(); } else if (state.mine) { renderMine(); } else { renderResults(); }
   /* 进了一个具体问题 ⟹ 品牌栏和主题标签云让路，主栏居中收窄（准则 10）。
      它们是"还没决定看什么"时的工具；已经决定了，留着只是噪音。 */
-  document.body.classList.toggle("mine-mode", Boolean(state.mine));
+  document.body.classList.toggle("mine-mode", Boolean(state.mine || state.asks));
   /* decided：**决定了看什么**（搜了词 / 进了问题）⟹ 品牌栏压成一行、地图折起。
      focused 是它的子集，只在"有主题页且没有搜索词"时额外生效（地图整块让路、
      卡片不重复列要点）——先搜词再点节点那条路径走的是 decided，不是 focused。 */
-  document.body.classList.toggle("decided", decided() && !state.mine);
+  document.body.classList.toggle("decided", decided() && !state.mine && !state.asks);
   document.body.classList.toggle("focused", Boolean(currentPage()) && !state.q);
   // 地址栏跟着这一屏走（弹窗自己会再调一次带 ?v= 的）
   syncUrl(document.getElementById("modal-overlay")?.classList.contains("open") ? MODAL_ID : null);
@@ -1284,12 +1295,14 @@ function startLane(q) {
   if (!COLLECT_URL || !q) return;
   if (LANE.timer) clearInterval(LANE.timer);
   LANE = { q, timer: null, t0: Date.now(), state: "new", data: null, floatDismissedFor: "" };
+  recordAsk(q);                                        // 落到这台设备上，刷新也还在
   if (state.q === q) renderLane({ state: "new", results: [] });
   const ask = () => {
     fetch(`${COLLECT_URL}/rtsearch`, {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ q }),
     }).then(r => r.json()).then(d => {
+      updateAsk(q, d);                                 // 不管用户还在不在看，清单都要记对
       if (LANE.q !== q) return;                       // 用户已经换了搜索词，丢弃旧响应
       LANE.state = d.state || "";
       LANE.data = d;
@@ -1303,6 +1316,162 @@ function startLane(q) {
   };
   ask();
   LANE.timer = setInterval(ask, LANE_POLL_MS);
+}
+
+/* ══════════ 「我要补的」：请求本身存在这台设备上（CY 2026-11-11 04:1x）══════════
+ * 他的话：「我刚刚搜了24小时血压仪有用吗？然后你说给我补，那在左边有一个跳转的入口，
+ * 但我刷新一下这现在入口又没有了。按道理如果用同一个 Chrome 的 profile，如果没有去清
+ * 我的 cache，这个跳转入口应该都在才对，直到我把它给删掉。否则它就应该在我左边或者
+ * 某个地方，被我管理起来，**这是核心的价值啊**」。
+ *
+ * 他说得对，而且病根很直白：`LANE` 从头到尾只是一个 **JS 变量**（`let LANE = {...}`），
+ * 刷新就没了。这不是"提示消失"那么轻——**用户让我们去找一件东西，这件事本身不见了**。
+ * 补内容要几分钟，几分钟里他刷新一次、或从别的标签页回来，这条请求就查无此人。
+ *
+ * ⟹ 请求和收藏同级：**存在这台设备的 localStorage 里，由用户自己删**（同 MARKS 的
+ * 三条承诺：只在本机、清浏览器数据会一起清掉、不拿它做任何推荐）。
+ *
+ * 🔑 **为什么只自动续"刚才还在跑的那些"**：`/rtsearch` 的云端缓存只活 24 小时。
+ * 对一条缓存已过期的问题再 POST 一次，等于**重新发起一次真花钱的补搜**。
+ * 所以规则是：**自动轮询只给年龄 < `ASK_RESUME_MS` 且还没跑完的**；
+ * 已跑完的、或太老的，只显示存下来的状态，**用户点进去才重新发起**
+ * ——那时它和他当初点「我要这个」是同一个动作，再花一次钱不是意外。
+ */
+const ASK_KEY = "xing.asks.v1";
+const ASK_RESUME_MS = 30 * 60 * 1000;   // 进站自动续的年龄上限（超过就只显示，不重发）
+const ASK_MAX = 50;
+let ASKS = [];              // 最近的在前
+let ASK_WRITABLE = true;    // 无痕模式/配额满时 localStorage 会抛，要诚实告诉用户
+
+function loadAsks() {
+  try {
+    const raw = localStorage.getItem(ASK_KEY);
+    if (raw) ASKS = JSON.parse(raw);
+  } catch (e) { ASK_WRITABLE = false; }
+  if (!Array.isArray(ASKS)) ASKS = [];
+}
+function saveAsks() {
+  try { localStorage.setItem(ASK_KEY, JSON.stringify(ASKS.slice(0, ASK_MAX))); }
+  catch (e) { ASK_WRITABLE = false; }
+}
+function askTerminal(a) {
+  return ["done", "skipped", "failed"].includes(a.state) || a.budget_exceeded;
+}
+function askCount() { return ASKS.length; }
+function asksBuilding() { return ASKS.filter(a => !askTerminal(a)).length; }
+
+function recordAsk(q) {
+  const i = ASKS.findIndex(a => a.q === q);
+  const prev = i >= 0 ? ASKS[i] : null;
+  if (i >= 0) ASKS.splice(i, 1);
+  // 重新发起同一个问题：**保留第一次提出的时间**（"我什么时候让你们找的"是用户的记忆锚点），
+  // 但状态清回进行中——否则页面会一边转圈一边显示上一次的"建好了"。
+  ASKS.unshift({ q, at: prev ? prev.at : Date.now(), touched: Date.now(),
+                 state: "new", n: 0, note: "" });
+  saveAsks(); refreshAsksUI();
+  if (state.asks) renderAsks();
+}
+function updateAsk(q, d) {
+  const a = ASKS.find(x => x.q === q);
+  if (!a) return;
+  a.state = d.state || a.state;
+  a.budget_exceeded = !!d.budget_exceeded;
+  a.n = (Array.isArray(d.results) ? d.results : []).filter(laneUsable).length;
+  a.note = (d.note || "").slice(0, 120);
+  a.touched = Date.now();
+  saveAsks(); refreshAsksUI();
+  if (state.asks) renderAsks();
+}
+function removeAsk(q) {
+  ASKS = ASKS.filter(a => a.q !== q);
+  saveAsks(); refreshAsksUI();
+  if (state.asks) renderAsks();
+}
+
+/** 一条请求现在该怎么跟用户说。**不合并"还没跑完"和"跑完了但没有"**——
+ *  那两件事在用户那里完全不同（一个值得等，一个不值得）。 */
+function askStatusText(a) {
+  if (a.budget_exceeded) return "今天的补内容额度用完了";
+  if (a.state === "failed") return "没找成——是我们这边的问题";
+  if (a.state === "skipped") return a.n ? `库里已经有 ${a.n} 条` : "不在我们收的范围里";
+  if (a.state === "done") return a.n ? `补好了，${a.n} 条` : "跑完了，没有一条够格";
+  // 非终态：区分"正在跑"和"我们没跟上"——后者不该显示成一个永远转的圈
+  return (Date.now() - a.touched) > ASK_RESUME_MS ? "还没跟完，点一下接着看" : "正在补…";
+}
+
+function refreshAsksUI() {
+  const el = document.getElementById("asks-entry");
+  if (!el) return;
+  const n = askCount();
+  const building = asksBuilding();
+  el.innerHTML = n
+    ? `<button class="mine-btn" id="asks-open">${building ? '<span class="lane-spin"></span>' : ""}
+         我要补的 <span class="mine-n">${n}</span></button>`
+    : "";
+  const btn = document.getElementById("asks-open");
+  if (btn) btn.addEventListener("click", () => go({ asks: true, mine: false, q: "", node: null, topic: null }));
+}
+
+function renderAsks() {
+  const el = document.getElementById("results");
+  const bar = document.querySelector(".toolbar");
+  if (bar) bar.hidden = true;
+  if (!el) return;
+  const head = `<div class="mine-head"><b>我要补的</b>
+      <button class="linklike" id="asks-back">回首页</button></div>`;
+  const note = `<div class="mine-note">
+      这份清单只存在<b>这台设备的浏览器</b>里：我们的服务器上没有它，
+      所以也<b>不会</b>拿它给你做任何推荐。<br>
+      清掉浏览器数据（或换一台设备、换一个浏览器）它会一起没有。${
+        ASK_WRITABLE ? "" : "<br><b>这个浏览器不让我们存东西</b>（无痕模式？），关掉页面就会丢。"}
+    </div>`;
+  if (!ASKS.length) {
+    el.innerHTML = head + `<div class="empty">还没有让我们补过内容。
+      <div class="empty-note">搜一个我们还没收的问题，页面上会有一颗「我要这个」。</div></div>` + note;
+    document.getElementById("asks-back")?.addEventListener("click", () => go({ asks: false }));
+    return;
+  }
+  const rows = ASKS.map(a => {
+    const done = askTerminal(a);
+    return `<div class="ask-row${done ? " done" : ""}">
+      <button class="ask-go" data-askgo="${esc(a.q)}">
+        <span class="ask-q">${esc(a.q)}</span>
+        <span class="ask-st">${done ? "" : '<span class="lane-spin"></span>'}${esc(askStatusText(a))}</span>
+      </button>
+      <button class="ask-del" data-askdel="${esc(a.q)}" aria-label="删掉这条"
+        title="从这台设备上删掉">&times;</button>
+    </div>`;
+  }).join("");
+  el.innerHTML = head + `<div class="ask-list">${rows}</div>` + note;
+  document.getElementById("asks-back")?.addEventListener("click", () => go({ asks: false }));
+  el.querySelectorAll("[data-askdel]").forEach(b =>
+    b.addEventListener("click", () => removeAsk(b.dataset.askdel)));
+  el.querySelectorAll("[data-askgo]").forEach(b =>
+    b.addEventListener("click", () => {
+      const q = b.dataset.askgo;
+      const box = document.getElementById("q");
+      if (box) box.value = q;
+      go({ asks: false, q, node: null, topic: null });
+      // 点进去才重新发起：缓存没过期就是免费读一次，过期了就等于他重按一次「我要这个」
+      startLane(q);
+    }));
+}
+
+/** 进站时把"刚才还在跑"的那几条接回来。**这是 CY 报的那个 bug 的正解**：
+ *  刷新之后入口还在，而且还在动。太老的不自动重发（见 ASK_RESUME_MS 的注释）。 */
+function resumeAsks() {
+  if (!COLLECT_URL) return;
+  const live = ASKS.filter(a => !askTerminal(a) && (Date.now() - a.touched) < ASK_RESUME_MS);
+  if (!live.length) return;
+  // 只让**最近那一条**驱动悬浮提示和内联进度框（同一时刻弹两个提示是噪音）；
+  // 其余的只把状态拉新，好让清单里的字是真的。
+  startLane(live[0].q);
+  live.slice(1, 4).forEach(a => {
+    fetch(`${COLLECT_URL}/rtsearch`, {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ q: a.q }),
+    }).then(r => r.json()).then(d => updateAsk(a.q, d)).catch(() => { /* 下次进站再说 */ });
+  });
 }
 
 
@@ -1932,10 +2101,17 @@ function loadData(attempt = 1) {
       /* ?lane=1 ⟹ 他是从"等待页"存的地址回来的：接着显示那一问的进度/结果。
          （后端对已在队列里的问题只回状态、不会再花钱搜一遍。） */
       if (PENDING_LANE) { const q = PENDING_LANE; PENDING_LANE = null; startLane(q); }
+      /* 刷新/重新进站时，把"刚才还在补"的那几条接回来（CY 2026-11-11 04:1x 报的
+         「刷新一下这入口又没有了」）。放在这里而不是启动时：它会渲染内联进度框，
+         那要等 data.json 到了页面才成形。 */
+      else resumeAsks();
     })
     .catch(err => {
       if (attempt < 3) return setTimeout(() => loadData(attempt + 1), 800 * attempt);
       DATA_LOADED = true;   // 别卡在"加载中"——失败要说失败
+      /* 数据没取到**不代表**用户那几条请求该失联：它们是两件独立的事
+         （清单来自本机 localStorage，进度来自我们的 Worker）。 */
+      refreshAsksUI(); resumeAsks();
       document.getElementById("results").innerHTML =
         `<div class="empty">内容没加载出来（${esc(String(err.message || err))}）。<br>
          <button class="linklike" onclick="location.reload()">重新加载</button>
@@ -1956,6 +2132,12 @@ function loadPages() {
 }
 
 loadMarks();
+loadAsks();     // 「我要补的」要在 restoreFromUrl 之前装好：?asks=1 一进来就要画得出
+/* 入口**不等 data.json**：它画的是用户自己的清单，和库里有什么内容无关。
+   原来它只在 render() 里刷，而 render() 要等数据到——data.json 慢一秒、或者干脆没取到，
+   左栏就有一秒（或永远）看不到"我要补的"。而这正是 CY 报的那个症状的形状，
+   判据第一次跑就在这里红了。 */
+refreshAsksUI();
 restoreFromUrl();   // 必须在 loadData 之前：它一回来就 render，那时 state 得已经是地址里的样子
 loadData();
 loadPages();
