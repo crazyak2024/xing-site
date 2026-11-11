@@ -116,7 +116,10 @@ button{font-family:inherit}
      CY 2026-11-10 手机实测：原来要滚过六行宣言 + 两颗按钮才看得到内容。 */
   .manifesto{display:flex;gap:7px;margin-top:6px}
   .manifesto li{font-size:12px;letter-spacing:0;font-weight:600;color:var(--sub)}
-  .manifesto-positive{display:none}
+  /* 价值陈述**手机上也要有**（2026-11-10 体验审查 §7）。此前它只在桌面侧栏的灰字里，
+     而手机是主场 ⟹ 首屏从头到尾没有一句说"你能更快拿到什么"，只有立场和口径。
+     立场不是首屏的工作，证明有用才是（准则 1 的直接推论）。 */
+  .manifesto-positive{display:block;font-size:var(--fs-sm);color:var(--ink-4);margin:7px 0 0}
   .brand-panel{padding:12px 16px 6px}
   .brand-panel h1{font-size:19px;display:inline-flex;vertical-align:middle}
   .brand-panel .tagline{display:inline-block;margin-left:8px}
@@ -145,9 +148,13 @@ button{font-family:inherit}
 .exit-ask button{padding:6px 9px;font-size:var(--fs-sm);border:1px solid var(--line);background:var(--card);border-radius:6px;cursor:pointer}
 @media (min-width:900px) and (max-width:1100px){.exit-btn{font-size:var(--fs-sm)}}
 
-.purity{font-size:var(--fs-xs);color:var(--faint);margin-top:16px;line-height:1.6}
+/* 口径（不要账户·不认识你·…）**在页脚**，和它要划边界的那句承诺摆在一起。
+   2026-11-10 16:5x 曾把它从页脚搬进左栏，理由是"首页挂着一千多条内容，页脚在几十屏
+   之外等于没写"——那个理由**今天不成立了**：首页不再铺内容（体验审查 §1），页脚就在
+   第二屏，承诺和它的边界重新摆在了同一处。 */
+.purity{font-size:var(--fs-xs);color:var(--faint);margin-top:10px;line-height:1.6;max-width:720px}
 .libnote{font-size:var(--fs-xs);color:var(--faint-2);margin-top:6px}
-@media (max-width:899px){.libnote{display:none}.purity{margin-top:12px}}
+@media (max-width:899px){.libnote{display:none}}
 
 .content-panel{flex:1;min-width:0;padding:0 14px 40px}
 @media (min-width:900px){.content-panel{padding:20px 20px 40px;border-left:1px solid var(--line)}}
@@ -158,21 +165,38 @@ button{font-family:inherit}
    主栏居中收到 900px——正文一行约 40 字，不用回扫。 */
 body.focused #map,
 body.focused #home-q{display:none}
-/* ⚠️ 品牌栏**压成一行，不是整块藏掉**：藏掉之后页面上没有站名、也没有回首页的入口，
-   用户不知道自己在哪儿（第一版就是这么退化的，真机截图当场看出来）。
-   宣言/纯净度声明/库存数这些"还没开始用"才需要的东西收起来，站名留着。 */
-body.focused .manifesto,
-body.focused .slogan,
-body.focused .manifesto-positive,
-body.focused .purity,
-body.focused .libnote{display:none}
-@media (min-width:900px){
-  body.focused .layout{flex-direction:column;max-width:940px}
-  body.focused .brand-panel{width:auto;position:static;padding:16px 20px 0}
-  body.focused .brand-panel h1{display:inline-block;font-size:18px;cursor:pointer}
-  body.focused .brand-panel .tagline{display:inline-block;margin-left:9px}
-  body.focused .content-panel{border-left:0;padding-top:10px}
+/* ══ decided：**只要用户已经决定看什么**（搜了词 或 进了某个问题），导航就让路 ══
+   准则 10 原来只在"有主题页且没有搜索词"时生效（body.focused）⟹ 先搜一个词、再点一个
+   节点的那条真实路径上**一次都没让过**。2026-11-10 体验审查实测：第一张卡之前压着
+   13 个区块（品牌区 4 块 + 领域药丸两行 + 地图说明 + 四组 chips + 独占一行的分享按钮…），
+   内容在第 3 屏。decided 是那条准则的正确触发条件，focused 现在只管答案页特有的那几件。
+   ⚠️ 品牌栏**压成一行，不是整块藏掉**：藏掉之后页面上没有站名、也没有回首页的入口，
+   用户不知道自己在哪儿（第一版就是这么退化的，真机截图当场看出来）。 */
+body.decided .manifesto,
+body.decided .manifesto-positive,
+body.decided .purity,
+body.decided .verline,
+body.decided .libnote{display:none}
+/* ⚠️ `#mine-entry`（我的收藏）**不收**：它是导航，不是文案。收起来等于用户进了一个问题
+   之后找不到自己存的东西，而它只在真有收藏时才出现、只占一行。 */
+body.decided .slogan{display:none}
+@media (max-width:899px){
+  /* 手机上品牌区本来就是一行（h1 + tagline + slogan 都是 inline），decided 时
+     slogan 也留着——它不占额外高度，且是唯一一句说明这是什么地方的话。 */
+  body.decided .slogan{display:inline-block}
 }
+@media (min-width:900px){
+  body.decided .layout{flex-direction:column;max-width:940px}
+  body.decided .brand-panel{width:auto;position:static;padding:16px 20px 0}
+  body.decided .brand-panel h1{display:inline-block;font-size:18px;cursor:pointer}
+  body.decided .brand-panel .tagline{display:inline-block;margin-left:9px}
+  body.decided .content-panel{border-left:0;padding-top:10px}
+}
+/* 决定了之后，地图收成一行（准则 10 原话：「地图是"还没决定看什么"时的工具；
+   已经决定了，它收成一行面包屑」）。点开才展开，展开状态不跨导航保留。 */
+.map-fold{display:block;width:100%;text-align:left;margin:2px 0 0;padding:6px 0;
+  border:0;background:none;color:var(--mute);font-size:var(--fs-sm);cursor:pointer}
+.map-fold:hover{color:var(--accent)}
 
 /* 区块：三个短标题就是这一页的结构（准则 15：3 秒看得出这页有什么） */
 .sec{margin:var(--sp-3) 0 0}
@@ -235,8 +259,9 @@ body.focused .card .summary{display:none}
 .searchbar input{width:100%;padding:12px 14px;font-size:16px;border:1px solid #d6d3cc;border-radius:10px;background:var(--card);color:var(--ink)}
 .searchbar input::placeholder{color:#b4b0a8}
 .searchbar input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(43,108,176,.1)}
-.hint{font-size:var(--fs-xs);color:var(--faint);margin:var(--sp-1) 0 0;line-height:1.6}
-.hint a{color:var(--mute)}
+/* 搜索框下面那句「用你自己的话问。搜不到是我们的问题。」已删（体验审查 §6）：
+   它解释的是**怎么操作**，而输入框的 placeholder 已经说了"你想弄明白什么？"。
+   判准还是那条——删掉它用户会做错什么吗？不会。 */
 #scope-hint{font-size:var(--fs-xs);color:var(--warn);margin-top:var(--sp-1)}
 /* 「这块我们不收什么」：是承诺不是提示，所以给一道左边线，但颜色压住不抢答案 */
 #family-rule:not(:empty){margin:10px 0 2px;padding:7px 0 7px 11px;border-left:2px solid var(--line-2);
@@ -315,9 +340,11 @@ body.focused .card .summary{display:none}
 .dchip .dn{font-size:var(--fs-xs);opacity:.7;margin-left:4px}
 .chips{display:flex;flex-wrap:wrap;gap:5px}
 .chip{font-size:var(--fs-sm);padding:4px 9px;border-radius:13px;border:1px solid var(--line);background:var(--card);color:var(--ink-3);cursor:pointer;text-align:left}
-/* 语义建议区（S1）。低调：它是"你也许想问这个"，不是结果本身，不该比结果更抢眼。 */
+/* 语义建议区（S1）。低调：它是"你也许想问这个"，不是结果本身，不该比结果更抢眼。
+   ⚠️ 2026-11-10 体验审查 §8：**框只留给"我们的判断"**（家族规则、答案）。
+   这一块是"你也许想问"，不是我们的判断 ⟹ 去掉虚线框和底色，靠留白和字号分层。 */
 #suggest:empty{display:none}
-#suggest{margin:6px 0 10px;padding:8px 10px;border:1px dashed var(--line);border-radius:8px;background:#fcfcfc}
+#suggest{margin:6px 0 10px}
 #suggest .sg-label{font-size:var(--fs-xs);color:var(--mute-2);margin-bottom:6px}
 #suggest .chips{display:flex;flex-wrap:wrap;gap:6px}
 #suggest .chip.gap{cursor:default;color:var(--mute);border-style:dashed}
@@ -548,16 +575,6 @@ a.src:after{content:" →"}
          到手的东西（答案写在最前面）。三行否定负责立场，这一句负责"所以我能得到什么"。 -->
     <p class="manifesto-positive">你问一句，我们把四个平台里讲明白了的那几条挑出来，
       <b>答案写在最前面</b>。</p>
-
-    <div class="purity">不要账户 · 不认识你 · 没有第三方脚本 · 没有推荐算法
-      <!-- 2026-11-10 Alpha 前评估补的这一句：上面四条都为真（BI 是我们自己的 Worker、自己的域、
-           不落 IP/UA/cookie），但封面图和播放画面是直连 B站/抖音/腾讯 的 ——
-           平台那边看得到有人在看。不写出来，用户会把这四条读成"看视频也没人知道"，那就是误导。 -->
-      <br>封面和播放来自原平台，平台那边看得到。
-      <!-- 质量口径从页脚搬上来（CY 2026-11-10 16:5x）：首页挂着一千多条内容，页脚在
-           几十屏之外，等于没写。它是**承诺的边界**，必须和承诺本身摆在一起。
-           放 .purity 而不是 .libnote，是因为 .libnote 在手机上是隐藏的。 -->
-      <br>一半多的内容做过第二道事实复核，其余还没逐条查。</div>
     <div class="libnote">库内 <span id="lib-count">—</span> 条，都过了筛</div>
     <!-- 版本号也从页脚搬上来，理由同上。它在手机上**不隐藏**：它是用户确认"我看到的是
          哪一版"的唯一入口，藏起来就等于没有。 -->
@@ -571,7 +588,6 @@ a.src:after{content:" →"}
     <div class="searchbar">
       <input id="q" type="text" placeholder="你想弄明白什么？">
     </div>
-    <p class="hint">用你自己的话问。搜不到是我们的问题。</p>
     <div id="scope-hint"></div>
     <div id="crumbs"></div>
     <!-- 「这块我们不收什么」（CY 2026-11-10 16:3x）。只在视线已经收到**一个领域家族**里时出现
@@ -625,6 +641,13 @@ a.src:after{content:" →"}
     <b>我们的成功是你走掉。</b>
     没有无限滚动、自动连播、猜你喜欢，也没有账户和浏览档案。
   </div>
+  <!-- 口径：上面那句承诺的**边界**，所以紧跟着它（见 .purity 的注释）。
+       四条都为真（BI 是我们自己的 Worker、自己的域，不落 IP/UA/cookie），但封面图和
+       播放画面是直连 B站/抖音/腾讯 的——平台那边看得到有人在看。不写出来，用户会把
+       这四条读成"看视频也没人知道"，那就是误导。 -->
+  <div class="purity">不要账户 · 不认识你 · 没有第三方脚本 · 没有推荐算法
+    <br>封面和播放来自原平台，平台那边看得到。
+    <br>一半多的内容做过第二道事实复核，其余还没逐条查。</div>
   <!-- 版本号与更新记录（CY 2026-11-10 16:2x 要）。放页脚是因为版本号的惯例位置就在这里，
        而且它不该和"找内容"抢注意力——要找它的人知道往下看。
        **规则：用户能感知的变化才升一号**，看不见的修补不占号 ⟹ "有的版本没有 release note"

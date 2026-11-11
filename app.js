@@ -256,6 +256,7 @@ function bindShareButtons(root) {
 function go(patch) {
   // 换节点就把"其余N条"收回去：展开状态属于那一页，不该跟着导航走
   if ("node" in patch && patch.node !== state.node) evExpanded = false;
+  mapExpanded = false;   // 地图的展开同理：换了一屏就该重新收起
   Object.assign(state, patch);
   render();
   // BI：他点了地图上的哪一格。只在真的选中某一层时记，取消选择不记（避免噪音）
@@ -275,8 +276,10 @@ function renderCrumbs() {
   /* 分享按钮挂在面包屑这一行：**凡是面包屑出现的地方，就是"你正在看某一页"**
      （搜索结果 / 主题 / 具体问题三种都算），首页没有面包屑也就不该有分享——
      首页的地址人人都有。这样一个位置就覆盖了"所有结果页"，不必每种视图各加一个。 */
+  // 标签写「分享」而不是「分享这一页」：手机 390 宽下长标签会把这颗按钮挤到第二行，
+  // 于是分享**独占一行**（体验审查 §2 数到的 13 个区块之一）。它在面包屑行尾，不必自述。
   el.innerHTML = parts.length > 1
-    ? parts.join(`<span class="sep">›</span>`) + shareBtnHtml(null, "分享这一页")
+    ? parts.join(`<span class="sep">›</span>`) + shareBtnHtml(null, "分享")
     : "";
   el.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => {
     if (b.dataset.go === "all") go({ topic: null, node: null });
@@ -291,10 +294,24 @@ function nodeChip(node, n, topic, isCurrent) {
     style="--c:${topicColor(topic)}">${esc(node)}<span class="n">${n}</span></button>`;
 }
 
+/* 已经决定看什么了吗（搜了词 / 进了某个问题）。准则 10 的触发条件：
+   「地图是"还没决定看什么"时的工具；已经决定了，它收成一行」。 */
+function decided() { return Boolean(state.node) || Boolean(state.q); }
+let mapExpanded = false;   // 折起的地图被手动展开过（属于这一屏，换导航就收回）
+
+/* ?node= 指向库里根本没有的问题（分享链接过期、手敲错）。
+   体验审查 §5 实测：原来会把全部 284 个节点铺出一屏、最底下才说"这里还没有内容"
+   ——一个坏链接长得像一个巨大的目录页。必须等 data.json 到了才能下这个判断。 */
+function nodeMissing() {
+  return Boolean(DATA_LOADED && state.node && !ALL_DATA.some(it => it.node === state.node));
+}
+
 function renderMap() {
   const el = document.getElementById("map");
   const scope = mapScope();
   let html = "";
+
+  if (nodeMissing()) { el.innerHTML = ""; return; }
 
   if (!state.q && !state.topic && !state.node) {
     /* S0 顶层目录：4 个主题卡。每卡只列 ≥2 条的节点，单条的汇总成"其他"——
@@ -334,9 +351,12 @@ function renderMap() {
       return { t, n: its.length, nodes };
     }).filter(Boolean);
 
+    /* 标题只说"这是什么"，不解释"点一个就只看它"（体验审查 §6：版面上不写操作说明）。
+       原来没有 topic 也没有 q 时会渲染出「 下的问题 —— 点一个进去」这种开头就缺主语
+       的句子（真机截到过），所以第三种情况得有自己的说法。 */
     const label = state.q
-      ? `围绕「${esc(state.q)}」的知识地图 —— 命中内容落在这些问题上，点一个就只看它`
-      : `${esc(state.topic || "")} 下的问题 —— 点一个进去`;
+      ? `围绕「${esc(state.q)}」的问题`
+      : state.topic ? `${esc(state.topic)} 下的问题` : `地图上的其他问题`;
     html = `<div class="map-label">${label}</div>` + rows.map(r => {
       // 一行最多先亮出 ROW_CHIP_MAIN 个节点，其余折进"其他N条"——不然标签把视频挤到看不见
       // （CY 2026-11-08 10:5x 截图实锤：一个主题 25+ 个节点原样铺开，视频区要滚好几屏才到）。
@@ -365,6 +385,25 @@ function renderMap() {
       </div>`;
     }).join("");
     if (!rows.length) html = `<div class="map-label">没命中任何问题。换个说法，或点「全部」回地图。</div>`;
+
+    /* ── 决定了之后，整块地图收成一行（体验审查 §2）──
+       实测：进「血糖是怎么升上去又降下来的」后，第一张卡之前压着 13 个区块，其中
+       领域药丸两行 + 地图说明 + 四组 chips（16 个）就占了 4 块。它们是"还没决定看什么"
+       时的工具。折起来 ⟹ 内容上到第一屏；点一下就全回来，一个都没少。
+       领域切换条一起折：它比主题更粗的一级入口，而换领域会清掉当前的问题，
+       在一个已经选定的问题页上它只是噪音。 */
+    if (decided() && !mapExpanded) {
+      const n = rows.reduce((s, r) => s + r.nodes.length, 0) - (state.node ? 1 : 0);
+      // 这一行的数字说的是"折起来的是什么"，所以三种情况各有说法：搜了词 ⟹ 命中的问题，
+      // 只进了节点 ⟹ 同主题的其他问题。说错了用户会以为点开是另一批东西。
+      const what = state.q
+        ? (state.node ? `命中的其他 ${n} 个问题` : `命中 ${n} 个问题`)
+        : `同主题还有 ${n} 个问题`;
+      el.innerHTML = n > 0 ? `<button class="map-fold" id="map-more">${what} ▾</button>` : "";
+      const more = el.querySelector("#map-more");
+      if (more) more.addEventListener("click", () => { mapExpanded = true; renderMap(); });
+      return;
+    }
   }
 
   el.innerHTML = domainBarHtml() + html;
@@ -397,8 +436,10 @@ function renderMap() {
 function renderScopeHint() {
   const el = document.getElementById("scope-hint");
   if (state.q && (state.topic || state.node)) {
-    el.innerHTML = `正在「${esc(state.node || state.topic)}」范围内搜索 ·
-      <button class="linklike" id="search-all">在全部内容里搜</button>`;
+    // 这一条是**状态**不是解释（体验审查 §6 点名留下的那一句），但写短（原来 13 个字的
+    // 「正在…范围内搜索」+「在全部内容里搜」）。
+    el.innerHTML = `只在「${esc(state.node || state.topic)}」里搜 ·
+      <button class="linklike" id="search-all">搜全部</button>`;
     el.querySelector("#search-all").addEventListener("click", () => go({ topic: null, node: null }));
   } else {
     el.innerHTML = "";
@@ -735,6 +776,37 @@ function renderResults() {
       这里一会儿就会出现知识地图。</div></div>`;
     return;
   }
+  /* ══════════ 首页不铺内容（CY 2026-11-10 批体验审查 §1）══════════
+   * 量到的：手机 390 宽，首页 `body.scrollHeight = 659,185px`、`.card` **1951 张**
+   * ⟹ 844px 一屏算下来是 **780 屏**，第二屏开始就是整屏的平台封面
+   * （「12款免费AI生图工具」「全行业覆盖 6600+香蕉提示词」）。
+   *
+   * 这不是性能问题，是**定位的自我否定**：第一屏印着「不投喂 · 不留你」、页脚印着
+   * 「没有无限滚动」，中间夹着 1951 条平台诱饵封面 —— 那两句话当时是假的。
+   * 和抖音首页的差别只剩"没有自动播放"。
+   *
+   * 所以：库里有什么，用**数字 + 入口**表达（四张主题卡的条数、几条真实问题），
+   * 要给"可点的证据"（准则 1）就给问题，不给视频。**视频只在用户问过之后出现。**
+   */
+  if (!state.q && !state.topic && !state.node) {
+    el.innerHTML = "";
+    document.getElementById("result-count").textContent = "";
+    if (bar) bar.hidden = true;
+    return;
+  }
+
+  /* 坏链接：?node= 指向库里没有的问题。一句话说清，不铺地图（体验审查 §5）。 */
+  if (nodeMissing()) {
+    el.innerHTML = `<div class="empty">这个问题不在我们库里。
+      <div class="empty-q">链接里写的是「${esc(displayNode(state.node))}」</div>
+      <div class="empty-acts"><button class="linklike" id="reset-all">回到知识地图</button></div></div>`;
+    el.querySelector("#reset-all").addEventListener("click", () => {
+      document.getElementById("q").value = "";
+      go({ q: "", topic: null, node: null });
+    });
+    return;
+  }
+
   if (!items.length) {
     /* 空态的主按钮是「我要这个」（CY 2026-11-10 选 bz1 第二件）。
      * 病例：他 11-09 21:46 搜「如何控制血糖」，语义分 0.838、库里真有 42 条，但结果区
@@ -750,9 +822,8 @@ function renderResults() {
         ${q ? `<button class="btn-primary" id="want-this">我要这个 →</button>` : ""}
         <button class="linklike" id="reset-all">回到知识地图</button>
       </div>
-      <div class="empty-note">没过质量判定的不会上线。
-        ${SEM.q === q && SEM.top.length && SEM.top[0].score >= SUGGEST_FLOOR
-        ? `上面列出了我们认为最接近的几个问题，点一下就能看。` : ""}</div></div>`;
+      ${SEM.q === q && SEM.top.length && SEM.top[0].score >= SUGGEST_FLOOR
+        ? `<div class="empty-note">上面几个是最接近的问题。</div>` : ""}</div>`;
     el.querySelector("#reset-all").addEventListener("click", () => {
       document.getElementById("q").value = "";
       go({ q: "", topic: null, node: null });
@@ -843,6 +914,10 @@ function render() {
   /* 进了一个具体问题 ⟹ 品牌栏和主题标签云让路，主栏居中收窄（准则 10）。
      它们是"还没决定看什么"时的工具；已经决定了，留着只是噪音。 */
   document.body.classList.toggle("mine-mode", Boolean(state.mine));
+  /* decided：**决定了看什么**（搜了词 / 进了问题）⟹ 品牌栏压成一行、地图折起。
+     focused 是它的子集，只在"有主题页且没有搜索词"时额外生效（地图整块让路、
+     卡片不重复列要点）——先搜词再点节点那条路径走的是 decided，不是 focused。 */
+  document.body.classList.toggle("decided", decided() && !state.mine);
   document.body.classList.toggle("focused", Boolean(currentPage()) && !state.q);
   // 地址栏跟着这一屏走（弹窗自己会再调一次带 ?v= 的）
   syncUrl(document.getElementById("modal-overlay")?.classList.contains("open") ? MODAL_ID : null);
@@ -903,21 +978,39 @@ function openModal(it) {
      逐字稿是把原作者的内容整篇复制出来公开，撞我们自己定的边界；要点是我们的概括。
      **这几条是产品真正的交付物**：读完多数情况就不必看视频了，省下的时间就是价值。
      所以它不是折叠的附属品，而是弹窗里排在最前、默认展开的主体。 */
+  /* ══════ 弹窗瘦身（CY 2026-11-10 批体验审查 §3；他的原话是「满屏的压力」）══════
+   * 量到的：播放器下方 **736 字**、scrollHeight 1713px，其中 **5 段在解释我们自己**：
+   *   ① 播放器是抖音官方的，它自带的按钮我们改不掉…
+   *   ② 我们的概括，不是原话…
+   *   ③ 这几条都是知识关系，不是"看了这个的人还看了"…
+   *   ④ 没有「下一条」。看完回地图，或者直接关掉。
+   *   ⑤ 点一下我们才知道做得对不对。这是我们唯一看的指标…
+   * 五段逐个过准则 13 那把尺子（删掉它用户会做错什么吗）——**五个都是"不会"**。
+   * ⚠️ 这不和"诚实是功能"冲突：诚实要的是**那句话存在且查得到**，不是糊在他脸上。
+   * ①③ 收进 `?`（下面的 HINTS），②④⑤ 直接删：
+   *   · ② 「我们的概括」这件事由区块标题「这条视频讲了什么」+ 下面那条原视频链接
+   *     已经表达完了；
+   *   · ④ 没有「下一条」最响的说法是**真的没有那颗按钮**，页脚还留着那句承诺；
+   *   · ⑤ 两颗按钮自己就是问句，不需要再解释我们为什么问。点完之后仍然会告诉他
+   *     刚刚记了什么（exitSaid 里的隐私说明留着——那是**事后**的交代，不是**事前**的自述）。
+   */
+  HINTS.kp = "我们读完这条内容自己概括的，不是原话。想看讲述过程，点下面的原视频。";
+  const hasPoints = !!(it.key_points && it.key_points.length);
+  /* 「入选依据：…」是**判定器的工作记录**，用户不需要它来决定看不看这条
+     （体验审查 §3：占版面但不是解释，一样收进 `?`）。它仍然查得到。 */
+  HINTS.why = it.reason ? `入选依据：${it.reason}` : "";
   const points = (it.key_points && it.key_points.length)
-    ? `<div class="kp"><div class="kp-head">这条视频讲了什么</div>
+    ? `<div class="kp"><div class="kp-head">这条视频讲了什么${hintBtn("kp")}</div>
          <ul>${it.key_points.map(p => `<li>${esc(p)}</li>`).join("")}</ul>
-         <div class="kp-note">我们的概括，不是原话。读完还想看讲述过程，再点下面的原视频。</div>
        </div>`
     : `<div class="kp"><div class="kp-note">这条还没出要点（判定流水线还在补），先看摘要或直接看原视频。</div></div>`;
   const body = embedFn
-    ? `<iframe class="modal-embed" src="${embedFn(it.video_id)}" allow="autoplay; fullscreen" allowfullscreen scrolling="no" frameborder="0"></iframe>
-       <p class="modal-tip">播放器是${PLATFORM_CN[it.platform] || it.platform}官方的，它自带的那些按钮我们改不掉。点进播放区后 Escape 可能失效（跨站 iframe 限制），用右上角 ✕ 关闭。</p>`
+    ? `<iframe class="modal-embed" src="${embedFn(it.video_id)}" allow="autoplay; fullscreen" allowfullscreen scrolling="no" frameborder="0"></iframe>`
     : `<div class="modal-cover-wrap">
          ${it.cover_url ? `<img class="modal-cover" src="${esc(modalCover(it.cover_url))}" alt=""
               decoding="async" referrerpolicy="no-referrer"
               onerror="this.closest('.modal-cover-wrap')?.remove()||this.remove()">` : ""}
          <div><a class="modal-openlink" href="${it.link}" target="_blank" rel="noopener">在${PLATFORM_CN[it.platform] || it.platform}中打开观看</a></div>
-         <p class="modal-tip">视频号的官方嵌入只支持微信小程序内，网页做不到，这是平台限制。</p>
        </div>`;
   m.innerHTML = `
     <div class="modal-head">
@@ -939,15 +1032,17 @@ function openModal(it) {
         ${fmtDate(it.published_at)
       ? ` · 发布于 ${esc(fmtDate(it.published_at))}${fmtAge(it.published_at) ? `（${esc(fmtAge(it.published_at))}）` : ""}`
       : " · 发布时间未知"}
+        ${it.reason ? hintBtn("why") : ""}
       </div>
-      <div class="modal-summary">${esc(it.summary || "")}</div>
+      <!-- 有要点时不再出 summary：两者讲的是同一件事（实测重复），要点扫得更快。
+           没有要点的那几条才退回摘要。 -->
+      ${hasPoints ? "" : `<div class="modal-summary">${esc(it.summary || "")}</div>`}
       ${points}
-      ${it.reason ? `<div class="modal-reason">入选依据：${esc(it.reason)}</div>` : ""}
       <a class="src" href="${it.link}" target="_blank" rel="noopener">在原平台看原作者的完整内容</a>
       ${edgeBlockHtml(it)}
-      <!-- 所有视频站在这个位置放"相关推荐"。我们在这个位置放一句"没有下一条"。
-           这是整个产品最结构性的一处叛逆：连播的入口被我们拿掉了，不是忘了做。 -->
-      <p class="no-next">没有「下一条」。看完回地图，或者直接关掉。</p>
+      <!-- 所有视频站在这个位置放"相关推荐"，我们什么都不放——**没有那颗按钮本身**
+           就是这句话最响的说法。原来这里写着「没有「下一条」。看完回地图，或者直接
+           关掉。」，页脚那句承诺已经把它说过一遍了（体验审查 §3）。 -->
       ${exitBlockHtml()}
     </div>`;
   document.getElementById("modal-overlay").classList.add("open");
@@ -1000,22 +1095,32 @@ function edgeBlockHtml(it) {
   const all = (DATA_EDGES && (DATA_EDGES[it.category] || DATA_EDGES[it.node])) || [];
   // 一条边没有就整块不出现——空着一个"相关问题"标题比没有更糟
   if (!all.length) return "";
-  const rows = all.slice(0, 5).map(e => {
+  /* 每种关系最多给一条——和答案页的 tailHtml 同一条规矩，这里原来漏了。
+     实测本条内容的 4 条边里**有 3 条都是「它是这个更大问题的一块」**：那等于把这一块的
+     意义抹掉（它要回答"从这里还能往哪几个方向走"，不是"列四条边"），还白占 60 字版面。
+     顺序：先给向上的大问题，再给前置、易混、实例。 */
+  const EDGE_ORDER = ["answers_part_of", "prereq", "confusable_with", "instance_of"];
+  const usable = all.filter(e => EDGE_CN[e.type]);
+  const shown = EDGE_ORDER.map(t => usable.find(e => e.type === t)).filter(Boolean);
+  const rows = shown.map(e => {
     const cn = EDGE_CN[e.type];
-    if (!cn) return "";
+    /* 「因为：…」**默认折起**（体验审查 §3）：3 条边就是 3 段长句，而用户在这一步要做的
+       决定只是"要不要顺着走"——关系名 + 问题名已经够他决定了。
+       理由没有丢，整块的 `?` 里逐条列着（也是被删掉的那句 edge-note 的新家）。 */
     return `<div class="edge-row"><span class="edge-mark">${cn.mark}</span>
       <div><div class="edge-k">${cn.k}</div>
         <button class="edge-nm" data-edge="${esc(e.type)}:${esc(it.category || it.node)}"
                 data-edge-dst="${esc(e.dst)}">${esc(displayNode(e.dst))}</button>
-        <div class="edge-why">因为：${esc(e.why)}</div></div></div>`;
+      </div></div>`;
   }).join("");
   if (!rows) return "";
+  HINTS.edges = '这几条是知识关系（它是谁的一块、要先懂什么、常被和谁搞混），'
+    + '不是"看了这个的人还看了"——所以每条都说得出为什么：\n\n'
+    + shown.map(e => `${EDGE_CN[e.type].mark} ${displayNode(e.dst)}\n  因为：${e.why || "—"}`).join("\n\n");
   return `<div class="edge-box">
-    <div class="edge-head">这个问题在地图上的位置</div>
+    <div class="edge-head">这个问题在地图上的位置${hintBtn("edges")}</div>
     <div class="edge-self">${esc(displayNode(it.node || it.category || ""))}</div>
     ${rows}
-    <p class="edge-note">这几条都是<b>知识关系</b>，不是"看了这个的人还看了"——
-      所以每条后面都说得出"因为"。</p>
     <button class="edge-nf" id="modal-notfound">这不是我想找的</button>
   </div>`;
 }
@@ -1330,14 +1435,15 @@ const PRIVACY_NOTE = COLLECT_URL
   ? "匿名记一条到我们自己的服务器（这台设备这次访问的编号，关掉网页就失效，拼不出你是谁）。"
   : "只记在你这台设备上，没有上传——这一版还没有后端。";
 
+/* 两颗按钮下面原来还有一段「点一下我们才知道做得对不对。这是我们唯一看的指标——找到
+   答案就走，对我们是成功，不是流失。」——那是**我们的度量需求**，不是他的下一步
+   （体验审查 §3）。按钮本身就是问句。他点完之后仍会看到我们记了什么（exitSaid）。 */
 function exitBlockHtml() {
   return `<div class="exit" id="exit">
     <div class="exit-btns">
       <button class="exit-btn ok" id="exit-ok">这个问题解决了</button>
       <button class="exit-btn no" id="exit-no">没找到我要的</button>
     </div>
-    <p class="exit-note">点一下我们才知道做得对不对。这是我们唯一看的指标——
-      找到答案就走，对我们是成功，不是流失。</p>
   </div>`;
 }
 
@@ -1572,6 +1678,7 @@ document.getElementById("q").addEventListener("input", e => {
   const v = e.target.value.trim().toLowerCase();
   qTimer = setTimeout(() => {
     state.q = v;
+    mapExpanded = false;   // 换了搜索词就把折起的地图收回去（和 go() 同一个规矩）
     render();
     // 只在停下打字后记一次（不是每个按键）。**搜了什么 + 命中几条**是这个产品
     // 最该看的 BI：命中 0 的词就是内容缺口清单。
