@@ -51,7 +51,7 @@ let ALL_DATA = [];      // 全部内容（跨领域）
 let DATA_EDGES = {};    // 知识地图的边：{节点名: [{type,dst,why}]}，详情页用
 let TOPICS = [];
 let DOMAIN_LIST = [];   // [{id,label,count}]，只含真有合格内容的领域
-const state = { q: "", topic: null, node: null, domain: null };
+const state = { q: "", topic: null, node: null, domain: null, mine: false };
 
 /* 哪些主题行在 S1/S2 被手动展开过（CY 2026-11-08 10:5x：「section下tag太多了，无法阅读了，
    而且把视频推到太下面」）。不进 state/URL——只是这一屏的临时展示状态，换个主题/搜索词
@@ -174,7 +174,8 @@ function shareUrl(videoId, lane) {
   if (state.node) p.set("node", state.node);
   if (videoId) p.set("v", videoId);
   if (lane) p.set("lane", "1");   // 只有"等待页"给出的地址带它：回来要接着看进度
-  if (REL_OPEN) p.set("rel", "1");  // 更新记录面板也有自己的地址（可以直接发"看我们改了什么"）
+  if (REL_OPEN) p.set("rel", "1");
+  if (state.mine) p.set("mine", "1");  // 更新记录面板也有自己的地址（可以直接发"看我们改了什么"）
   const s = p.toString();
   return location.origin + location.pathname + (s ? "?" + s : "");
 }
@@ -197,6 +198,7 @@ function restoreFromUrl() {
   PENDING_VIDEO = p.get("v") || null;
   PENDING_LANE = p.get("lane") === "1" ? state.q : null;
   PENDING_REL = p.get("rel") === "1";
+  if (p.get("mine") === "1") state.mine = true;
   const box = document.getElementById("q");
   if (box && state.q) box.value = state.q;
 }
@@ -672,6 +674,7 @@ function cardHtml(it, whyNote, covers) {
              onerror="coverFail(this)">`
       : `<span>${esc(PLATFORM_CN[it.platform] || it.platform)}</span>`}
         <span class="plat-badge">${esc(PLATFORM_CN[it.platform] || it.platform)}</span>
+        ${bmBtn(it.id, isMarked(it.id))}
         ${dur ? `<span class="dur-badge">${dur}</span>` : ""}
       </div>
       <div class="card-body">
@@ -826,15 +829,17 @@ function renderFamilyRule() {
 
 function render() {
   renderCrumbs();
+  refreshMarkUI();
   renderFamilyRule();
   if (typeof renderSuggest === "function") renderSuggest();
   renderMap();
   renderHomeQuestions();
   renderScopeHint();
   renderAnswer();
-  renderResults();
+  if (state.mine) { renderMine(); } else { renderResults(); }
   /* 进了一个具体问题 ⟹ 品牌栏和主题标签云让路，主栏居中收窄（准则 10）。
      它们是"还没决定看什么"时的工具；已经决定了，留着只是噪音。 */
+  document.body.classList.toggle("mine-mode", Boolean(state.mine));
   document.body.classList.toggle("focused", Boolean(currentPage()) && !state.q);
   // 地址栏跟着这一屏走（弹窗自己会再调一次带 ?v= 的）
   syncUrl(document.getElementById("modal-overlay")?.classList.contains("open") ? MODAL_ID : null);
@@ -1514,6 +1519,141 @@ document.getElementById("q").addEventListener("input", e => {
   }, 160);
 });
 
+
+/* ══════════ 收藏：存在你自己的浏览器里（CY 2026-11-10 16:5x）══════════
+ * 他的话：「知识的 bookmark 跟积累非常重要…虽然我们没有账号系统，但用户不用登录，
+ * 在他自己的 Chrome 的 memory 里面，我们就可以帮他做 bookmark…将来如果要升级账户系统
+ * 也可以做，只是这账户系统几乎就是匿名的，用户只要记住个 ID 就可以了。」
+ *
+ * 为什么这件事和"不要账户、不认识你"不冲突：**收藏从头到尾没离开过这台设备**。
+ * 我们的服务器上没有这份名单，所以也无从拿它做推荐——这不是承诺，是做不到。
+ * 三句话必须写在用户看得见的地方（他点名要提示的那三条）：
+ *   ① 只在这台设备上 ② 清浏览器数据会一起清掉 ③ 不会用来给你做任何推荐
+ *
+ * 存什么：只存 id + 当时的标题/作者（够在列表里显示），不存观看记录、不存时间线。
+ * 存标题是因为内容可能下架——那时要能诚实地说"这条已经不在库里了"，
+ * 而不是让收藏夹里凭空少一行（"少了一行"和"我记错了"在用户那里完全同形）。
+ */
+const MARK_KEY = "xing.marks.v1";
+let MARKS = { items: {}, nodes: {} };
+let MARK_WRITABLE = true;   // 无痕模式/配额满时 localStorage 会抛，要诚实告诉用户
+
+function loadMarks() {
+  try {
+    const raw = localStorage.getItem(MARK_KEY);
+    if (raw) MARKS = Object.assign({ items: {}, nodes: {} }, JSON.parse(raw));
+  } catch (e) { MARK_WRITABLE = false; }
+}
+function saveMarks() {
+  try { localStorage.setItem(MARK_KEY, JSON.stringify(MARKS)); } catch (e) { MARK_WRITABLE = false; }
+}
+function markCount() { return Object.keys(MARKS.items).length + Object.keys(MARKS.nodes).length; }
+function isMarked(id) { return !!MARKS.items[id]; }
+function isNodeMarked(n) { return !!MARKS.nodes[n]; }
+
+function toggleMark(id) {
+  if (MARKS.items[id]) delete MARKS.items[id];
+  else {
+    const it = ALL_DATA.find(x => x.id === id);
+    MARKS.items[id] = { title: it ? it.title : "", author: it ? it.author : "",
+                        node: it ? it.node : "", platform: it ? it.platform : "" };
+  }
+  saveMarks(); afterMarkChange();
+}
+function toggleNodeMark(n) {
+  if (MARKS.nodes[n]) delete MARKS.nodes[n]; else MARKS.nodes[n] = { title: n };
+  saveMarks(); afterMarkChange();
+}
+
+/* 收藏按钮。**不画星星**：星星在短视频平台等于"点赞/喜欢"，而这里的动作是"存起来以后看"。
+   用书签旗形，和标识一样是截断的几何。 */
+function bmBtn(id, on) {
+  return `<button class="bm${on ? " on" : ""}" data-bm="${esc(id)}"
+    aria-label="${on ? "取消收藏" : "收藏"}" title="${on ? "已收藏，点一下取消" : "收藏到这台设备"}">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12v18l-6-5-6 5z"/></svg></button>`;
+}
+
+/* 捕获阶段拦截：卡片本身也绑了 click（三处），不在捕获阶段挡住，点收藏会顺手把弹窗打开 */
+document.addEventListener("click", e => {
+  const b = e.target.closest?.("[data-bm]");
+  if (!b) return;
+  e.stopPropagation(); e.preventDefault();
+  (b.dataset.bmKind === "node" ? toggleNodeMark : toggleMark)(b.dataset.bm);
+}, true);
+
+function refreshMarkUI() {
+  document.querySelectorAll("[data-bm]").forEach(b => {
+    const on = b.dataset.bmKind === "node" ? isNodeMarked(b.dataset.bm) : isMarked(b.dataset.bm);
+    b.classList.toggle("on", on);
+    b.setAttribute("aria-label", on ? "取消收藏" : "收藏");
+  });
+  const e1 = document.getElementById("mine-entry");
+  if (e1) {
+    const n = markCount();
+    e1.innerHTML = n
+      ? `<button class="mine-btn" id="mine-open">我的收藏 <span class="mine-n">${n}</span></button>`
+      : "";
+    const btn = document.getElementById("mine-open");
+    if (btn) btn.addEventListener("click", () => go({ mine: true, q: "", node: null, topic: null }));
+  }
+  /* ⚠️ 这里**不许**调 renderMine()：renderMine 结尾会调 refreshMarkUI，
+     两边互相调就是无限递归（17:1x 真撞到，浏览器报 Maximum call stack size exceeded，
+     顺带把 syncUrl 也一起带崩，地址栏的 ?mine=1 永远写不上）。
+     职责切开：本函数只刷按钮状态和计数；收藏页要不要重画，由**改动收藏的那一方**决定。 */
+}
+
+/** 收藏发生变化后的统一出口：刷按钮 + 如果正停在收藏页就重画它 */
+function afterMarkChange() {
+  refreshMarkUI();
+  if (state.mine) renderMine();
+}
+
+function renderMine() {
+  const el = document.getElementById("results");
+  const bar = document.querySelector(".toolbar");
+  if (bar) bar.hidden = true;
+  const ids = Object.keys(MARKS.items);
+  const nodes = Object.keys(MARKS.nodes);
+  const live = ids.map(id => ALL_DATA.find(x => x.id === id)).filter(Boolean);
+  const gone = ids.filter(id => !ALL_DATA.some(x => x.id === id));
+  const note = `<div class="mine-note">
+      收藏只存在<b>这台设备的浏览器</b>里：我们的服务器上没有这份名单，
+      所以也<b>不会</b>拿它给你做任何推荐。<br>
+      清掉浏览器数据（或换一台设备、换一个浏览器）收藏会一起没有。
+      ${MARK_WRITABLE ? "" : "<br><b>这个浏览器不让我们存东西</b>（无痕模式？），现在收的这次关掉页面就没了。"}
+    </div>`;
+  if (!ids.length && !nodes.length) {
+    el.innerHTML = `<div class="mine-head"><b>我的收藏</b>
+      <button class="linklike" id="mine-back0">回首页</button></div><div class="empty">还没有收藏。<div class="empty-note">
+      在任意一条视频或问题上点那个书签就收进来了。</div></div>${note}`;
+    document.getElementById("mine-back0")?.addEventListener("click", () => go({ mine: false }));
+    return;
+  }
+  const nodeList = nodes.length ? `<div class="sec"><div class="sh"><span class="t">收藏的问题</span>
+      <span class="n">${nodes.length}</span></div>
+      <ul class="hq-list">${nodes.map(n => `<li><button class="hq" data-node="${esc(n)}">
+        <span class="hq-q">${esc(displayNode(n))}</span>${bmBtn(n, true).replace("<button", '<button data-bm-kind="node"')}
+      </button></li>`).join("")}</ul></div>` : "";
+  const goneList = gone.length ? `<div class="mine-gone">有 ${gone.length} 条收藏的内容已经不在库里了
+      （下架或没通过复核）：${gone.map(id => esc(MARKS.items[id].title || id)).join("、")}
+      <button class="linklike" id="mine-clean">清掉这几条</button></div>` : "";
+  const head = `<div class="mine-head"><b>我的收藏</b>
+      <button class="linklike" id="mine-back">回首页</button></div>`;
+  el.innerHTML = head + nodeList
+    + (live.length ? `<div class="sec"><div class="sh"><span class="t">收藏的视频</span>
+        <span class="n">${live.length}</span></div><div class="cards">${live.map(it => cardHtml(it)).join("")}</div></div>` : "")
+    + goneList + note;
+  el.querySelectorAll(".hq").forEach(b => b.addEventListener("click", () =>
+    go({ mine: false, node: b.dataset.node })));
+  el.querySelectorAll(".card").forEach(c => c.addEventListener("click", () => {
+    const it = ALL_DATA.find(x => x.id === c.dataset.id); if (it) openModal(it);
+  }));
+  document.getElementById("mine-back")?.addEventListener("click", () => go({ mine: false }));
+  const cl = document.getElementById("mine-clean");
+  if (cl) cl.addEventListener("click", () => { gone.forEach(id => delete MARKS.items[id]); saveMarks(); renderMine(); });
+  refreshMarkUI();
+}
+
 /* ---------- 版本号与更新记录（CY 2026-11-10 16:2x 要）----------
  * 他要的三件：① 首页有个入口 ② 能看历史、有价值感 ③ 他自己能一眼 check 当前版本。
  * 加上他紧跟的两条约束：**必须 user facing**、**未必每个版本都有 release note**。
@@ -1636,6 +1776,7 @@ function loadPages() {
     .catch(() => { /* 没有主题页就当没有，列表视图照常工作 */ });
 }
 
+loadMarks();
 restoreFromUrl();   // 必须在 loadData 之前：它一回来就 render，那时 state 得已经是地址里的样子
 loadData();
 loadPages();

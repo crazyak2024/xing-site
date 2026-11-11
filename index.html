@@ -424,6 +424,29 @@ footer::before{content:"";position:absolute;left:38%;top:-5px;width:6px;height:1
 .about{font-size:var(--fs-sm);color:var(--mute-2);line-height:1.6;max-width:720px;margin:0 auto}
 /* 版本行：比 .about 再轻一档——它是查得到的信息，不是要读的信息 */
 .verline{margin:8px 0 0;font-size:var(--fs-xs);color:var(--faint)}
+/* ── 收藏（本地）──
+   书签旗而不是星星：星星在短视频平台等于"喜欢"，这里的动作是"存起来以后看"。 */
+.bm{position:absolute;top:6px;right:6px;width:26px;height:26px;padding:0;border:0;cursor:pointer;
+  border-radius:var(--radius);background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center}
+.bm svg{width:14px;height:14px;fill:none;stroke:var(--ink-inv);stroke-width:2;stroke-linejoin:round}
+.bm.on svg{fill:var(--ink-inv)}
+.bm:hover{background:rgba(0,0,0,.62)}
+.hq .bm{position:static;background:none;width:22px;height:22px}
+.hq .bm svg{stroke:var(--faint-2)}
+.hq .bm.on svg{stroke:var(--ink);fill:var(--ink)}
+#mine-entry:not(:empty){margin-top:10px}
+.mine-btn{font-size:var(--fs-sm);padding:5px 10px;border:var(--hair) solid var(--line);
+  background:var(--card);border-radius:var(--radius);cursor:pointer;color:var(--ink-3)}
+.mine-n{color:var(--mute)}
+.mine-note{margin:16px 0 0;padding:10px 0 0;border-top:var(--hair) solid var(--line);
+  font-size:var(--fs-sm);color:var(--sub);line-height:1.7}
+/* 收藏页是独立视图：首页那几块（地图/问题入口/建议/答案区）让路，
+   否则收藏列表挂在一整屏首页下面，用户以为自己没点成 */
+body.mine-mode #map,body.mine-mode #home-q,body.mine-mode #suggest,
+body.mine-mode #answer,body.mine-mode #family-rule,body.mine-mode #crumbs{display:none}
+.mine-head{display:flex;align-items:baseline;gap:12px;margin:var(--sp-3) 0 var(--sp-2)}
+.mine-head b{font-size:var(--fs-xl)}
+.mine-gone{margin-top:14px;font-size:var(--fs-sm);color:var(--warn);line-height:1.6}
 .verbtn{background:none;border:none;padding:0;margin-left:8px;font:inherit;color:var(--mute-2);
   text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .verbtn:hover{color:var(--ink-3)}
@@ -537,6 +560,9 @@ a.src:after{content:" →"}
     <!-- 版本号也从页脚搬上来，理由同上。它在手机上**不隐藏**：它是用户确认"我看到的是
          哪一版"的唯一入口，藏起来就等于没有。 -->
     <div class="verline" id="verline"></div>
+    <!-- 我的收藏入口：放左栏（和版本号同理——首页很长，底部等于没有）。
+         没有收藏时这里是空的：空的入口只会让人点进去扑空。 -->
+    <div id="mine-entry"></div>
   </aside>
 
   <div class="content-panel">
