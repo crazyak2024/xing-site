@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96">
+<!-- 「醒」的标识：被切断的无限符号。CY 2026-11-10 16:3x 从 6 个方向里选的 06。
+     无限刷是我们要去掉的那个东西,所以标识直接把 ∞ 切开——切口 12°、右半沿切口滑移,
+     读作"切开后错位",而不是"画歪了"。
+     ⚠️ 两个视觉尺寸不是一个文件:logo.svg 给 24px 以上,favicon.svg 笔画更粗、缺口更大,
+     因为细笔画和窄缝在 16px 上会糊成一个普通的 ∞ ——那恰好是我们在反对的符号。 -->
+<g transform="rotate(12 48 48)" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="butt"><path d="M 44,40 C 29.3,26 14,32.2 14,48 C 14,63.8 29.3,70 44,56"/><path d="M 52,40 C 66.7,26 82,32.2 82,48 C 82,63.8 66.7,70 52,56" transform="translate(-0.83 3.91)"/></g>
+</svg>
