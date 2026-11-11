@@ -73,10 +73,10 @@
   --fs-xs:11px;--fs-sm:12px;--fs-md:13px;--fs-lg:14px;--fs-xl:15px;
   /* 间距同理，四档 */
   --sp-1:4px;--sp-2:8px;--sp-3:14px;--sp-4:22px;
-  /* 形：标识是**截断的笔画 + 直角收口**，所以全站圆角克制、线一律 1px。
-     --cut-angle 是标识上那道切口的角度，分隔线等元素复用它，
-     保证全站出现的每一处"切口"都是同一个角度，而不是各画各的。 */
-  --radius:7px;--radius-lg:12px;--hair:1px;--stroke:2px;--cut-angle:18deg;
+  /* 形：标识是**一条线被撑开**，所以全站圆角克制、线一律 1px。
+     --gap-w 是线上那个口的宽度，分隔线等元素复用它，
+     保证全站出现的每一处"开口"都是同一个宽度，而不是各画各的。 */
+  --radius:7px;--radius-lg:12px;--hair:1px;--stroke:2px;--gap-w:9px;
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
@@ -96,12 +96,12 @@ button{font-family:inherit}
 /* slogan：面板上第二响的一块，仅次于三行宣言。和标识同一句话的两种说法 */
 .slogan{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:2px;
   margin:var(--sp-3) 0 var(--sp-2);line-height:1.3}
-/* ── 切口：标识上那道斜缝，提炼成全站的分隔语言 ──
-   一条普通的线，在偏左处被一道 18° 的缝切开（角度就是 --cut-angle，和标识同一个数）。
+/* ── 开口：标识上那道被撑开的缝，提炼成全站的分隔语言 ──
+   一条普通的线，在偏左处张开一个口（宽度就是 --gap-w，和标识是同一个动作：线被顶开）。
    只在"一段结束了"的地方用，用多了就不是记号而是花纹。 */
 .cut-rule{position:relative;height:var(--hair);background:var(--line);margin:0;border:0}
-.cut-rule::after{content:"";position:absolute;left:38%;top:-5px;width:6px;height:11px;
-  background:var(--bg);transform:rotate(var(--cut-angle))}
+.cut-rule::after{content:"";position:absolute;left:38%;top:-5px;width:var(--gap-w);height:11px;
+  background:var(--bg)}
 
 /* 宣言：三行否定堆叠，是面板的主视觉。
    窄栏（200px）正好一行一句，竖排的节奏让它像钉在墙上的三条，而不是一句长标语。
@@ -419,8 +419,8 @@ body.focused .card .summary{display:none}
 
 footer{padding:14px 16px 30px;color:var(--sub);font-size:var(--fs-sm);
   border-top:var(--hair) solid var(--line);position:relative}
-footer::before{content:"";position:absolute;left:38%;top:-5px;width:6px;height:11px;
-  background:var(--bg);transform:rotate(var(--cut-angle))}
+footer::before{content:"";position:absolute;left:38%;top:-5px;width:var(--gap-w);height:11px;
+  background:var(--bg)}
 .about{font-size:var(--fs-sm);color:var(--mute-2);line-height:1.6;max-width:720px;margin:0 auto}
 /* 版本行：比 .about 再轻一档——它是查得到的信息，不是要读的信息 */
 .verline{margin:8px 0 0;font-size:var(--fs-xs);color:var(--faint)}
@@ -513,20 +513,17 @@ a.src:after{content:" →"}
 <body>
 <div class="layout">
   <aside class="brand-panel">
-    <!-- 标识：被切断的无限符号（CY 2026-11-10 16:3x 从六个方向里选的 06，然后收了两轮）。
+    <!-- 标识：一条横线被撑开成一道缝 = 睁开的眼（CY 2026-11-10 20:3x 选 ey3）。
          几何写在这里而不是 <img>：它要跟着字号和前景色走（深色块上自动反白），
-         外链图做不到这件事。同一份几何也在 logo.svg / favicon.svg 里。
-         ⚠️ 切口 12°、右半沿切口滑移 4 ——缺口再窄一点，16px 上就糊成一个普通的 ∞，
-         而那恰好是我们反对的符号。 -->
+         外链图做不到这件事。同一份几何也在 logo.svg / favicon.svg 里（改一处要改三处）。
+         ⚠️ 上一版「被切开的无限符号」被 CY 一句「看着像手铐」判死——病根与四张对照图
+         在仓库 `brand/`，别再往回画。 -->
     <h1><svg class="mark" viewBox="0 0 96 96" aria-hidden="true" focusable="false">
-        <defs>
-          <clipPath id="xlh"><rect x="-60" y="-60" width="105.8" height="260" transform="rotate(18 48 48)"/></clipPath>
-          <clipPath id="xrh"><rect x="50.2" y="-60" width="260" height="260" transform="rotate(18 48 48)"/></clipPath>
-        </defs>
         <g fill="none" stroke="currentColor" stroke-width="6.5">
-          <path d="M 48,48 C 48,15.0 14,26 14,48 C 14,70 48,81.0 48,48 C 48,15.0 82,26 82,48 C 82,70 48,81.0 48,48 Z" clip-path="url(#xlh)"/>
-          <path d="M 48,48 C 48,15.0 14,26 14,48 C 14,70 48,81.0 48,48 C 48,15.0 82,26 82,48 C 82,70 48,81.0 48,48 Z" clip-path="url(#xrh)" transform="translate(-1.24 3.80)"/>
+          <path d="M 8,48 C 25,48 33,29 48,29 C 63,29 71,48 88,48"/>
+          <path d="M 8,48 C 25,48 33,67 48,67 C 63,67 71,48 88,48"/>
         </g>
+        <circle cx="48" cy="48" r="5" fill="currentColor"/>
       </svg><span>醒</span></h1>
     <p class="tagline">知识视频地图</p>
     <!-- slogan（CY 2026-11-10 16:3x：「整个网站还是缺一句有趣有力的 slogan」）。
