@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共1917条",
+  "generated_note": "判定=合格的候选，共1918条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1162,7 +1162,7 @@
     {
       "id": "ai1",
       "label": "AI 与大模型",
-      "count": 1724
+      "count": 1725
     },
     {
       "id": "fin1",
@@ -53133,6 +53133,34 @@
       "topic": "误区纠正",
       "node": "大模型蒸馏与知识压缩",
       "category": "(地图缺口)大模型蒸馏与知识压缩",
+      "domain": "ai1"
+    },
+    {
+      "id": "douyin:7571022403090779442",
+      "video_id": "7571022403090779442",
+      "title": "模型蒸馏：知识转移与压缩方法",
+      "original_title": "什么是模型蒸馏？十分钟给你说清楚模型蒸馏原理 #大模型 #大模型蒸馏 #人工智能 #知识分享 #科普",
+      "author": "AI大模型",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7571022403090779442",
+      "cover_url": "https://p3-sign.douyinpic.com/tos-cn-i-dy/b5cacf9fe720470fb2854bb8f7325251~tplv-dy-resize-walign-adapt-aq:540:q75.webp?lk3s=138a59ce&x-expires=1795564800&x-signature=rHws%2FRWdeUHjufUnwogEOsIwhvQ%3D&from=327834062&s=PackSourceEnum_AWEME_DETAIL&se=false&sc=cover&biz_tag=aweme_video&l=202611110800328872D34964DA35C61195",
+      "published_at": "2025-11-10T09:13:44+00:00",
+      "key_points": [
+        "终端算力有限，大模型参数多不易部署，需要压缩方案解决。",
+        "知识蒸馏通过大模型训练小模型，迁移知识能力提升效率。",
+        "蒸馏包含老师模型、学生模型、蒸馏算法三个核心部分。",
+        "DeepSeek 671B蒸馏到1.5B-7B规模，参数大小决定蒸馏效果。",
+        "学生模型参数规模越大，蒸馏后性能越接近老师模型。"
+      ],
+      "duration_s": 536.522,
+      "likes": 1423,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解模型蒸馏原理：通过大模型（老师）向小模型（学生）转移知识实现压缩。涵盖蒸馏背景、三要素框架、DeepSeek案例及效果影响因素。",
+      "reason": "视频系统讲解模型蒸馏的完整概念体系，从问题背景到原理再到实践案例，逻辑清晰无营销成分。原文表述：'学生可以利用老师知识学习和模仿，让小型模型快速学习到大型复杂模型通过漫长训练才能得到的能力'。 | 引用:「学生可以利用老师知识学习和模仿，让小型模型快速学习到大型复杂模型的能力。」",
+      "topic": "概念原理",
+      "node": "大模型架构创新与技术对比",
+      "category": "(地图缺口)大模型架构创新与技术对比",
       "domain": "ai1"
     }
   ]
