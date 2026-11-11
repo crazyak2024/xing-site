@@ -880,6 +880,25 @@ function renderResults() {
     return;
   }
 
+  /* ══════════ 库里有、只是说法对不上 ══════════
+   * CY 2026-11-11 06:5x 截图实测：他搜「怎么控制血糖」，结果区写着"这里还没有内容"、
+   * 请他按「我要这个」去花钱找；按下去后台环 0 回了一句"其实我们有"（0.841，6 条）。
+   * **同一个分数、同一条线**（前端 SUGGEST_SURE 0.75 ＝ 后端 SEM_SURE 0.75），
+   * 前台说没有、后台说有。他的原话是「这是搞什么？」。
+   *
+   * 病根：结果区的过滤从头到尾只有 `hitsQuery` 子串匹配，语义分只拿去画上面那排建议条。
+   * 换一种说法就是 0 命中 —— 而我们在说"没有内容"的那一刻，**已经知道答案在哪个节点里**。
+   * bz1（11-10）当时只把"我要这个"搬进了这块空白，没有把**内容**搬进来，所以病还在。
+   *
+   * ⟹ 确信区（≥0.75）且该节点库里真有内容时，直接把那些内容摆出来；
+   *    既不先说一句"没有内容"，也不让他为已经有的东西按一次要花钱的按钮。
+   *    「都不是？」出口保留：确信区也会认错，认错时他仍要能让我们去找。
+   */
+  if (!items.length && !state.node) {
+    const sure = sureNodeHits();
+    if (sure.length) { renderSureHits(el, state.q, sure); return; }
+  }
+
   if (!items.length) {
     /* 空态的主按钮是「我要这个」（CY 2026-11-10 选 bz1 第二件）。
      * 病例：他 11-09 21:46 搜「如何控制血糖」，语义分 0.838、库里真有 42 条，但结果区
@@ -889,7 +908,13 @@ function renderResults() {
      * 注意：这里 emit 的是 `gap_wish`（和左栏同一个事件类型，后台已有消费形状），
      * note 带 `from=empty` 以便区分来源——不新造事件名，省掉一次 schema 变更。 */
     const q = state.q;
-    el.innerHTML = `<div class="empty">这里还没有内容。
+    /* 语义还在路上时**不要先断言"没有内容"**——线上实测 `/semantic` 冷启要 9.7 秒，
+       而答案可能就在上面那个确信命中分支里。但也**不能把出口一起扣住**：
+       按钮照常给，只把那句"没有内容"换成"正在找"，等分数到了会自己重画（见 fetchSemantic）。 */
+    const waiting = Boolean(q) && SEM.pending && SEM.q === q;
+    el.innerHTML = `<div class="empty">${waiting
+      ? `<span class="lane-spin"></span>正在找…`
+      : "这里还没有内容。"}
       ${q ? `<div class="empty-q">你搜的是「${esc(q)}」</div>` : ""}
       <div class="empty-acts">
         ${q ? `<button class="btn-primary" id="want-this">我要这个 →</button>` : ""}
@@ -901,15 +926,7 @@ function renderResults() {
       document.getElementById("q").value = "";
       go({ q: "", topic: null, node: null });
     });
-    const want = el.querySelector("#want-this");
-    if (want) want.addEventListener("click", () => {
-      recordExit("gap_wish", `${q} [from=empty]`);
-      // 文案一句话就够（CY 2026-11-10 15:3x：「页面上文案需要简洁有力，不要长篇大论」）。
-      // 下面的进度条自己会说在干什么，这里再解释一遍流程是重复占版面。
-      want.outerHTML = `<span class="want-ok"><b>记下了，正在去找。</b></span>`;
-      // 缺口车道（CY 2026-11-10）：按钮不再只是"记一笔"，它真的会让本机去搜。
-      startLane(q);
-    });
+    bindWantThis(el, q, "empty");
     return;
   }
 
@@ -940,6 +957,59 @@ function renderResults() {
   }
   el.querySelectorAll(".card").forEach(c => c.addEventListener("click", () =>
     openModal(DATA.find(it => it.id === c.dataset.id))));
+}
+
+/** 「我要这个」：记一笔缺口 + 真的让本机去搜（缺口车道，CY 2026-11-10）。
+ *  from 只进 note，用来分辨入口（empty = 空态；sure = 确信命中下面那个"都不是？"）。 */
+function bindWantThis(root, q, from) {
+  const want = root.querySelector("#want-this");
+  if (!want || !q) return;
+  want.addEventListener("click", () => {
+    recordExit("gap_wish", `${q} [from=${from}]`);
+    // 文案一句话就够（CY 2026-11-10 15:3x：「页面上文案需要简洁有力，不要长篇大论」）。
+    // 下面的进度条自己会说在干什么，这里再解释一遍流程是重复占版面。
+    want.outerHTML = `<span class="want-ok"><b>记下了，正在去找。</b></span>`;
+    startLane(q);
+  });
+}
+
+/** 确信区（≥SUGGEST_SURE）里、库里真有内容的那几个问题节点。
+ *  只在"按字面一条都没搜到"时才用得上——字面有命中就说明他已经有东西看了。 */
+function sureNodeHits() {
+  if (!state.q || SEM.q !== state.q || !SEM.top.length) return [];
+  const out = [];
+  for (const t of SEM.top) {
+    if ((t.score || 0) < SUGGEST_SURE) continue;
+    const list = DATA.filter(it => it.node === t.name && (!state.topic || it.topic === state.topic));
+    if (list.length) out.push({ name: t.name, items: list });
+  }
+  return out;
+}
+
+/** 把确信命中的节点当结果摆出来。版式和正常结果的分节一模一样——
+ *  它们**就是**正常结果，只是入口是语义而不是字面。 */
+function renderSureHits(el, q, sure) {
+  const total = sure.reduce((n, s) => n + s.items.length, 0);
+  const cnt = document.getElementById("result-count");
+  if (cnt) cnt.textContent = `${total}条`;
+  /* 这一行必须有：他搜的词和下面问题的字面不一样，不说一句他会以为我们答非所问。
+     只说对他有用的那部分（这是最接近的问题），不解释我们的检索为什么没对上。 */
+  el.innerHTML = `<div class="sure-lead">「${esc(q)}」——库里最接近的是下面这${sure.length > 1 ? "几个" : "个"}问题：</div>`
+    + sure.map(s => `
+      <div class="section">
+        <div class="section-head">
+          <span class="section-dot" style="background:${topicColor(s.items[0].topic)}"></span>
+          <button class="section-title" data-drill="${esc(s.name)}" data-topic="${esc(s.items[0].topic)}">${esc(s.name)}</button>
+          <span class="section-count">${s.items.length}条</span>
+        </div>
+        <div class="grid">${sortItems(s.items).map(it => cardHtml(it)).join("")}</div>
+      </div>`).join("")
+    + `<div class="sure-acts"><button class="linklike" id="want-this">都不是我要的 → 去找「${esc(q)}」</button></div>`;
+  el.querySelectorAll("[data-drill]").forEach(b => b.addEventListener("click", () =>
+    go({ node: b.dataset.drill, topic: b.dataset.topic })));
+  el.querySelectorAll(".card").forEach(c => c.addEventListener("click", () =>
+    openModal(DATA.find(it => it.id === c.dataset.id))));
+  bindWantThis(el, q, "sure");
 }
 
 /* ---------- 「这块我们不收什么」（CY 2026-11-10 16:3x）----------
@@ -1588,7 +1658,11 @@ function renderLane(d) {
     // 解释句收进 `?`（版面上只留结论）：已知的事实错误会被挡掉，但不是每条都逐句复核过。
     HINTS.laneok = "这些是库里已有的内容，都过了质量判定。已知的事实错误会被挡住，"
       + "但库里只有一半多做过第二道逐句事实复核。";
-    box.innerHTML = `<div class="lane ok"><div class="lane-head">其实我们有——是我们的搜索没搭上你的说法</div>
+    /* 标题只说结论。原来写的是"其实我们有——是我们的搜索没搭上你的说法"：
+       那半句在跟用户解释我们的检索怎么回事，对他没有用（CY 2026-11-10 17:0x 文案铁律）。
+       而且他看到这句之前，页面刚说过"这里还没有内容"——两句话自相矛盾，
+       根因已在 renderResults 里修掉（确信命中直接给内容，不再先说没有）。 */
+    box.innerHTML = `<div class="lane ok"><div class="lane-head">这个我们有</div>
       <div class="lane-sub">${esc(d.note || "")}。都过了质量判定${hintBtn("laneok")}</div>
       <div class="lane-cards grid">${items.map(laneCardHtml).join("")}</div></div>`;
     bindLaneCards(box);
@@ -1809,6 +1883,9 @@ function fetchSemantic(q) {
   const seq = ++semSeq;
   SEM = { q, top: [], ms: 0, pending: true, err: "" };
   renderSuggest();
+  // 同理（见下面 .then 里那一句）：字面 0 命中时先把结果区换成"正在找…"，
+  // 别让"这里还没有内容"先闪一下——那句话有一半概率在几百毫秒后被自己推翻。
+  if (state.q === q && !state.mine && !state.asks && !matchedByQuery().length) renderResults();
   fetch(SEMANTIC_URL, { method: "POST", headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ q }) })
     .then(r => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
@@ -1817,6 +1894,9 @@ function fetchSemantic(q) {
       if (!d || d.ok !== true) throw new Error((d && d.err) || "bad payload");
       SEM = { q, top: (d.top || []).slice(0, 5), ms: d.ms || 0, pending: false, err: "" };
       renderSuggest();
+      // 语义是异步到的，而结果区在它到之前已经画过一遍了（那时只有字面匹配，可能是 0 条）。
+      // 字面 0 命中时必须重画一次——否则确信命中的内容要等他再动一下页面才出现。
+      if (state.q === q && !state.mine && !state.asks && !matchedByQuery().length) renderResults();
       const t0 = SEM.top[0];
       // 落进现有 ev 表不加列：node 列正好就是节点名，细节塞 note。
       // （加列要改 D1 schema，而这条信息的形状本来就跟 node 对得上。）
@@ -1829,6 +1909,8 @@ function fetchSemantic(q) {
       // 不留痕就会变成 /rtsearch 那种"自报成功的空结果"。
       SEM = { q, top: [], ms: 0, pending: false, err: String((e && e.message) || e) };
       renderSuggest();
+      // 失败也要把"正在找…"收掉，退回原来的空态——否则转圈会一直转下去。
+      if (state.q === q && !state.mine && !state.asks && !matchedByQuery().length) renderResults();
       emit("search_sem_fail", { note: SEM.err });
     });
 }
@@ -1879,7 +1961,14 @@ function renderSuggest() {
   const unsure = SEM.top[0].score < SUGGEST_SURE;
   if (unsure) maybeRecordGap(state.q, SEM.top[0].score, "weak");
 
-  const chips = SEM.top.map(t => {
+  /* 下面结果区已经把确信命中的节点**连内容一起**摆出来了（renderSureHits）⟹
+     这里再摆一遍同样的问题名就是重复占版面。只留它没摆的那几个。
+     条件要和 renderResults 里那个分支逐字一致，否则两处会各说各话。 */
+  const shown = new Set((!localHits && !state.node) ? sureNodeHits().map(s => s.name) : []);
+  const rest = SEM.top.filter(t => !shown.has(t.name));
+  if (shown.size && !rest.length) { el.innerHTML = ""; return; }
+
+  const chips = (shown.size ? rest : SEM.top).map(t => {
     const where = nodeInLib(t.name);
     if (!where) {
       return `<span class="chip gap" title="这个问题还没有合格内容">${esc(t.name)}</span>`;
@@ -1887,12 +1976,14 @@ function renderSuggest() {
     return `<button class="chip" data-sg="${esc(t.name)}" data-sg-topic="${esc(where.topic)}"
       data-sg-domain="${esc(where.domain || "")}">${esc(t.name)}<span class="n">${t.n || ""}</span></button>`;
   }).join("");
-  const allGap = SEM.top.every(t => !nodeInLib(t.name));
+  const allGap = (shown.size ? rest : SEM.top).every(t => !nodeInLib(t.name));
   el.innerHTML =
     (unsure
       ? `<div class="sg-label unsure">你问的这个，我们没有直接的答案。下面这几个问题<b>可能</b>沾边，
            也可能不是一回事——你自己判断：</div>`
-      : `<div class="sg-label">你想问的，也许是这几个问题：</div>`) +
+      : shown.size
+        ? `<div class="sg-label">还可以看：</div>`
+        : `<div class="sg-label">你想问的，也许是这几个问题：</div>`) +
     `<div class="chips">${chips}</div>` +
     (allGap ? `<div class="sg-note">这些还没有干净的答案，我们在找。</div>`
       : unsure ? `<div class="sg-note">已记进缺口清单。</div>` : "");

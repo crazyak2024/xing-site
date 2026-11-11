@@ -427,6 +427,10 @@ body.focused .card .summary{display:none}
   border:1px solid var(--ok);background:var(--ok);color:var(--card)}
 .btn-primary:hover{background:var(--ok-ink-2);border-color:var(--ok-ink-2)}
 .want-ok{display:block;max-width:420px;margin:0 auto;font-size:var(--fs-sm);color:var(--ok-ink);line-height:1.6}
+/* 「库里有、只是说法对不上」（CY 2026-11-11 06:5x 报）：确信命中的节点直接当结果摆。
+   这一行说清他看的是什么（他搜的词 ≠ 下面问题的字面），出口留在最下面。 */
+.sure-lead{font-size:var(--fs-sm);color:var(--ink-4);margin:0 0 12px;line-height:1.6}
+.sure-acts{margin:4px 0 8px;font-size:var(--fs-sm)}
 /* 没把握区的建议标题（bz1 第一件）：和确信区同样的 chips，但这句话要看得出我们在犹豫 */
 #suggest .sg-label.unsure{color:var(--warn-2);line-height:1.6}
 
