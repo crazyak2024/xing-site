@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共1974条",
+  "generated_note": "判定=合格的候选，共1979条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1172,7 +1172,7 @@
     {
       "id": "hea2",
       "label": "慢病指标与营养",
-      "count": 56
+      "count": 61
     },
     {
       "id": "hea1",
@@ -1197,7 +1197,7 @@
       "label": "健康",
       "short": "健康这块：只收讲机制的，不收治疗方案、用药和剂量。",
       "long": "我们做的是机制科普，不是诊疗。说某药该吃多少、该不该停药、拿食谱当处方——哪怕讲述者是医生、哪怕说得对，我们都不收。偏方神药、保健品带货、拿截肢失明吓人、把个人经历当普遍规律，以及「一定会」「绝对不会」这类不作限定的绝对句，同样不收。身体的事最后要问医生，不要问视频。",
-      "count": 94
+      "count": 99
     }
   },
   "domain_family": {
@@ -54140,6 +54140,33 @@
       "domain": "hea2"
     },
     {
+      "id": "bilibili:BV1wryPYqErH",
+      "video_id": "BV1wryPYqErH",
+      "title": "血压的定义与形成机制",
+      "original_title": "生理学—动脉血压",
+      "author": "宋毅老师",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1wryPYqErH",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/1d7f8805752f53709109782998c16fc7cd784b49.jpg",
+      "published_at": "2024-10-17T12:16:21+00:00",
+      "key_points": [
+        "血压=血液对单位面积血管壁的侧压力，动脉血压最高，通常测肱动脉压力",
+        "常用单位：毫米汞柱或千帕，两者可换算（1mmHg≈0.133kPa）",
+        "收缩压/舒张压源自心脏收缩和舒张，左心室收缩推动血液进入主动脉产生压力",
+        "形成血压的前提条件是足够的血液充盈，血量不足则压力随之下降"
+      ],
+      "duration_s": 1722.0,
+      "likes": 298,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解血压定义（血液对血管壁侧压力）、测量单位（毫米汞柱/千帕）、主要指标（收缩压/舒张压），及形成机制（心脏收缩、血液充盈）。",
+      "reason": "讲解了血压定义、测量单位、形成机制等基础概念，对应血压科普的核心认知。 | 引用:「血液对单位面积血管壁的侧压力就叫血压；左心室收缩血哗一下射到主动脉」",
+      "topic": "概念原理",
+      "node": "血压的形成与基本指标定义",
+      "category": "(地图缺口)血压的形成与基本指标定义",
+      "domain": "hea2"
+    },
+    {
       "id": "bilibili:BV15dG9zZEHb",
       "video_id": "BV15dG9zZEHb",
       "title": "钠离子在人体内的生理作用与水电解质平衡",
@@ -54348,6 +54375,32 @@
       "topic": "概念原理",
       "node": "缺钾会让人怎么样",
       "category": "(地图缺口)缺钾会让人怎么样",
+      "domain": "hea2"
+    },
+    {
+      "id": "bilibili:BV1Vb4y1f7Mc",
+      "video_id": "BV1Vb4y1f7Mc",
+      "title": "运动后血压升高的生理机制与诊断标准",
+      "original_title": "运动后血压高，算不算高血压？",
+      "author": "铅医蔷薇",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1Vb4y1f7Mc",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/79006a9fdc274e57c3cf10d6bd0fffd8a6560d36.png",
+      "published_at": "2021-05-15T12:39:10+00:00",
+      "key_points": [
+        "高血压诊断需在安静状态下测量（测前30分钟无烟酒运动），运动后血压升高不符合诊断标准",
+        "运动激发交感神经→心脏收缩力增强→泵出血量增加→血压升高，属正常生理反应",
+        "判断标准：运动停止后数分钟内血压能否恢复至正常范围，恢复即无病理意义"
+      ],
+      "duration_s": 81.0,
+      "likes": 39,
+      "collects": null,
+      "comments": null,
+      "summary": "纠正运动后血压升高=高血压的误解，解释其生理机制（交感神经激活、心脏收缩增强、血液泵出增多），及诊断标准的严格条件。",
+      "reason": "明确解释了运动后血压升高的生理机制及诊断标准，纠正了常见的认识误解。 | 引用:「交管神经凶分心脏收缩力加强往外蹦血蹦的也多；运动完几分钟能降下来就不叫高血压」",
+      "topic": "误区纠正",
+      "node": "血压高一点要不要紧",
+      "category": "68.血压高一点要不要紧",
       "domain": "hea2"
     },
     {
@@ -54614,6 +54667,33 @@
       "domain": "hea2"
     },
     {
+      "id": "bilibili:BV1m541137dK",
+      "video_id": "BV1m541137dK",
+      "title": "家用血压计的标准测量方法",
+      "original_title": "家用血压计的使用方法",
+      "author": "玮姐1314",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1m541137dK",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/a2afc47a8d1eefac0bf6b0a1d601c78185965427.jpg",
+      "published_at": "2021-05-10T04:55:17+00:00",
+      "key_points": [
+        "袖带中心需与心脏同高，紧贴度以能塞入一根手指为准，避免过松或过紧",
+        "测量前需保持安静状态10-20分钟，测量时身心放松、手掌向上、不说话",
+        "尽可能每天同一时间、同一条件、同一姿势测量，便于观察血压变化规律",
+        "电子血压计需用稳定交流电源，电池不足导致电压不稳定，测量结果有误差"
+      ],
+      "duration_s": 234.0,
+      "likes": 256,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解在家测血压的标准化条件与步骤：袖带位置、紧贴度、测量时机（安静10-20分钟）、姿势、电源稳定等关键要点。",
+      "reason": "明确规范了在家测血压的标准操作条件，包括器械放置、环境条件、身体姿态等要素。 | 引用:「袖带中心应与心脏同高，塞入一根手指为准；测量前保持安静10到20分钟」",
+      "topic": "方法实操",
+      "node": "血压怎么测才测得准",
+      "category": "65.血压怎么测才测得准",
+      "domain": "hea2"
+    },
+    {
       "id": "bilibili:BV1na4y1P7oM",
       "video_id": "BV1na4y1P7oM",
       "title": "家庭血压测量的标准方法",
@@ -54638,6 +54718,59 @@
       "topic": "方法实操",
       "node": "血压怎么测才测得准",
       "category": "65.血压怎么测才测得准",
+      "domain": "hea2"
+    },
+    {
+      "id": "bilibili:BV1C94y1U7uS",
+      "video_id": "BV1C94y1U7uS",
+      "title": "低血压的定义与分类",
+      "original_title": "血压多少算是低血压，低血压对身体有危害吗？",
+      "author": "行侠好医",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1C94y1U7uS",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/edb3c1c107d6d0f137f921063774f5f1d357a87d.jpg",
+      "published_at": "2022-05-28T01:00:00+00:00",
+      "key_points": [
+        "低血压定义：收缩压<90mmHg或舒张压<60mmHg，但症状与动态反应是判断关键",
+        "生理性低血压：无症状、运动后血压能升至正常，实为保护因素，高血压风险反而更低",
+        "病理性低血压：平时正常、突然降低且伴头晕乏力等症状，提示身体发生异常",
+        "体位性低血压：改变体位（起身）时收缩压下降≥20mmHg或舒张压下降≥10mmHg"
+      ],
+      "duration_s": 160.0,
+      "likes": 143,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解低血压诊断标准（收缩压<90mmHg或舒张压<60mmHg），区分生理性、病理性、体位性低血压的特点与临床意义。",
+      "reason": "明确对比了不同类型低血压的特点与临床意义，纠正了'低血压一定是病'的认识误区。 | 引用:「生理性血压偏低是好现象，风险更小；突然降低伴头晕属不正常，需医学干预」",
+      "topic": "概念原理",
+      "node": "低血压的原因与分类",
+      "category": "(地图缺口)低血压的原因与分类",
+      "domain": "hea2"
+    },
+    {
+      "id": "bilibili:BV1wm4y1Q7Zx",
+      "video_id": "BV1wm4y1Q7Zx",
+      "title": "高血压患者为什么要做这些检查",
+      "original_title": "高血压患者要做的检查，必须查！医生：每个高血压病人都要知道",
+      "author": "心脑血管医生赵丹阳",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1wm4y1Q7Zx",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/3fb8727a0ee26b55b8bb42a40d89eb6e84bfadcc.jpg",
+      "published_at": "2022-01-16T20:53:17+00:00",
+      "key_points": [
+        "需检查血糖、血脂、肝肾功、尿酸等指标，识别伴随的代谢异常",
+        "长期高血压伤害肾脏，需查肾功能和尿蛋白评估受损程度",
+        "高血压致心肌肥厚和缺血，心电图和超声可显示心脏结构变化"
+      ],
+      "duration_s": 80.0,
+      "likes": 100,
+      "collects": null,
+      "comments": null,
+      "summary": "讲高血压患者必做的三类检查（血生化、肾功尿蛋白、心电图）及其原因：检测危险因素、发现器官损害。",
+      "reason": "讲述高血压患者需要进行的检查项目及其背后的生理机制——高血压怎么伤害器官。未涉及治疗方案或用药建议。 | 引用:「长期的血压升高会对肾脏有损害会出现高血压肾损害，长期的血压增高会使我们的心肌受损」",
+      "topic": "概念原理",
+      "node": "高血压需要定期查哪些项目？注意这些高血压不影响寿命",
+      "category": "高血压需要定期查哪些项目？注意这些高血压不影响寿命",
       "domain": "hea2"
     },
     {
