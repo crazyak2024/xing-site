@@ -51,6 +51,26 @@ let ALL_DATA = [];      // 全部内容（跨领域）
 let DATA_EDGES = {};    // 知识地图的边：{节点名: [{type,dst,why}]}，详情页用
 let TOPICS = [];
 let DOMAIN_LIST = [];   // [{id,label,count}]，只含真有合格内容的领域
+
+/* ══════════ 首页壳层：shell.json（CY 2026-11-11 05:1x 报「主页是空的」）══════════
+ * 他的话：「现在主页是空的，搜一个内容就要等待」。查实：`data.json` 这天已经涨到
+ * **3.84MB**（gzip 后约 1.1MB），本机当时网络又恰好很慢（独立验证：绕开代理直连，
+ * 12–30KB/s，不是我们代码的锅）—— 但哪怕网络正常，首页那 4 张主题卡（概念原理/
+ * 方法实操/误区纠正/时效选择）也要等**全部 1979 条正文**下载解析完才画得出来，
+ * 而它们真正需要的只是"名字 + 条数 + 一句静态提示"，**没有一条正文字节是必须的**。
+ *
+ * 这不是新故障，是旧债——`pipeline/export_site.py` 里原来就写着"彻底的修法是拆包，
+ * 这里先把假话去掉"，只是一直没排上。
+ *
+ * 做法：后端另导出一份 `shell.json`（2–3KB，和 data.json 同一次导出一起生成），
+ * 装首页用得到的一切（`topics`/`topic_counts`/`domains`/`families`/`domain_family`/
+ * `all_count`），**不含任何一条内容正文**。前端两份并行取，shell 先到就先把首页画出来；
+ * `data.json` 继续给搜索结果和详情页用，那部分的逻辑一个字都没动。
+ * ⚠️ **只管首页顶层（S0）、未选领域的那条路径**：选了领域 / 搜了词 / 进了问题之后，
+ * 该等 `data.json`还是等——那些视图需要的是具体哪几条内容，shell 给不了。 */
+let SHELL_LOADED = false;
+let TOPIC_COUNTS = {};  // {主题名: 条数}，首页顶层 4 张卡用
+let ALL_COUNT = 0;      // 全库合格总数，首页"库内 N 条"/"全部领域 N"在数据到之前先显示这个
 const state = { q: "", topic: null, node: null, domain: null, mine: false, asks: false };
 
 /* 哪些主题行在 S1/S2 被手动展开过（CY 2026-11-08 10:5x：「section下tag太多了，无法阅读了，
@@ -66,14 +86,25 @@ const ROW_CHIP_MAIN = 8; // 单行最多先亮出几个节点，其余折进"其
 function applyDomain() {
   DATA = state.domain ? ALL_DATA.filter(it => it.domain === state.domain) : ALL_DATA;
   const el = document.getElementById("lib-count");
-  if (el) el.textContent = DATA.length;
+  if (!el) return;
+  // data.json 没到之前，DATA 是空的——这时"库内 0 条"是假话，宁可先显示 shell 给的
+  // 真实总数（选了领域就查那个领域的真实条数，没选就是 all_count）。数据一到，
+  // 行为和原来完全一样（DATA.length 本来就该和这两个数相等）。
+  if (!DATA_LOADED && SHELL_LOADED) {
+    const n = state.domain ? (DOMAIN_LIST.find(d => d.id === state.domain)?.count ?? ALL_COUNT) : ALL_COUNT;
+    el.textContent = n;
+    return;
+  }
+  el.textContent = DATA.length;
 }
 function domainBarHtml() {
   if (DOMAIN_LIST.length < 2) return "";
   const btn = (id, label, n) =>
     `<button class="dchip${(state.domain === id || (!state.domain && id === null)) ? " on" : ""}" ` +
     `data-domain="${id === null ? "" : esc(id)}">${esc(label)}${n ? ` <span class="dn">${n}</span>` : ""}</button>`;
-  return `<div class="domain-bar">` + btn(null, "全部领域", ALL_DATA.length) +
+  // 同上：数据没到时用 shell 给的总数，不是 0——这一行本来就该和 lib-count 同一个数。
+  const allN = DATA_LOADED ? ALL_DATA.length : ALL_COUNT;
+  return `<div class="domain-bar">` + btn(null, "全部领域", allN) +
     DOMAIN_LIST.map(d => btn(d.id, d.label, d.count)).join("") + `</div>`;
 }
 
@@ -322,6 +353,38 @@ function renderMap() {
   let html = "";
 
   if (nodeMissing()) { el.innerHTML = ""; return; }
+
+  if (!state.q && !state.topic && !state.node && !DATA_LOADED && SHELL_LOADED && !state.domain) {
+    /* 🔑 shell 快速路径：data.json 没到，但 shell.json 到了——首页顶层 4 张卡只需要
+       "名字+条数+静态提示"，shell 全都有，不必等正文。数据一到，下面那条真实路径
+       会重新渲染一遍，行为分毫不差（这是同一份 TOPIC_HINT，只是条数的来源不同）。
+       ⚠️ 只接管**未选领域**的顶层视图：选了领域后的拆分，shell 没有这个粒度，
+       交给下面原来的逻辑（此时它会照旧显示"还没数据"，那个状态本来就少见）。 */
+    html = `<div class="topic-grid">` + TOPICS.filter(t => TOPIC_COUNTS[t]).map(t => `
+      <div class="topic-card slim" style="--c:${topicColor(t)}">
+          <button class="topic-head" data-topic-only="${esc(t)}">
+            <span class="dot"></span><span class="tname">${esc(t)}</span><span class="tn">${TOPIC_COUNTS[t]}条</span>
+          </button>
+          <div class="thint">${esc(TOPIC_HINT[t] || "")}</div>
+        </div>`).join("") + `</div>`;
+    // 和下面那条真实路径一样，顶上要带着领域 tab（domainBarHtml 也是 shell 字段驱动的，
+    // 数据没到时一样能画对）——漏了这一步的后果是真机点开后"全部领域/AI/财经…"那排消失了，
+    // 11-11 05:3x 判据第一次跑就在这里抓到（0 个 .dchip）。
+    el.innerHTML = domainBarHtml() + html;
+    el.querySelectorAll("[data-domain]").forEach(b => b.addEventListener("click", () => {
+      const id = b.dataset.domain || null;
+      const qbox = document.getElementById("q");
+      if (qbox) qbox.value = "";
+      state.domain = id;
+      applyDomain();
+      go({ topic: null, node: null, q: "" });
+    }));
+    el.querySelectorAll("[data-topic-only]").forEach(b => b.addEventListener("click", () => {
+      const t = b.dataset.topicOnly;
+      go(t === state.topic && !state.node ? { topic: null } : { topic: t, node: null });
+    }));
+    return;
+  }
 
   if (!state.q && !state.topic && !state.node) {
     /* S0 顶层目录：4 个主题卡。每卡只列 ≥2 条的节点，单条的汇总成"其他"——
@@ -774,16 +837,16 @@ function renderResults() {
     if (note) note.innerHTML = `怎么排的${hintBtn("sort")}`;
   }
 
-  // 🔴 **数据还没到 ≠ 我们没有内容**（CY 2026-11-10 08:2x 手机首开实测报的 bug）。
-  // data.json 压缩后 960KB，从美西机器直连都要 2.9 秒；他在飞书内置浏览器里等的那段时间，
-  // 页面上写的是"这里还没有内容"——**库里有 1620 条，这句话是在替我们自己撒谎**，
-  // 而且和"真的搜不到"长得一模一样（他的原话：好像需要我输入一个搜索词内容才会出来）。
-  // 加载中必须说加载中。彻底的修法是拆包（首屏只要地图，不要 1620 条正文），那属于
-  // 首页改版，这里先把假话去掉。
+  // 🔴 **数据还没到 ≠ 我们没有内容**（CY 2026-11-10 08:2x 手机首开实测报的 bug，
+  // 11-11 05:1x 又报一次「主页是空的」——那次的病根是"知识地图也绑在这份大文件上"，
+  // 已经用 shell.json 拆开，见 loadShell()）。这里剩下的是**结果/详情**那部分：
+  // 它们要的是哪几条内容本身，没法靠一份几 KB 的摘要代替，加载中必须老实说加载中。
+  // ⚠️ **"约 1MB"这句原来写死一个数字，库从 1620 条长到 1979 条后它已经偏了**——
+  // 条数会一直涨，写死的字节数只会越来越不准。改成不量化的说法，不再因为库存变化而漂移。
   if (!DATA_LOADED) {
-    el.innerHTML = `<div class="empty"><span class="lane-spin"></span>正在把内容载入…
-      <div class="empty-note">第一次打开要下载整个内容库（约 1MB），网络慢时要等几秒。
-      这里一会儿就会出现知识地图。</div></div>`;
+    el.innerHTML = `<div class="empty"><span class="lane-spin"></span>正在把这部分内容载入…
+      <div class="empty-note">上面的分类和问题已经能点——这里要的是具体内容，
+      网络慢时会多等一会儿。</div></div>`;
     return;
   }
   /* ══════════ 首页不铺内容（CY 2026-11-10 批体验审查 §1）══════════
@@ -2073,6 +2136,29 @@ function openReleases() {
   // 和 15:3x 的分享按钮同一处理——要记就先改白名单再部署 Worker，不在这版偷偷塞。
 }
 
+/* shell.json 只有几 KB，和 data.json 并行取、谁先到谁先画。失败就安静重试几次——
+   它不影响"有没有内容"（data.json 落地后一样能补上同一批字段），只影响首页能多快
+   看到真实数字而不是"库内 0 条"那种假话。*/
+function loadShell(attempt = 1) {
+  fetch("shell.json", { cache: "no-cache" })
+    .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(d => {
+      TOPICS = d.topics || TOPICS;
+      TOPIC_COUNTS = d.topic_counts || {};
+      DOMAIN_LIST = d.domains || DOMAIN_LIST;
+      FAMILIES = d.families || FAMILIES;
+      DOMAIN_FAMILY = d.domain_family || DOMAIN_FAMILY;
+      ALL_COUNT = d.all_count || 0;
+      SHELL_LOADED = true;
+      if (!DATA_LOADED) { applyDomain(); render(); }   // 先刷"库内 N 条"，再把首页画出来
+    })
+    .catch(() => {
+      if (attempt < 3) setTimeout(() => loadShell(attempt + 1), 500 * attempt);
+      // 三次都没拿到就算了：data.json 迟早会带着同一批字段落地，首页会在那时才画出来
+      // ——退回原来的行为，不是新的失败模式。
+    });
+}
+
 /* 实测过一次：data.json 当时 ~800KB（转写全文都在里面），网络不稳时会**半截下载却仍回
    HTTP 200**，JSON.parse 直接抛 → 页面全白。tx2 把转写全文移出 data.json 后体积掉了
    一个数量级，但这个兜底留着——"200 + 残缺 body"是这台机器上反复出现的形状，
@@ -2139,6 +2225,7 @@ loadAsks();     // 「我要补的」要在 restoreFromUrl 之前装好：?asks=
    判据第一次跑就在这里红了。 */
 refreshAsksUI();
 restoreFromUrl();   // 必须在 loadData 之前：它一回来就 render，那时 state 得已经是地址里的样子
+loadShell();    // 几 KB，和 loadData 并行——首页那 4 张卡不该等 data.json 那几 MB
 loadData();
 loadPages();
 loadReleases();   // ~2KB，取不到就不显示版本行（页面宁可少说，不许猜一个版本号出来）
