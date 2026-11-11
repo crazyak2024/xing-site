@@ -1,8 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96">
-<!-- 「醒」的标识：被切断的无限符号。CY 2026-11-10 16:3x 从 6 个方向里选的 06。
-     无限刷是我们要去掉的那个东西,所以标识直接把 ∞ 切开——切口 12°、右半沿切口滑移,
-     读作"切开后错位",而不是"画歪了"。
-     ⚠️ 两个视觉尺寸不是一个文件:logo.svg 给 24px 以上,favicon.svg 笔画更粗、缺口更大,
-     因为细笔画和窄缝在 16px 上会糊成一个普通的 ∞ ——那恰好是我们在反对的符号。 -->
-<g transform="rotate(12 48 48)" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="butt"><path d="M 44,40 C 29.3,26 14,32.2 14,48 C 14,63.8 29.3,70 44,56"/><path d="M 52,40 C 66.7,26 82,32.2 82,48 C 82,63.8 66.7,70 52,56" transform="translate(-0.83 3.91)"/></g>
+<!-- 「醒」的标识：被**切开**的无限符号（CY 2026-11-10 从 6 个方向选 06，17:0x 说"不够锐"后重做）。
+     锐在哪：切口不是把两条路径各自画断、留平头——那看起来是"掰断的"。
+     这里是**用斜向半平面裁切整条 ∞**，所以两个切面和刀口严格共线，
+     再让右半沿刀口法线滑移 ⟹ 读作"一刀切开后错位"。环收尖（pointy=1.5）也是为了锐。
+     ⚠️ 两个视觉尺寸不是一份文件：页签那份刀口更陡、缺口更大、笔画更粗，
+     否则 16px 上会糊成一个**普通的 ∞**——那恰好是我们反对的符号。 -->
+  <defs>
+    <clipPath id="xlm"><rect x="-60" y="-60" width="105.8" height="260" transform="rotate(18 48 48)"/></clipPath>
+    <clipPath id="xrm"><rect x="50.2" y="-60" width="260" height="260" transform="rotate(18 48 48)"/></clipPath>
+  </defs>
+  <g fill="none" stroke="currentColor" stroke-width="6.5">
+    <path d="M 48,48 C 48,15.0 14,26 14,48 C 14,70 48,81.0 48,48 C 48,15.0 82,26 82,48 C 82,70 48,81.0 48,48 Z" clip-path="url(#xlm)"/>
+    <path d="M 48,48 C 48,15.0 14,26 14,48 C 14,70 48,81.0 48,48 C 48,15.0 82,26 82,48 C 82,70 48,81.0 48,48 Z" clip-path="url(#xrm)" transform="translate(-1.24 3.80)"/>
+  </g>
 </svg>

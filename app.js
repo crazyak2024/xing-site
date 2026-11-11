@@ -304,8 +304,10 @@ function renderMap() {
       if (!byTopic.has(it.topic)) byTopic.set(it.topic, []);
       byTopic.get(it.topic).push(it);
     }
-    html = `<div class="map-intro">点一个主题，或直接点下面的问题——两下就到内容。也可以用上面的搜索框直接问。</div>
-      <div class="topic-grid">` + TOPICS.filter(t => byTopic.has(t)).map(t => {
+    /* CY 2026-11-10 17:0x：「文案必须是对用户有价值的话，不要解释与他们无关的事情」。
+       这里原来有一句「点一个主题，或直接点下面的问题——两下就到内容…」：它解释的是**怎么操作**，
+       而卡片本身已经说明了这件事。判准还是那条——删掉它，用户会做错什么吗？不会。 */
+    html = `<div class="topic-grid">` + TOPICS.filter(t => byTopic.has(t)).map(t => {
       const items = byTopic.get(t);
       const nodes = [...countBy(items, "node").entries()].sort((a, b) => b[1] - a[1]);
       const main = nodes.filter(([, n]) => n >= 2).slice(0, 5);

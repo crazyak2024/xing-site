@@ -76,7 +76,7 @@
   /* 形：标识是**截断的笔画 + 直角收口**，所以全站圆角克制、线一律 1px。
      --cut-angle 是标识上那道切口的角度，分隔线等元素复用它，
      保证全站出现的每一处"切口"都是同一个角度，而不是各画各的。 */
-  --radius:7px;--radius-lg:12px;--hair:1px;--stroke:2px;--cut-angle:12deg;
+  --radius:7px;--radius-lg:12px;--hair:1px;--stroke:2px;--cut-angle:18deg;
 }
 *{box-sizing:border-box}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
@@ -97,7 +97,7 @@ button{font-family:inherit}
 .slogan{font-size:18px;font-weight:700;color:var(--ink);letter-spacing:2px;
   margin:var(--sp-3) 0 var(--sp-2);line-height:1.3}
 /* ── 切口：标识上那道斜缝，提炼成全站的分隔语言 ──
-   一条普通的线，在偏左处被一道 12° 的缝切开（角度就是 --cut-angle，和标识同一个数）。
+   一条普通的线，在偏左处被一道 18° 的缝切开（角度就是 --cut-angle，和标识同一个数）。
    只在"一段结束了"的地方用，用多了就不是记号而是花纹。 */
 .cut-rule{position:relative;height:var(--hair);background:var(--line);margin:0;border:0}
 .cut-rule::after{content:"";position:absolute;left:38%;top:-5px;width:6px;height:11px;
@@ -519,10 +519,15 @@ a.src:after{content:" →"}
          ⚠️ 切口 12°、右半沿切口滑移 4 ——缺口再窄一点，16px 上就糊成一个普通的 ∞，
          而那恰好是我们反对的符号。 -->
     <h1><svg class="mark" viewBox="0 0 96 96" aria-hidden="true" focusable="false">
-      <g transform="rotate(12 48 48)" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="butt">
-        <path d="M 44,40 C 29.3,26 14,32.2 14,48 C 14,63.8 29.3,70 44,56"/>
-        <path d="M 52,40 C 66.7,26 82,32.2 82,48 C 82,63.8 66.7,70 52,56" transform="translate(-0.83 3.91)"/>
-      </g></svg><span>醒</span></h1>
+        <defs>
+          <clipPath id="xlh"><rect x="-60" y="-60" width="105.8" height="260" transform="rotate(18 48 48)"/></clipPath>
+          <clipPath id="xrh"><rect x="50.2" y="-60" width="260" height="260" transform="rotate(18 48 48)"/></clipPath>
+        </defs>
+        <g fill="none" stroke="currentColor" stroke-width="6.5">
+          <path d="M 48,48 C 48,15.0 14,26 14,48 C 14,70 48,81.0 48,48 C 48,15.0 82,26 82,48 C 82,70 48,81.0 48,48 Z" clip-path="url(#xlh)"/>
+          <path d="M 48,48 C 48,15.0 14,26 14,48 C 14,70 48,81.0 48,48 C 48,15.0 82,26 82,48 C 82,70 48,81.0 48,48 Z" clip-path="url(#xrh)" transform="translate(-1.24 3.80)"/>
+        </g>
+      </svg><span>醒</span></h1>
     <p class="tagline">知识视频地图</p>
     <!-- slogan（CY 2026-11-10 16:3x：「整个网站还是缺一句有趣有力的 slogan」）。
          选它的理由：它和标识是**同一句话的两种说法**——标识把无限符号切断，这句把
