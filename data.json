@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共1916条",
+  "generated_note": "判定=合格的候选，共1917条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1162,7 +1162,7 @@
     {
       "id": "ai1",
       "label": "AI 与大模型",
-      "count": 1723
+      "count": 1724
     },
     {
       "id": "fin1",
@@ -53106,6 +53106,33 @@
       "topic": "概念原理",
       "node": "大模型蒸馏原理与应用",
       "category": "(地图缺口)大模型蒸馏原理与应用",
+      "domain": "ai1"
+    },
+    {
+      "id": "douyin:7674555682418380083",
+      "video_id": "7674555682418380083",
+      "title": "大模型蒸馏技术原理与局限分析",
+      "original_title": "Deepseek全靠蒸馏？蒸馏到底是什么？真的有那么好用吗？ 天天蒸馏挂嘴边这群人有没有想过，蒸馏能从输出还原出先进算法吗？如果能的话，这项技术远比蒸馏有用的多了。#Deepseek #人工智能 #AI #大模型 #Chatgpt",
+      "author": "林禾Mind",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7674555682418380083",
+      "cover_url": "https://p3-sign.douyinpic.com/tos-cn-i-dy/4304fef0cda0430d8c025b4b129ea4ae~tplv-dy-resize-walign-adapt-aq:540:q75.webp?lk3s=138a59ce&x-expires=1795561200&x-signature=%2Foa3l9C4S3bG88tmFDemZskBZAM%3D&from=327834062&s=PackSourceEnum_AWEME_DETAIL&se=false&sc=cover&biz_tag=aweme_video&l=20261111075702BC01AFB2A6BAA1B2FCEA",
+      "published_at": "2026-08-19T01:10:00+00:00",
+      "key_points": [
+        "蒸馏用软目标而非硬标签传递知识，保留错误答案的相对关系（暗知识）",
+        "温度参数在训练时烫平概率分布暴露细节，完成后恢复，这是蒸馏的关键设计",
+        "白河蒸馏需教师模型内部数据，仅对开源/自家模型可行；闭源模型的蒸馏无法获取",
+        "自我蒸馏（多个专家模型合并）是2025年新方向，Deepseek V3、Kimi K3等都采用此法"
+      ],
+      "duration_s": 536.02,
+      "likes": 2295,
+      "collects": null,
+      "comments": null,
+      "summary": "讲蒸馏原理：软目标和暗知识传递知识，温度参数调控概率分布。列举白河蒸馏、自我蒸馏等方法，分析蒸馏无法从输出还原算法，反驳国产模型都靠蒸馏的误区。",
+      "reason": "视频讲解蒸馏通过软目标和暗知识传递知识的原理，引入温度参数调控机制，列举多种蒸馏方法，并明确指出\"白河蒸流只能针对自家模型或开源模型可行，GP Cloud的内部概率根本不可能拿得到\"，直接驳斥了蒸馏能还原闭源模型算法的说法。 | 引用:「白河蒸流只能针对自家模型或开源模型可行，GP Cloud的内部概率根本不可能拿得到」",
+      "topic": "误区纠正",
+      "node": "大模型蒸馏与知识压缩",
+      "category": "(地图缺口)大模型蒸馏与知识压缩",
       "domain": "ai1"
     }
   ]
