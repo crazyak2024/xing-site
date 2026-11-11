@@ -792,8 +792,40 @@ function renderResults() {
     openModal(DATA.find(it => it.id === c.dataset.id))));
 }
 
+/* ---------- 「这块我们不收什么」（CY 2026-11-10 16:3x）----------
+ * 他的话：「健康家族『任何治疗方案、用药剂量一律拒收』这样的 msg 应该在页面中展示出来。
+ * 其他的知识点可能有类似的规则，如果对用户有价值，应该展示出来。」
+ *
+ * 为什么这条值得占版面（我们刚砍过一轮文案，这是加回来的那一行）：
+ * 这个产品的差异化**全在拒收了什么**上。「我们只收讲机制的，不收用药剂量」是一句
+ * 用户可以拿去验的承诺——他随便点开一条，发现有人在教他吃什么药，我们就输了。
+ * 判准还是那条：删掉这句，用户会做错什么吗？——**会**。他会以为这里能回答"我该吃什么药"。
+ *
+ * 只在视线收到一个家族里时出现（选了领域，或进了某个问题）。首页混着三类，
+ * 摆一条规则等于谁也不指。长的那段收进 `?`。 */
+let FAMILIES = {};        // 家族 id → {label, short, long, count}
+let DOMAIN_FAMILY = {};   // 块 id → 家族 id（item.domain 是块，不是家族）
+
+function currentFamily() {
+  if (state.domain) return DOMAIN_FAMILY[state.domain] || null;
+  if (!state.node && !state.topic) return null;   // 首页不显示
+  const fams = new Set(filtered().map(i => DOMAIN_FAMILY[i.domain]).filter(Boolean));
+  return fams.size === 1 ? [...fams][0] : null;   // 跨家族的主题（如"概念原理"）不显示
+}
+
+function renderFamilyRule() {
+  const el = document.getElementById("family-rule");
+  if (!el) return;
+  const f = currentFamily();
+  const r = f && FAMILIES[f];
+  if (!r || !r.short) { el.innerHTML = ""; return; }
+  HINTS.famrule = r.long || "";
+  el.innerHTML = esc(r.short) + (r.long ? hintBtn("famrule") : "");
+}
+
 function render() {
   renderCrumbs();
+  renderFamilyRule();
   if (typeof renderSuggest === "function") renderSuggest();
   renderHomeQuestions();
   renderMap();
@@ -1565,6 +1597,8 @@ function loadData(attempt = 1) {
       DATA_LOADED = true;
       TOPICS = d.topics || [...new Set(ALL_DATA.map(i => i.topic))];
       DOMAIN_LIST = d.domains || [];
+      FAMILIES = d.families || {};
+      DOMAIN_FAMILY = d.domain_family || {};
       applyDomain();
       render();
       /* 地址里带 ?v= ⟹ 把那条视频直接打开（分享链接的落点）。

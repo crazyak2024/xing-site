@@ -180,6 +180,9 @@ body.focused .card .summary{display:none}
 .hint{font-size:var(--fs-xs);color:var(--faint);margin:var(--sp-1) 0 0;line-height:1.6}
 .hint a{color:var(--mute)}
 #scope-hint{font-size:var(--fs-xs);color:#b7791f;margin-top:var(--sp-1)}
+/* 「这块我们不收什么」：是承诺不是提示，所以给一道左边线，但颜色压住不抢答案 */
+#family-rule:not(:empty){margin:10px 0 2px;padding:7px 0 7px 11px;border-left:2px solid #d9d9d9;
+  font-size:var(--fs-sm);color:#6b6b6b;line-height:1.6}
 
 /* 面包屑 */
 #crumbs{display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-top:10px;font-size:var(--fs-sm)}
@@ -452,6 +455,11 @@ a.src:after{content:" →"}
     <p class="hint">用你自己的话问。搜不到是我们的问题。</p>
     <div id="scope-hint"></div>
     <div id="crumbs"></div>
+    <!-- 「这块我们不收什么」（CY 2026-11-10 16:3x）。只在视线已经收到**一个领域家族**里时出现
+         （选了领域，或进了某个问题），首页不出现——首页是混着的，摆一条规则等于谁也不指。
+         放在答案上方是刻意的：用户正要决定信不信下面这些内容，规则在这时候才有用。
+         正文来自 data.json 的 families[*].short，不写死在页面里。 -->
+    <div id="family-rule"></div>
     <!-- 首屏的「这里已经答得比较全的问题」（CY 2026-11-10）：真实节点+真实条数，可点。
          放在地图之前，因为它比地图更直接——地图要先理解结构，问题可以直接认。 -->
     <div id="home-q"></div>
