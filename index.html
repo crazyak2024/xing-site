@@ -355,6 +355,25 @@ body.focused .card .summary{display:none}
 
 footer{padding:14px 16px 30px;color:var(--sub);font-size:var(--fs-sm);border-top:1px solid var(--line)}
 .about{font-size:var(--fs-sm);color:#888;line-height:1.6;max-width:720px;margin:0 auto}
+/* 版本行：比 .about 再轻一档——它是查得到的信息，不是要读的信息 */
+.verline{max-width:720px;margin:12px auto 0;font-size:var(--fs-sm);color:#aaa}
+.verbtn{background:none;border:none;padding:0;margin-left:8px;font:inherit;color:#888;
+  text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.verbtn:hover{color:#444}
+/* 更新记录面板：复用 .modal 的容器，自己只管里面的版式 */
+.rel-wrap{padding:18px 18px 26px;max-width:620px;margin:0 auto}
+.rel-h{font-size:17px;font-weight:700;margin:0 0 4px}
+.rel-sub{font-size:var(--fs-sm);color:#888;margin:0 0 18px;line-height:1.6}
+.rel-item{padding:14px 0;border-top:1px solid var(--line)}
+.rel-top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.rel-v{font-weight:700;font-size:15px}
+.rel-cur{font-size:11px;background:#1a7f5a;color:#fff;border-radius:3px;padding:1px 5px}
+.rel-date{font-size:var(--fs-sm);color:#aaa;margin-left:auto}
+.rel-t{font-size:15px;margin:2px 0 0}
+.rel-item ul{margin:8px 0 0;padding-left:18px}
+.rel-item li{font-size:var(--fs-sm);color:#555;line-height:1.65;margin:4px 0}
+.rel-rule{margin-top:20px;padding-top:14px;border-top:1px solid var(--line);
+  font-size:var(--fs-sm);color:#999;line-height:1.65}
 
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:flex-start;justify-content:center;z-index:100;overflow-y:auto}
 .modal-overlay.open{display:flex}
@@ -475,6 +494,12 @@ a.src:after{content:" →"}
     没有无限滚动、自动连播、猜你喜欢，也没有账户和浏览档案。
     <br>一半多的内容做过第二道事实复核，其余还没逐条查——看到讲错的，点「没找到我要的」。
   </div>
+  <!-- 版本号与更新记录（CY 2026-11-10 16:2x 要）。放页脚是因为版本号的惯例位置就在这里，
+       而且它不该和"找内容"抢注意力——要找它的人知道往下看。
+       **规则：用户能感知的变化才升一号**，看不见的修补不占号 ⟹ "有的版本没有 release note"
+       这件事不会发生，号本身就是一条记录（他提的那条顾虑，用编号规则消掉而不是用例外消掉）。
+       文案在 releases.json 里，不写死在这——那样改一句话要改三个地方，必然漂移。 -->
+  <div class="verline" id="verline"></div>
 </footer>
 <script src="app.js"></script>
 </body>

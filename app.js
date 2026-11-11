@@ -174,6 +174,7 @@ function shareUrl(videoId, lane) {
   if (state.node) p.set("node", state.node);
   if (videoId) p.set("v", videoId);
   if (lane) p.set("lane", "1");   // 只有"等待页"给出的地址带它：回来要接着看进度
+  if (REL_OPEN) p.set("rel", "1");  // 更新记录面板也有自己的地址（可以直接发"看我们改了什么"）
   const s = p.toString();
   return location.origin + location.pathname + (s ? "?" + s : "");
 }
@@ -195,6 +196,7 @@ function restoreFromUrl() {
   if (p.get("node")) state.node = p.get("node");
   PENDING_VIDEO = p.get("v") || null;
   PENDING_LANE = p.get("lane") === "1" ? state.q : null;
+  PENDING_REL = p.get("rel") === "1";
   const box = document.getElementById("q");
   if (box && state.q) box.value = state.q;
 }
@@ -981,6 +983,7 @@ function closeModal() {
   document.getElementById("modal-overlay").classList.remove("open");
   document.getElementById("modal-content").innerHTML = "";
   MODAL_ID = null;
+  REL_OPEN = false;   // 更新记录也走这个关闭口，关掉要把 ?rel=1 从地址里撤掉
   syncUrl(null);
 }
 
@@ -1478,6 +1481,77 @@ document.getElementById("q").addEventListener("input", e => {
   }, 160);
 });
 
+/* ---------- 版本号与更新记录（CY 2026-11-10 16:2x 要）----------
+ * 他要的三件：① 首页有个入口 ② 能看历史、有价值感 ③ 他自己能一眼 check 当前版本。
+ * 加上他紧跟的两条约束：**必须 user facing**、**未必每个版本都有 release note**。
+ *
+ * 编号规则（我定的，写在面板底部给用户看，不只是内部约定）：
+ *   **用户能感知的变化才升一号**；页面变快、修个 bug、后台换实现——不升号、不写记录。
+ * 这条规则把他第二、第三条约束同时消掉：既然只有"你下次来会发现不一样"才升号，那
+ * **"没有记录的版本"根本不存在**，不需要给它留例外；而"必须 user facing"也就不是
+ * 写作要求而是**结构要求**——写不出一句"你会发现什么不一样"的改动，压根拿不到号。
+ * ⚠️ 文案只放在 releases.json 里，不在这里写死：两处各一份必然漂移。
+ * 面板里**不放**"我们修了哪些 bug / 重构了什么"——那是给我自己看的，对用户是噪音。 */
+let REL = null;           // releases.json 的内容（点开才需要，但进站就取：它 ~2KB）
+let REL_OPEN = false;     // 更新记录面板开着没（地址栏的 ?rel=1 跟着它走）
+let PENDING_REL = false;  // 带 ?rel=1 落地的：等 releases.json 到了再打开
+
+function loadReleases() {
+  fetch("releases.json", { cache: "no-cache" })
+    .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(d => {
+      REL = d;
+      renderVersionLine();
+      if (PENDING_REL) { PENDING_REL = false; openReleases(); }
+    })
+    // 取不到就**什么都不显示**：显示一个猜的版本号比不显示更糟（页面会撒谎）。
+    .catch(() => { REL = null; });
+}
+
+function renderVersionLine() {
+  const el = document.getElementById("verline");
+  if (!el || !REL) return;
+  const cur = (REL.entries || []).find(e => e.v === REL.current) || (REL.entries || [])[0];
+  if (!cur) return;
+  el.innerHTML = `版本 v${esc(cur.v)} · ${esc(cur.date)} ·`
+    + `<button class="verbtn" id="rel-open">更新记录</button>`;
+  document.getElementById("rel-open").addEventListener("click", openReleases);
+}
+
+function openReleases() {
+  if (!REL) return;
+  const m = document.getElementById("modal-content");
+  const items = (REL.entries || []).map(e => `
+    <div class="rel-item">
+      <div class="rel-top">
+        <span class="rel-v">v${esc(e.v)}</span>
+        ${e.v === REL.current ? `<span class="rel-cur">现在用的</span>` : ""}
+        <span class="rel-date">${esc(e.date)}</span>
+      </div>
+      <p class="rel-t">${esc(e.title)}</p>
+      <ul>${(e.points || []).map(p => `<li>${esc(p)}</li>`).join("")}</ul>
+    </div>`).join("");
+  m.className = "modal";
+  m.innerHTML = `
+    <div class="modal-head">
+      <span class="modal-where">更新记录</span>
+      <button class="modal-close" aria-label="关闭">&times;</button>
+    </div>
+    <div class="rel-wrap">
+      <p class="rel-h">这个站改过什么</p>
+      <p class="rel-sub">${esc(REL.scheme_short || "")}</p>
+      ${items}
+      <p class="rel-rule">${esc(REL.scheme_long || "")}</p>
+    </div>`;
+  document.getElementById("modal-overlay").classList.add("open");
+  REL_OPEN = true;
+  syncUrl(null);            // 地址变成 ?rel=1（见 shareUrl）：这一页也能发给人
+  m.querySelector(".modal-close").addEventListener("click", closeModal);
+  m.focus?.();
+  // **刻意不记 BI**：Worker 的 kind 白名单里没有 releases，发过去会被静默丢掉。
+  // 和 15:3x 的分享按钮同一处理——要记就先改白名单再部署 Worker，不在这版偷偷塞。
+}
+
 /* 实测过一次：data.json 当时 ~800KB（转写全文都在里面），网络不稳时会**半截下载却仍回
    HTTP 200**，JSON.parse 直接抛 → 页面全白。tx2 把转写全文移出 data.json 后体积掉了
    一个数量级，但这个兜底留着——"200 + 残缺 body"是这台机器上反复出现的形状，
@@ -1530,3 +1604,4 @@ function loadPages() {
 restoreFromUrl();   // 必须在 loadData 之前：它一回来就 render，那时 state 得已经是地址里的样子
 loadData();
 loadPages();
+loadReleases();   // ~2KB，取不到就不显示版本行（页面宁可少说，不许猜一个版本号出来）
