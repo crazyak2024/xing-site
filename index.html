@@ -297,8 +297,11 @@ body.focused .card .summary{display:none}
 /* 地图区 */
 #map{margin:12px 0 14px}
 .map-intro,.map-label{font-size:var(--fs-xs);color:var(--mute);margin-bottom:8px}
-.topic-grid{display:grid;grid-template-columns:1fr;gap:9px}
-@media (min-width:620px){.topic-grid{grid-template-columns:1fr 1fr}}
+/* 首页四张主题卡：**手机上也两列**，四张正好两行（CY 2026-11-10 16:5x 要求把这块压到两行）。
+   在此之前是一列四行、每行还铺着 5 个节点 tag ⟹ 整块能吃掉 400px，真正的内容被挤出屏幕。 */
+.topic-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.topic-card.slim{padding:9px 10px}
+.topic-card.slim .thint{margin:2px 0 0;line-height:1.45}
 .topic-card{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--c);border-radius:9px;padding:10px 11px}
 .topic-head{border:none;background:none;padding:0;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--dark-2)}
 .topic-head .dot{width:8px;height:8px;border-radius:50%;background:var(--c);flex-shrink:0}
@@ -420,7 +423,7 @@ footer::before{content:"";position:absolute;left:38%;top:-5px;width:6px;height:1
   background:var(--bg);transform:rotate(var(--cut-angle))}
 .about{font-size:var(--fs-sm);color:var(--mute-2);line-height:1.6;max-width:720px;margin:0 auto}
 /* 版本行：比 .about 再轻一档——它是查得到的信息，不是要读的信息 */
-.verline{max-width:720px;margin:12px auto 0;font-size:var(--fs-sm);color:var(--faint-2)}
+.verline{margin:8px 0 0;font-size:var(--fs-xs);color:var(--faint)}
 .verbtn{background:none;border:none;padding:0;margin-left:8px;font:inherit;color:var(--mute-2);
   text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .verbtn:hover{color:var(--ink-3)}
@@ -525,8 +528,15 @@ a.src:after{content:" →"}
       <!-- 2026-11-10 Alpha 前评估补的这一句：上面四条都为真（BI 是我们自己的 Worker、自己的域、
            不落 IP/UA/cookie），但封面图和播放画面是直连 B站/抖音/腾讯 的 ——
            平台那边看得到有人在看。不写出来，用户会把这四条读成"看视频也没人知道"，那就是误导。 -->
-      <br>封面和播放来自原平台，平台那边看得到。</div>
+      <br>封面和播放来自原平台，平台那边看得到。
+      <!-- 质量口径从页脚搬上来（CY 2026-11-10 16:5x）：首页挂着一千多条内容，页脚在
+           几十屏之外，等于没写。它是**承诺的边界**，必须和承诺本身摆在一起。
+           放 .purity 而不是 .libnote，是因为 .libnote 在手机上是隐藏的。 -->
+      <br>一半多的内容做过第二道事实复核，其余还没逐条查。</div>
     <div class="libnote">库内 <span id="lib-count">—</span> 条，都过了筛</div>
+    <!-- 版本号也从页脚搬上来，理由同上。它在手机上**不隐藏**：它是用户确认"我看到的是
+         哪一版"的唯一入口，藏起来就等于没有。 -->
+    <div class="verline" id="verline"></div>
   </aside>
 
   <div class="content-panel">
@@ -543,11 +553,11 @@ a.src:after{content:" →"}
     <div id="family-rule"></div>
     <!-- 首屏的「这里已经答得比较全的问题」（CY 2026-11-10）：真实节点+真实条数，可点。
          放在地图之前，因为它比地图更直接——地图要先理解结构，问题可以直接认。 -->
-    <div id="home-q"></div>
     <!-- 语义建议：用户的说法和我们的问题措辞对不上时，这里列最接近的几个问题。
          刻意**不说**"地图上没有"——用户没有"地图"这个概念（CY 2026-11-09 定的话术）。 -->
     <div id="suggest"></div>
     <div id="map"></div>
+    <div id="home-q"></div>
     <!-- 主题页的答案区（S4）。R9 的那一刀：用户点开抖音链接那一刻他已经离开我们了，
          微信里没有回来的路径 ⟹ **完成感必须发生在点出之前**。所以这一屏自己把答案给完，
          视频退居证据位，页尾明确告诉他可以关掉。 -->
@@ -581,14 +591,12 @@ a.src:after{content:" →"}
   <div class="about">
     <b>我们的成功是你走掉。</b>
     没有无限滚动、自动连播、猜你喜欢，也没有账户和浏览档案。
-    <br>一半多的内容做过第二道事实复核，其余还没逐条查——看到讲错的，点「没找到我要的」。
   </div>
   <!-- 版本号与更新记录（CY 2026-11-10 16:2x 要）。放页脚是因为版本号的惯例位置就在这里，
        而且它不该和"找内容"抢注意力——要找它的人知道往下看。
        **规则：用户能感知的变化才升一号**，看不见的修补不占号 ⟹ "有的版本没有 release note"
        这件事不会发生，号本身就是一条记录（他提的那条顾虑，用编号规则消掉而不是用例外消掉）。
        文案在 releases.json 里，不写死在这——那样改一句话要改三个地方，必然漂移。 -->
-  <div class="verline" id="verline"></div>
 </footer>
 <script src="app.js"></script>
 </body>

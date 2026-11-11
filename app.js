@@ -308,15 +308,16 @@ function renderMap() {
       const nodes = [...countBy(items, "node").entries()].sort((a, b) => b[1] - a[1]);
       const main = nodes.filter(([, n]) => n >= 2).slice(0, 5);
       const restN = nodes.filter(([, n]) => n < 2).reduce((s, [, n]) => s + n, 0);
-      return `<div class="topic-card" style="--c:${topicColor(t)}">
+      /* CY 2026-11-10 16:5x：「四项下面有很多 tag…现在差不多占了四五行，太高了，
+         高度控制在两行」。**首页不再铺节点 tag**——进了主题之后局部地图自然会把它们列出来，
+         首页摆一遍只是把真正的内容挤到屏幕外（同一个病 11-08 已经犯过一次）。
+         首页这块的职责只有一件：让你两下就进到某个主题。所以一张卡 = 名字 + 条数 + 一句
+         这主题答的是什么，不多不少。四张卡两列排 ⟹ 整块恰好两行。 */
+      return `<div class="topic-card slim" style="--c:${topicColor(t)}">
           <button class="topic-head" data-topic-only="${esc(t)}">
             <span class="dot"></span><span class="tname">${esc(t)}</span><span class="tn">${items.length}条</span>
           </button>
           <div class="thint">${esc(TOPIC_HINT[t] || "")}</div>
-          <div class="chips">
-            ${main.map(([node, n]) => nodeChip(node, n, t, false)).join("")}
-            ${restN ? `<button class="chip more" data-topic-only="${esc(t)}">其他 ${restN} 条…</button>` : ""}
-          </div>
         </div>`;
     }).join("") + `</div>`;
   } else {
@@ -827,8 +828,8 @@ function render() {
   renderCrumbs();
   renderFamilyRule();
   if (typeof renderSuggest === "function") renderSuggest();
-  renderHomeQuestions();
   renderMap();
+  renderHomeQuestions();
   renderScopeHint();
   renderAnswer();
   renderResults();
@@ -872,7 +873,7 @@ function renderHomeQuestions() {
     .sort((a, b) => (b.hasPage - a.hasPage) || (b.q - a.q) || (b.c - a.c));
   const top = scored.filter(x => x.hasPage || x.q).slice(0, 6).map(x => [x.n, x.c]);
   if (!top.length) { host.innerHTML = ""; return; }
-  host.innerHTML = `<div class="hq-label">这里已经答得比较全的问题</div>
+  host.innerHTML = `<div class="hq-label">也可以直接从这几个问题进去</div>
     <ul class="hq-list">${top.map(([n, c]) =>
       `<li><button class="hq" data-node="${esc(n)}"><span class="hq-q">${esc(displayNode(n))}</span>
         <span class="hq-n">${c} 条</span></button></li>`).join("")}</ul>`;
