@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共1918条",
+  "generated_note": "判定=合格的候选，共1928条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1170,6 +1170,11 @@
       "count": 155
     },
     {
+      "id": "hea2",
+      "label": "慢病指标与营养",
+      "count": 10
+    },
+    {
       "id": "hea1",
       "label": "血糖与代谢",
       "count": 38
@@ -1192,13 +1197,14 @@
       "label": "健康",
       "short": "健康这块：只收讲机制的，不收治疗方案、用药和剂量。",
       "long": "我们做的是机制科普，不是诊疗。说某药该吃多少、该不该停药、拿食谱当处方——哪怕讲述者是医生、哪怕说得对，我们都不收。偏方神药、保健品带货、拿截肢失明吓人、把个人经历当普遍规律，以及「一定会」「绝对不会」这类不作限定的绝对句，同样不收。身体的事最后要问医生，不要问视频。",
-      "count": 38
+      "count": 48
     }
   },
   "domain_family": {
     "ai1": "ai",
     "fin1": "finance",
-    "hea1": "health"
+    "hea1": "health",
+    "hea2": "health"
   },
   "items": [
     {
@@ -53187,6 +53193,276 @@
       "node": "大模型架构创新与技术对比",
       "category": "(地图缺口)大模型架构创新与技术对比",
       "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV13U5W6ZE8C",
+      "video_id": "BV13U5W6ZE8C",
+      "title": "高压高与低压高的成因与调理差异",
+      "original_title": "血压的高压高和低压高，到底有啥区别？",
+      "author": "薄世宁医生",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV13U5W6ZE8C",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/6c8bb522e4a3d15c5d946dcada192c43de00e810.jpg",
+      "published_at": "2026-05-13T23:20:00+00:00",
+      "key_points": [
+        "高压高多因中老年血管老化、超高盐饮食、吸烟肥胖等加速动脉硬化。",
+        "低压高多见压力大焦虑睡眠不足的中青年，交感神经兴奋导致小血管收缩。",
+        "高压高危害：血管壁受压力大，易诱发脑出血脑梗主动脉夹层等急性事件。",
+        "低压高危害：血流受阻增加心脑供血不足风险，长期损伤心脑功能。"
+      ],
+      "duration_s": 378.0,
+      "likes": 3498,
+      "collects": null,
+      "comments": null,
+      "summary": "讲高压高因血管硬化缓冲能力差，低压高因小血管收紧外周阻力增加，成因、危害、调理重点完全不同。",
+      "reason": "讲述了高压高因血管老化、低压高因神经紧张的不同机制，强调调理重点完全不同。视频明确表达两种血压升高的本质差异。 | 引用:「高压高是老化问题血管变硬了低压高是状态问题小血管太紧了调理的重点也完全不同」",
+      "topic": "概念原理",
+      "node": "血压是怎么升上去的",
+      "category": "61.血压是怎么升上去的",
+      "domain": "hea2"
+    },
+    {
+      "id": "bilibili:BV1KA411N7pk",
+      "video_id": "BV1KA411N7pk",
+      "title": "高血压对血管和心脑的伤害机制",
+      "original_title": "两分钟把高血压的原理给你讲得明明白白！",
+      "author": "泽桥医生",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1KA411N7pk",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/79e88e140efed9071177bd25c541ca9d722962ea.jpg",
+      "published_at": "2021-03-15T05:52:20+00:00",
+      "key_points": [
+        "血管在高血压冲击下失去弹性变脆变硬，管壁撕裂是斑块形成起点。",
+        "血管裂纹吸收胆固醇脂肪钙等堆积成斑块，最终堵塞或破裂导致中风心梗。",
+        "高血压危害全身：脑梗脑出血眼底出血失明足部缺血坏死冠心病。",
+        "血管硬化是不可逆的，预防优于治疗，强调不要等症状才被动应对。"
+      ],
+      "duration_s": 108.0,
+      "likes": 6297,
+      "collects": null,
+      "comments": null,
+      "summary": "用拟人化方式讲高血压如何使血管失去弹性、形成斑块、增加脑出血脑梗心梗风险的完整链条。",
+      "reason": "讲述了高血压使血管从正常→硬化→裂纹→斑块堆积→堵塞的完整病变链条，以及各脏器的具体危害机制。 | 引用:「一根橡皮管长期处于撑开绷紧状态原本有弹性的血管壁变脆变硬甚至出现裂纹」",
+      "topic": "概念原理",
+      "node": "血压是怎么升上去的",
+      "category": "61.血压是怎么升上去的",
+      "domain": "hea2"
+    },
+    {
+      "id": "bilibili:BV1vi4y137Xr",
+      "video_id": "BV1vi4y137Xr",
+      "title": "血压三要素与高血压的血管病变机制",
+      "original_title": "【3D医学动画】高血压",
+      "author": "刘英阁",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1vi4y137Xr",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/1671a930abd6480de06f25f2b7d43b583558dfa3.jpg",
+      "published_at": "2020-07-22T04:06:09+00:00",
+      "key_points": [
+        "血压三要素：心输出量（心脏每分钟排血）、血容量（体内总血）、血管阻力。",
+        "高血压使血管壁变弱形成动脉瘤，或出现裂纹吸收胆固醇脂肪钙形成斑块。",
+        "血细胞粘在斑块上形成血栓，进一步减少或完全阻塞血流引发脑中风。",
+        "钠敏感人群限盐可降低血容量；戒酒戒烟可改善血液粘度降低血管阻力。"
+      ],
+      "duration_s": 403.0,
+      "likes": 3308,
+      "collects": null,
+      "comments": null,
+      "summary": "讲血压由心输出量、血容量、血管阻力决定，解释高血压如何导致血管损伤、斑块形成、血栓阻塞。",
+      "reason": "讲述了血压三要素的定义、高血压如何破坏血管壁、动脉粥样硬化和血栓形成的完整医学机制。 | 引用:「影响血压的三个主要因素第一个是心输出量第二个是血容量第三个是阻力」",
+      "topic": "概念原理",
+      "node": "血压是怎么升上去的",
+      "category": "61.血压是怎么升上去的",
+      "domain": "hea2"
+    },
+    {
+      "id": "bilibili:BV1q5oLB7EQn",
+      "video_id": "BV1q5oLB7EQn",
+      "title": "甘油三酯与低密度脂蛋白的成因和危害差异",
+      "original_title": "甘油三酯vs低密度脂蛋白胆固醇，两个指标到底有啥区别",
+      "author": "薄世宁医生",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1q5oLB7EQn",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/960b9b8ee4ad4980eece4054cbb271020492192c.jpg",
+      "published_at": "2026-04-26T23:20:00+00:00",
+      "key_points": [
+        "甘油三酯本质是热量包，由过量糖精细碳水酒打包成，可在数天内升降。",
+        "低密度脂蛋白是运输车，70-80%由身体自合成，受年龄遗传激素影响长期相对稳定。",
+        "甘油三酯高危险胰腺炎，低密度高危险血管斑块和心脑梗塞。",
+        "降甘油三酯靠减热量，降低密度需调代谢，两者方法截然不同。"
+      ],
+      "duration_s": 463.0,
+      "likes": 3865,
+      "collects": null,
+      "comments": null,
+      "summary": "讲甘油三酯是多余热量打包、低密度脂蛋白是胆固醇运输车，来源、控制因素、危害完全不同。",
+      "reason": "讲述了甘油三酯和低密度脂蛋白在来源、控制因素、危害部位的本质区别，明确体现完全是两码事的核心机制。 | 引用:「甘油三酯高在多数情况下是吃太多了而低密度脂蛋白胆固醇不是单纯吃出来的而是代谢出问题了」",
+      "topic": "概念原理",
+      "node": "血脂的几个指标在说什么",
+      "category": "62.血脂的几个指标在说什么",
+      "domain": "hea2"
+    },
+    {
+      "id": "bilibili:BV14y4y1m7F3",
+      "video_id": "BV14y4y1m7F3",
+      "title": "骨质疏松的生物学机制与成因",
+      "original_title": "高清医学动画：5分钟骨质疏松",
+      "author": "医维度解剖app",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV14y4y1m7F3",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/4f63cbeb7637300941d9823d46a3a3a1d4004bef.jpg",
+      "published_at": "2021-01-18T02:02:44+00:00",
+      "key_points": [
+        "骨由破骨细胞（分解旧骨）和成骨细胞（制造新骨）维持平衡，30岁后破骨速度超建造。",
+        "原发性骨质疏松与年龄和女性绝经后激素下降相关，继发性与肾脏问题某些药物有关。",
+        "低峰骨量危险因素：家族史高危药物缺乏运动吸烟酗酒等加速骨丢失。",
+        "骨质疏松患者常见脊柱髋部手腕骨折，威胁生活质量需早期预防。"
+      ],
+      "duration_s": 316.0,
+      "likes": 936,
+      "collects": null,
+      "comments": null,
+      "summary": "讲骨骼内破骨细胞和成骨细胞的平衡机制，解释年龄增长、激素变化、缺乏运动如何导致骨质疏松。",
+      "reason": "讲述了破骨细胞和成骨细胞平衡被打破如何导致骨质疏松的完整机制，以及各阶段的影响因素。 | 引用:「破骨细胞逐渐比成骨细胞去除更多的骨做一个」",
+      "topic": "概念原理",
+      "node": "骨头为什么会变脆",
+      "category": "63.骨头为什么会变脆",
+      "domain": "hea2"
+    },
+    {
+      "id": "bilibili:BV1kw2LBFEru",
+      "video_id": "BV1kw2LBFEru",
+      "title": "运动与营养对骨密度的影响",
+      "original_title": "如何提高我们的骨密度！",
+      "author": "烧毁一切就是美",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1kw2LBFEru",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/34860dc8d71e20b5970f15048eabb40d3ee293df.jpg",
+      "published_at": "2025-12-05T10:26:40+00:00",
+      "key_points": [
+        "骨密度在20-30岁达峰值，30岁后自然下降，但运动和营养干预可延缓或逆转。",
+        "举重产生最大压力骨密度最高，柔道球类次之，游泳缺乏重力效果最差。",
+        "钙是骨材料维生素D促吸收维生素K把钙锁在骨，乳品芝麻小鱼豆类绿叶菜含量高。",
+        "力学刺激通过肌腱拉动骨骼向成骨细胞发出制造更多骨的信号。"
+      ],
+      "duration_s": 231.0,
+      "likes": 4260,
+      "collects": null,
+      "comments": null,
+      "summary": "讲骨密度峰值在20-30岁，通过负重运动和补充钙维生素D、K能显著提高和维持骨密度延缓衰退。",
+      "reason": "讲述了不同运动为什么有不同效果、运动如何通过力学刺激促进骨形成、三种营养素的协同作用的完整原理链。 | 引用:「举重运动员平常受到杠铃哑铃的巨大压力骨密度最高其次柔道运动员经常要摔」",
+      "topic": "概念原理",
+      "node": "骨头为什么会变脆",
+      "category": "63.骨头为什么会变脆",
+      "domain": "hea2"
+    },
+    {
+      "id": "bilibili:BV1cu82zZEeX",
+      "video_id": "BV1cu82zZEeX",
+      "title": "沃尔夫定律与负重运动对骨密度的机制",
+      "original_title": "使用6个方法提高你的骨密度",
+      "author": "鹏哥谈健康",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1cu82zZEeX",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/186e81e780236ace17c30a1d6f05bdb9b9e57d37.jpg",
+      "published_at": "2025-07-31T11:26:42+00:00",
+      "key_points": [
+        "沃尔夫定律：骨根据负荷自调整，负荷增加则骨小梁增多骨皮质增厚，负荷减少则萎缩。",
+        "宇航员失重每月流失1-2%骨量，说明地球引力日常压力是维持骨密度根本。",
+        "复合力训练（深蹲硬拉卧推）比加重背心更有效，肌肉收缩产生更大力学刺激。",
+        "骨密度流失超过一定程度无法完全恢复，预防优于治疗需中年人提早重视。"
+      ],
+      "duration_s": 569.0,
+      "likes": 1578,
+      "collects": null,
+      "comments": null,
+      "summary": "讲沃尔夫定律（骨适应其承受负荷）、负重运动和力量训练如何通过力学刺激提高骨密度。",
+      "reason": "讲述了为什么骨骼会适应负荷的生物学原理、缺少压力的后果、不同训练方式效果的差异。 | 引用:「沃尔夫定律指出了健康动物的骨骼能够适应它所承受的负荷如果某块骨骼」",
+      "topic": "概念原理",
+      "node": "骨头为什么会变脆",
+      "category": "63.骨头为什么会变脆",
+      "domain": "hea2"
+    },
+    {
+      "id": "bilibili:BV1DW4y1f7dn",
+      "video_id": "BV1DW4y1f7dn",
+      "title": "骨质疏松的营养机制与补钙误区",
+      "original_title": "骨质疏松的真相，和很多人以为的不一样",
+      "author": "黄石说营养",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1DW4y1f7dn",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/c0b10cff1c4f644c81169a9116920b9e22fb34a4.jpg",
+      "published_at": "2023-07-14T22:15:00+00:00",
+      "key_points": [
+        "骨非纯钙质：钙60%磷25%矿物质15%，35%是胶原蛋白，补钙不足以解决。",
+        "钙化悖论：过量补钙反增动脉钙化风险，骨质疏松患者往往动脉钙化程度更高。",
+        "维生素K2作用：把血液中钙抓住锁到骨，MK7型更稳定（半衰期是MK4的48倍）。",
+        "维生素D3促钙吸收20倍，维生素A（视黄醇）参与骨形成，需协同补充。"
+      ],
+      "duration_s": 579.0,
+      "likes": 959,
+      "collects": null,
+      "comments": null,
+      "summary": "纠正仅靠补钙治骨质疏松的误区，讲骨由多种矿物质和胶原蛋白组成，强调维生素K2、D3对钙代谢的关键作用。",
+      "reason": "讲述了为什么仅补钙不够、钙如何被运输到骨、各种维生素的具体作用的完整营养代谢机制。 | 引用:「如果你患有骨质疏松仅仅依靠钙来增强骨骼这样的做法是解决不了问题的」",
+      "topic": "概念原理",
+      "node": "骨头为什么会变脆",
+      "category": "63.骨头为什么会变脆",
+      "domain": "hea2"
+    },
+    {
+      "id": "bilibili:BV1kx4y1i7MH",
+      "video_id": "BV1kx4y1i7MH",
+      "title": "贫血分类与缺铁性贫血的真实机制",
+      "original_title": "贫血=缺铁=吃菠菜+红枣+红糖水？都快成迷信了，赶紧让妈妈停下来",
+      "author": "聊医点",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1kx4y1i7MH",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/b4d7dd597e12727c2c866f50769e9719f3f5b326.jpg",
+      "published_at": "2024-05-10T12:00:00+00:00",
+      "key_points": [
+        "贫血定义：血红蛋白低于标准值，导致乏力苍白晕心气促等缺氧症状。",
+        "血红蛋白由血红素（含二价铁和卟啉）和珠蛋白合成，缺任一种都会降血红蛋白。",
+        "贫血三类：小细胞低色素（缺铁）大细胞（缺叶酸B12）正常细胞（急性出血）。",
+        "传统补铁食物效果有限，中国贫血患者缺铁性占50%以上，需找原因再对症。"
+      ],
+      "duration_s": 632.0,
+      "likes": 2365,
+      "collects": null,
+      "comments": null,
+      "summary": "讲贫血是血红蛋白减少、不一定缺铁，血红蛋白由血红素和珠蛋白组成，纠正吃菠菜红枣补铁的民间误区。",
+      "reason": "讲述了贫血的定义、血红蛋白成分和功能、为什么缺铁导致贫血、不同贫血类型的区别，同时纠正民间误解。 | 引用:「血红蛋白咱们从这个名字拆解就能看到它主要合成原料叫血红素还有一个就是珠蛋白」",
+      "topic": "概念原理",
+      "node": "缺铁会让人怎么样",
+      "category": "64.缺铁会让人怎么样",
+      "domain": "hea2"
+    },
+    {
+      "id": "bilibili:BV17s411g7Q2",
+      "video_id": "BV17s411g7Q2",
+      "title": "高血压的症状与并发症",
+      "original_title": "深读-高血压1：忽视高血压？纯属玩命",
+      "author": "深读视频",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV17s411g7Q2",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/4e4d9a033a2f8c5e93624e15cd8eaa296536b3b5.jpg",
+      "published_at": "2018-08-07T02:23:36+00:00",
+      "key_points": [
+        "高血压诊断标准：收缩压≥140mmHg、舒张压≥90mmHg",
+        "患者早期无症状特性：多在体检或出现并发症时才被发现",
+        "常见症状包括：搏动性头痛、头晕、心悸、鼻出血、牙龈出血",
+        "致命性并发症：脑梗、脑溢血、心脏肥大、心衰、肾衰竭、眼底出血"
+      ],
+      "duration_s": 312.0,
+      "likes": 1598,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解高血压的诊断标准、常见症状与严重并发症。强调患者早期常无症状，多通过体检或并发症才被发现，容易被忽视。",
+      "reason": "用定义、症状、并发症三层结构直接回答'血压高要不要紧'的问题。转写中'如果发生在大脑就是脑梗、脑溢血；在心脏就是心脏肥大、心衰；在肾脏就是肾衰竭'等内容，展现高血压危害的严重性。 | 引用:「如果发生在大脑就是脑梗、脑溢血；在心脏就是心脏肥大、心衰；在肾脏就是肾衰竭」",
+      "topic": "误区纠正",
+      "node": "血压高一点要不要紧",
+      "category": "68.血压高一点要不要紧",
+      "domain": "hea2"
     }
   ]
 }
