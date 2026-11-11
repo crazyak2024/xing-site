@@ -608,6 +608,11 @@ a.src:after{content:" →"}
   </div>
 </div>
 
+<!-- 补搜进度/完成的页内提示（CY 2026-11-10 16:5x：「只要他用户没有把这个页面关掉，
+     他可以继续浏览…等到我们这个搞定之后呢，就会有个在这页面里面的弹出提示，这样其实
+     也不涉及 privacy」）。**独立于 #results 之外**——它要在用户逛到任何别的页面时都
+     显示得出来，不能绑在某一屏的 DOM 里（那一屏会被别的渲染整个替换掉）。 -->
+<div id="lane-float"></div>
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal" id="modal-content" tabindex="-1"></div>
 </div>

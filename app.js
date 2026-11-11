@@ -832,6 +832,7 @@ function renderFamilyRule() {
 function render() {
   renderCrumbs();
   refreshMarkUI();
+  renderLaneFloat();   // 导航要当场更新悬浮提示，别等下一次轮询（最多 1.5s 的滞后）
   renderFamilyRule();
   if (typeof renderSuggest === "function") renderSuggest();
   renderMap();
@@ -1114,13 +1115,71 @@ function recordExit(kind, note, itemId) {
  */
 const LANE_POLL_MS = 1500;
 const LANE_MAX_MS = 6 * 60 * 1000;   // 6 分钟后停止轮询：慢道再久也不该让页面一直转
-let LANE = { q: "", timer: null, t0: 0, state: "" };
+// floatDismissedFor：用户关掉过的那个「阶段」的 key（见 laneFloatKey）。只压住那一阶段的
+// 提示——建设中那条被关掉，不代表"建好了"那条也不该弹，两件事用户可能都想知道。
+let LANE = { q: "", timer: null, t0: 0, state: "", data: null, floatDismissedFor: "" };
+
+/* ══════════ 补搜的页内提示：不用守在这一页（CY 2026-11-10 16:5x）══════════
+ * 「只要他用户没有把这个页面关掉，他可以继续浏览…等到我们这个搞定之后呢，就会有个
+ * 在这页面里面的弹出提示，这样其实也不涉及 privacy」。
+ *
+ * 这是**同一个页面里的浮层**，不是系统通知/推送——所以真的不涉及隐私：没有权限弹窗，
+ * 没有离开网站也能收到的东西，关掉这个标签页提示就随标签页一起没了，和"存地址晚点回来"
+ * （?lane=1）是两件独立的事，这个管的是"没关页面、但逛去别处了"那段时间。
+ *
+ * 🔴 **这顺手修了一个潜在 bug**：原来 `renderLane()` 每次轮询都无条件把进度框塞进
+ * `#results`——用户一旦导航到别的问题/搜索，`#results` 的内容已经被换掉，下一次轮询
+ * 会把进度框**接在当前这个不相关的页面底下**，而不是消失或挪地方。现在内联框只在
+ * `state.q === LANE.q`（用户仍在看这个搜索）时才渲染；离开了就只走下面的悬浮提示，
+ * 不碰 `#results`。 */
+function laneFloatKey() {
+  const terminal = ["done", "skipped", "failed"].includes(LANE.state) || (LANE.data || {}).budget_exceeded;
+  return `${LANE.q}:${terminal ? "done" : "building"}`;
+}
+
+function renderLaneFloat() {
+  const host = document.getElementById("lane-float");
+  if (!host) return;
+  if (!LANE.q || state.q === LANE.q || LANE.floatDismissedFor === laneFloatKey()) {
+    host.innerHTML = "";
+    return;
+  }
+  const d = LANE.data || {};
+  const terminal = ["done", "skipped", "failed"].includes(LANE.state) || d.budget_exceeded;
+  const items = (Array.isArray(d.results) ? d.results : []).filter(laneUsable);
+  let body;
+  if (!terminal) {
+    body = `<span class="lane-spin"></span>正在建「${esc(LANE.q)}」…`;
+  } else if (d.budget_exceeded) {
+    body = `今天的补内容额度用完了`;
+  } else if (LANE.state === "failed") {
+    body = `没找成「${esc(LANE.q)}」——是我们这边的问题`;
+  } else if (LANE.state === "skipped" && !items.length) {
+    body = `「${esc(LANE.q)}」不在我们收的范围里`;
+  } else {
+    body = items.length ? `「${esc(LANE.q)}」建好了，${items.length} 条，点一下去看`
+                        : `「${esc(LANE.q)}」没有一条够格`;
+  }
+  host.innerHTML = `<div class="lane-toast${terminal ? " done" : ""}">
+      <button class="lf-body" id="lf-open">${body}</button>
+      <button class="lf-close" id="lf-close" aria-label="关闭">&times;</button>
+    </div>`;
+  host.querySelector("#lf-open").addEventListener("click", () => {
+    const box = document.getElementById("q");
+    if (box) box.value = LANE.q;
+    go({ q: LANE.q, node: null, topic: null });
+  });
+  host.querySelector("#lf-close").addEventListener("click", () => {
+    LANE.floatDismissedFor = laneFloatKey();
+    renderLaneFloat();
+  });
+}
 
 function startLane(q) {
   if (!COLLECT_URL || !q) return;
   if (LANE.timer) clearInterval(LANE.timer);
-  LANE = { q, timer: null, t0: Date.now(), state: "new" };
-  renderLane({ state: "new", results: [] });
+  LANE = { q, timer: null, t0: Date.now(), state: "new", data: null, floatDismissedFor: "" };
+  if (state.q === q) renderLane({ state: "new", results: [] });
   const ask = () => {
     fetch(`${COLLECT_URL}/rtsearch`, {
       method: "POST", headers: { "Content-Type": "application/json" },
@@ -1128,7 +1187,9 @@ function startLane(q) {
     }).then(r => r.json()).then(d => {
       if (LANE.q !== q) return;                       // 用户已经换了搜索词，丢弃旧响应
       LANE.state = d.state || "";
-      renderLane(d);
+      LANE.data = d;
+      if (state.q === q) renderLane(d);                // 仍在看这个搜索：和原来一样内联
+      renderLaneFloat();                                // 任何视图都刷新悬浮提示
       const over = Date.now() - LANE.t0 > LANE_MAX_MS;
       if (["done", "skipped", "failed"].includes(d.state) || d.budget_exceeded || over) {
         clearInterval(LANE.timer); LANE.timer = null;
