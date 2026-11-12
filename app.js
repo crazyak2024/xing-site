@@ -79,6 +79,13 @@ const state = { q: "", topic: null, node: null, domain: null, mine: false, asks:
 const expandedRows = new Set();
 const ROW_CHIP_MAIN = 8; // 单行最多先亮出几个节点，其余折进"其他N条"（S0 同款阈值的行版）
 
+/* 搜索结果里他正在看哪一个问题（CY 2026-11-11 16:2x：「搜索以后的结果，现在是分问题
+   展示的，这些问题应该在上方列出来供用户选择」）。
+   为什么不进 state/URL：它**不是一次导航**——选一个问题只是把同一份结果收窄到其中一段，
+   随时能按"全部"回去；真要进到那个问题里，点问题名本身（那条路一直在，走的是 go()）。
+   换搜索词/换导航就归零，和 expandedRows 同性质。 */
+let resultFocus = null;
+
 /* 领域切换（fin1 起）：领域是比主题更粗的一级——"AI 与大模型"和"财经基础"下面各有
    自己的 4 个主题。为什么要这一级：不分的话"概念原理"里会同时出现 Transformer 和
    通货膨胀，用户点进去看到的是两个不相干领域搅在一起。
@@ -298,6 +305,7 @@ function go(patch) {
   // 换节点就把"其余N条"收回去：展开状态属于那一页，不该跟着导航走
   if ("node" in patch && patch.node !== state.node) evExpanded = false;
   mapExpanded = false;   // 地图的展开同理：换了一屏就该重新收起
+  resultFocus = null;    // 上一屏选中的那个问题不跟着导航走（同上）
   Object.assign(state, patch);
   render();
   // BI：他点了地图上的哪一格。只在真的选中某一层时记，取消选择不记（避免噪音）
@@ -943,7 +951,9 @@ function renderResults() {
     el.innerHTML = `<div class="grid">${sortItems(items).map(it => cardHtml(it)).join("")}</div>`;
   } else {
     const order = [...byNode.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0], "zh"));
-    el.innerHTML = order.map(([node, list]) => `
+    if (resultFocus && !byNode.has(resultFocus)) resultFocus = null;   // 换了搜索词，上一个选中的问题可能已不在
+    const shown = resultFocus ? order.filter(([n]) => n === resultFocus) : order;
+    el.innerHTML = qpickHtml(order, items.length) + shown.map(([node, list]) => `
       <div class="section">
         <div class="section-head">
           <span class="section-dot" style="background:${topicColor(list[0].topic)}"></span>
@@ -954,9 +964,51 @@ function renderResults() {
       </div>`).join("");
     el.querySelectorAll("[data-drill]").forEach(b => b.addEventListener("click", () =>
       go({ node: b.dataset.drill, topic: b.dataset.topic })));
+    bindQpick(el);
+    if (resultFocus) {
+      const n = byNode.get(resultFocus).length;
+      document.getElementById("result-count").textContent = `${n}条 / 共${items.length}条`;
+    }
   }
   el.querySelectorAll(".card").forEach(c => c.addEventListener("click", () =>
     openModal(DATA.find(it => it.id === c.dataset.id))));
+}
+
+/* ══════════ 结果顶部的问题选择条（CY 2026-11-11 16:2x）══════════
+ * 他的话：「搜索以后的结果，现在是分问题展示的，这些问题应该在上方列出来供用户选择」。
+ *
+ * 原来的样子：一次搜索命中好几个问题，就按问题分段**往下堆**——他要知道有哪几个问题，
+ * 只能一路往下滚过每一段的全部卡片。分组是有的，**选择入口没有**。
+ *
+ * 两种动作要分清，这也是这条为什么不进 URL：
+ *   · 点这排里的一个问题 ＝ 把同一份结果**收窄**到其中一段（随时按"全部"回去，不是导航）
+ *   · 点段标题里的问题名 ＝ 真的**进到那个问题里**（整页换成那一页，走 go()，原来就有）
+ * 上限 12 颗：再多就从"选择条"退化成第二份长列表；超出的在下面照样摆得到。 */
+const QPICK_MAX = 12;
+
+function qpickHtml(order, total) {
+  const chips = order.slice(0, QPICK_MAX).map(([node, list]) => `
+    <button class="qpick-chip${resultFocus === node ? " on" : ""}" data-qpick="${esc(node)}">
+      <span class="qpick-dot" style="background:${topicColor(list[0].topic)}"></span>${esc(displayNode(node))}
+      <span class="qpick-n">${list.length}</span></button>`).join("");
+  return `<div class="qpick">
+      <div class="qpick-row">
+        <button class="qpick-chip qpick-all${resultFocus ? "" : " on"}" data-qpick="">全部<span class="qpick-n">${total}</span></button>
+        ${chips}
+      </div>
+      ${order.length > QPICK_MAX
+      ? `<div class="qpick-more">还有 ${order.length - QPICK_MAX} 个问题，在下面</div>` : ""}
+    </div>`;
+}
+
+function bindQpick(root) {
+  root.querySelectorAll("[data-qpick]").forEach(b => b.addEventListener("click", () => {
+    const n = b.dataset.qpick || null;
+    resultFocus = (n && n !== resultFocus) ? n : null;   // 再点一次同一颗 = 取消
+    renderResults();
+    if (resultFocus) emit("pick", { picked: "qpick" });
+    document.getElementById("results")?.scrollIntoView({ block: "start", behavior: "smooth" });
+  }));
 }
 
 /** 「我要这个」：记一笔缺口 + 真的让本机去搜（缺口车道，CY 2026-11-10）。
@@ -994,8 +1046,15 @@ function renderSureHits(el, q, sure) {
   if (cnt) cnt.textContent = `${total}条`;
   /* 这一行必须有：他搜的词和下面问题的字面不一样，不说一句他会以为我们答非所问。
      只说对他有用的那部分（这是最接近的问题），不解释我们的检索为什么没对上。 */
+  /* 这条路也要有选择条（同 renderResults）：确信命中常常一次命中好几个问题，
+     不给选择入口他就只能往下滚。只在真有 ≥2 个问题时出。 */
+  const order = sure.map(s => [s.name, s.items]);
+  if (resultFocus && !order.some(([n]) => n === resultFocus)) resultFocus = null;
+  const shown = (resultFocus ? order.filter(([n]) => n === resultFocus) : order)
+    .map(([name, items]) => ({ name, items }));
   el.innerHTML = `<div class="sure-lead">「${esc(q)}」——库里最接近的是下面这${sure.length > 1 ? "几个" : "个"}问题：</div>`
-    + sure.map(s => `
+    + (order.length > 1 ? qpickHtml(order, total) : "")
+    + shown.map(s => `
       <div class="section">
         <div class="section-head">
           <span class="section-dot" style="background:${topicColor(s.items[0].topic)}"></span>
@@ -1010,6 +1069,11 @@ function renderSureHits(el, q, sure) {
   el.querySelectorAll(".card").forEach(c => c.addEventListener("click", () =>
     openModal(DATA.find(it => it.id === c.dataset.id))));
   bindWantThis(el, q, "sure");
+  bindQpick(el);   // 重新渲染走的还是 renderResults()，它会再次落到这个分支
+  if (resultFocus && cnt) {
+    const n = (order.find(([name]) => name === resultFocus) || [, []])[1].length;
+    cnt.textContent = `${n}条 / 共${total}条`;
+  }
 }
 
 /* ---------- 「这块我们不收什么」（CY 2026-11-10 16:3x）----------
@@ -1529,7 +1593,36 @@ function askStatusText(a) {
   if (a.state === "skipped") return a.n ? `库里已经有 ${a.n} 条` : "不在我们收的范围里";
   if (a.state === "done") return a.n ? `补好了，${a.n} 条` : "跑完了，没有一条够格";
   // 非终态：区分"正在跑"和"我们没跟上"——后者不该显示成一个永远转的圈
-  return (Date.now() - a.touched) > ASK_RESUME_MS ? "还没跟完，点一下接着看" : "正在补…";
+  if ((Date.now() - a.touched) > ASK_RESUME_MS) return "还没跟完，点一下接着看";
+  const pr = askProgress(a);
+  return pr ? `正在核验 ${pr.done}/${pr.total} 条` : "正在补…";
+}
+
+/* ══════════ 一条请求现在是什么颜色（CY 2026-11-11 16:2x）══════════
+ * 他的话：「上面说我要补的，这个其实在左边栏会展示，但是你没有展示任何的状态，
+ * 就比如说它是一个黄色的，或者有进度条。那完成的时候是绿色的，我觉得这个还是要有的」。
+ *
+ * 四档，但**不是四种颜色**——全站语义色只有三类（可点/肯定/提醒），
+ * 要加第四类之前得说清它和这三类的区别，这里说不清，所以失败那档用**形状**区分（方块）：
+ *   building 黄点 + 呼吸（在动的）· done 绿点（补好了，有货）
+ *   · none 灰点（跑完了但没有一条够格 / 不在收的范围——结束了，但没东西看）
+ *   · fail 黄方块（失败或额度用完：要他知道，但不是"错误"级别）
+ * 颜色只在这一个函数里判，渲染处不再判第二遍。 */
+function askPhase(a) {
+  if (a.budget_exceeded || a.state === "failed") return "fail";
+  if (a.state === "skipped" || a.state === "done") return a.n ? "done" : "none";
+  return "building";
+}
+
+/** 进度条**只在后台真给了分母时才画**（`note` 形如「已核完 3/8｜…」，
+ *  见 pipeline/gap_lane.py 那条 progress）。拿不到分母就只给一句"正在补…"——
+ *  假进度条（按时间瞎走的那种）比没有进度条更糟：它会在卡住的时候继续骗人。 */
+function askProgress(a) {
+  const m = /(\d+)\s*\/\s*(\d+)/.exec(a.note || "");
+  if (!m) return null;
+  const done = +m[1], total = +m[2];
+  if (!total || done > total) return null;
+  return { done, total, pct: Math.max(3, Math.round(done / total * 100)) };
 }
 
 function refreshAsksUI() {
@@ -1537,9 +1630,12 @@ function refreshAsksUI() {
   if (!el) return;
   const n = askCount();
   const building = asksBuilding();
+  /* 入口上那颗点代表**整份清单现在的状态**：有在补的就黄（而且在动），
+     没有在补的就看有没有补到货（绿）还是全都空手而归（灰）。 */
+  const ph = building ? "building" : (ASKS.some(a => askPhase(a) === "done") ? "done" : "none");
   el.innerHTML = n
-    ? `<button class="mine-btn" id="asks-open">${building ? '<span class="lane-spin"></span>' : ""}
-         我要补的 <span class="mine-n">${n}</span></button>`
+    ? `<button class="mine-btn" id="asks-open"><span class="ask-dot ask-${ph}"></span>
+         我要补的 <span class="mine-n">${building ? `${building} 个在补 · 共 ${n}` : n}</span></button>`
     : "";
   const btn = document.getElementById("asks-open");
   if (btn) btn.addEventListener("click", () => go({ asks: true, mine: false, q: "", node: null, topic: null }));
@@ -1566,10 +1662,14 @@ function renderAsks() {
   }
   const rows = ASKS.map(a => {
     const done = askTerminal(a);
+    const ph = askPhase(a);
+    const pr = ph === "building" ? askProgress(a) : null;
     return `<div class="ask-row${done ? " done" : ""}">
       <button class="ask-go" data-askgo="${esc(a.q)}">
-        <span class="ask-q">${esc(a.q)}</span>
-        <span class="ask-st">${done ? "" : '<span class="lane-spin"></span>'}${esc(askStatusText(a))}</span>
+        <span class="ask-q"><span class="ask-dot ask-${ph}"></span>${esc(a.q)}</span>
+        <span class="ask-st">${esc(askStatusText(a))}</span>
+        ${pr ? `<span class="ask-bar" role="progressbar" aria-valuenow="${pr.done}"
+          aria-valuemin="0" aria-valuemax="${pr.total}"><i style="width:${pr.pct}%"></i></span>` : ""}
       </button>
       <button class="ask-del" data-askdel="${esc(a.q)}" aria-label="删掉这条"
         title="从这台设备上删掉">&times;</button>
