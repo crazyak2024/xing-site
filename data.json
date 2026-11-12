@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共2219条",
+  "generated_note": "判定=合格的候选，共2225条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1162,7 +1162,7 @@
     {
       "id": "ai1",
       "label": "AI 与大模型",
-      "count": 1929
+      "count": 1935
     },
     {
       "id": "fin1",
@@ -1195,7 +1195,7 @@
       "label": "AI 与大模型",
       "short": "AI 这块：不收短剧和「不学就被淘汰」，教程只收讲清方法的。",
       "long": "披着 AI 外壳的剧情娱乐一律不收。无依据夸大风险、制造紧迫感的焦虑话术不收。纯点击演示的教程不收——从头到尾「跟着点这里」、不解释为什么、换个场景就不会了；讲清了可迁移方法的，哪怕边操作边讲，我们收。",
-      "count": 1929
+      "count": 1935
     },
     "finance": {
       "label": "财经",
@@ -88477,6 +88477,186 @@
       "topic": "方法实操",
       "node": "AI工具使用教程",
       "category": "(地图缺口)AI工具使用教程",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1U14N6cEwU",
+      "video_id": "BV1U14N6cEwU",
+      "title": "训练数据影响分析：影响函数与数据归因",
+      "original_title": "【机器学习理论】训练数据归因：留一法金标准、影响函数三项相乘、TracIn 与 EK-FAC 近似",
+      "author": "古希腊掌管代码的神",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1U14N6cEwU",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/0effea0397869777735a1aa1acd428eb5fcd71dc.png",
+      "published_at": "2026-11-12T10:00:00+00:00",
+      "key_points": [
+        "留一法是金标准但需重训N次；影响函数用梯度、海森逆、训练梯度三项相乘近似",
+        "影响函数与真实重训的相关系数：逻辑回归0.9999、深度网络0.86",
+        "可用于发现错标数据，按自影响排序，错标样本通常离群突出",
+        "TracIn回放检查点计算梯度点积，与留一法相关系数0.98",
+        "大模型用EK-FAC压缩梯度，找到的是主题相通而非词汇重合的文档"
+      ],
+      "chapters": [],
+      "duration_s": 243.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲述从删一条数据重训到梯度海森矩阵的影响函数再到大模型的TracIn近似，用于找出对模型决策影响最大的训练数据。",
+      "reason": "这是ICML2017发表的mainstream方法。转写明确指出'影响函数公式只有三项，测试样本的梯度乘海森矩阵的逆乘训练样本的梯度'，并通过实验验证了准确性。 | 引用:「影响函数公式只有三项，测试样本的梯度乘海森矩阵的逆乘训练样本的梯度」",
+      "consensus": "mainstream",
+      "topic": "概念原理",
+      "node": "训练数据影响函数与模型可解释性",
+      "category": "训练数据影响函数与模型可解释性",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1224N68Eq1",
+      "video_id": "BV1224N68Eq1",
+      "title": "三把筛子检测训练数据中的毒样本",
+      "original_title": "【数据工程】毒样本三把筛子：困惑度两头可疑、embedding 离群、训练动态，阈值按分位数",
+      "author": "古希腊掌管代码的神",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1224N68Eq1",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/f7105f7e4d5befdc240249837d75ab25a66316e1.png",
+      "published_at": "2026-11-12T07:00:00+00:00",
+      "key_points": [
+        "困惑度既要避免过高（乱码、OCR垃圾）也要避免过低（重复模板）；正常20-50",
+        "KNN距离或LOF检测embedding离群；孤立森林换个思路，避免误杀稀疏处理",
+        "训练动态：confidence高variability低为好样本；confidence低variability高为错标",
+        "loss尖峰是数据和参数状态共同作用，回溯需逐条检查而非整batch判死刑",
+        "流水线：先规则过滤，再按语种算困惑度，再embedding离群检测"
+      ],
+      "chapters": [],
+      "duration_s": 330.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "通过困惑度、embedding离群与训练动态三个角度检测毒样本，用分位数设定阈值而非固定值。",
+      "reason": "数据质量检测是mainstream方法。转写中实测数据清晰：'正常英文落在20~50之间，乱码样本冲到289，复读广告只有5.3'，这些阈值是可应用的。 | 引用:「困惑度两头都可疑，正常英文20~50、乱码289、复读广告5.3」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "训练数据质量评估与毒样本检测",
+      "category": "训练数据质量评估与毒样本检测",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1m24N68Ew1",
+      "video_id": "BV1m24N68Ew1",
+      "title": "强化学习训练Agent工具调用：奖励设计与错误拆解",
+      "original_title": "【RL 实战】工具强化学习：错误拆解、SFT 与 RL 对照、分项奖励范本与不调用选项",
+      "author": "古希腊掌管代码的神",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1m24N68Ew1",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/4db3758f9f0c45f1798d1c679ec7f9f2996b722d.png",
+      "published_at": "2026-11-12T04:00:00+00:00",
+      "key_points": [
+        "工具调用三层决策可分开：选工具、填参数名、填参数值",
+        "SFT过拟合易背答案，GRPO强化学习泛化更好（从36.5%升到58.4%）",
+        "奖励分项加权：工具名权最重，参数可部分得分但防钻空子",
+        "模型可能只看函数名，需混入随机打乱名字的数据增强理解",
+        "不调用也是选项：需要、无关、单函数三类都要能正确判断"
+      ],
+      "chapters": [],
+      "duration_s": 286.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "用强化学习训练模型工具调用，分项奖励（工具名、参数名、值），防止名字依赖与错误拆解。",
+      "reason": "工具强化学习是mainstream方向。转写对比了两种方法：'SFT之后反而掉到36.53%，同样4000条改用GRPO强化学习涨到58.38%'，泛化改进明显。 | 引用:「SFT之后反而掉到36.53%，同样4000条改用GRPO强化学习涨到58.38%」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "工具强化学习与奖励设计",
+      "category": "工具强化学习与奖励设计",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1Cd4N6WEAP",
+      "video_id": "BV1Cd4N6WEAP",
+      "title": "日期算术的参数化数据合成与泛化",
+      "original_title": "【数据工程】日期算术的数据合成：参数化造题、边界案例加权与 PRIMETIME 泛化实测",
+      "author": "古希腊掌管代码的神",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1Cd4N6WEAP",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/91cb2b494f762f9cd58553c5c9efe651fbc2566e.png",
+      "published_at": "2026-11-11T10:00:00+00:00",
+      "key_points": [
+        "日期算数难在结构（大小月、闰年、进位），模型把日期当token而非格子",
+        "参数化造题：随机锚点偏移、代码生成答案，自动化天然正确",
+        "边界案例加权：月末、闰年加倍权重，防数据浪费",
+        "100万合成题训练0.5B模型，1-250天准确率99.9%，泛化到1001-1100天",
+        "生产环保日期计算交给工具，训练目的是让模型听懂何时调用和检查"
+      ],
+      "chapters": [],
+      "duration_s": 268.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "用参数化造题自动生成日期算术训练数据，边界案例加权，0.5B模型通过100万条合成题达到99.9%准确率。",
+      "reason": "参数化数据合成是mainstream方法。转写中通过案例验证了有效性：'把100万条这样的合成题喂给0.5B参数小模型，1~250天加法正确率直接冲到99.9%'，还能泛化。 | 引用:「把100万条这样的合成题喂给0.5B参数小模型，1~250天加法正确率直接冲到99.9%」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "数据合成与参数化造题",
+      "category": "数据合成与参数化造题",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1C94N6REAw",
+      "video_id": "BV1C94N6REAw",
+      "title": "神经网络的频率学习原则与傅里叶特征",
+      "original_title": "【机器学习理论】谱偏差与频率原则：从低频到高频的学习顺序、神经正切核解释与傅里叶特征",
+      "author": "古希腊掌管代码的神",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1C94N6REAw",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/9f612c0991b53a60c2125e532c35b2e4b824a6a2.png",
+      "published_at": "2026-11-11T00:30:00+00:00",
+      "key_points": [
+        "频率原则：网络从低频学到高频；频率1需18步、频率10需5600步",
+        "神经正切核解释：网络在训练时近似线性，收敛速度∝特征值",
+        "网络输出光滑特性导致低频特征值大、高频小，天然偏好平滑解",
+        "傅里叶特征解决高频：输入映射为正弦余弦，尺度参数要匹配目标频率",
+        "坐标网络需加傅里叶特征或SIREN激活，并调好频率尺度"
+      ],
+      "chapters": [],
+      "duration_s": 285.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "神经网络遵循频率原则（从低到高学习），可用神经正切核和特征值解释为何，通过傅里叶特征解决高频问题。",
+      "reason": "频率原则是ICML2019等已发表的mainstream理论。转写中用实测数据说明学习顺序：'频率一已对齐需50步，2500步频率六才到位，最密的频率十要到1万步'。 | 引用:「频率一已对齐需50步，2500步频率六才到位，最密的频率十要到1万步」",
+      "consensus": "mainstream",
+      "topic": "概念原理",
+      "node": "神经网络频率学习与谱偏差",
+      "category": "神经网络频率学习与谱偏差",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1x44K6AEoB",
+      "video_id": "BV1x44K6AEoB",
+      "title": "模型版本发布的影子评测与灰度回归验收",
+      "original_title": "【评测与基准】影子评测与回归验收：三种对比方式、负翻转、bootstrap 显著性与按域非劣门限",
+      "author": "古希腊掌管代码的神",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1x44K6AEoB",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/f076fe0a89f10d991a06a0799fc02faecb66cab6.png",
+      "published_at": "2026-11-10T10:00:00+00:00",
+      "key_points": [
+        "影子评测零风险无反馈；金丝雀和AB有真实反馈但需控爆炸",
+        "负翻转检查：平均分涨≠全线改进；新旧差距小负翻转更多",
+        "配对bootstrap判显著性：有放回抽样1万次，95%置信区间超零则非噪声",
+        "回归验收按域分别检查，每个域下界≥容忍线（容忍线必须全绿）",
+        "灰度阶梯提升流量（1%→5%→25%→100%），每阶段有门线越线自动回滚"
+      ],
+      "chapters": [],
+      "duration_s": 284.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲模型版本发布前的影子评测与灰度验收，包括负翻转检查、bootstrap显著性与按域门线。",
+      "reason": "影子评测、灰度验收是mainstream的发布方法。转写中通过负翻转案例说明了问题：'新版本上线后他变得过分讨好用户，三天后开始回滚'，表明评测不完整。 | 引用:「新版本上线后他变得过分讨好用户，三天后开始回滚」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "大模型评测体系与基准问题",
+      "category": "大模型评测体系与基准问题",
       "domain": "ai1"
     }
   ]
