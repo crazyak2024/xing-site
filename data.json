@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共2230条",
+  "generated_note": "判定=合格的候选，共2229条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1172,7 +1172,7 @@
     {
       "id": "hea2",
       "label": "慢病指标与营养",
-      "count": 65
+      "count": 64
     },
     {
       "id": "hea1",
@@ -1207,7 +1207,7 @@
       "label": "健康",
       "short": "健康这块：怎么做可以给你；吃什么药、吃多少不行——那是医生的事。",
       "long": "限盐、吃法、运动、体重、睡眠、怎么测准——这些你自己就能做的调整，我们收，并且要求讲清适用边界：谁适用、什么情况得先看医生。给药名配剂量、该不该停药、该换哪种药，一律不收——那只能发生在诊室里，不能发生在视频里。偏方神药、保健品带货、拿截肢失明吓人、把个人经历当普遍规律，以及「一定会」「绝对不会」这类不作限定的绝对句，同样不收。明确偏离主流共识的讲法我们会少量保留并标注出来，明显反科学的不收。身体的事最后要问医生，不要问视频。",
-      "count": 134
+      "count": 133
     }
   },
   "domain_family": {
@@ -85677,34 +85677,6 @@
       "summary": "通过半透膜实验演示渗透压原理，讲述食盐提升血液渗透压如何引发水分滞留、血容量增加、最终血压升高的完整过程。",
       "reason": "用U形试管实验演示渗透原理，转写详述'溶质颗粒浓度越高吸引水分子能力越强''水分子迁移运动达平衡时业主高度差产生的压强就是渗透压'，逻辑严密。 | 引用:「所谓半透膜就是只允许水分子自由通过而阻止溶质颗粒通过结果就是由纯水一侧迁移到溶液一侧的水分子更多」",
       "consensus": "mainstream",
-      "topic": "概念原理",
-      "node": "血压是怎么升上去的",
-      "category": "61.血压是怎么升上去的",
-      "domain": "hea2"
-    },
-    {
-      "id": "bilibili:BV1gmovB4End",
-      "video_id": "BV1gmovB4End",
-      "title": "糖和胰岛素对血压的影响",
-      "original_title": "医生直言：高血压根源不是盐，而是糖和胰岛素，教你真正降压方法",
-      "author": "EmpowerYou",
-      "platform": "bilibili",
-      "link": "https://www.bilibili.com/video/BV1gmovB4End",
-      "cover_url": "https://i1.hdslb.com/bfs/archive/c86894308821e443d8a7ade4055a8823bd5cefb0.jpg",
-      "published_at": "2026-04-28T23:15:00+00:00",
-      "key_points": [
-        "传统限盐对大多数人血压无显著效果，提示根源可能在别处",
-        "糖通过激素机制（非水潴留）将血管和肾脏锁定在高压状态",
-        "这是对血压升高机制的另一种解释，偏离了主流盐-水潴留共识"
-      ],
-      "chapters": [],
-      "duration_s": 1179.0,
-      "likes": 28,
-      "collects": null,
-      "comments": null,
-      "summary": "医生提出高血压根源是糖和胰岛素激素机制而非盐，因传统限盐策略对多数人无效",
-      "reason": "\"for half a century, we've been told that the villain is salt...Except that hasn't worked for most people...sugar has been driving blood pressure up through a completely different route\" —— 偏离盐的中心作用这一主流共识，但未否认盐的生理作用，属非主流观点 | 引用:「传统限盐策略对大多数人无效，而糖通过激素机制升高血压」",
-      "consensus": "minority",
       "topic": "概念原理",
       "node": "血压是怎么升上去的",
       "category": "61.血压是怎么升上去的",
