@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共2216条",
+  "generated_note": "判定=合格的候选，共2219条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1162,7 +1162,7 @@
     {
       "id": "ai1",
       "label": "AI 与大模型",
-      "count": 1910
+      "count": 1913
     },
     {
       "id": "fin1",
@@ -1195,7 +1195,7 @@
       "label": "AI 与大模型",
       "short": "AI 这块：不收短剧和「不学就被淘汰」，教程只收讲清方法的。",
       "long": "披着 AI 外壳的剧情娱乐一律不收。无依据夸大风险、制造紧迫感的焦虑话术不收。纯点击演示的教程不收——从头到尾「跟着点这里」、不解释为什么、换个场景就不会了；讲清了可迁移方法的，哪怕边操作边讲，我们收。",
-      "count": 1910
+      "count": 1913
     },
     "finance": {
       "label": "财经",
@@ -88531,6 +88531,93 @@
       "topic": "概念原理",
       "node": "AI工具使用教程",
       "category": "(地图缺口)AI工具使用教程",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1SzWX6fEZd",
+      "video_id": "BV1SzWX6fEZd",
+      "title": "公众号小说创作全流程：AI工作流与变现指南",
+      "original_title": "网文作者新平台！公众号小说创作全流程一条视频解清！有广告分成、改编！或许成为下一个爆款网文平台！Ai写小说，Ai写网文，星月写作！",
+      "author": "-星月凌云-",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1SzWX6fEZd",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/5849b3d88b86cd5841e671d8203ca0364dc74feb.jpg",
+      "published_at": "2026-11-12T08:30:28+00:00",
+      "key_points": [
+        "公众号小说需100粉丝开通广告变现，改编稿费保底6000+元分成",
+        "AI创作三步流程：确立脑洞与金手指→选提示词模板→生成正文，可绕过手工创作时间",
+        "下沉市场题材（年代文、都市文、职场文）天然与改编方向匹配，更易获改编机会",
+        "完本15-30万字作品后可触发改编条约，即使LV0账号也有机会获稿费"
+      ],
+      "chapters": [],
+      "duration_s": 443.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲公众号小说平台规则、改编收益、用AI工具完成脑洞→提示词→生成→修改的创作工作流",
+      "reason": "讲解了平台规则、创意框架、AI使用方法。但有轻微焦虑营销：'蓝海就在眼前''最佳入场时期'无充足支撑，夸大了平台前景。转写引用：'我已经全盘给你拖出了公众号小说的发布流程'，实际只示范了流程骨架而非完整讲解。 | 引用:「现在是最佳的入场时期啊，蓝海就在眼前，改编获得的稿费那是非常之高」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "AI内容创作工具工作流",
+      "category": "(地图缺口)AI内容创作工具工作流",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV13pWy6zE6q",
+      "video_id": "BV13pWy6zE6q",
+      "title": "千问4max网文写作评测：与主流模型对标分析",
+      "original_title": "首发测评！Qwen4max正式更新！Qwen系列新模型用来写小说是什么效果？写网文能力究竟如何！",
+      "author": "-星月凌云-",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV13pWy6zE6q",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/4836ad8cd1b4334c63f4375b6acd6633f70627bd.jpg",
+      "published_at": "2026-11-11T09:59:51+00:00",
+      "key_points": [
+        "千问4max综合评分7/10，AI味少、情绪感强，但生成风格偏短篇不适合长篇创作",
+        "相比上代千问3.8，新版本对提示词要求精准度更高，人味与情绪表现明显进步",
+        "奇想4.0生成速度更快，更适配都市脑洞、年代文创作，在长篇能力上仍优于千问4max",
+        "正式上架预计11月底，上线后将补充详细使用指南供用户选型参考"
+      ],
+      "chapters": [],
+      "duration_s": 240.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "对千问4max与奇想4.0等模型在网文创作中的生成效果进行实测对比，给出评分与适用题材",
+      "reason": "通过实际生成对比、打分、场景分析给出客观测评，符合时效选择内容的标准。转写引用：'我不了解AI写小说的话我根本看不出来这文本是AI写的...这个我觉得是千万4非常非常牛逼的一个点'，有具体观察基础。 | 引用:「他整体的文风适配更偏向于短片所以我综合能力在长篇这方面只能给到一个积分」",
+      "consensus": "mainstream",
+      "topic": "时效选择",
+      "node": "大模型版本与选型指南",
+      "category": "(地图缺口)大模型版本与选型指南",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV136Wu6gEkg",
+      "video_id": "BV136Wu6gEkg",
+      "title": "网文平台规则与AI快速创作指南：平台对标与工作流",
+      "original_title": "网文平台签约难度与底层逻辑全解析：AI写长短篇网文赛道排名及新人投稿指南！Ai写小说，Ai写网文，星月写作",
+      "author": "-星月凌云-",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV136Wu6gEkg",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/55c50ce737e998b9d2ca949259669ed806a9611c.jpg",
+      "published_at": "2026-11-10T08:37:22+00:00",
+      "key_points": [
+        "长篇平台某番活跃度最高、改编费最高（保底6000+元），新人需完本15-30万字才能签约",
+        "某点人工审核门槛最高、签约难且慢，不建议新手入场；其他平台签约较易但稿费不稳定",
+        "AI创作流程：确立脑洞→选提示词模板→生成正文→人工修改，显著缩短创作周期",
+        "题材选择优先下沉市场高热题材（年代文、都市文），与改编方向天然高匹配"
+      ],
+      "chapters": [],
+      "duration_s": 698.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "对比长短篇网文平台签约难度、收益差异，讲解用AI快速生成15-30万字作品的核心工作流",
+      "reason": "讲解了平台对比逻辑、签约流程、AI使用方法等实操知识。但有过度化表述：'一条视频给你讲清目前所有网游平台'实际只讲了长短篇主流平台。转写引用：'如果你触发了改编的条约即使你是LV0LV1的话也是有机会'，表述概率事件为必然。 | 引用:「只要你写的足够好就没有任何问题，你迟早会拿到收益，文好破一切」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "AI内容创作工具工作流",
+      "category": "(地图缺口)AI内容创作工具工作流",
       "domain": "ai1"
     }
   ]
