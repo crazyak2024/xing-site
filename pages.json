@@ -982,69 +982,69 @@
     },
     {
       "category": "07.怎么写提示词才能少踩坑",
-      "coverage": "骨架 0-7 全部被覆盖：0 由前两条+后两条共同打底，1 由调试卡与六边形框架给出数字/样例两种锚点，2 由三层递进与简化指南覆盖，3 由三层递进的第三层+五步框架覆盖，4 主要靠三条铁律（五步框架的「结论标注依据」是补充），5 由调试卡与简化指南一正一反覆盖，6 由五步框架（长对话交班）与 Context 框架（长期资产）两半拼齐，7 三条都有讲。薄的地方：第 4 点只有一条短视频在撑，深度不够；另外「怎么量化验证提示词改好了没有（A/B、评测集）」整个候选池只有 《简化提示词指南：从目标和验证开始》 一句带过，不足以成点，没写进骨架——它更该挂到相邻节点「怎么评估 AI 输出质量」；提示词注入/越狱这类安全坑本池完全没有。",
+      "coverage": "骨架 0-7 全部被覆盖：0/1/3/4/5 由三层递进那条承担，2 由'数字和例子'那条补实，4 的防幻觉半边由三句咒语补齐，6 由简化指南+调试循环双向支撑，7 由调试循环（迭代）+ 35秒那条（上下文交班）合成。两处偏薄要说明：第3点只有'贴1-2个示范'的定性说法，没有一条讲清 few-shot 的边际收益（《提示词工程核心方法：角色、指令、背景、思考》 有'3-5个实例达80%效果'这一句，但整条其余是五要素复述，为一句话加一条不值）；思维链/分步思考（《提示词工程基础讲解》 的准确率37%→92%、《AI应用的提示词与上下文工程基础》 的 think step-by-step）本节点没收，它更该挂到'模型为什么会答错、怎么让它推理'那个相邻节点。另外'首尾权重效应'只有一条34小时录播课提到，无法作为入口收进来，见 notes。",
       "disputed": [
         {
-          "claim": "提示词应该写得尽量完整结构化，还是应该尽量短、按需披露",
-          "sides": "《提示词系统写法从Prompt到Context的完整框架》 的六边形框架、各类「五要素缺一不可」口播主张信息给全才稳；《简化提示词指南：从目标和验证开始》 用 Claude Code 系统提示词删 80%+ 评测不降反驳，wechat xL-BBHsTJTePk 说矛盾指令让模型浪费算力仲裁，wechat xMijCDg7Iw2C 主张分层披露/延迟加载优于前置全量"
+          "claim": "到底要不要给AI'设角色/身份'",
+          "sides": "主流框架派（三层递进 wechat:…xPOHfCcJBSG9、六步公式 《提示词6步公式：角色到参考示例的完整框架》、《AI提问优化：角色定义四步法》 甚至主张虚构角色的教育履历）把角色设定当第一要素、称'专业十倍'；反方 wechat:…xMijCDg7Iw2C 说在真实生产中穷举检查清单比角色设定更稳定高效，wechat:…xOCiVB4sU06M/…xKamJHNvJSu7 也主张'用专业方法而非角色扮演'"
         },
         {
-          "claim": "角色扮演（「你是XX专家」「你是巴菲特」）到底有没有用",
-          "sides": "《提示词6步公式：角色到参考示例的完整框架》、《AI提问优化：角色定义四步法》 说角色定位是第一步也最关键、知名人物效果更好；wechat xOCiVB4sU06M 和 xKamJHNvJSu7 说要用专家真正用的方法而非角色扮演营造氛围，wechat xMijCDg7Iw2C 说穷举检查清单在真实生产中比角色设定更稳定"
+          "claim": "提示词该写得更完整，还是该砍短",
+          "sides": "加法派：《提示词系统写法从Prompt到Context的完整框架》 的六边形（任务/指标/边界/样本/规则/验收）、《提示词的第二层：背景信息的灵魂赋权》 的'背景故事越完整越有灵魂'、《提示词工程核心方法论与实战调优技巧》 的结构化精心设计；减法派：《简化提示词指南：从目标和验证开始》 称 Claude Code 系统提示词删80%+评测无下降、《GPT 6时代Skill策略调整：从复杂到精简》 称模型变强后大量人工框架已不必要且复杂设计反而费token、wechat:…xL-BBHsTJTePk 称矛盾指令让模型浪费算力仲裁、wechat:…xMijCDg7Iw2C 主张分层披露/延迟加载"
         },
         {
-          "claim": "该用成熟模板还是自己从需求本质推",
-          "sides": "douyin:《AI生成提示词的四步工作法》 推 Lyra 这类通用生成模板（「顶级提示词由 AI 生成」）；《第一性原理：拆解需求本质而非盲套提示词模板》 说套模板必然「泯然于众人」要用第一性原理拆，wechat xPOHfCcJBSG9 说固化模板会过时作废"
+          "claim": "好提示词是人写的还是让AI生成的",
+          "sides": "douyin:《AI生成提示词的四步工作法》 称'顶级提示词由AI生成而非人写'（Lyra 四阶段）、《让AI自己写提示词，生成个性化智能体》 称'AI自己最懂AI'；《第一性原理：拆解需求本质而非盲套提示词模板》 反过来主张必须自己用第一性原理拆到本质，照搬任何现成结论（包括AI给的模板）都会'泯然于众人'"
         },
         {
-          "claim": "面对新模型，提示词需要越写越精细还是越写越自然",
-          "sides": "《提示词三步法/五步法：从简单指令到高定需求》 和 《大模型应用架构与提示词设计完全指南》 说推理模型能自主推敲隐含需求、26 年趋势是自然表达；《提示词工程核心方法论与实战调优技巧》、douyin:《提示词工程基础讲解》 等仍按 2024 年的复杂结构化范式教"
+          "claim": "提示词精度要不要随模型调整",
+          "sides": "《提示词三步法/五步法：从简单指令到高定需求》 称推理式模型能自主推敲隐含需求、不需面面俱到，生成式模型才要详细指引；《大模型应用架构与提示词设计完全指南》 称重要性已从'24年的复杂结构化'转为'26年的自然表达'；而大量 2026 年的五要素/四件套短视频仍按统一模板讲，不区分模型代际"
         }
       ],
       "domain": "ai1",
-      "editor_note": "这个节点量大质差：66 条里超过一半是「角色+任务+背景+格式+约束」四到六要素的同义改写，短口播互相复制，信息密度极低；防幻觉「三条铁律」一条内容被至少 6 个号逐字搬运，其中一条点赞 15 万——这里高赞完全不代表独有信息，只代表这条模板好抄。真正带可核验锚点的只有少数几条（Claude Code 删 80% 的评测结论、Lyra 四阶段、调试循环的四轮步序、信心指数 1-10）。第二个坑是跑题：约 12 条其实是 AI 生图/生视频的提示词技巧（字体设计参考法、样机、灰模法、Seedance 活人感、画风拆解、空间位置用画面坐标、电商作图模板、视频反推提示词），它们各自讲得不错但答的不是「怎么写提示词少踩坑」这个通用问题，应整体迁到相邻节点「AI 生图/生视频的提示词怎么写」；《Markdown符号的来源与三种处理方案》 的 Markdown 星号井号问题也属于另一个节点（输出格式怎么治）。第三个坑是候选之间有四组真实冲突（见 disputed），尤其「写全」与「写短」、「角色扮演有用/没用」，新旧两派都在本池里大声说话，用户如果只看一条很容易拿到已经过时的那派；本次 picks 特意同时放了正反两条（《提示词系统写法从Prompt到Context的完整框架》 对 《简化提示词指南：从目标和验证开始》）让分歧显出来。最后一个空白：没有任何一条讲怎么验证提示词真的改好了（评测集、A/B、回归），也没有一条碰提示词注入与安全。另有 douyin:《五个AI图像生成创意插画提示词》、douyin:《ChatGPT电商产品作图五大提示词》、wechat ImnPH9mG3jv 这类纯模板清单/引流向内容，信息量低且带「配套去水印教程」式钩子，已排除。",
+      "editor_note": "这个节点的信噪比很差。67条里约15条其实是垂类生成提示词（字体 《AI字体设计的正确打开方式：参考学习而非文生图堆砌》、样机 《AI样机生成的正确方法：审美定调+智能替换而非模板》、空间位置 《AI如何理解空间位置：从画面坐标而非人物视角》、生图演进 《AI生图提示词演进——从画质到真实感》、灰模 《灰模法：隔离参考信息维度的AI生成技巧》、画风 《AI学习特定画风的标准方法：从参考拆解到风格指令》、Seedance 《Seedance视频「活人感」的三要素提示词控制法》、Claude辅助写图词 《用Claude协助编写提示词的系统四步法》、反推视频词 douyin:《从视频反推AI生成提示词的方法》、插画模板 douyin:《五个AI图像生成创意插画提示词》、电商作图 douyin:《ChatGPT电商产品作图五大提示词》），应挂到'生图/生视频提示词怎么写'；《Markdown符号的来源与三种处理方案》（输出里的星号井号怎么去）更该挂'输出格式怎么控'；《提示词、RAG、微调选型框架》/《大模型应用架构与提示词设计完全指南》 属'提示词还是RAG还是微调'选型节点。剩下的本节点内容里，'五要素/四件套/三步法/六步公式'同一主张被不同措辞讲了十几遍，没有新增信息，这是本次 redundant 列表最长的一簇。两个坑要提醒：①按互动量排序会直接翻车——点赞最高的6条（15.3万/8.2万/5.1万/2.2万/2.1万/1.8万）里有4条是同一个'防幻觉三条铁律'，纯按热度会给用户6条一模一样的东西；②三条几十小时录播课（《提示词工程：通过语言编程激发大模型潜能》 123521s、《提示词工程核心方法论与实战调优技巧》 111065s、《提示词设计核心方法与应用技巧》 35370s）不能作为节点答案，但 《提示词工程：通过语言编程激发大模型潜能》 提到的'首尾权重效应：核心指令放开头或结尾、次要信息放中间'是全部候选中唯一的机理级锚点，没有任何短视频覆盖——这是本节点的真空，建议另找或自制。另已排除带卖课/焦虑话术的条目（《上下文工程：提示词手工到自动化的进阶》 的'决定职业天花板'、douyin:《提示词工程基础讲解》 的'效率提升3-5倍'、douyin:《AI生成提示词的四步工作法》 的'百万验证'），以及附带去水印教程的 douyin:《五个AI图像生成创意插画提示词》。",
       "node": "怎么写提示词才能少踩坑",
       "order": [
         {
           "bucket": "pick",
           "id": "wechat_channels:export/UzFfBgAAxPOHfCcJBSG9k8zT4DCKxgfQyHjWe-GGqqieVNJAUg",
-          "reason": "编辑判断·入选最小互补集：打底：先讲清「提示词是引出最佳答案的前文」这个机制，再给三层递进（定方向→给示范终点→挖信息），一条顶掉一堆五要素口播｜覆盖骨架[0, 1, 2, 3]｜独有：明确区分「会过时的固化模板」和「长期有效的边界设计+信息挖掘能力」，给出为什么别背模板的理由而不只是口号",
+          "reason": "编辑判断·入选最小互补集：骨干框架：从'为什么会跑偏'的机理一路讲到三层递进（设方向→给示范→挖信息），一条顶掉十几条'五要素'复述｜覆盖骨架[0, 1, 3, 4, 5]｜独有：提出'提示词=引出最佳答案的前文'，并明确固化模板会过时作废、长期有效的是边界设计和信息挖掘能力",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "bilibili:BV1hAM26KEcb",
+          "reason": "编辑判断·入选最小互补集：把'说清楚'落到地面：列数字法+举例子法，专治形容词式提示词｜覆盖骨架[2, 3]｜独有：指出真正的难点不是知道要换掉形容词，而是先把自己心里的那把尺子量化清楚",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "wechat_channels:export/UzFfBgAAxOGvWChUIm2Mk8zT4DCKhC6lC9LpdX-lHU2OefH0aw",
+          "reason": "编辑判断·入选最小互补集：可直接抄走的防幻觉约束三句（承认边界/自我评分/亮出证据），并解释AI为什么会硬凑｜覆盖骨架[4]｜独有：给出风险分级——引用类任务风险最高、写作类最低，以及'AI优化连贯性而非准确性、人类偏好结构化反而强化了它的自信'这一成因",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
           "id": "wechat_channels:export/UzFfBgAAxMGEMFBNTB-Ik8zT4DCK4TORNx_LVl-xwlW5MiAetw",
-          "reason": "编辑判断·入选最小互补集：可照做的操作卡：四条常见翻车形态 + 五条自检清单 + 调试循环的具体步序｜覆盖骨架[0, 1, 5, 7]｜独有：把「写→跑→找最差处→只改那处→再跑、通常四轮」写成可执行循环，并点名「过长、自相矛盾」本身就是翻车原因",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "pick",
-          "id": "douyin:7652180035524893870",
-          "reason": "编辑判断·入选最小互补集：49 秒速览：防幻觉的三条可直接粘贴的铁律｜覆盖骨架[4]｜独有：「每次回答标信心指数 1-10、低于 7 分标红」这种把诚实度量化、肉眼可查的写法",
+          "reason": "编辑判断·入选最小互补集：操作路径最清楚的一条：调试循环+五条检查清单+四类常见翻车｜覆盖骨架[1, 2, 6, 7]｜独有：写→跑→找最差处→只改那一处→再跑，四轮通常足够；并把'目标模糊/过长/自相矛盾/格式不明'列为固定排查项",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
           "id": "bilibili:BV1mfxr6PEDW",
-          "reason": "编辑判断·入选最小互补集：反方向的解药：专治「越写越长」，教怎么删和怎么让模型自己验收｜覆盖骨架[2, 5, 7]｜独有：Claude Code 系统提示词删掉 80%+ 后编码评测无性能下降这个可核验实证，以及「不确定需求时让模型一次问你一个问题直到能写出 spec」",
+          "reason": "编辑判断·入选最小互补集：反方向的解药：少写而不是多写，目标+自验证两件就够，附可核验的实证锚点｜覆盖骨架[5, 6, 7]｜独有：Claude Code 系统提示词删掉80%以上后编码评测无性能下降；并给出'不确定需求时让模型一次问一个问题直到能写出完整 spec'和 /doctor audit 查过期指令的具体操作",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
-          "id": "bilibili:BV1HSbi62EnL",
-          "reason": "编辑判断·入选最小互补集：长流程深讲：把单次提问升级成多窗口、分阶段的生产流程｜覆盖骨架[0, 3, 4, 6]｜独有：阶段交班的具体做法——每阶段完成后强制开新窗口粘贴总结，不让一个窗口跑全马",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "pick",
-          "id": "bilibili:BV1SreE6dEJr",
-          "reason": "编辑判断·入选最小互补集：系统收尾：从 Prompt 到 Context Engineering 的完整框架，适合要把提示词做成可复用资产的人｜覆盖骨架[0, 1, 6, 7]｜独有：六边形框架（任务/指标/边界/样本/规则/验收）和「Context 要主动排除旧信息」这一步，别人都只讲往里加",
+          "id": "wechat_channels:export/UzFfBgAAxP6ILH5kWEuJk8zT4DCKMiHVxa5ACG2oGeMFCr6C8A",
+          "reason": "编辑判断·入选最小互补集：35秒补上最容易被忽略的那一坑：上下文饱和导致的遗漏，以及怎么交班｜覆盖骨架[7]｜独有：用已用 Token 数判断何时转移，并以'背景/进度/下一步'三段结构化文档接力到新对话",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "bilibili:BV1f8RFBPEso",
-          "reason": "编辑判断·主张层面与《通过提示词约束优化AI回答质量》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -1066,28 +1066,28 @@
           "source": "deterministic_rule"
         },
         {
-          "bucket": "redundant",
+          "bucket": "rest",
           "id": "bilibili:BV1skY76VEmB",
-          "reason": "编辑判断·主张层面与《AI字体设计的正确打开方式：参考学习而非文生图堆砌》重复，默认折叠",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "redundant",
-          "id": "bilibili:BV1cChqzqEWm",
-          "reason": "编辑判断·主张层面与《提示词系统写法从Prompt到Context的完整框架》重复，默认折叠",
-          "source": "editorial_lm"
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
           "bucket": "rest",
-          "id": "bilibili:BV1ww411W7CA",
+          "id": "bilibili:BV1cChqzqEWm",
           "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
           "source": "deterministic_rule"
         },
         {
           "bucket": "redundant",
-          "id": "bilibili:BV1DmKm6TEkd",
-          "reason": "编辑判断·主张层面与《AI字体设计的正确打开方式：参考学习而非文生图堆砌》重复，默认折叠",
+          "id": "bilibili:BV1ww411W7CA",
+          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
           "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1DmKm6TEkd",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
           "bucket": "rest",
@@ -1096,10 +1096,16 @@
           "source": "deterministic_rule"
         },
         {
-          "bucket": "redundant",
+          "bucket": "rest",
           "id": "bilibili:BV1yiXTBxE7n",
-          "reason": "编辑判断·主张层面与《向AI提问的五步框架：从指令到追问》重复，默认折叠",
-          "source": "editorial_lm"
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1pEen6nE3r",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
           "bucket": "rest",
@@ -1116,32 +1122,32 @@
         {
           "bucket": "redundant",
           "id": "bilibili:BV1WGdsB2E1x",
-          "reason": "编辑判断·主张层面与《通过提示词约束优化AI回答质量》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
-          "bucket": "redundant",
+          "bucket": "rest",
           "id": "bilibili:BV1gAQ1BzENc",
-          "reason": "编辑判断·主张层面与《提示词系统写法从Prompt到Context的完整框架》重复，默认折叠",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1HSbi62EnL",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1Xw6FBpE7u",
+          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
-          "id": "bilibili:BV1hAM26KEcb",
-          "reason": "编辑判断·主张层面与《提示词调试循环：从模糊到结构化的迭代方法》重复，默认折叠",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "rest",
-          "id": "bilibili:BV1Xw6FBpE7u",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
-        },
-        {
-          "bucket": "rest",
           "id": "bilibili:BV1ib421E7Sy",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
           "bucket": "rest",
@@ -1152,37 +1158,43 @@
         {
           "bucket": "redundant",
           "id": "bilibili:BV1wNPNeSES9",
-          "reason": "编辑判断·主张层面与《提示词6步公式：角色到参考示例的完整框架》重复，默认折叠",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "rest",
-          "id": "bilibili:BV1vSEezQEAk",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
-        },
-        {
-          "bucket": "redundant",
-          "id": "bilibili:BV1VEA8zYE6f",
-          "reason": "编辑判断·主张层面与《提示词6步公式：角色到参考示例的完整框架》重复，默认折叠",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "redundant",
-          "id": "bilibili:BV1M7pC6cEUK",
           "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
-          "id": "bilibili:BV1uDB9BaEsi",
-          "reason": "编辑判断·主张层面与《提示词系统写法从Prompt到Context的完整框架》重复，默认折叠",
+          "id": "bilibili:BV1vSEezQEAk",
+          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
+          "id": "bilibili:BV1VEA8zYE6f",
+          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1M7pC6cEUK",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1uDB9BaEsi",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1SreE6dEJr",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "redundant",
           "id": "bilibili:BV1DU3x6REQT",
-          "reason": "编辑判断·主张层面与《提示词6步公式：角色到参考示例的完整框架》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -1198,51 +1210,45 @@
           "source": "deterministic_rule"
         },
         {
-          "bucket": "rest",
+          "bucket": "redundant",
           "id": "bilibili:BV1N29aYgELQ",
+          "reason": "编辑判断·主张层面与《提示词三维度：高度、深度、广度》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "rest",
+          "id": "bilibili:BV1DeAve7EkP",
           "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
           "source": "deterministic_rule"
         },
         {
           "bucket": "redundant",
-          "id": "bilibili:BV1DeAve7EkP",
-          "reason": "编辑判断·主张层面与《AI生成提示词的四步工作法》重复，默认折叠",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "redundant",
           "id": "bilibili:BV1t596YPEek",
-          "reason": "编辑判断·主张层面与《AI生成提示词的四步工作法》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《简化提示词指南：从目标和验证开始》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "bilibili:BV1ToV76NECH",
-          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《AI的三句咒语：承认边界、自我评分、亮出证据》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
-          "bucket": "rest",
+          "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxKamJHNvJSu7k8zT4DCKLGKi7GJrxM4Io1d4qjOa9g",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《提示词三维度：高度、深度、广度》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxPyDMEMTdQ7ujMzT4DCK5U0hcUjJaN80UpETQIVU3w",
-          "reason": "编辑判断·主张层面与《提示词的本质：给AI派活的地图》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "douyin:7566554653261958452",
-          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "redundant",
-          "id": "wechat_channels:export/UzFfBgAAxOGvWChUIm2Mk8zT4DCKhC6lC9LpdX-lHU2OefH0aw",
-          "reason": "编辑判断·主张层面与《三条铁律让豆包诚实输出》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《简化提示词指南：从目标和验证开始》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -1254,19 +1260,19 @@
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxJWrFAkLCET2k8zT4DCKPY9ghMM1Yo5wAQZw3omW0g",
-          "reason": "编辑判断·主张层面与《三条铁律让豆包诚实输出》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《AI的三句咒语：承认边界、自我评分、亮出证据》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7652180035524893870",
+          "reason": "编辑判断·主张层面与《AI的三句咒语：承认边界、自我评分、亮出证据》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxKOAaE4mBCH0k8zT4DCKdbhLDjI7Hcbg4aiX926XfA",
-          "reason": "编辑判断·主张层面与《三条铁律让豆包诚实输出》重复，默认折叠",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "redundant",
-          "id": "wechat_channels:export/UzFfBgAAxP6ILH5kWEuJk8zT4DCKMiHVxa5ACG2oGeMFCr6C8A",
-          "reason": "编辑判断·主张层面与《向AI提问的五步框架：从指令到追问》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《AI的三句咒语：承认边界、自我评分、亮出证据》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -1284,7 +1290,7 @@
         {
           "bucket": "redundant",
           "id": "douyin:7612513614234127635",
-          "reason": "编辑判断·主张层面与《通过提示词约束优化AI回答质量》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -1302,19 +1308,19 @@
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxOCiVB4sU06Mk8zT4DCK7KaZUwS1gctFvYShby8JGg",
-          "reason": "编辑判断·主张层面与《AI使用的四维度：速度、高度、深度、范围》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
-          "bucket": "redundant",
+          "bucket": "rest",
           "id": "wechat_channels:export/UzFfBgAAxL-BBHsTJTePk8zT4DCKZN9_rgfHNncChT8hmc5jbg",
-          "reason": "编辑判断·主张层面与《提示词调试循环：从模糊到结构化的迭代方法》重复，默认折叠",
-          "source": "editorial_lm"
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxLyvGGdvWSSCk8zT4DCKD3wWfWKIRuz7ZXQZCISchw",
-          "reason": "编辑判断·主张层面与《多模型通用提示词编写规范》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -1324,10 +1330,10 @@
           "source": "editorial_lm"
         },
         {
-          "bucket": "rest",
+          "bucket": "redundant",
           "id": "douyin:7477208108171857162",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
@@ -1338,19 +1344,19 @@
         {
           "bucket": "redundant",
           "id": "douyin:7621117842859003186",
-          "reason": "编辑判断·主张层面与《提示词调试循环：从模糊到结构化的迭代方法》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "douyin:7599967007982783770",
-          "reason": "编辑判断·主张层面与《提示词6步公式：角色到参考示例的完整框架》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxJimfHYKOAeMk8zT4DCKRg6dikvtiLRyCK4cjR2m-g",
-          "reason": "编辑判断·主张层面与《提示词调试循环：从模糊到结构化的迭代方法》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《提示词工程的三层递进模型》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -1366,15 +1372,15 @@
           "source": "deterministic_rule"
         },
         {
-          "bucket": "redundant",
+          "bucket": "rest",
           "id": "wechat_channels:export/UzFfBgAAxMijCDg7Iw2Ck8zT4DCKCY0UzwHwFOJTjm1bhOMc4w",
-          "reason": "编辑判断·主张层面与《简化提示词指南：从目标和验证开始》重复，默认折叠",
-          "source": "editorial_lm"
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
           "bucket": "redundant",
           "id": "douyin:7657921060280601897",
-          "reason": "编辑判断·主张层面与《三条铁律让豆包诚实输出》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《AI的三句咒语：承认边界、自我评分、亮出证据》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -1386,7 +1392,7 @@
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxPyhaGwBeg2Mk8zT4DCKu0jJMr-OhSYav50Roi1e5w",
-          "reason": "编辑判断·主张层面与《AI生成提示词的四步工作法》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《简化提示词指南：从目标和验证开始》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -1398,92 +1404,88 @@
         {
           "bucket": "redundant",
           "id": "douyin:7654467056079725914",
-          "reason": "编辑判断·主张层面与《三条铁律让豆包诚实输出》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《AI的三句咒语：承认边界、自我评分、亮出证据》重复，默认折叠",
           "source": "editorial_lm"
         }
       ],
       "outline": [
-        "AI 不读心、只按概率续写——模糊输入必然得到最大众化的平淡结果；所以要先把身份/角色、任务目标、背景、输出格式、约束边界这套骨架给足，核心指令放开头或结尾",
-        "用可核验的具体锚点替代形容词：数字、条数、字数、格式锁死；并贴 1-2 个你认可的范例让 AI 照着学（示例 3-5 个后收益递减）",
-        "不要照搬网上的「神级提示词」模板：会同质化、会随模型过时；改为拆到需求本质，或让 AI 反向采访你、替你生成定制提示词",
-        "把 AI 从「迎合」扳到「质疑」：要求它先复述理解再动手、当杠精找漏洞和风险、禁止夸赞与盲目顺从",
-        "防幻觉的硬约束：不确定就说不确定、给结论标信心分、数字/统计/引文必须附可验证来源",
-        "提示词不是越长越好：指令自相矛盾和系统提示膨胀会让模型浪费算力仲裁，要删冗余、按需分层披露，并写明「怎么算做到了」的自验证方法",
-        "上下文与长对话管理：把项目背景、样本、长期规则沉淀成 Context 而不是每次重写；窗口接近满溢会遗忘跑偏，要分阶段交班、用结构化文档在新窗口接力",
-        "提示词是调试出来的不是写出来的：写→跑→找最差的一处→只改那处→再跑，3-4 轮收敛；不满意不要重开，而是说清哪里不对"
+        "底层机理：模型不读心、只做概率补全，提示词本质是'引出最佳答案的前文'——模糊输入必然被平均成最大众的平庸结果",
+        "基本骨架别缺项：身份/视角、任务目标、背景与受众、输出格式、禁忌约束，缺一项就等于让模型替你猜",
+        "把抽象形容词换成可核验的具体约束：数量、结构、字数、硬指标（'高级''优质'等于没说）",
+        "给示范比堆描述有效：贴1-2个你认可的输出让它照着学，并让它先复述理解再开写",
+        "防幻觉与反谄媚要写成明文约束：禁止编造、不确定就说不确定、数字必须给来源、强制它挑风险和漏洞而不是夸你",
+        "别闷头套网上的'神级提示词'：让模型反问采访你、帮你写提示词、或从成果逆向反推，模板套娃只会得到大众脸",
+        "提示词不是越长越好：指令过长、自相矛盾、系统提示膨胀会让模型浪费算力仲裁；模型变强后脚手架要往下减、按需披露",
+        "把它当调试而不是许愿：写→跑→只改最差那一处→再跑；长对话上下文饱和会开始遗漏，要结构化交班开新窗口"
       ],
       "picks": [
         {
           "covers": [
             0,
             1,
-            2,
-            3
+            3,
+            4,
+            5
           ],
           "id": "wechat_channels:export/UzFfBgAAxPOHfCcJBSG9k8zT4DCKxgfQyHjWe-GGqqieVNJAUg",
-          "role": "打底：先讲清「提示词是引出最佳答案的前文」这个机制，再给三层递进（定方向→给示范终点→挖信息），一条顶掉一堆五要素口播",
-          "unique": "明确区分「会过时的固化模板」和「长期有效的边界设计+信息挖掘能力」，给出为什么别背模板的理由而不只是口号"
+          "role": "骨干框架：从'为什么会跑偏'的机理一路讲到三层递进（设方向→给示范→挖信息），一条顶掉十几条'五要素'复述",
+          "unique": "提出'提示词=引出最佳答案的前文'，并明确固化模板会过时作废、长期有效的是边界设计和信息挖掘能力"
         },
         {
           "covers": [
-            0,
-            1,
-            5,
-            7
+            2,
+            3
           ],
-          "id": "wechat_channels:export/UzFfBgAAxMGEMFBNTB-Ik8zT4DCK4TORNx_LVl-xwlW5MiAetw",
-          "role": "可照做的操作卡：四条常见翻车形态 + 五条自检清单 + 调试循环的具体步序",
-          "unique": "把「写→跑→找最差处→只改那处→再跑、通常四轮」写成可执行循环，并点名「过长、自相矛盾」本身就是翻车原因"
+          "id": "bilibili:BV1hAM26KEcb",
+          "role": "把'说清楚'落到地面：列数字法+举例子法，专治形容词式提示词",
+          "unique": "指出真正的难点不是知道要换掉形容词，而是先把自己心里的那把尺子量化清楚"
         },
         {
           "covers": [
             4
           ],
-          "id": "douyin:7652180035524893870",
-          "role": "49 秒速览：防幻觉的三条可直接粘贴的铁律",
-          "unique": "「每次回答标信心指数 1-10、低于 7 分标红」这种把诚实度量化、肉眼可查的写法"
+          "id": "wechat_channels:export/UzFfBgAAxOGvWChUIm2Mk8zT4DCKhC6lC9LpdX-lHU2OefH0aw",
+          "role": "可直接抄走的防幻觉约束三句（承认边界/自我评分/亮出证据），并解释AI为什么会硬凑",
+          "unique": "给出风险分级——引用类任务风险最高、写作类最低，以及'AI优化连贯性而非准确性、人类偏好结构化反而强化了它的自信'这一成因"
         },
         {
           "covers": [
-            2,
-            5,
-            7
-          ],
-          "id": "bilibili:BV1mfxr6PEDW",
-          "role": "反方向的解药：专治「越写越长」，教怎么删和怎么让模型自己验收",
-          "unique": "Claude Code 系统提示词删掉 80%+ 后编码评测无性能下降这个可核验实证，以及「不确定需求时让模型一次问你一个问题直到能写出 spec」"
-        },
-        {
-          "covers": [
-            0,
-            3,
-            4,
-            6
-          ],
-          "id": "bilibili:BV1HSbi62EnL",
-          "role": "长流程深讲：把单次提问升级成多窗口、分阶段的生产流程",
-          "unique": "阶段交班的具体做法——每阶段完成后强制开新窗口粘贴总结，不让一个窗口跑全马"
-        },
-        {
-          "covers": [
-            0,
             1,
+            2,
             6,
             7
           ],
-          "id": "bilibili:BV1SreE6dEJr",
-          "role": "系统收尾：从 Prompt 到 Context Engineering 的完整框架，适合要把提示词做成可复用资产的人",
-          "unique": "六边形框架（任务/指标/边界/样本/规则/验收）和「Context 要主动排除旧信息」这一步，别人都只讲往里加"
+          "id": "wechat_channels:export/UzFfBgAAxMGEMFBNTB-Ik8zT4DCK4TORNx_LVl-xwlW5MiAetw",
+          "role": "操作路径最清楚的一条：调试循环+五条检查清单+四类常见翻车",
+          "unique": "写→跑→找最差处→只改那一处→再跑，四轮通常足够；并把'目标模糊/过长/自相矛盾/格式不明'列为固定排查项"
+        },
+        {
+          "covers": [
+            5,
+            6,
+            7
+          ],
+          "id": "bilibili:BV1mfxr6PEDW",
+          "role": "反方向的解药：少写而不是多写，目标+自验证两件就够，附可核验的实证锚点",
+          "unique": "Claude Code 系统提示词删掉80%以上后编码评测无性能下降；并给出'不确定需求时让模型一次问一个问题直到能写出完整 spec'和 /doctor audit 查过期指令的具体操作"
+        },
+        {
+          "covers": [
+            7
+          ],
+          "id": "wechat_channels:export/UzFfBgAAxP6ILH5kWEuJk8zT4DCKMiHVxa5ACG2oGeMFCr6C8A",
+          "role": "35秒补上最容易被忽略的那一坑：上下文饱和导致的遗漏，以及怎么交班",
+          "unique": "用已用 Token 数判断何时转移，并以'背景/进度/下一步'三段结构化文档接力到新对话"
         }
       ],
       "provenance": {
-        "input_hash": "102f4246e6b703c8",
+        "input_hash": "62e48cfd0fef39ad",
         "model": "opus"
       },
       "receipt": {
-        "folded": 37,
+        "folded": 32,
         "picked": 6,
-        "qualified": 66,
+        "qualified": 67,
         "rejected": 2,
         "rejected_why": [
           "违反硬性排除项。视频用\"我重生了这一世我定要成为最牛逼的程序员\"的短剧情节+反转叙事讲解提示词概念。虽贴AI外壳，但本质",
@@ -1493,27 +1495,19 @@
       "stale": [
         {
           "id": "bilibili:BV1ww411W7CA",
-          "why": "2023-11 的「虚构角色教育背景/资格/经历」四步法，是 GPT-3.5 时代的做法；本池内多条新视频已反驳角色扮演的收益，现在更该写专业方法与可验证约束"
+          "why": "2023-11。核心招数是'虚构角色的教育背景、资格、研究领域'再提问，这类重度角色扮演在当代模型上收益很低、还容易引入腔调污染；四步法本身已被后来的框架完全吸收"
         },
         {
           "id": "bilibili:BV1ib421E7Sy",
-          "why": "2024-07 的六步公式，核心主张「第一步角色定位最关键、巴菲特马斯克这类名人更有效」已被 2026 年的候选直接否定；框架本身还能看，排序与权重过时"
+          "why": "2024-07。'指定巴菲特、马斯克、鲁迅这类知名人物角色效果更好'是旧模型时代的经验，现在更可能带来风格模仿而非专业度；且6步公式与节点内十几条同质内容重复"
         },
         {
           "id": "douyin:7275718799872003386",
-          "why": "2023-09 讲「组合泛化」的学术化论述，没有任何可操作写法，概念表述也不是当下通行口径"
+          "why": "2023-09。用'组合泛化能力'来定义和评判提示工程，是前GPT-4时代的学术口径，对'怎么写才少踩坑'没有任何可操作抓手"
         },
         {
           "id": "bilibili:BV1DQ4y1g7P4",
-          "why": "2023-12 的提示词/RAG/微调选型框架，两年来 RAG 与微调的成本结构、长上下文能力都变了；而且它答的是「技术选型」，更该挂到相邻节点而非本节点"
-        },
-        {
-          "id": "douyin:7477208108171857162",
-          "why": "引用「CoT 让准确率从 37% 升到 92%」这类早期论文数字，现在主流模型已内置推理，手写 think step by step 的边际收益与当时完全不同"
-        },
-        {
-          "id": "bilibili:BV1vSEezQEAk",
-          "why": "2025-05 强调「超长文档会被拒绝、提示词越长计算效率越低」，在当下的长上下文与缓存定价下已不准确，容易误导人不敢给足背景"
+          "why": "2023-12。提示词/Few-shot/RAG/微调四选一的决策框架已被工具调用、长上下文和agent改写（节点内 《大模型应用架构与提示词设计完全指南》 已是更新版本）；而且它本就属于'技术选型'节点而非本节点"
         }
       ]
     },
@@ -3267,89 +3261,99 @@
     },
     {
       "category": "18.AI订阅该不该付费付哪档",
-      "coverage": "骨架 8 点中 0–7 全部有落点：0（避坑指南 + 涨价真相）、1（涨价真相 + 范式转变）、2（范式转变）、3（四款横评）、4（Plus衰落）、5（顶配对标）、6（国内五款 + 避坑指南）、7（Claude成本实测 + 涨价真相的重度用户部分 + 避坑指南的封号提示）。两处薄弱必须说明：①第6点里'改按 token / API 按量付费替代包月'只被一句话带过（国内五款里的'Claude 按 token 计费 100 元最便宜但需自配工作流'），全节点唯一讲清开通与本地客户端配置路径的 《豆包2.0 Pro付费开通与本地客户端配置》 已因价格与模型代次过时被排除，这条内容更该挂到相邻的『API 按量付费与本地客户端配置』节点，而不是硬塞进选档节点；②第7点的'回本门槛'只有一条 n=1 的创业自述（月花2000元案例），不足以支撑结论，该条更适合挂到相邻的『AI 变现与投入回报』节点。腾讯 BuddyOne 打包会员那条讲的是行业打包模式与办公生态现状，不是选档判据，同样属于相邻节点。",
+      "coverage": "骨架 0-8 全部被覆盖：0(第1、2条)、1(第2、3条)、2(第3条)、3(第4条)、4(第6、7条)、5(第5条)、6(第1、6条)、7(第1条)、8(第1、2、8条)。无遗漏点。第4点（按量计费）和第8点（渠道风险）覆盖较薄，分别只靠豆包实操与降智自检两条支撑，前者只讲了国内火山引擎一家、没有讲 OpenAI/Anthropic 官方 API 的按量成本对比，这一块更该挂到「AI成本与API计费」类的相邻节点而不是在本节点硬塞。",
       "disputed": [
         {
-          "claim": "GPT Plus 这一档现在还值不值得买",
-          "sides": "《国内外主流AI会员避坑与选型指南》(09-21) 说『GPT 必买，综合性价比最高』；《ChatGPT Plus衰落分析》(11-02) 与《五款AI工具性价比对比》(11-06) 说 Plus 已被系统性压低、新功能 Pro 独占，不必续费。时间线上后者更新，分歧主要由 10 月底 Pro 额度翻倍这一事件造成。"
+          "claim": "GPT Plus 当下还值不值得付",
+          "sides": "douyin:《20美元AI会员三选一：GPT、Claude、Gemini对标》 与 wechat_channels:...xJ-jdDV7（9月）认为 GPT 综合性价比最高、日常杂活首选甚至'必买'；douyin:《ChatGPT Plus衰落分析：被系统性压低的付费用户》 与 wechat_channels:...xIuAWCUl（11月）认为 Plus 价值已非、应停止续费。时间差是主因，11月两条更新。"
         },
         {
-          "claim": "Claude 的额度到底宽松还是很快见底",
-          "sides": "《20美元AI会员三选一》说 Claude 模型能力领先约 20% 且『额度限制宽松』；《Claude成本实测》说 8–9 次后端开发对话就吃掉 70% 周额度、十来次花完一周。实际差异来自使用形态：聊天式用量宽松，Agent/编码式用量极快见底。"
+          "claim": "Claude 是否适合作为主力订阅",
+          "sides": "douyin:《20美元AI会员三选一：GPT、Claude、Gemini对标》 说能力领先约20%、额度限制宽松；bilibili:《Claude成本实测与大模型订阅选型》 说额度消耗惊人、8-9次后端对话耗掉70%周额度。差异来自使用形态——聊天 vs Agent编码，不是事实冲突。"
         },
         {
-          "claim": "低价模型的成本优势能不能当作选档依据",
-          "sides": "《DeepSeek涨价后的市场重新分化》说成本领先不可持续（DeepSeek 涨价时 GPT-5.6/Claude 反而降价）；《国内五款AI会员订阅对比》仍把『Claude 按 token 计费 100 元最便宜』作为推荐理由。"
+          "claim": "豆包性价比高不高",
+          "sides": "wechat_channels:...xJ-jdDV7 说'豆包性价比低'；bilibili:《豆包2.0 Pro付费开通与本地客户端配置》 的按量计费方案显示豆包2.0 Pro单价极低。实际是会员档 vs API档两回事。"
+        },
+        {
+          "claim": "DeepSeek 式低价能否持续构成优势",
+          "sides": "douyin:《DeepSeek涨价后的市场重新分化》 说成本领先非可持续、GPT-5.6/Claude 反而降价已追平；douyin:《AI订阅涨价真相：补贴退潮与成本转移》 说算力成本每年降10倍而价格反涨是'筛选'。"
         }
       ],
       "domain": "ai1",
-      "editor_note": "节点内容量足但同质度极高：16 条里『20 美元三选一/四选一』这一个主张占了 4 条，其中 《20美元AI会员三选一：GPT、Claude、Gemini对标》 与 wechat_channels 那条是逐点完全相同的同一内容跨平台分发；折叠《五款AI工具性价比对比》时唯一损失的是它的组合建议（用免费的 Grok 补 GPT 的实时信息与视频短板、Workbody 免费档作辅助），如果要给'不付费也能凑一套'的答案，可以把这条提上来替换。最大的坑是时效断层——10 月底的 Plus/Pro 分档调整让 9 月之前的所有选型结论作废，选档类内容只应信 10 月之后的；本节点有 5 条发布于 9 月之前。另有两类内容明确排除：《ChatGPT Plus性价比论：百亿投入与月费杠杆》 是典型的焦虑/认知升级营销（『花这点钱即可超越大多数人』『倒逼高频使用』），无任何可核验锚点；wechat 月花 2000 元那条是 n=1 创业自述，把 10–20 倍收入增长归因于订阅无法核验，不能当选档依据。真正的内容缺口有两个：没有一条算清『API 按量付费 vs 包月订阅』的分界点（多少用量以下按量更省），也没有一条讲 20 美元档的降级/退订与额度结转的实际操作。",
+      "editor_note": "这个节点的内容质量整体偏中下，有三个明显的坑。一、**严重同质化**：17 条里有 6 条在主张层面可折叠，其中 wechat_channels:...xPalMG57 与 douyin:《20美元AI会员三选一：GPT、Claude、Gemini对标》 是同一条内容的跨平台重发（要点逐字一致），索引层面应直接合并而不是并列。二、**时效断层最伤**：这个节点对时间极度敏感（档位权益、额度政策、价格每月变），而候选里 9 月及以前的 5 条（含点赞14309的爆款之外最火的几条）结论已被 10-11 月的政策变化推翻——尤其'GPT Plus 必买'这一条在 9 月是主流共识、11 月成了反面案例。索引展示时必须显式标注发布时间，否则用户按热度点进旧的会得到错的结论。三、**具体性两极分化**：带可核验锚点的只有少数几条（豆包的50万字3.2元、Claude Max是Pro的5-20倍、粗剪20秒耗尽5小时额度、涨价1元→3元），其余大量停留在'没有完美产品，按需选择'的同义反复——这句话本身零信息量，却出现在至少 5 条里。另有一条毒性候选已排除：douyin:《ChatGPT Plus性价比论：百亿投入与月费杠杆》 是典型的'花钱超越大多数人/省钱千元但生活无变化'焦虑说服，无任何可核验信息，不应进入索引。此外 wechat_channels:...《月花2000元AI会员的投入回报案例分析》（月花2000元回报案例）与 ...xP6vQHIqR1CJ（腾讯BuddyOne打包）虽不冗余也不过时，但前者是极端个案（创业者10-20倍收入覆盖成本）无法泛化为选型依据，后者是行业观察而非订阅决策，更该挂到'AI办公生态/打包会员'相邻节点。",
       "node": "AI订阅该不该付费付哪档",
       "order": [
         {
           "bucket": "pick",
           "id": "wechat_channels:export/UzFfBgAAxJ-jdDV7CCTVk8zT4DCK-1p0s1QMYS5CM8HiIsf3vA",
-          "reason": "编辑判断·入选最小互补集：入口：先回答'该不该付'，给出可执行的付费门槛线和国内外产品的粗分档｜覆盖骨架[0, 6, 7]｜独有：唯一给出可操作的开通门槛：先把免费额度用完、日均用 AI 超10次才建议付费、别一次订多个",
+          "reason": "编辑判断·入选最小互补集：决策入口：先免费再付费、算频率、不为焦虑付费的前置判据，同时给国内外产品一张粗选型表｜覆盖骨架[0, 6, 7, 8]｜独有：明确的付费门槛量化（日均用AI超10次才建议开）+ 别一次订多个",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
-          "id": "douyin:7674676046179880243",
-          "reason": "编辑判断·入选最小互补集：解释为什么同样的档位越来越不划算——补贴退潮与涨价的真实动机｜覆盖骨架[0, 1, 7]｜独有：补贴退潮的量化叙述：过去20美元内含约700美元算力价值、算力成本每年降10倍而价格反涨，说明定价逻辑已从补贴转向筛选",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "pick",
-          "id": "douyin:7675677208391874681",
-          "reason": "编辑判断·入选最小互补集：换算方法论：把'付哪档'从比单价改成比任务总成本｜覆盖骨架[1, 2]｜独有：不比'100万Token多少钱'而比'完成同一任务谁总消耗低'，并给出 A 模型100万Token完成、B 模型单价低但需500万Token 的反转例子",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "pick",
-          "id": "bilibili:BV1zZ4v6eEKB",
-          "reason": "编辑判断·入选最小互补集：20美元主流档的长篇横向深讲（四款同台，节点内最新且最全）｜覆盖骨架[3]｜独有：把 Grok 纳入对标并指出其 Plus 8美金档不足以对标20美金档，是唯一覆盖第四款的横评",
+          "id": "douyin:7698352379791445288",
+          "reason": "编辑判断·入选最小互补集：20美元档三选一的主力对标，给出能力差距与额度虚水的具体锚点｜覆盖骨架[0, 1, 8]｜独有：Claude模型能力领先GPT约20%、GPT粗剪20秒用完5小时额度这类可核验的量化对比",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
           "id": "douyin:7703616600720690442",
-          "reason": "编辑判断·入选最小互补集：针对最常被默认选中的那一档（GPT Plus）给出'别续费'的具体证据链｜覆盖骨架[4]｜独有：12月起 Chat 与 Codex 费用合并计算、28天更新仅得额度重置、10月底 Pro 翻倍而 Plus 不变的时间线",
+          "reason": "编辑判断·入选最小互补集：时效性最强的一条：解释为什么2026年底Plus档本身在贬值，带时间点与政策变化｜覆盖骨架[1, 2]｜独有：12月起Chat和Codex费用合并计算、10月底Pro额度翻倍而Plus不变的时间线",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
           "id": "wechat_channels:export/UzFfBgAAxJWveDotBC69k8zT4DCKoTKprkufsheQ92OOp0JWJg",
-          "reason": "编辑判断·入选最小互补集：往上一档：顶配会员三家对标，回答'要不要从20美元跳到100–250美元'｜覆盖骨架[5]｜独有：Claude Max 日常模型用量为 Pro 的 5–20 倍、支持后台 Agent 常驻；500美元档独占 Codex 超快模式",
+          "reason": "编辑判断·入选最小互补集：往上一档：顶配会员（GPT Pro/Claude Max/Google Ultra）各自独占什么、谁该升｜覆盖骨架[3]｜独有：Claude Max日常用量为Pro的5-20倍、500美元档独占Codex超快模式等档位差的具体权益",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "douyin:7675677208391874681",
+          "reason": "编辑判断·入选最小互补集：成本范式转换的方法论：重度/Agent用户该怎么算钱，带涨价后的真实单价｜覆盖骨架[5]｜独有：从比Token单价转向比'完成同一任务总消耗'，并给出A/B模型总成本反转的算法",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
           "id": "douyin:7702441995767254308",
-          "reason": "编辑判断·入选最小互补集：国内侧选型，给出具体档位的分界而不是产品排名｜覆盖骨架[6]｜独有：豆包 68 元档权限不足、200 元档才划算的档位分界线；Kimi 的 agent 按次数算而非按量",
+          "reason": "编辑判断·入选最小互补集：国内五款会员的档位细节，补上国外产品之外的本土选型｜覆盖骨架[6, 4]｜独有：豆包68元档权限不足、200元档才划算这类国内具体档位临界点",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
-          "id": "bilibili:BV1toJ168EzC",
-          "reason": "编辑判断·入选最小互补集：重度用户的现实天花板实测，决定'再高的档位也不够'时该怎么组合｜覆盖骨架[7]｜独有：8–9 次后端开发对话即消耗 70% 周额度的实测，以及中间层集成的 Claude 成本反高于直连 API（转接费）",
+          "id": "bilibili:BV1gLZsBaEtm",
+          "reason": "编辑判断·入选最小互补集：订阅之外的第四条路：按量计费+本地客户端自配的完整操作路径与真实单价｜覆盖骨架[4]｜独有：输入50万字3.2元/输出16元的实价，以及火山引擎+Cherry Studio的具体配置步骤",
           "source": "editorial_lm"
         },
         {
-          "bucket": "rest",
-          "id": "bilibili:BV1gLZsBaEtm",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "bucket": "pick",
+          "id": "bilibili:BV1aNYT6ZEfw",
+          "reason": "编辑判断·入选最小互补集：渠道风险的操作性补充：买便宜账号会付什么隐性代价、怎么自检｜覆盖骨架[8]｜独有：用'不要思考不要联网直接告诉我知识截止时间'一句提示词自检降智的可操作方法",
+          "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
-          "id": "douyin:7698352379791445288",
-          "reason": "编辑判断·主张层面与《四款主流AI会员20美金档对标评测》重复，默认折叠",
+          "id": "bilibili:BV1toJ168EzC",
+          "reason": "编辑判断·主张层面与《《20美元AI会员三选一：GPT、Claude、Gemini对标》 + 《Agent时代的成本评估范式转变》（Claude额度消耗快+订阅制对重度用户不友好，已被额度虚水与Agent成本两条覆盖）》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "bilibili:BV1zZ4v6eEKB",
+          "reason": "编辑判断·主张层面与《《20美元AI会员三选一：GPT、Claude、Gemini对标》（四款20美元档对标，多出Grok一家但结论同为'无绝对最优按需选'）》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxPalMG57RV6wk8zT4DCKdy7-wPAAd9xPjqWrjbtX4w",
-          "reason": "编辑判断·主张层面与《20美元AI会员三选一：GPT、Claude、Gemini对标》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《《20美元AI会员三选一：GPT、Claude、Gemini对标》（同一条内容的视频号重发，要点逐条一致）》重复，默认折叠",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "redundant",
+          "id": "douyin:7674676046179880243",
+          "reason": "编辑判断·主张层面与《《Agent时代的成本评估范式转变》（补贴退潮/重度用户是成本黑洞/多家对标，与Agent成本范式同一主张且无具体单价）》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -3361,13 +3365,13 @@
         {
           "bucket": "redundant",
           "id": "douyin:7682733858522337915",
-          "reason": "编辑判断·主张层面与《Agent时代的成本评估范式转变》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《《Agent时代的成本评估范式转变》（同一轮涨价事件的另一讲法，重心在DeepSeek市场格局而非订阅决策）》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxIuAWCUlckCJk8zT4DCKKLv_uFZAEK9pNu-8bCLHUw",
-          "reason": "编辑判断·主张层面与《ChatGPT Plus衰落分析：被系统性压低的付费用户》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《《ChatGPT Plus衰落分析：被系统性压低的付费用户》 + 《20美元AI会员三选一：GPT、Claude、Gemini对标》（Plus被系统性压低+五小时窗口+三家对标的组合，主张层面无新增，仅多了Grok免费够用一句）》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -3384,94 +3388,97 @@
         }
       ],
       "outline": [
-        "先判断该不该付：免费额度是否已用尽、日均使用频率门槛、不为焦虑/情绪付费、别一次订多个",
-        "价格为什么在涨：补贴退潮（20美元曾含远超其值的算力）、算力单价在降而售价反涨、涨价本质是筛选重度用户而非护城河",
-        "成本该怎么算：Agent 时代不比 token 单价，比'完成同一任务的总消耗'，单价低但轮次多反而更贵",
-        "20美元主流档横向（GPT Plus / Claude Pro / Gemini / Grok）各自强弱，以及'按主要用途选'而非选最优",
-        "GPT Plus 这一档当前已被系统性压低（额度掺水、新功能 Pro 独占、Pro 翻倍而 Plus 不变）→ 该不该停续费",
-        "顶配档（GPT Pro / Claude Max / Google Ultra，100–250 美元）各自独占能力与适用人群",
-        "国内产品的档位选择（豆包低档不够用 / 通义19元 / 千问 / Kimi / 腾讯打包）与'改按 token 付费'的替代路线",
-        "重度用户的额度天花板与风险：周额度被几次对话吃光、封号与地域限制、多平台组合与回本门槛"
+        "20美元主流档（GPT Plus / Claude Pro / Gemini / Grok）各自的能力侧重与取舍，按用途选而非选最优",
+        "额度与'虚水'：各家额度计量方式不同（5小时窗口、分项额度、粗剪20秒耗尽），实际可用量远低于宣传",
+        "Plus档被系统性压低：新功能Pro独占、额度不涨、费用合并计算，续费价值在衰减",
+        "顶配档（GPT Pro / Claude Max / Google Ultra 100-200美元）多花的钱买到什么、什么人值得升",
+        "按量计费/API 自配（豆包、Claude token计费）相对订阅制的成本结构差异与配置门槛",
+        "Agent/重度用户的成本范式：不比单价比'完成同一任务总消耗'，重度用户才是成本黑洞",
+        "国内产品档位选型（豆包68 vs 200、通义19元、千问、Kimi、Workbody）与国内外差异",
+        "付费决策前置判据：先用免费额度、算使用频率（日均>10次）、不为焦虑付费、不一次订多个",
+        "渠道与账号风险：Claude封号、中转站降智、便宜渠道的隐性代价"
       ],
       "picks": [
         {
           "covers": [
             0,
             6,
-            7
+            7,
+            8
           ],
           "id": "wechat_channels:export/UzFfBgAAxJ-jdDV7CCTVk8zT4DCK-1p0s1QMYS5CM8HiIsf3vA",
-          "role": "入口：先回答'该不该付'，给出可执行的付费门槛线和国内外产品的粗分档",
-          "unique": "唯一给出可操作的开通门槛：先把免费额度用完、日均用 AI 超10次才建议付费、别一次订多个"
+          "role": "决策入口：先免费再付费、算频率、不为焦虑付费的前置判据，同时给国内外产品一张粗选型表",
+          "unique": "明确的付费门槛量化（日均用AI超10次才建议开）+ 别一次订多个"
         },
         {
           "covers": [
             0,
             1,
-            7
+            8
           ],
-          "id": "douyin:7674676046179880243",
-          "role": "解释为什么同样的档位越来越不划算——补贴退潮与涨价的真实动机",
-          "unique": "补贴退潮的量化叙述：过去20美元内含约700美元算力价值、算力成本每年降10倍而价格反涨，说明定价逻辑已从补贴转向筛选"
+          "id": "douyin:7698352379791445288",
+          "role": "20美元档三选一的主力对标，给出能力差距与额度虚水的具体锚点",
+          "unique": "Claude模型能力领先GPT约20%、GPT粗剪20秒用完5小时额度这类可核验的量化对比"
         },
         {
           "covers": [
             1,
             2
           ],
-          "id": "douyin:7675677208391874681",
-          "role": "换算方法论：把'付哪档'从比单价改成比任务总成本",
-          "unique": "不比'100万Token多少钱'而比'完成同一任务谁总消耗低'，并给出 A 模型100万Token完成、B 模型单价低但需500万Token 的反转例子"
+          "id": "douyin:7703616600720690442",
+          "role": "时效性最强的一条：解释为什么2026年底Plus档本身在贬值，带时间点与政策变化",
+          "unique": "12月起Chat和Codex费用合并计算、10月底Pro额度翻倍而Plus不变的时间线"
         },
         {
           "covers": [
             3
           ],
-          "id": "bilibili:BV1zZ4v6eEKB",
-          "role": "20美元主流档的长篇横向深讲（四款同台，节点内最新且最全）",
-          "unique": "把 Grok 纳入对标并指出其 Plus 8美金档不足以对标20美金档，是唯一覆盖第四款的横评"
-        },
-        {
-          "covers": [
-            4
-          ],
-          "id": "douyin:7703616600720690442",
-          "role": "针对最常被默认选中的那一档（GPT Plus）给出'别续费'的具体证据链",
-          "unique": "12月起 Chat 与 Codex 费用合并计算、28天更新仅得额度重置、10月底 Pro 翻倍而 Plus 不变的时间线"
+          "id": "wechat_channels:export/UzFfBgAAxJWveDotBC69k8zT4DCKoTKprkufsheQ92OOp0JWJg",
+          "role": "往上一档：顶配会员（GPT Pro/Claude Max/Google Ultra）各自独占什么、谁该升",
+          "unique": "Claude Max日常用量为Pro的5-20倍、500美元档独占Codex超快模式等档位差的具体权益"
         },
         {
           "covers": [
             5
           ],
-          "id": "wechat_channels:export/UzFfBgAAxJWveDotBC69k8zT4DCKoTKprkufsheQ92OOp0JWJg",
-          "role": "往上一档：顶配会员三家对标，回答'要不要从20美元跳到100–250美元'",
-          "unique": "Claude Max 日常模型用量为 Pro 的 5–20 倍、支持后台 Agent 常驻；500美元档独占 Codex 超快模式"
+          "id": "douyin:7675677208391874681",
+          "role": "成本范式转换的方法论：重度/Agent用户该怎么算钱，带涨价后的真实单价",
+          "unique": "从比Token单价转向比'完成同一任务总消耗'，并给出A/B模型总成本反转的算法"
         },
         {
           "covers": [
-            6
+            6,
+            4
           ],
           "id": "douyin:7702441995767254308",
-          "role": "国内侧选型，给出具体档位的分界而不是产品排名",
-          "unique": "豆包 68 元档权限不足、200 元档才划算的档位分界线；Kimi 的 agent 按次数算而非按量"
+          "role": "国内五款会员的档位细节，补上国外产品之外的本土选型",
+          "unique": "豆包68元档权限不足、200元档才划算这类国内具体档位临界点"
         },
         {
           "covers": [
-            7
+            4
           ],
-          "id": "bilibili:BV1toJ168EzC",
-          "role": "重度用户的现实天花板实测，决定'再高的档位也不够'时该怎么组合",
-          "unique": "8–9 次后端开发对话即消耗 70% 周额度的实测，以及中间层集成的 Claude 成本反高于直连 API（转接费）"
+          "id": "bilibili:BV1gLZsBaEtm",
+          "role": "订阅之外的第四条路：按量计费+本地客户端自配的完整操作路径与真实单价",
+          "unique": "输入50万字3.2元/输出16元的实价，以及火山引擎+Cherry Studio的具体配置步骤"
+        },
+        {
+          "covers": [
+            8
+          ],
+          "id": "bilibili:BV1aNYT6ZEfw",
+          "role": "渠道风险的操作性补充：买便宜账号会付什么隐性代价、怎么自检",
+          "unique": "用'不要思考不要联网直接告诉我知识截止时间'一句提示词自检降智的可操作方法"
         }
       ],
       "provenance": {
-        "input_hash": "809378c205138345",
+        "input_hash": "569d33d220817fea",
         "model": "opus"
       },
       "receipt": {
-        "folded": 4,
+        "folded": 6,
         "picked": 8,
-        "qualified": 16,
+        "qualified": 17,
         "rejected": 4,
         "rejected_why": [
           "时效内容且涉及跨地区访问。关于海外AI服务订阅的教程容易过期（政策、价格、方法常变），转写中提到\"IP节点一致\"暗示需要",
@@ -3481,94 +3488,84 @@
       },
       "stale": [
         {
-          "id": "bilibili:BV1gLZsBaEtm",
-          "why": "2026-02-15，距今 9 个月。豆包 2.0 Pro 的按量单价（输入 3.2 元 / 输出 16 元每 50 万字）与模型 ID 大概率已随代次更新失效；开通与 Cherry Studio 配置路径可能仍可用，但价格不可直接引用。"
-        },
-        {
-          "id": "wechat_channels:export/UzFfBgAAxJ-jdDV7CCTVk8zT4DCK-1p0s1QMYS5CM8HiIsf3vA",
-          "why": "2026-09-21，早于 10 月底 Pro 额度翻倍 / Plus 保持不变这一关键事件，其中『GPT 必买』『豆包性价比低』等产品结论已被后续三条推翻；但它的决策框架部分（免费额度先用完、日均 10 次门槛、不为焦虑付费）不随时间失效，因此保留在 picks 里只取框架、不取产品结论。"
-        },
-        {
           "id": "douyin:7645661786902215034",
-          "why": "2026-05-30，早于补贴退潮与分档拉开，『20 美元买一个超级大脑』的前提已不成立；且通篇无可核验锚点，属于情绪叙事而非选档依据。"
+          "why": "2026-05 发布，核心论点是'20美元买百亿投入的超级大脑'，但2026年10-11月 Plus 档已被系统性削弱、新功能 Pro 独占，其'20美元=超级大脑'的前提已不成立。且全篇是焦虑/励志式说服，无一条可核验锚点。"
         },
         {
-          "id": "douyin:7682733858522337915",
-          "why": "价格数字锚在 2026-08-17 的那次 DeepSeek 调价，之后 GPT/Claude 侧又有多轮变动，具体倍数不宜再直接引用（已同时判为与《Agent时代成本评估范式转变》重复）。"
+          "id": "douyin:7674676046179880243",
+          "why": "2026-08 的涨价解释，价格数字已被 《Agent时代的成本评估范式转变》 和 《DeepSeek涨价后的市场重新分化》 的更细单价覆盖；'20美元含700美元算力'的历史参照对当下决策已无指导意义。"
+        },
+        {
+          "id": "bilibili:BV1zZ4v6eEKB",
+          "why": "2026-11-06 发布不算旧，但其中'Grok Plus档8美金'与四家额度描述在11月初政策变动期极易过期，且结论停在'没有绝对最优'的抽象层，不作为主力。"
         }
       ]
     },
     {
       "category": "21.现在该用哪个大模型",
-      "coverage": "覆盖骨架第 0-6 点（0 与 3 由前沿方案篇打底、1 由八模型对比篇铺开、2 由性价比矩阵+档位计费两条共同撑起、4 由写作排名篇、5 由开源横评+开源成本两条一正一反、6 由分层架构篇）。漏了第 7 点（免费额度/学生计划/先试后买）——节点内只有 《2026年AI免费与低价替代方案完整指南》 讲得全，但它整条是'白嫖渠道盘点'，主张层面属于相邻节点「AI 工具怎么免费/低成本用」，不为了补覆盖硬塞进来。另外两个没进骨架但值得知道的点：中英文 token 税（《中英文调用大模型的成本与效果权衡》）更像相邻节点「调 API 怎么省钱」，财报场景实测全军翻车（《国产AI工具工作能力对标测评》）更像相邻节点「AI 的幻觉与可靠性」。",
+      "coverage": "骨架 0-7 中，0/1/2/3/4/5/6 由 7 条 picks 覆盖：0 和 3（方法论与跑分陷阱）由 pick1+pick4 双重覆盖，1（任务对位）由 pick2 给清单、pick4 给当代次实证，2/4 由 pick3+pick7 给成本两面，5 由 pick6，6 由 pick5。**第 7 点（同一模型内部的档位与计费阈值）只拿到抽象覆盖**——pick1 提了 reasoning 模式可调，但「超 272k token 翻倍计费」这类可核验阈值只有 《GPT-5.6版本对比：Soul/Terra/Luna能力与成本差异》 讲过，而它停在 GPT-5.6 代次（当下已到 6.1/6.2），阈值可能已变，不值得为凑覆盖塞进来。另外「写作/网文该用哪个模型」在候选里自成一簇（6 条以上），但那是独立使用场景，更该挂到相邻的「AI 写作/网文工具选型」节点，不在本节点展开。编程专项的具体分数对位（wechat 的《2026年编程大模型性能对比》）也未选入：数字够具体，但该条无发布日期、无法核验时效。",
       "disputed": [
         {
-          "claim": "跑分/榜单能不能当选型依据",
-          "sides": "《大模型编程能力对比：Deep Seek v3、Gemini 2.5与主流模型实测》 实测 Gemini 2.5 Pro 官方基准第一但编程题全败、《Kimi K3.1 Pro vs Opus 5.5首发测评：性价比对标分析》 说 Kimi 跑分 9 项领先而中文创意写作实场景落后 6 分，都主张榜单不可信；而 wechat 前沿方案篇主张盲测 ELO 贴近体感、硬考题糊弄不了，榜单可用只要看懂口径"
+          "claim": "中美顶级模型的性能差距到底有多大",
+          "sides": "《大模型性价比怎么选？能力-成本矩阵决策法》 说差距已缩到 0.4%、通用能力成标配；wechat《中美大模型性能与性价比对标》说差距 2.7%、并引 Mozilla 称中国模型追平还需 4.4 个月。两条都用「几乎追平」的口径，但数字差近 7 倍，且都没给可核验的评测集。"
         },
         {
-          "claim": "通用能力是否已经'成了标配、差异消退'",
-          "sides": "《大模型性价比怎么选？能力-成本矩阵决策法》 说中美差距缩到 0.4%、通用能力差异化消退、未来拼应用集成；《2026年全球AI助手能力评测与选型建议》 和 《国产AI工具工作能力对标测评》 则说各家差异明显，且真实财经任务上五款国产全数翻车、迭代后幻觉率未降反升"
+          "claim": "跑分/榜单能不能直接当选型依据",
+          "sides": "wechat《2026年编程大模型性能对比》直接用 43.3%、54.4 分推出选型路径；《Kimi K3.1 Pro vs Opus 5.5首发测评：性价比对标分析》 自测 Kimi 跑分 9 项领先但中文写作实测输 6 分；《大模型编程能力对比：Deep Seek v3、Gemini 2.5与主流模型实测》 实测官方基准第一的 Gemini 2.5 Pro 编程题全败。榜单派与实测派结论相反。"
         },
         {
-          "claim": "中美顶级模型的实际差距有多大",
-          "sides": "wechat 中美对标篇给 2.7%、追平只需 4.4 个月；《大模型性价比怎么选？能力-成本矩阵决策法》 给 0.4%；《Kimi K3.1 Pro vs Opus 5.5首发测评：性价比对标分析》 的实场景评测给出 9 vs 13 分的明显差距。同一问题三个量级不一致的口径"
+          "claim": "厂商官方宣传的能力/省量指标是否可信",
+          "sides": "douyin Swift 1.5 实测 token 只省 6%，官宣 58%；《GPT Image 2.5两版本能力对比与选型》 说 GPT Image 2.5 的保真度实测不如官方宣传；而 wechat《腾讯混元4》整条就是官方跑分与定价的转述，无第三方复核。"
         },
         {
-          "claim": "开源模型是不是更省钱",
-          "sides": "wechat 六大主流篇说 DeepSeek 开源免费、性价比最高；douyin:《开源vs闭源：成本与适用场景对比》 说开源机器 50 万+人力 50 万、总成本反超 API，开源只解决私有定制而非省钱"
+          "claim": "走开源到底省不省钱",
+          "sides": "douyin:《开源vs闭源：成本与适用场景对比》 算出机器 50 万＋人力 50 万、总成本反超 API；而 wechat《国内外六大主流大模型》《国产三大开源》一类则直接把「DeepSeek 开源免费、性价比最高」当结论，不计部署与运维。"
         }
       ],
       "domain": "ai1",
-      "editor_note": "这个节点的坑在于：候选里一半以上是'八大模型/六大模型/国内五大'式的阵容盘点，彼此主张高度重合、且多数没有可核验锚点（'文字质感天花板''适配工作流的才最优'），所以只留了一条当地图，其余全折叠。真正稀缺的是三类：成本结构（帕累托前沿、翻倍计费阈值、自部署总成本）、档位与推理力度这一层（多数视频只选厂商不选档）、以及'不要只选一个'的分层架构视角——这三类各只有一两条在讲。时效风险极高：节点内最新（2026-11）和最旧（2025-02）相差 20 个月，而模型阵容每季度换一轮，所有带具体型号排名的结论都要看日期。另外，picks 里的 Soul/Terra/Luna 那条是 GPT-5.6 时代（现已到 6.2），留它是因为分档逻辑和超长上下文翻倍计费这套机制仍然适用，看的时候要把型号名当占位符。未选的三条网文工具类（绍文/笔零A/绝文等垂直工具排名）有明显的工具引流嫌疑，且主张层面属于'AI 写小说用什么'这个相邻节点，不是本节点的答案。",
+      "editor_note": "这个节点看着有 39 条，实际能答题的不到 1/5。三个明显的坑：①一半以上是「单模型首发评测」（GPT Image 2.5、混元世界模型、Kimi K3、Fable 5、Flint、METR、XAI 战略），它们回答的是「这个新模型怎么样」，不是「我现在该用哪个」，作为节点内容是噪声；②泛对比类（6大/8大/四大/国产五强）主张高度同质，都在重复「代码选 Claude、省钱选 DeepSeek、长文本选 Kimi」，折叠后只需留最新的一条；③时效性极差——4 条无发布日期、2 条停在 2025 年，而这个节点对模型代次、单价、上下文阈值都高度敏感，旧条目的具体数字直接误导。还有一个结构性缺口：全节点没有一条「2026-11 当代次的横向对标」，最新的 wechat 那条只讲方法论不点名模型，所以读者拿到的是正确的选型方法 + 略滞后的模型名单，用的时候要自己把模型名换成当下版本。毒性方面：无明显卖课/焦虑营销，唯一需要留意的是网文工具那一簇（笔零A、绍文、少文AI）在给具名小工具排名，有引流嫌疑，且它们本就该挂到写作节点而非这里。按点赞取恰好会取到最旧的两条（11680、4186），这个节点尤其不能按热度排。",
       "node": "现在该用哪个大模型",
       "order": [
         {
           "bucket": "pick",
           "id": "wechat_channels:export/UzFfBgAAxMepHGdtQiyCk8zT4DCK-7yyy-bYKqBjai8hyJiT2w",
-          "reason": "编辑判断·入选最小互补集：打底的方法论：先教你怎么读榜、怎么按任务对应能力/成本/速度三维度选，而不是直接给排名｜覆盖骨架[0, 3]｜独有：把榜单的三种算法口径（盲测ELO贴体感、硬考题糊弄不了、综合指数权重人为）拆开讲，并指出推理力度本身是个可调档位",
+          "reason": "编辑判断·入选最小互补集：开篇方法论：先教你怎么读榜单、怎么按成本-速度-能力三维度对位，再谈具体模型（本节点最新的一条，2026-11-03）｜覆盖骨架[0, 3, 7]｜独有：榜单三种排序方法各自的偏差来源，以及「推理时可调节」（Opus 的 Reasoning、GPT-6 的 Pro 模式）这一档位维度",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
           "id": "wechat_channels:export/UzFfBgAAxMiCECBrRmKqk8zT4DCKQ_nupTIfvbzgnC5n--pHHw",
-          "reason": "编辑判断·入选最小互补集：阵容地图：国产+全球八家各自强在哪，用来把自己的任务落到某一家上｜覆盖骨架[1]｜独有：（无独有点，靠覆盖面入选）",
+          "reason": "编辑判断·入选最小互补集：110秒速览：8个主流模型按国产/全球两阵营给任务对位（代码、文字质感、多模态、长文本、实时资讯），当快速查表用｜覆盖骨架[0, 1]｜独有：「多工具组合优于单一工具」这个结论配了完整的8款对位清单，是全节点最省时的查表形态",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
           "id": "bilibili:BV1CTej6gEqB",
-          "reason": "编辑判断·入选最小互补集：成本这一维的决策工具：用能力-成本矩阵/帕累托前沿把'跑分高'和'该买'分开｜覆盖骨架[0, 2]｜独有：帕累托前沿线这个可操作的选型法，配同分价差 10 倍的具体报价对照（$0.95 vs $0.09）",
+          "reason": "编辑判断·入选最小互补集：成本决策框架：把选型从「谁最强」转成「谁在帕累托前沿上」，带可核验的单价对比｜覆盖骨架[2, 4]｜独有：帕累托前沿决策法 + 同分价差10倍的具体锚点（Gpt5.6S $0.95 vs Glm5.3 $0.09）、推理价格280倍下跌",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
-          "id": "douyin:7661983184120237348",
-          "reason": "编辑判断·入选最小互补集：同一家族内部怎么选档，以及百万上下文真实计费长什么样｜覆盖骨架[3, 2]｜独有：超过 272k token 输入直接翻倍计费、输出涨至 1.5 倍，以及 Ultra/Max 两种 agent 调度都额外吃额度",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "pick",
-          "id": "douyin:7703856387515813162",
-          "reason": "编辑判断·入选最小互补集：写作场景的落点，且给的是组合用法不是单选｜覆盖骨架[4]｜独有：Gemini 主笔 + Opus/Astra 审核的互补工作流，把幻觉问题交给第二个模型兜",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "pick",
-          "id": "bilibili:BV1emKb6sE93",
-          "reason": "编辑判断·入选最小互补集：要本地部署时选哪个开源模型：13 款横评，带硬件可用门槛｜覆盖骨架[5]｜独有：双卡 20 token/s 以下直接淘汰的体感门槛，以及 9B 参数段性价比最优、Q4 量化版得分最高的实测结论",
-          "source": "editorial_lm"
-        },
-        {
-          "bucket": "pick",
-          "id": "douyin:7704700444011057266",
-          "reason": "编辑判断·入选最小互补集：在部署之前先回答'该不该自己部署'，给出总成本口径｜覆盖骨架[5]｜独有：机器 50 万 + 人力 50 万、总成本反超 API 的成本拆解，以及'下载模型'到'用起来'之间差一整套企业架构",
+          "id": "bilibili:BV1DzHK6xE6X",
+          "reason": "编辑判断·入选最小互补集：跑分与实测脱节的现场演示：当代次（Kimi K3.1 Pro vs Opus 5.5）的真实对标，说明为什么不能照榜下单｜覆盖骨架[1, 3]｜独有：9项跑分领先但中文创意写作差6分（9 vs 13）的反例，以及「国产模型无免费试用导致无法先验后买」这个采购侧障碍",
           "source": "editorial_lm"
         },
         {
           "bucket": "pick",
           "id": "bilibili:BV1jpnn66Edz",
-          "reason": "编辑判断·入选最小互补集：收尾的架构视角：把'选一个模型'的问题改写成'怎么分层路由'｜覆盖骨架[6]｜独有：用决策模型前置分类，把语言检测/实体识别/向量嵌入这类活交给 MB 级 CPU 可跑的小模型",
+          "reason": "编辑判断·入选最小互补集：反向解法：很多任务根本不该叫大模型，给出决策模型前置＋专精小模型的分层架构｜覆盖骨架[6]｜独有：语言检测/实体识别/向量嵌入都有MB级CPU可跑的轻量选项，决策模型只把复杂任务上抛",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "bilibili:BV1emKb6sE93",
+          "reason": "编辑判断·入选最小互补集：本地部署路线的实操横评：13款开源模型按参数段分组实测，给出能跑且好用的那几档｜覆盖骨架[5]｜独有：以「双卡低于20token/秒即淘汰」为准入线的硬吞吐判据，以及9B段性价比最优、Q4量化版得分最高的实测结论",
+          "source": "editorial_lm"
+        },
+        {
+          "bucket": "pick",
+          "id": "douyin:7704700444011057266",
+          "reason": "编辑判断·入选最小互补集：收尾的成本现实检查：开源不等于省钱，把私有化部署的隐性成本摊开（2026-11-05，最新）｜覆盖骨架[4, 5]｜独有：机器50万＋人力50万、总成本反超API的量级估算，以及开源占七成调用流量却不到三成收入",
           "source": "editorial_lm"
         },
         {
@@ -3596,10 +3593,10 @@
           "source": "editorial_lm"
         },
         {
-          "bucket": "rest",
+          "bucket": "redundant",
           "id": "bilibili:BV13ZnY6NEwi",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《前沿大模型的技术方案与选型建议》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
           "bucket": "rest",
@@ -3620,28 +3617,28 @@
           "source": "deterministic_rule"
         },
         {
+          "bucket": "rest",
+          "id": "bilibili:BV1BdY76eEPM",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
           "bucket": "redundant",
           "id": "bilibili:BV1vWxK63Euy",
           "reason": "编辑判断·主张层面与《Kimi K3.1 Pro vs Opus 5.5首发测评：性价比对标分析》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
-          "bucket": "rest",
+          "bucket": "redundant",
           "id": "bilibili:BV1EEWt6MEmS",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《GPT-6.1 Terra vs Sol对标评测：中文能力与成本差异》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
-          "bucket": "rest",
-          "id": "bilibili:BV1DzHK6xE6X",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
-        },
-        {
-          "bucket": "rest",
+          "bucket": "redundant",
           "id": "bilibili:BV1rcK26SEEx",
-          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
-          "source": "deterministic_rule"
+          "reason": "编辑判断·主张层面与《Kimi K3.1 Pro vs Opus 5.5首发测评：性价比对标分析》重复，默认折叠",
+          "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
@@ -3664,7 +3661,7 @@
         {
           "bucket": "redundant",
           "id": "bilibili:BV1z56vBwExP",
-          "reason": "编辑判断·主张层面与《2026大模型写作能力排名》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《2026年全球AI助手能力评测与选型建议》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -3692,32 +3689,44 @@
           "source": "deterministic_rule"
         },
         {
-          "bucket": "redundant",
-          "id": "wechat_channels:export/UzFfBgAAxKqnIBpMO32QjMzT4DCKqcspIftDu9KyycPhfk7sjA",
-          "reason": "编辑判断·主张层面与《8个主流大模型对比与选型指南》重复，默认折叠",
-          "source": "editorial_lm"
+          "bucket": "rest",
+          "id": "douyin:7703856387515813162",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
         },
         {
           "bucket": "rest",
-          "id": "douyin:7681668070007807482",
+          "id": "wechat_channels:export/UzFfBgAAxKqnIBpMO32QjMzT4DCKqcspIftDu9KyycPhfk7sjA",
           "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
           "source": "deterministic_rule"
         },
         {
           "bucket": "redundant",
-          "id": "douyin:7678643214076680817",
-          "reason": "编辑判断·主张层面与《AI写作大模型排名评测》重复，默认折叠",
+          "id": "douyin:7681668070007807482",
+          "reason": "编辑判断·主张层面与《AI网文工具选型对比评测》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "redundant",
-          "id": "douyin:7678647639394800314",
-          "reason": "编辑判断·主张层面与《AI写作大模型排名评测》重复，默认折叠",
+          "id": "douyin:7678643214076680817",
+          "reason": "编辑判断·主张层面与《AI网文工具选型对比评测》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
           "bucket": "rest",
+          "id": "douyin:7678647639394800314",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
           "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAA5oszH80HSQAAAAstQy6ubaLX4KHWvLEZgBPEvKIgWWp0SqqJzNPgMIqsNbwXrWmNNualfoB_Ta40",
+          "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
+          "source": "deterministic_rule"
+        },
+        {
+          "bucket": "rest",
+          "id": "douyin:7661983184120237348",
           "reason": "规则排序·未入选最小互补集，按『B站优先、其余按标题』列在证据之后",
           "source": "deterministic_rule"
         },
@@ -3736,7 +3745,7 @@
         {
           "bucket": "redundant",
           "id": "wechat_channels:export/UzFfBgAAxIagRDVbKHCOjMzT4DCKhNqsXpgv4nuYmqNripQW2Q",
-          "reason": "编辑判断·主张层面与《8个主流大模型对比与选型指南》重复，默认折叠",
+          "reason": "编辑判断·主张层面与《国内5大AI工具的核心差异》重复，默认折叠",
           "source": "editorial_lm"
         },
         {
@@ -3753,92 +3762,87 @@
         }
       ],
       "outline": [
-        "选型的前提是先定任务场景、再看榜：榜单有盲测ELO/硬考题/综合指数三种口径，官方基准与实测经常不一致",
-        "主流旗舰的能力分工对照表：代码、中文写作、多模态、长上下文、实时资讯，各家强项不同（Claude/GPT/Gemini/Grok 与 DeepSeek/Kimi/豆包/千问/GLM）",
-        "成本与性价比：同分数模型价格可差 10 倍，帕累托前沿式选型，中美价差，以及按量计费的隐性陷阱",
-        "选完厂商还要选档：同一家族内的旗舰/主力/快档，以及推理力度（Reasoning/Pro/max）可调带来的能力-成本-速度三角",
-        "写作与创意场景的专门选法：通用模型之间的文笔差距，以及主笔+审核的组合用法",
-        "开源与本地部署：选哪个参数档位、显存与 token/s 的可用门槛、以及自部署的真实总成本是否划得来",
-        "不要只选一个模型：分层/路由架构，简单任务交专精小模型，复杂推理才上大模型",
-        "低成本获取与先试后买：免费额度、学生计划、以及国产模型普遍缺试用机制对决策的影响"
+        "选型第一原则：不存在「最强模型」，先定任务类型再定模型；榜单只能当参考，三种算分法（盲测ELO/硬考题/综合指数）各有偏差",
+        "分任务的具体对位：代码、中文写作、多模态、长文本/研报、实时资讯各有不同的当下最优解，多模型组合常优于单一模型",
+        "能力-成本权衡：推理价格已暴跌、通用能力成标配，同分数模型价格可差10倍，用帕累托前沿而不是追跑分",
+        "跑分≠好用：官方基准/官方宣传与真实场景实测经常脱节（编程榜一实测全败、省token只达宣传的1/10、财报类事实题集体翻车）",
+        "国产 vs 国外、开源 vs 闭源的取舍：性价比与调用量的现状，以及开源「免费」背后的真实总成本",
+        "本地部署路线的硬约束：参数档位、显存/量化、token/s 吞吐决定你实际能跑哪一档",
+        "不是所有活都该叫大模型：分层架构（决策模型前置＋专精小模型兜底简单任务）同时降本降延迟",
+        "同一模型内部还要选档位：旗舰/日常/极速版、reasoning 模式开不开、上下文超阈值的翻倍计费"
       ],
       "picks": [
         {
           "covers": [
             0,
-            3
+            3,
+            7
           ],
           "id": "wechat_channels:export/UzFfBgAAxMepHGdtQiyCk8zT4DCK-7yyy-bYKqBjai8hyJiT2w",
-          "role": "打底的方法论：先教你怎么读榜、怎么按任务对应能力/成本/速度三维度选，而不是直接给排名",
-          "unique": "把榜单的三种算法口径（盲测ELO贴体感、硬考题糊弄不了、综合指数权重人为）拆开讲，并指出推理力度本身是个可调档位"
-        },
-        {
-          "covers": [
-            1
-          ],
-          "id": "wechat_channels:export/UzFfBgAAxMiCECBrRmKqk8zT4DCKQ_nupTIfvbzgnC5n--pHHw",
-          "role": "阵容地图：国产+全球八家各自强在哪，用来把自己的任务落到某一家上",
-          "unique": ""
+          "role": "开篇方法论：先教你怎么读榜单、怎么按成本-速度-能力三维度对位，再谈具体模型（本节点最新的一条，2026-11-03）",
+          "unique": "榜单三种排序方法各自的偏差来源，以及「推理时可调节」（Opus 的 Reasoning、GPT-6 的 Pro 模式）这一档位维度"
         },
         {
           "covers": [
             0,
-            2
+            1
           ],
-          "id": "bilibili:BV1CTej6gEqB",
-          "role": "成本这一维的决策工具：用能力-成本矩阵/帕累托前沿把'跑分高'和'该买'分开",
-          "unique": "帕累托前沿线这个可操作的选型法，配同分价差 10 倍的具体报价对照（$0.95 vs $0.09）"
+          "id": "wechat_channels:export/UzFfBgAAxMiCECBrRmKqk8zT4DCKQ_nupTIfvbzgnC5n--pHHw",
+          "role": "110秒速览：8个主流模型按国产/全球两阵营给任务对位（代码、文字质感、多模态、长文本、实时资讯），当快速查表用",
+          "unique": "「多工具组合优于单一工具」这个结论配了完整的8款对位清单，是全节点最省时的查表形态"
         },
         {
           "covers": [
-            3,
-            2
-          ],
-          "id": "douyin:7661983184120237348",
-          "role": "同一家族内部怎么选档，以及百万上下文真实计费长什么样",
-          "unique": "超过 272k token 输入直接翻倍计费、输出涨至 1.5 倍，以及 Ultra/Max 两种 agent 调度都额外吃额度"
-        },
-        {
-          "covers": [
+            2,
             4
           ],
-          "id": "douyin:7703856387515813162",
-          "role": "写作场景的落点，且给的是组合用法不是单选",
-          "unique": "Gemini 主笔 + Opus/Astra 审核的互补工作流，把幻觉问题交给第二个模型兜"
+          "id": "bilibili:BV1CTej6gEqB",
+          "role": "成本决策框架：把选型从「谁最强」转成「谁在帕累托前沿上」，带可核验的单价对比",
+          "unique": "帕累托前沿决策法 + 同分价差10倍的具体锚点（Gpt5.6S $0.95 vs Glm5.3 $0.09）、推理价格280倍下跌"
         },
         {
           "covers": [
-            5
+            1,
+            3
           ],
-          "id": "bilibili:BV1emKb6sE93",
-          "role": "要本地部署时选哪个开源模型：13 款横评，带硬件可用门槛",
-          "unique": "双卡 20 token/s 以下直接淘汰的体感门槛，以及 9B 参数段性价比最优、Q4 量化版得分最高的实测结论"
-        },
-        {
-          "covers": [
-            5
-          ],
-          "id": "douyin:7704700444011057266",
-          "role": "在部署之前先回答'该不该自己部署'，给出总成本口径",
-          "unique": "机器 50 万 + 人力 50 万、总成本反超 API 的成本拆解，以及'下载模型'到'用起来'之间差一整套企业架构"
+          "id": "bilibili:BV1DzHK6xE6X",
+          "role": "跑分与实测脱节的现场演示：当代次（Kimi K3.1 Pro vs Opus 5.5）的真实对标，说明为什么不能照榜下单",
+          "unique": "9项跑分领先但中文创意写作差6分（9 vs 13）的反例，以及「国产模型无免费试用导致无法先验后买」这个采购侧障碍"
         },
         {
           "covers": [
             6
           ],
           "id": "bilibili:BV1jpnn66Edz",
-          "role": "收尾的架构视角：把'选一个模型'的问题改写成'怎么分层路由'",
-          "unique": "用决策模型前置分类，把语言检测/实体识别/向量嵌入这类活交给 MB 级 CPU 可跑的小模型"
+          "role": "反向解法：很多任务根本不该叫大模型，给出决策模型前置＋专精小模型的分层架构",
+          "unique": "语言检测/实体识别/向量嵌入都有MB级CPU可跑的轻量选项，决策模型只把复杂任务上抛"
+        },
+        {
+          "covers": [
+            5
+          ],
+          "id": "bilibili:BV1emKb6sE93",
+          "role": "本地部署路线的实操横评：13款开源模型按参数段分组实测，给出能跑且好用的那几档",
+          "unique": "以「双卡低于20token/秒即淘汰」为准入线的硬吞吐判据，以及9B段性价比最优、Q4量化版得分最高的实测结论"
+        },
+        {
+          "covers": [
+            4,
+            5
+          ],
+          "id": "douyin:7704700444011057266",
+          "role": "收尾的成本现实检查：开源不等于省钱，把私有化部署的隐性成本摊开（2026-11-05，最新）",
+          "unique": "机器50万＋人力50万、总成本反超API的量级估算，以及开源占七成调用流量却不到三成收入"
         }
       ],
       "provenance": {
-        "input_hash": "7d1c95c048b7727b",
+        "input_hash": "d3137ad02b7f17be",
         "model": "opus"
       },
       "receipt": {
-        "folded": 12,
-        "picked": 8,
-        "qualified": 38,
+        "folded": 14,
+        "picked": 7,
+        "qualified": 39,
         "rejected": 4,
         "rejected_why": [
           "时效性内容涉及模型版本与订阅等级信息。转写提到'GPT6昨天正式发布，要用最新模型必须升级成plus以上会员'，但未给具",
@@ -3849,27 +3853,35 @@
       "stale": [
         {
           "id": "bilibili:BV1UAZSYTE74",
-          "why": "2025-04 的评测，对象是 DeepSeek v3 / Gemini 2.5 / O3-mini，这几代在本节点语境里已完全换代；它的方法论（算法题+工程题、三次重试）仍有参考价值，结论不能再用"
+          "why": "2025-04 的 DeepSeek v3 / Gemini 2.5 代次横评，涉及的模型版本与价格已全部换代，只有「别信排行榜」的方法论还成立"
         },
         {
           "id": "bilibili:BV17hVBzXEo9",
-          "why": "2025-05 的 O3 / O4-mini-high 对比，型号已退场"
+          "why": "2025-05 的 O3 / O4-mini-high 对比，这代模型已退场"
         },
         {
           "id": "wechat_channels:export/UzFfAgtgekIEAQAAAAAA5oszH80HSQAAAAstQy6ubaLX4KHWvLEZgBPEvKIgWWp0SqqJzNPgMIqsNbwXrWmNNualfoB_Ta40",
-          "why": "2025-02 的 DeepSeek 蒸馏档位时代内容；参数-显存的经验比例还能用，但推荐的模型档位和'671B 需集群'的结论已被 MoE 稀疏激活架构改写"
+          "why": "2025-02 DeepSeek 本地部署热期的参数/显存科普，1.5B-671B 的档位划分和 70B 需 43GB 的估算在 MoE 稀疏激活成为主流后已不适用"
         },
         {
           "id": "bilibili:BV1Q2iXBtEme",
-          "why": "2026-01 的全球助手阵容，距今 10 个月、GPT/Gemini/Claude 三家都已跨大版本，'Claude 无多模态''GPT 价格偏高'这类判断需要重新核；它赞 11680 是全节点最高，但热度不构成时效豁免"
+          "why": "2026-01 的结论（Claude 无多模态、GPT 价格偏高）在当下代次已被推翻；点赞 11680 是全节点最高，但热度来自时效窗口已过的那一版格局"
+        },
+        {
+          "id": "bilibili:BV1z56vBwExP",
+          "why": "2026-01 四大付费模型对比，模型代次与定价均已变动"
+        },
+        {
+          "id": "bilibili:BV1RrgQ6aEQU",
+          "why": "把 4K/8K/16K/32K 当选型主轴，而同节点 2026-11 的内容已把「百万 token 上下文成标配」当背景，档位框架整体过时"
+        },
+        {
+          "id": "douyin:7661983184120237348",
+          "why": "GPT-5.6 的 Soul/Terra/Luna 三档与 272k 翻倍计费阈值是本节点唯一讲清「模型内选档」的具体锚点，但已跨到 6.1/6.2 两个代次，阈值与价格不可直接沿用"
         },
         {
           "id": "wechat_channels:export/UzFfBgAAxNOnMG5IdE35k8zT4DCKGKOq0ux7r_eVBpBwlgAj6w",
-          "why": "无发布时间，且混着'Gemini 2.0 多模态领先''Kimi 上下文 2000 万字'这类不同世代的参数，口径对不上，不可作为当下选型依据"
-        },
-        {
-          "id": "bilibili:BV1ogcfzCEcA",
-          "why": "2026-03 的国产工具财报实测，测的五款都已多轮迭代；'翻车'的结论可能已不成立，但它暴露的'指令排除条件被无视'这类失败形态仍值得警惕"
+          "why": "无发布日期，且内部自相矛盾——把 GPT-6 和 Gemini 2.0 并列，跨了两年的代次，整条可信度低"
         }
       ]
     },

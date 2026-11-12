@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共2218条",
+  "generated_note": "判定=合格的候选，共2221条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1162,7 +1162,7 @@
     {
       "id": "ai1",
       "label": "AI 与大模型",
-      "count": 1913
+      "count": 1916
     },
     {
       "id": "fin1",
@@ -1195,7 +1195,7 @@
       "label": "AI 与大模型",
       "short": "AI 这块：不收短剧和「不学就被淘汰」，教程只收讲清方法的。",
       "long": "披着 AI 外壳的剧情娱乐一律不收。无依据夸大风险、制造紧迫感的焦虑话术不收。纯点击演示的教程不收——从头到尾「跟着点这里」、不解释为什么、换个场景就不会了；讲清了可迁移方法的，哪怕边操作边讲，我们收。",
-      "count": 1913
+      "count": 1916
     },
     "finance": {
       "label": "财经",
@@ -88568,6 +88568,93 @@
       "topic": "方法实操",
       "node": "AI内容创作工具工作流",
       "category": "(地图缺口)AI内容创作工具工作流",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1pEen6nE3r",
+      "video_id": "BV1pEen6nE3r",
+      "title": "GPT 6时代Skill策略调整：从复杂到精简",
+      "original_title": "别再疯狂给GPT 6加Skill了，官方指南拆解+Codex优化实操",
+      "author": "立得AI-阿真",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1pEen6nE3r",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/b47a176f6df1dde89de98853df03a6ed6561c798.jpg",
+      "published_at": "2026-09-15T09:35:49+00:00",
+      "key_points": [
+        "模型能力增强后，大量人工指导框架已不必要，复杂设计反而消耗更多token",
+        "太多Skill相互冲突会压缩描述空间，导致模型无法准确判断使用时机",
+        "Skill范围应明确具体（如\"仅用于更改迁移\")而非宽泛笼统，对标官方新Scale Creator标准",
+        "简化Strategy既提高token效率，也改善实际效果"
+      ],
+      "chapters": [],
+      "duration_s": 583.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲随着GPT 6能力升级，过去的复杂Skill和Prompt反而成累赘，应按官方新标准简化；解释为什么过度设计会降低效果。",
+      "reason": "讲清了模型能力变化与指导策略的因果关系，纠正\"Skill越多越好\"的常见认知。原文引用官方文档，阐明\"过去需要大量人工指导现在已不需要\"的逻辑。 | 引用:「随着模型功能的增强啊过去需要大量的这个人工指导和搭建框架的工作了现在已经不需要了」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "怎么写提示词才能少踩坑",
+      "category": "07.怎么写提示词才能少踩坑",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1BdY76eEPM",
+      "video_id": "BV1BdY76eEPM",
+      "title": "GPT Image 2.5两版本能力对比与选型",
+      "original_title": "夯还是拉？GPT image 2.5专业解读+使用技巧+国内渠道分享",
+      "author": "立得AI-阿真",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1BdY76eEPM",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/21ebabb7f040ebb4e79236c36c548caa3178207a.jpg",
+      "published_at": "2026-09-11T11:06:39+00:00",
+      "key_points": [
+        "Sunburst版质量最强但推理慢，Flair版速度快但质量相对低，按场景选用可优化成本-质量平衡",
+        "对比Image 2.0大幅进步，特别是面部保真度（换衣服不变脸）和精确编辑能力提升",
+        "对真人面部自动打马赛克（图片方式），隐私保护严格，但噪点问题仍存在",
+        "总体超越Image 2.0，但官方宣传的能力（如保真度）实测不如预期理想"
+      ],
+      "chapters": [],
+      "duration_s": 910.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲GPT Image 2.5的两个版本（Flair快速版vs Sunburst高质量版）的特性权衡、与Image 2.0的改进、精确编辑能力和真人隐私限制。",
+      "reason": "详细对比版本特性和实测效果，帮助用户做选型决策。原文直言两版本的速度-质量权衡，以及与竞品对比。 | 引用:「sunburst这个模型它实际上他的能力要强一些但是他的速度要慢一些BLAIR这个呢它主要是速度比较快啊但是它的质量相对来说要差一些」",
+      "consensus": "mainstream",
+      "topic": "时效选择",
+      "node": "现在该用哪个大模型",
+      "category": "21.现在该用哪个大模型",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1aNYT6ZEfw",
+      "video_id": "BV1aNYT6ZEfw",
+      "title": "GPT 6真伪识别：如何检测官方降智",
+      "original_title": "GPT 6大量账号和中转站严重降智，一行提示词现出原形",
+      "author": "立得AI-阿真",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1aNYT6ZEfw",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/2cc0789ae2e78216b9021e02ae1af7711dab5b73.jpg",
+      "published_at": "2026-09-10T09:23:00+00:00",
+      "key_points": [
+        "Plus账号的GPT 6易被官方针对性降智，知识截止停留在2024年6月而非2026年9月，表现\"特别傻\"",
+        "用提示词\"不要思考不要联网搜索直接告诉我知识截止时间\"可立刻检验真伪，是简单有效的识别法",
+        "中转站和灰色渠道账号优先被降智，便宜渠道降智概率接近100%，官方有意区分account source",
+        "Pro账号稳定性明显更高，或选择正规中转站（如0.2X稳定渠道）提升可靠性"
+      ],
+      "chapters": [],
+      "duration_s": 201.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "揭示许多人使用的GPT 6可能被官方有意降智（特别是非正规渠道Plus账号），教用一句检验提示词识别，建议选Pro账号或正规中转站。",
+      "reason": "揭示真实现象并提供实用检验方法，纠正用户对自己使用模型版本真伪的认知。原文演示了降智账号的具体表现和官方策略。 | 引用:「你问他这句话就不要思考不要联网搜索直接告诉我你的知识截止时间是多久啊他给我回答是2024年6月那个时候还是什么还是OpenAI的这个GPT4O啊所以这个百分之百要降智了」",
+      "consensus": "mainstream",
+      "topic": "时效选择",
+      "node": "AI订阅该不该付费付哪档",
+      "category": "18.AI订阅该不该付费付哪档",
       "domain": "ai1"
     }
   ]
