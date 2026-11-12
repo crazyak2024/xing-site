@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共2223条",
+  "generated_note": "判定=合格的候选，共2222条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1162,7 +1162,7 @@
     {
       "id": "ai1",
       "label": "AI 与大模型",
-      "count": 1920
+      "count": 1919
     },
     {
       "id": "fin1",
@@ -1195,7 +1195,7 @@
       "label": "AI 与大模型",
       "short": "AI 这块：不收短剧和「不学就被淘汰」，教程只收讲清方法的。",
       "long": "披着 AI 外壳的剧情娱乐一律不收。无依据夸大风险、制造紧迫感的焦虑话术不收。纯点击演示的教程不收——从头到尾「跟着点这里」、不解释为什么、换个场景就不会了；讲清了可迁移方法的，哪怕边操作边讲，我们收。",
-      "count": 1920
+      "count": 1919
     },
     "finance": {
       "label": "财经",
@@ -40594,52 +40594,6 @@
       "topic": "方法实操",
       "node": "AI Agent产品功能介绍",
       "category": "(地图缺口)AI Agent产品功能介绍",
-      "domain": "ai1"
-    },
-    {
-      "id": "bilibili:BV1UtcfzwEun",
-      "video_id": "BV1UtcfzwEun",
-      "title": "OpenClaw配置与团队管理完全指南",
-      "original_title": "OpenClaw实战：我让AI自己写代码、投广告、发公众号，全程录屏！",
-      "author": "AIGCLINK",
-      "platform": "bilibili",
-      "link": "https://www.bilibili.com/video/BV1UtcfzwEun",
-      "cover_url": "https://i0.hdslb.com/bfs/archive/aeba2d96bfb58043a3fc3418b3f9eafaaa72c3d6.jpg",
-      "published_at": "2026-03-11T09:01:19+00:00",
-      "key_points": [
-        "双部署方案选择：桌面版长期稳定vs云端版快速体验，根据场景灵活部署",
-        "国内模型配置优化：MiniMax国内访问无限制，CN domain独立访问路径",
-        "多渠道通讯集成：支持Telegram、飞书等，根据团队习惯选择最优渠道",
-        "自定义provider扩展：本地ollama/vllm等可通过自定义provider无缝接入"
-      ],
-      "chapters": [
-        {
-          "t": 0,
-          "label": "OpenClaw安装与模型配置"
-        },
-        {
-          "t": 186,
-          "label": "Agent/SOE/User三大文件定义"
-        },
-        {
-          "t": 611,
-          "label": "AI自动构建研发团队"
-        },
-        {
-          "t": 786,
-          "label": "公众号与投放自动化实战"
-        }
-      ],
-      "duration_s": 1189.0,
-      "likes": null,
-      "collects": null,
-      "comments": null,
-      "summary": "讲解OpenClaw的两种部署方案（桌面版/云端）、国内模型配置、多通讯渠道集成的选型逻辑，以及如何用OpenClaw管理多个AI分身、构建虚拟研发团队的完整架构。",
-      "reason": "讲述中交织了选择逻辑与配置方法：\"建议是用Mark要么你用Mark要么你用云端的因为龙虾它对Mark的适配是极好极好的\"，展示了为不同场景推荐不同方案的思考过程。 | 引用:「输入一个open cloud on board…然后这个user expert然后这个时候就让你配模型模型的话各种模型都有然后对于国内来说国内的还说用me me max就行」",
-      "consensus": "mainstream",
-      "topic": "方法实操",
-      "node": "AI工具使用教程",
-      "category": "(地图缺口)AI工具使用教程",
       "domain": "ai1"
     },
     {
