@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共2212条",
+  "generated_note": "判定=合格的候选，共2219条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1162,7 +1162,7 @@
     {
       "id": "ai1",
       "label": "AI 与大模型",
-      "count": 1921
+      "count": 1928
     },
     {
       "id": "fin1",
@@ -1195,7 +1195,7 @@
       "label": "AI 与大模型",
       "short": "AI 这块：不收短剧和「不学就被淘汰」，教程只收讲清方法的。",
       "long": "披着 AI 外壳的剧情娱乐一律不收。无依据夸大风险、制造紧迫感的焦虑话术不收。纯点击演示的教程不收——从头到尾「跟着点这里」、不解释为什么、换个场景就不会了；讲清了可迁移方法的，哪怕边操作边讲，我们收。",
-      "count": 1921
+      "count": 1928
     },
     "finance": {
       "label": "财经",
@@ -88279,6 +88279,202 @@
       "topic": "方法实操",
       "node": "高级提示词工程与系统提示词提取",
       "category": "(地图缺口)高级提示词工程与系统提示词提取",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1o6xr6jE9p",
+      "video_id": "BV1o6xr6jE9p",
+      "title": "Claude被封号的真实原因：招股书里的商业决策",
+      "original_title": "Claude为啥老是封你的号，答案藏在Anthropic招股书的公开细节里",
+      "author": "LeaderAI",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1o6xr6jE9p",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/ff4579d1c2a181816d629ab854c02615fa5d8a6f.jpg",
+      "published_at": "2026-10-31T04:24:39+00:00",
+      "key_points": [
+        "大陆收入占总收入5-7%，失去这部分对财务影响小，误封成本-收益不对等",
+        "防蒸馏是主要动因：竞争对手用2.4万假账号调用170万次，特征难与普通用户区分",
+        "政策层面：中国不在商业服务范围，超50%中资公司一律限制，叠加防蒸馏导致宁可错杀"
+      ],
+      "chapters": [],
+      "duration_s": 144.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "通过分析Anthropic招股书数据，解释Claude在大陆频繁封号的三个根本原因：收入占比小、防止蒸馏、官方政策不覆盖中国。",
+      "reason": "基于Anthropic公开招股书数据的合理分析，量化说明了误封的必然性。'5%到7%的收入来自后来被认定违规的客户...宁可少赚这笔钱也要封'通过招股书数字验证了这是商业权衡而非单纯针对。 | 引用:「5%到7%的收入来自后来被认定违规的客户...宁可少赚这笔钱也要封」",
+      "consensus": "mainstream",
+      "topic": "误区纠正",
+      "node": "大模型服务政策与地域限制",
+      "category": "(地图缺口)大模型服务政策与地域限制",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1pvnv6ZEyn",
+      "video_id": "BV1pvnv6ZEyn",
+      "title": "Vibe知识大赏Skill：稳定科普视频自动生成",
+      "original_title": "自费2000迭代测试，开源我的Vibe知识大赏Skill，稳定高效一键出片",
+      "author": "LeaderAI",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1pvnv6ZEyn",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/36e6d671956d098fdc013d97141a83d5d36ea87e.jpg",
+      "published_at": "2026-10-21T03:24:41+00:00",
+      "key_points": [
+        "通过AI自我迭代打分投入2000元，解决同提示词多次调用效果不一致问题，实现稳定质量",
+        "Skill本质是规范化提示词流程，降低用户试错成本（避免每次调用花5-100多块的随机成本）",
+        "适配Claude桌面版，支持一键生成多种场景讲解动画，提高内容生产效率"
+      ],
+      "chapters": [],
+      "duration_s": 1839.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "介绍自开发的知识讲解视频Skill工具，通过2000元迭代测试实现稳定输出，展示安装配置、使用示例与最佳实践。",
+      "reason": "讲清了Skill的目标问题、解决方案和实际效果。'花了大概2000块钱左右...自己跑了之后自己给自己打分'体现了稳定性的成本投入和承诺，相比纯步骤教程提供了'这个工具解决什么问题'的方法论价值。 | 引用:「花了大概2000块钱左右...自己跑了之后自己给自己打分」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "AI内容创作工具工作流",
+      "category": "(地图缺口)AI内容创作工具工作流",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV13JnG6rE3n",
+      "video_id": "BV13JnG6rE3n",
+      "title": "口播Skill：一条龙自动化视频制作工作流",
+      "original_title": "颠覆口播创作流程！开源我的口播Skill，AI写稿、自动剪辑、生成讲解动画，claude一条龙全搞定",
+      "author": "LeaderAI",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV13JnG6rE3n",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/a085d12889aaf6323e456c6f10f0ce6d0866e98c.jpg",
+      "published_at": "2026-10-18T08:47:32+00:00",
+      "key_points": [
+        "将口播创作分解为三个自动化环节：AI写稿→自动剪辑磕巴部分→生成讲解动画，大幅降低人工干预",
+        "AI自动识别并删除重复、卡壳、失败的录制部分，提高剪辑效率和专业度",
+        "整个工作流规范化为Skill，非程序员也能一键生成发布级视频，降低内容创作门槛"
+      ],
+      "chapters": [],
+      "duration_s": 1557.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解通过Claude Skill实现从真人口播到完整视频的自动化全流程，包括AI写稿、自动剪辑、讲解动画生成等。",
+      "reason": "讲清了工作流的自动化优势和分工。'我只是提供了一个想法...文案是AI帮我写的，剪辑完全是AI帮我做的'说明Skill可显著减少人工，而非单纯的操作教程。 | 引用:「我只是提供了一个想法...文案是AI帮我写的，剪辑完全是AI帮我做的」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "AI内容创作工具工作流",
+      "category": "(地图缺口)AI内容创作工具工作流",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1g8Jy6FELx",
+      "video_id": "BV1g8Jy6FELx",
+      "title": "Token与缓存机制：大模型API成本优化指南",
+      "original_title": "【深度科普】Claude、Codex怎么用更省钱？先搞懂Token、上下文和缓存",
+      "author": "LeaderAI",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1g8Jy6FELx",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/fde3a8a69575206f284d2f63cbf55f1f8ce699fa.jpg",
+      "published_at": "2026-10-15T10:35:33+00:00",
+      "key_points": [
+        "Token按输入输出分开计价，系统提示词+工具说明首轮占用最多（演示中18K token），是隐形成本",
+        "缓存命中可将重复部分按折扣价计算，保质期因平台而异（Claude默认5分钟、Code一小时、GPT6系列30分钟）",
+        "打断缓存是最高代价操作：一次打断等于一整轮全价重算，对话越长缓存省的越多"
+      ],
+      "chapters": [],
+      "duration_s": 1372.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解Token计价原理、系统提示词隐形成本、缓存折扣机制、不同模型缓存保质期差异等，提供成本优化的方法论。",
+      "reason": "系统讲解了Token和缓存的工作机制及成本影响。'系统提示词...就已经占了18K了'量化说明隐形成本；'重复的部分按折扣价...真正按原价算的只有每轮新增的那1000个'清晰展示缓存省钱逻辑。 | 引用:「系统提示词...就已经占了18K了」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "Token机制与API成本优化",
+      "category": "(地图缺口)Token机制与API成本优化",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1wvpw6qE6V",
+      "video_id": "BV1wvpw6qE6V",
+      "title": "AI模型成本优化的9条实用习惯",
+      "original_title": "【实用科普】AI模型怎么用更省钱？上下文、缓存与9个使用习惯",
+      "author": "LeaderAI",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1wvpw6qE6V",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/d4223523c46cbef9b5dfb03562e7dfe87dcbeffd.jpg",
+      "published_at": "2026-10-06T09:59:14+00:00",
+      "key_points": [
+        "缓存命中需前缀完全一致，打断缓存=一整轮全价重算；对话越长缓存省的越多，越要避免改模型或改配置",
+        "一个任务开一个对话、定期压缩上下文、规则写进CLAUDE.md固定，这些做法正是缓存最容易命中的场景",
+        "难度越低用越小模型、用git兜底回滚比让AI修复烂摊子省钱、重读取交给子代理避免撑大主对话"
+      ],
+      "chapters": [],
+      "duration_s": 219.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解Token、上下文、缓存的基础机制，提供9条降低模型使用成本的具体实操建议，包括任务隔离、版本管理、模型选择等。",
+      "reason": "结合原理与可执行建议。'每一轮发出去的包裹就越大...你付的钱用掉的额度都是按这个包裹的大小算的'说明成本本质；'一个任务一个对话...规则写进文件别打断缓存按任务选模型'给出直接可用的操作清单。 | 引用:「每一轮发出去的包裹就越大...你付的钱用掉的额度都是按这个包裹的大小算的」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "Token机制与API成本优化",
+      "category": "(地图缺口)Token机制与API成本优化",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV11fHW6iEqQ",
+      "video_id": "BV11fHW6iEqQ",
+      "title": "AI代码视频生成技术栈：从HTML到MP4",
+      "original_title": "【深度科普】Opus 5.5是怎么用代码做视频的？从画面、声音到MP4的技术栈科普",
+      "author": "LeaderAI",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV11fHW6iEqQ",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/8e9b5699d4131770141eefcf8a0001663833a61a.jpg",
+      "published_at": "2026-10-05T09:31:05+00:00",
+      "key_points": [
+        "视频本质=快速翻过的图片序列，每秒30张；HTML/CSS/JavaScript分别搭舞台、穿衣服、加肌肉，网页本身是动画",
+        "Canvas逐像素绘画、Three.js搭3D摄影棚、Shader对每个像素下发着色公式，改一行代码整个画面跟着变",
+        "JSAP编排时间线谁先谁后、Remotion按帧号计算画面、Python合成音频数据、FFmpeg压缩成MP4"
+      ],
+      "chapters": [],
+      "duration_s": 225.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解Opus用代码生成视频的完整技术链路，从前端框架到渲染器、时间线排序、音频合成、最后压缩的各环节原理。",
+      "reason": "系统讲解了视频代码生成的技术架构。'每秒翻三张看起来像幻灯片...拉到每秒30张就变成了流畅的视频'用类比说明基础；'SHADER呢就是发给每个学生的同一张答题卡'用比喻解释GPU原理；'一句话变成代码...最后由FFMPEG压成视频'总结完整链路。 | 引用:「一句话变成代码，代码画出画面，排好时间，算出声音，最后由FFMPEG压成视频」",
+      "consensus": "mainstream",
+      "topic": "概念原理",
+      "node": "代码视频生成技术原理",
+      "category": "(地图缺口)代码视频生成技术原理",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1isH76vEri",
+      "video_id": "BV1isH76vEri",
+      "title": "Opus视频创作进阶技巧：视频拆解与提示词优化",
+      "original_title": "Opus5.5做视频进阶教程，爆款拆解+声音克隆+音色设计+经验分享，做自媒体就像喝水一样简单",
+      "author": "LeaderAI",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1isH76vEri",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/9ea3c6288b5775cf16125ab0dcd98af689a82148.jpg",
+      "published_at": "2026-10-04T14:33:38+00:00",
+      "key_points": [
+        "直接发视频链接给Claude可自动下载并拆解结构，理解别人如何写提示词，避免从零开始摸索",
+        "利用1000+分类提示词仓库可快速预判效果、学习编写方法，显著降低每次5-100多块的随机试错成本",
+        "简单任务切换到更小的模型执行可进一步降低成本，组合使用声音克隆和音色设计提升专业度"
+      ],
+      "chapters": [],
+      "duration_s": 1760.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解Opus视频创作的进阶技巧，包括直接链接下载拆解别人视频结构、利用1000+提示词库快速学习、声音克隆与音色设计等。",
+      "reason": "讲清了进阶创作的具体技巧。'就是你只要把这个链接发送给他...他一会就可以帮你下载下来'说明了任务简化方向；'这种特别简单的任务你其实可以切换到这个solid去做都可以'体现成本优化意识。 | 引用:「就是你只要把这个链接发送给他...他一会就可以帮你下载下来」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "Opus视频创作进阶技巧",
+      "category": "(地图缺口)Opus视频创作进阶技巧",
       "domain": "ai1"
     }
   ]
