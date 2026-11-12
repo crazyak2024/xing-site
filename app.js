@@ -169,10 +169,121 @@ function deIdentify(s) {
 }
 
 function topicColor(t) { return TOPIC_COLOR[t] || "#718096"; }
-function hitsQuery(it, q) {
-  if (!q) return true;
-  return (it.title + " " + (it.summary || "") + " " + (it.node || "") + " " + (it.author || "")).toLowerCase().includes(q);
+/* ══════════ 搜索为什么原来永远 0 命中（2026-11-12 02:5x 修）══════════
+ *
+ * 原来这个函数是一句 `haystack.includes(q)` —— **整句字面包含**。
+ * 后果：用户用一句自然语言提问（而这个产品的主张就是「按问题检索」），
+ * `includes("三岁儿童抚养什么最重要的能力")` 在 2001 条里**永远匹配不到任何一条**，
+ * 因为没有哪个标题会原样包含用户的整句话。CY 11-12 00:3x–01:2x 连问四次
+ * 「还是没有看到任何的结果」，三条展示通路里**这是其中一条**
+ * （另两条：补搜块没有入口、语义搜索 0.45 低于 0.60 地板）。
+ *
+ * ⚠️ 这个 bug 最毒的地方：**短词搜索一直是好的**（搜「血压」命中 77 条），
+ * 所以任何用关键词测试的人都测不出问题。只有照产品自己主张的方式用（问一句话）才会撞上。
+ *
+ * 修法（刻意不引入分词库，保持零依赖）：
+ *   ① 整句字面包含 —— 原来的行为，保留，仍是最强信号（搜「血压」照旧）
+ *   ② **问句本身**也进检索面：`asked_as` 是这条内容所属的补搜块当初被谁用什么话问出来的
+ *      （export_site 从 request_packs.origin_q 带出来）。他问过一次的话，再问就该找得到。
+ *   ③ 退化到 **2-gram 覆盖率**：去掉停用字/停用词后，查询的二字片段有 ≥ MIN_COVER
+ *      比例出现在检索面里就算命中。中文没有空格，2-gram 是零依赖下最稳的近似。
+ * 为什么覆盖率阈值是 0.3 而不是 0.5：自然语言问句里真正承载意思的片段是少数
+ * （「三岁」「能力」），其余是连接成分；0.5 会把本该命中的问句全挡掉——
+ * 那就等于没修。0.3 的代价是偶尔多出几条不相关的，**而这个方向的错是可恢复的**
+ * （用户看到一条不相关的可以跳过；看到 0 条他就走了）。 */
+const STOP_CHARS = new Set("的了是吗呢啊吧呀么地得着过都很也就还又在和与或把被给对从到为所以而且但如这那有没不很最更".split(""));
+/* 功能词片段。**「能不」「不能」「有用」这三个是实测补进来的**：
+ * 「降压药能不能停」切出「能不」「不能」两个**重叠**片段，它们来自同一个词，
+ * 却被当成两份独立证据 ⟹ 凑够"至少命中两个"的闸，把「Agent 开发岗位拆解」
+ * 「AI 著作权基础原则」推到 0.65 分。重叠的功能词不是证据，是同一个噪音数了两遍。 */
+const STOP_GRAMS = new Set(["什么", "怎么", "如何", "为什", "什", "可以", "是否", "有没", "没有",
+  "哪些", "哪个", "需要", "应该", "是不", "不是", "我们", "你们", "一下", "一个", "这个", "那个",
+  "能不", "不能", "有用", "用吗", "能够", "还是"]);
+
+/** 切片段：汉字连续段切 2-gram，英文/数字连续段整词。
+ *  ⚠️ **汉字和数字要分开切**（第一版写成"整段必须全是汉字才切 2-gram"，于是
+ *  「24小时血压仪有用吗」整条被当成一个英文词，一个片段都切不出来 ⟹ 0 命中）。 */
+function qGrams(q) {
+  const out = [];
+  for (const m of String(q).toLowerCase().matchAll(/[\p{Script=Han}]+|[a-z0-9]+/gu)) {
+    const seg = m[0];
+    if (!/[\p{Script=Han}]/u.test(seg)) { out.push(seg); continue; }   // GPT / DASH / 180 / 24
+    if (seg.length === 1) { if (!STOP_CHARS.has(seg)) out.push(seg); continue; }
+    for (let i = 0; i + 2 <= seg.length; i++) {
+      const g = seg.slice(i, i + 2);
+      if (STOP_GRAMS.has(g)) continue;
+      if (STOP_CHARS.has(g[0]) && STOP_CHARS.has(g[1])) continue;
+      out.push(g);
+    }
+  }
+  return [...new Set(out)];
 }
+
+/* 覆盖率为什么必须**按片段的稀有度加权**（第一版没加权，实测当场炸）：
+ * 「大模型为什么会幻觉」在 2001 条里命中 **493 条** —— 因为「大模」「模型」两个片段
+ * 在一个 AI 内容占 86% 的库里几乎处处都有，光靠它们就凑够了 0.3 的覆盖率。
+ * 而真正决定这一问的是「幻觉」。不加权的覆盖率等于**让最没信息量的词决定命中**。
+ * 加权之后同样这句话只剩真正讲幻觉的那些条。
+ * 权重用 idf = log(N/df)：片段越常见权重越低，常见到满库都有就几乎不贡献分数。
+ * df 是**现场在当前库上数出来的**，不是预先写死的停用词表——库的构成会变
+ * （现在 86% 是 AI，将来不是），写死的表会在构成变化时静默失效。 */
+const MIN_COVER = 0.3;
+
+function queryHay(it) {
+  if (it._hay == null) {
+    it._hay = (it.title + " " + (it.summary || "") + " " + (it.node || "") + " "
+      + (it.author || "") + " " + (it.asked_as || "")).toLowerCase();
+  }
+  return it._hay;
+}
+
+let QPREP = { q: null };
+/** 一次查询只算一次 idf（否则每条内容都重算一遍，2001 × 片段数次子串搜索）。 */
+function qPrep(q) {
+  if (QPREP.q === q) return QPREP;
+  const all = qGrams(q);
+  const n = DATA.length || 1;
+  /* **整个库里一次都没出现过的片段，必须从评分里剔掉。**
+   * 2-gram 是滑窗切的，必然切出一堆跨词边界的碎片（「高血压病人」切出「压病」，
+   * 「如何控制好血压」切出「制好」「好血」）。这些碎片**不是词**，所以库里 df=0，
+   * 而 idf = log(N/df) 偏偏给它们最高的权重 ⟹ 问句越长，分母里的垃圾越多，
+   * 覆盖率被拖到阈值以下。实测「高血压病人如何控制好血压」就是这样被判 0 命中的
+   * ——而这是 CY 真的问过的那一句。剔掉 df=0 之后，分母只剩真的存在于库里的片段。
+   * 顺带一条：**剔不动的情况要老实返回 0**。如果一句话里有信息量的片段库里一个都没有
+   * （「今天天气怎么样」），那它就不是我们能回答的问题，不该靠一个残片凑出命中。 */
+  const grams = [], w = [];
+  for (const g of all) {
+    let df = 0;
+    for (const it of DATA) if (queryHay(it).includes(g)) df++;
+    if (!df) continue;                       // 库里不存在 ⟹ 不是判别信号，不参与评分
+    grams.push(g);
+    w.push(Math.log((n + 1) / (df + 1)));
+  }
+  // 多片段问句却只剩 ≤1 个有效片段：说明这一问和库的交集几乎为零，别靠那一个残片宣布命中。
+  // 实测拦下的：「明星八卦」只剩一个片段，却靠它在一条 DeepSeek 插件内容上凑出 1.00。
+  const usable = !(all.length >= 3 && grams.length <= 1);
+  QPREP = { q, grams, w, usable, total: w.reduce((a, b) => a + b, 0) };
+  return QPREP;
+}
+
+/** 命中度（0 = 没命中）。给排序用的分数，别只当布尔值使。 */
+function queryScore(it, q) {
+  if (!q) return 1;
+  const hay = queryHay(it);
+  if (hay.includes(q)) return 1;                       // 整句命中 —— 最强信号
+  const { grams, w, total, usable } = qPrep(q);
+  if (!usable || !grams.length || total <= 0) return 0;
+  let s = 0, hits = 0;
+  for (let i = 0; i < grams.length; i++) if (hay.includes(grams[i])) { s += w[i]; hits++; }
+  /* 片段够多时**至少要命中两个**：只命中一个，只能证明撞上了一个常见词，证明不了相关。
+   * 实测拦下的：「降压药能不能停」靠单命中「不能」把「Agent 开发岗位拆解」「AI 著作权
+   * 基础原则」推到了 0.65 —— 分母里只剩两个片段时，一个常见词就够半壁江山。 */
+  if (grams.length >= 3 && hits < 2) return 0;
+  const cover = s / total;
+  return cover >= MIN_COVER ? cover : 0;
+}
+
+function hitsQuery(it, q) { return !q || queryScore(it, q) > 0; }
 
 /* ---------- 三个层次的集合 ----------
  * matchedByQuery : 只按搜索词过滤 —— 局部地图的取景范围（所以点地图能横跳，不会把自己锁死）
@@ -716,7 +827,12 @@ function sortItems(items) {
     const cd = consensusRank(a) - consensusRank(b);
     if (cd) return cd;
     if (q) {
-      const sc = it => (it.title.toLowerCase().includes(q) ? 10 : 0) + ((it.summary || "").toLowerCase().includes(q) ? 3 : 0);
+      // 标题整句命中仍然最重（10），其次才是 2-gram 覆盖度（0–1 之间，乘 5 拉开差距）。
+      // 原来这里只看"标题/摘要有没有整句包含"，而整句包含在自然语言问句下恒为假 ⟹
+      // 这一段在最需要它的场景里**等于不存在**，顺序退化成纯平台偏好 + 字典序。
+      const sc = it => (it.title.toLowerCase().includes(q) ? 10 : 0)
+        + ((it.summary || "").toLowerCase().includes(q) ? 3 : 0)
+        + queryScore(it, q) * 5;
       const d = sc(b) - sc(a);
       if (d) return d;
     }
