@@ -198,10 +198,14 @@ body.decided .slogan{display:none}
      slogan 也留着——它不占额外高度，且是唯一一句说明这是什么地方的话。 */
   body.decided .slogan{display:inline-block}
 }
+/* 站名可点＝回首页。**不在 min-width:900 里面**：手机上它同样是回去的入口，
+   原来只有宽屏给 cursor:pointer，而 JS 那一侧又漏了搜索态（见 app.js 的 goHome 注释），
+   于是"看着能点、点了没反应"同时发生在两头。 */
+body.decided .brand-panel h1{cursor:pointer}
 @media (min-width:900px){
   body.decided .layout{flex-direction:column;max-width:940px}
   body.decided .brand-panel{width:auto;position:static;padding:16px 20px 0}
-  body.decided .brand-panel h1{display:inline-block;font-size:18px;cursor:pointer}
+  body.decided .brand-panel h1{display:inline-block;font-size:18px}
   body.decided .brand-panel .tagline{display:inline-block;margin-left:9px}
   body.decided .content-panel{border-left:0;padding-top:10px}
 }
@@ -269,9 +273,30 @@ body.focused .card .kp-mini,
 body.focused .card .summary{display:none}
 
 /* 搜索框是内容区唯一的"大件"：地图是浏览入口，它是提问入口，两者都该一眼看到 */
-.searchbar input{width:100%;padding:12px 14px;font-size:16px;border:1px solid #d6d3cc;border-radius:10px;background:var(--card);color:var(--ink)}
+.searchbar{position:relative}
+/* 右边留出 ✕ 的位置：不留的话长搜索词会钻到按钮底下，看起来像被截断了 */
+.searchbar input{width:100%;padding:12px 46px 12px 14px;font-size:16px;border:1px solid #d6d3cc;border-radius:10px;background:var(--card);color:var(--ink)}
 .searchbar input::placeholder{color:#b4b0a8}
 .searchbar input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(43,108,176,.1)}
+/* 「退出搜索」的 ✕（CY 2026-11-11 22:1x：「想退到首页，现在只能通过把搜索栏里的文字一个一个
+   删掉，非常不直觉」）。三件事刻意这么定：
+   ① **在输入框里**，不是在面包屑里——手指要清掉一句话，第一个去的地方永远是那句话旁边。
+      面包屑里那颗 15px 的 `.crumb-x` 留着（它是"只清搜索词、留在当前问题里"的窄动作），
+      但它既不够大也不是"回首页"，不能当这件事的答案。
+   ② **可点区 44×44**（苹果 HIG 的拇指下限），而圆圈只画 22px：看着轻、点着准。
+      为什么要写死：`.lane-toast` 的教训——只验 DOM 不验几何，上线即无 CSS。
+   ③ **只在框里真有字时出现**。空框上摆一颗 ✕ 是噪音，而且会让人以为还有东西可清。 */
+#q-clear{position:absolute;top:50%;right:1px;transform:translateY(-50%);
+  width:44px;height:44px;display:none;align-items:center;justify-content:center;
+  border:0;background:none;padding:0;cursor:pointer;color:var(--sub);
+  -webkit-tap-highlight-color:transparent}
+body.has-q #q-clear{display:flex}
+/* 底色复用 --line（全站那道暖灰分隔线），不另开一个一次性灰——brand.py 的色值棘轮
+   抓得对：多一个灰就是多一处将来会漂的地方。⚠️ 棘轮用正则数 `#xxxxxx`，**连注释里的
+   都算**，所以这一段不许举例写出任何色值（第一版就是这么把棘轮顶红的）。 */
+#q-clear i{display:block;width:22px;height:22px;border-radius:50%;background:var(--line);
+  color:var(--sub-2);font-style:normal;font-size:13px;line-height:22px;text-align:center}
+#q-clear:hover i{background:var(--accent);color:var(--ink-inv)}
 /* 搜索框下面那句「用你自己的话问。搜不到是我们的问题。」已删（体验审查 §6）：
    它解释的是**怎么操作**，而输入框的 placeholder 已经说了"你想弄明白什么？"。
    判准还是那条——删掉它用户会做错什么吗？不会。 */
@@ -694,6 +719,9 @@ a.src:after{content:" →"}
   <div class="content-panel">
     <div class="searchbar">
       <input id="q" type="text" placeholder="你想弄明白什么？">
+      <!-- 退出搜索、回首页。标签只写 ✕：按钮在输入框里、框里有字，它指什么是自明的
+           （文案铁律：不解释操作）。无障碍名字写全，给读屏和长按提示。 -->
+      <button id="q-clear" type="button" aria-label="清空搜索，回首页" title="清空搜索，回首页"><i>✕</i></button>
     </div>
     <div id="scope-hint"></div>
     <div id="crumbs"></div>

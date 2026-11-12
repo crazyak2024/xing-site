@@ -1134,13 +1134,57 @@ function render() {
   // 地址栏跟着这一屏走（弹窗自己会再调一次带 ?v= 的）
   syncUrl(document.getElementById("modal-overlay")?.classList.contains("open") ? MODAL_ID : null);
   bindShareButtons();
+  /* ✕ 的显隐跟着每一次渲染走。放这儿而不是只放在 input 事件里：清空 `#q` 的地方
+     全站有十几处（面包屑的 ×、点领域、点节点、分享回来、补搜改写搜索词…），
+     每处各记一遍必然漏——而它们没有一个不走 render()。 */
+  if (typeof syncHasQ === "function") syncHasQ();
 }
 
-/* 站名点一下回首页。focused 态下它是页面上**唯一**的回去入口（面包屑的「全部」是另一个，
-   但人找"回首页"第一个点的永远是站名）。 */
+/* ══════════ 回首页：一个动作，三个入口（CY 2026-11-11 22:1x）══════════
+ * 他的话：「当我们进行一项搜索后，想退到首页，现在只能通过把搜索栏里的文字一个一个删掉，
+ * 非常不直觉，而且浪费算力。」
+ *
+ * **他是对的，而且比"不直觉"更糟：那时候页面上一个能回去的键都没有。**
+ *   · 站名：原来的条件是 `body.focused`，而 focused = `currentPage() && !state.q`
+ *     ⟹ **只要有搜索词就恒假**，正好是他抱怨的那一屏。CSS 那边偏偏给了 cursor:pointer
+ *     （只在 ≥900 宽），于是"看着能点、点了没反应"——比没有这个入口更伤。
+ *   · 面包屑的「全部」：`go({topic:null,node:null})` **不清 q**，还留在搜索结果里。
+ *   · 面包屑的 ✕：只清 q、保留当前问题，而且 15px 见方，手机上点不中。
+ * 三条路没有一条通到首页 ⟹ 他只能去按退格键。
+ *
+ * 现在：输入框里的 ✕ / 站名 / Esc 三个入口全走 goHome()。
+ * **domain（领域）不清**：选领域是一次明确的范围选择，不是"这次搜索"的一部分；
+ * 清掉它会把正在逛财经的人踢回全站。领域药丸一直在页面上，他要换随时能换。 */
+function atHome() {
+  return !state.q && !state.node && !state.topic && !state.mine && !state.asks;
+}
+
+function goHome() {
+  const box = document.getElementById("q");
+  if (box) {
+    box.value = "";
+    /* 手机上收起键盘：这个动作的目的是**看首页**，而首页的价值（地图、真实问题）
+       正好在键盘遮住的那半屏里。宽屏不 blur——那里没有键盘，留着焦点他能直接重打。 */
+    if (window.innerWidth < 900) box.blur();
+  }
+  cancelPendingSearch();          // 别让已经作废的那次输入在 400ms 后又发一次请求
+  go({ q: "", node: null, topic: null, mine: false, asks: false });
+  syncHasQ();
+}
+
 document.querySelector(".brand-panel h1")?.addEventListener("click", () => {
-  if (document.body.classList.contains("focused")) go({ node: null, topic: null, q: "" });
+  if (!atHome()) goHome();
 });
+document.getElementById("q-clear")?.addEventListener("click", goHome);
+
+/* 输入框里有没有字——决定 ✕ 出不出。挂在 body 上而不是直接改按钮 display，
+   是为了让"有搜索词"这件事在 CSS 里可寻址（以后别处要用同一个条件不必再写一遍 JS）。
+   ⚠️ 读的是**输入框的实际内容**，不是 state.q：两者在打字的那 160ms 里不同步，
+   而 ✕ 要跟着他眼睛看到的字走，不是跟着我们的状态走。 */
+function syncHasQ() {
+  const box = document.getElementById("q");
+  document.body.classList.toggle("has-q", Boolean(box && box.value.length));
+}
 
 /* 首屏的「最近有人在问」：宣言是主张，可点的真实问题才是证据。
    取的是**真实节点 + 真实条数**，按条数排——不是编出来的示例问句。
@@ -2042,7 +2086,16 @@ function maybeRecordGap(q, score, band) {
   }, GAP_QUIET_MS);
 }
 
+/* 在飞的那次向量化请求。`semSeq` 只负责**丢掉过期响应**，Worker 那边照样把 bge-m3
+   跑完了（花的是 Workers AI 的 neuron）⟹ 真要省算力必须 abort，让 Cloudflare 那侧
+   在 fetch 断开时就停。两个一起留着：abort 失败/老浏览器没有它时 seq 还兜着。 */
+let semAbort = null;
+function abortSemantic() {
+  if (semAbort) { try { semAbort.abort(); } catch (e) { /* 老浏览器没有就算了 */ } semAbort = null; }
+}
+
 function fetchSemantic(q) {
+  abortSemantic();
   if (!q || q.length > 60) { SEM = { q: "", top: [], ms: 0, pending: false, err: "" }; renderSuggest(); return; }
   const seq = ++semSeq;
   SEM = { q, top: [], ms: 0, pending: true, err: "" };
@@ -2050,8 +2103,9 @@ function fetchSemantic(q) {
   // 同理（见下面 .then 里那一句）：字面 0 命中时先把结果区换成"正在找…"，
   // 别让"这里还没有内容"先闪一下——那句话有一半概率在几百毫秒后被自己推翻。
   if (state.q === q && !state.mine && !state.asks && !matchedByQuery().length) renderResults();
+  semAbort = typeof AbortController === "function" ? new AbortController() : null;
   fetch(SEMANTIC_URL, { method: "POST", headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ q }) })
+                        body: JSON.stringify({ q }), signal: semAbort ? semAbort.signal : undefined })
     .then(r => (r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status))))
     .then(d => {
       if (seq !== semSeq) return;            // 用户还在打字，过期响应直接丢掉
@@ -2069,6 +2123,14 @@ function fetchSemantic(q) {
     })
     .catch(e => {
       if (seq !== semSeq) return;
+      /* 我们自己掐掉的（他清空了搜索框 / 回了首页）**不是失败**。不单独认出来的话
+         BI 里会多出一串 `search_sem_fail: The user aborted a request`，
+         而那正好会把真正的向量化故障埋在噪音里。 */
+      if (e && (e.name === "AbortError" || /abort/i.test(String(e.message || "")))) {
+        SEM = { q: "", top: [], ms: 0, pending: false, err: "" };
+        renderSuggest();
+        return;
+      }
       // 失败就安静退回关键词匹配（绝不因为一个附加能力影响用户），但**必须留痕**——
       // 不留痕就会变成 /rtsearch 那种"自报成功的空结果"。
       SEM = { q, top: [], ms: 0, pending: false, err: String((e && e.message) || e) };
@@ -2166,23 +2228,57 @@ function renderSuggest() {
 document.getElementById("modal-overlay").addEventListener("click", e => {
   if (e.target.id === "modal-overlay") closeModal();
 });
-document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+/* Esc：弹窗开着就关弹窗，否则退回首页（第三个回去的入口，见 goHome 那段注释）。
+   顺序不能反——弹窗是更靠上的一层，一次 Esc 只该收掉一层。 */
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if (document.getElementById("modal-overlay")?.classList.contains("open")) { closeModal(); return; }
+  if (!atHome()) goHome();
+});
 
-let qTimer = null;
+/* ══════════ 两个节拍，不是一个（CY 2026-11-11 22:1x「浪费算力」那半句）══════════
+ * 原来一个 160ms 的 timer 同时管三件事：本地过滤、BI 事件、**语义搜索的网络请求**。
+ * 后者在 Cloudflare Workers AI 上真跑一次 bge-m3 向量化（isolate 冷的时候还要先把
+ * 105 条索引文本全量向量化一遍）⟹ 按退格键删 8 个字 = 最多 8 次向量化 + 8 条
+ * 「他搜了什么」的 BI 事件，而那 8 个前缀（"如何控制血"、"如何控制"、"如何控"…）
+ * **没有一个是他真正想问的问题**。缺口清单被前缀污染，比多花的那点算力更贵。
+ *
+ * 拆成两档：
+ *   · 本地过滤（纯内存 filter，零成本）→ 还是 160ms，手感不变；
+ *   · 网络 + BI → 等一个**真正的停顿**；而且**删字时等更久**，因为变短的输入永远是
+ *     过路状态，不是目的地（没人把一句话删掉一半当成自己要问的问题）。 */
+const Q_RENDER_MS = 160;
+const Q_NET_MS = 420;         // 打字停下
+const Q_NET_DEL_MS = 700;     // 正在删字：再等久一点，大概率他还要继续删
+let qTimer = null, qNetTimer = null, qPrev = "";
+
+function cancelPendingSearch() {
+  clearTimeout(qTimer); clearTimeout(qNetTimer);
+  qPrev = "";
+  abortSemantic();            // 在飞的那次请求直接掐掉，别让 Worker 白算完
+}
+
 document.getElementById("q").addEventListener("input", e => {
-  clearTimeout(qTimer);
+  clearTimeout(qTimer); clearTimeout(qNetTimer);
   const v = e.target.value.trim().toLowerCase();
+  const deleting = v.length < qPrev.length;
+  qPrev = v;
+  syncHasQ();                 // ✕ 跟着字走，不等 debounce
   qTimer = setTimeout(() => {
     state.q = v;
     mapExpanded = false;   // 换了搜索词就把折起的地图收回去（和 go() 同一个规矩）
     render();
+  }, Q_RENDER_MS);
+  // 清空到空串：本地那一跳照走（回到首页的列表），但没有任何可问的东西 ⟹ 不发请求、不记事件。
+  if (!v) { abortSemantic(); SEM = { q: "", top: [], ms: 0, pending: false, err: "" }; return; }
+  qNetTimer = setTimeout(() => {
     // 只在停下打字后记一次（不是每个按键）。**搜了什么 + 命中几条**是这个产品
     // 最该看的 BI：命中 0 的词就是内容缺口清单。
-    if (v) emit("search");
+    emit("search");
     // 语义搜索：关键词命中与否都要问一次——它不只是兜底，还负责把
     // "地图认为他问的是哪个节点"记进事件表（自动升级闸要吃这个）。
     fetchSemantic(v);
-  }, 160);
+  }, deleting ? Q_NET_DEL_MS : Q_NET_MS);
 });
 
 
