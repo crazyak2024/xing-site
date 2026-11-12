@@ -6878,8 +6878,10 @@
         "folded": 3,
         "picked": 4,
         "qualified": 7,
-        "rejected": 0,
-        "rejected_why": []
+        "rejected": 1,
+        "rejected_why": [
+          "表现形式偏向个人生活vlog而非系统讲解，混杂大量生活细节，虽涉及测量操作细节但缺乏机制解释；更重要的是转写质量严重异常"
+        ]
       },
       "stale": []
     },
