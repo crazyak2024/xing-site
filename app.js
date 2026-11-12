@@ -566,6 +566,15 @@ function hintBtn(key) { return `<button class="qm" data-hint="${esc(key)}" aria-
 
 function closeHint() { document.querySelectorAll(".qpop").forEach(n => n.remove()); }
 
+/* 「也看看」：把被限额收起的非主流那一格展开。一次性——展开了就不再收回去，
+   收回去只会让用户以为自己点错了。 */
+document.addEventListener("click", e => {
+  const sm = e.target.closest?.("[data-show-minority]");
+  if (!sm) return;
+  const held = sm.closest(".cons-held")?.nextElementSibling;
+  if (held?.classList?.contains("minority-held")) { held.hidden = false; sm.closest(".cons-held").remove(); }
+});
+
 document.addEventListener("click", e => {
   const b = e.target.closest?.(".qm");
   if (!b) { closeHint(); return; }
@@ -701,6 +710,11 @@ const PLATFORM_RANK = { bilibili: 0, douyin: 1, wechat_channels: 2 };
 function sortItems(items) {
   const q = state.q;
   return [...items].sort((a, b) => {
+    // 共识档排在**所有**其它规则之前（CY 2026-11-12：「优先呈现符合科学界标准的视频」）。
+    // 为什么在搜索命中度之前：一条非主流内容标题撞得再准，也不该压在主流讲法上面——
+    // 搜得准是"找得到"，共识是"该不该先看"，后者是编辑方针，优先级更高。
+    const cd = consensusRank(a) - consensusRank(b);
+    if (cd) return cd;
     if (q) {
       const sc = it => (it.title.toLowerCase().includes(q) ? 10 : 0) + ((it.summary || "").toLowerCase().includes(q) ? 3 : 0);
       const d = sc(b) - sc(a);
@@ -710,6 +724,19 @@ function sortItems(items) {
     if (pd) return pd;
     return (a.title || "").localeCompare(b.title || "", "zh");
   });
+}
+
+/** 一格内容网格 = 排序 → 非主流限额 → 卡片；被限额挡下的要**说出来**。
+ *  为什么必须说出来：悄悄少显示几条，和"我们只找到这几条"在页面上完全同形
+ *  （这个产品已经在同一个形状上栽过两次：缺 link 的被吃掉、到点未判的被说成不合格）。
+ *  那行字还给一颗「也看看」——"有限的给"是默认不摆在前面，不是不让看。 */
+function gridHtml(list) {
+  const { items, held } = capMinority(sortItems(list));
+  const grid = `<div class="grid">${items.map(it => cardHtml(it)).join("")}</div>`;
+  if (!held.length) return grid;
+  return grid + `<div class="cons-held">另有 ${held.length} 条偏离主流共识的讲法没摆在上面
+    <button class="linklike" data-show-minority="1">也看看</button></div>
+    <div class="grid minority-held" hidden>${held.map(it => cardHtml(it)).join("")}</div>`;
 }
 
 /* 卡片 v2（CY 2026-11-07 反馈后重做）：带缩略图+互动数+要点式摘要。
@@ -781,6 +808,75 @@ function coverFail(img) {
 }
 window.coverFail = coverFail;
 
+/* ══════════ 共识分级的呈现（CY 2026-11-12 02:2x 定文案与呈现由我设计）══════════
+ *
+ * 他要的两件事：**优先呈现符合科学界标准的**，非主流观点**有限地给、但要醒目提醒**。
+ *
+ * 设计上的三条取舍，都是为了让提醒**真的被看见、又不把正常内容污染**：
+ * ① **mainstream 一个字都不加**。如果 1900 条里 1900 条都挂着某种标，标就等于没有。
+ *    醒目来自稀缺——只有需要提醒的那几条才有颜色。
+ * ② **卡片上只给一枚短标，长话留到点开之后**。列表要能扫，一行解释会把卡片挤爆；
+ *    但点开要看视频之前，必须把话说完——那是他真的要决定"信不信它"的时刻。
+ * ③ **文案不解释我们的流程**（CY 11-10 的文案铁律：「不要解释与他们无关的事情」）。
+ *    不写"判定员给它打了 minority"，写"主流指南目前不这么说"——用户要的是这一句。
+ *
+ * 为什么 minority 的提醒要说出"我们为什么还是收了它"：只给警告不给理由，用户的
+ * 合理反应是"那你为什么放上来"。说清收它的条件（论证可检验、没否认已知事实），
+ * 这条提醒才是知识而不是免责声明。 */
+const CONSENSUS = {
+  limited: {
+    badge: "证据有限",
+    tip: "有研究支持，但还没成为专业共识",
+    banner: "<b>这条属于证据有限的说法。</b>它的方向不违反共识，但结论还没站稳——"
+          + "可能只有单个研究支撑，或专业界仍在争论。当成一种思路，别当定论。",
+  },
+  minority: {
+    badge: "非主流",
+    tip: "明确偏离主流共识，我们标出来给你",
+    banner: "<b>这条偏离主流共识。</b>主流指南目前不这么说。"
+          + "我们还是保留它，是因为它的论证可以被检验、也没有否认已知事实——"
+          + "但请先看这个问题下标着主流的那几条，再回来看它。",
+  },
+};
+/** 健康类内容统一的那一句：和分级无关，所有健康内容都给。
+ *  （CY 2026-11-12：「将来我们可以增加一个提醒，让用户找医生之类的」——现在就给上。）
+ *  放在点开之后、视频上方：列表里每张卡都挂一句"去问医生"是噪音，
+ *  真要看这条内容之前看到它，才是有用的时刻。 */
+const HEALTH_NOTE = "吃什么药、吃多少、能不能停药——这些我们一条都不收，视频也给不了。"
+                  + "身体的事最后要问医生。";
+
+function consensusBadge(it) {
+  const c = CONSENSUS[it.consensus];
+  return c ? `<span class="cons-badge cons-${esc(it.consensus)}" title="${esc(c.tip)}">${
+    esc(c.badge)}</span>` : "";
+}
+
+/** 排序键：主流永远在前（CY「优先呈现符合科学界标准的视频」）。
+ *  ⚠️ 这是**稳定排序的前置键**，不替换原有排序——原来按什么排，在同一档内仍按什么排。 */
+const CONSENSUS_RANK = { mainstream: 0, limited: 1, minority: 2 };
+function consensusRank(it) {
+  const r = CONSENSUS_RANK[it && it.consensus];
+  return r == null ? 0 : r;   // 认不出/没有 ⟹ 当主流（和导出端的 COALESCE 一致）
+}
+/** 「有限的给」的那个"限"（CY 原话：「非主流的观点我们也可以**有限的**给」）。
+ *  同一屏里 minority 最多留 MINORITY_CAP 条，且**不许排第一**：
+ *  第一条是用户默认会点的那条，把非主流放第一就等于在推荐它。
+ *  被挡下的不是删除——页面会说明还有几条非主流被收起（见 renderResults）。 */
+const MINORITY_CAP = 1;
+function capMinority(items) {
+  const out = [], held = [];
+  for (const it of items) {
+    if (it.consensus === "minority"
+        && (out.filter(x => x.consensus === "minority").length >= MINORITY_CAP
+            || out.length === 0)) { held.push(it); continue; }
+    out.push(it);
+  }
+  // 第一条就是 minority 的那种情况：它被挡下后，如果后面没有别的内容，
+  // 仍然要给出来——"只找到非主流讲法"也是一个真实答案，不能让页面变成空的。
+  if (!out.length) return { items: held, held: [] };
+  return { items: out, held };
+}
+
 function cardHtml(it, whyNote, covers) {
   const dur = fmtDuration(it.duration_s);
   const hasImg = !!it.cover_url;
@@ -806,7 +902,7 @@ function cardHtml(it, whyNote, covers) {
         ${dur ? `<span class="dur-badge">${dur}</span>` : ""}
       </div>
       <div class="card-body">
-        <h3>${esc(it.title)}</h3>
+        <h3>${consensusBadge(it)}${esc(it.title)}</h3>
         <div class="meta">
           ${fmtDate(it.published_at)
       ? `<span class="pub" title="发布于 ${esc(fmtDate(it.published_at))}">${esc(fmtDate(it.published_at))}</span>`
@@ -974,7 +1070,7 @@ function renderResults() {
   if (byNode.size < 2) {
     // ⚠️ 不能写 .map(cardHtml)：Array.map 会把下标当第二个参数传进去，
     // cardHtml 的第二参是 whyNote ⟹ esc(数字) 当场抛 TypeError（真浏览器里抓到的）
-    el.innerHTML = `<div class="grid">${sortItems(items).map(it => cardHtml(it)).join("")}</div>`;
+    el.innerHTML = gridHtml(items);
   } else {
     const order = [...byNode.entries()].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0], "zh"));
     if (resultFocus && !byNode.has(resultFocus)) resultFocus = null;   // 换了搜索词，上一个选中的问题可能已不在
@@ -986,7 +1082,7 @@ function renderResults() {
           <button class="section-title" data-drill="${esc(node)}" data-topic="${esc(list[0].topic)}">${esc(node)}</button>
           <span class="section-count">${list.length}条</span>
         </div>
-        <div class="grid">${sortItems(list).map(it => cardHtml(it)).join("")}</div>
+        ${gridHtml(list)}
       </div>`).join("");
     el.querySelectorAll("[data-drill]").forEach(b => b.addEventListener("click", () =>
       go({ node: b.dataset.drill, topic: b.dataset.topic })));
@@ -1087,7 +1183,7 @@ function renderSureHits(el, q, sure) {
           <button class="section-title" data-drill="${esc(s.name)}" data-topic="${esc(s.items[0].topic)}">${esc(s.name)}</button>
           <span class="section-count">${s.items.length}条</span>
         </div>
-        <div class="grid">${sortItems(s.items).map(it => cardHtml(it)).join("")}</div>
+        ${gridHtml(s.items)}
       </div>`).join("")
     + `<div class="sure-acts"><button class="linklike" id="want-this">都不是我要的 → 去找「${esc(q)}」</button></div>`;
   el.querySelectorAll("[data-drill]").forEach(b => b.addEventListener("click", () =>
@@ -1278,6 +1374,22 @@ function bindChapters(root, it) {
 }
 
 /* ---------- 弹窗 ---------- */
+/** 点开之后、视频**上方**的那条提醒。
+ *  为什么在播放器上方而不是下方：下方等于"看完再告诉你"，那时提醒已经没用了。
+ *  健康类的那一句对所有健康内容都给（不分级）；分级提醒只给 limited / minority。
+ *  两条都有时，分级那条在前——它是关于"这条内容"的，更具体。 */
+function consensusBannerHtml(it) {
+  const c = CONSENSUS[it.consensus];
+  const isHealth = (DOMAIN_FAMILY || {})[it.domain] === "health";
+  if (!c && !isHealth) return "";
+  const parts = [];
+  if (c) parts.push(`<div class="cons-note cons-${esc(it.consensus)}">
+      <span class="cons-badge cons-${esc(it.consensus)}">${esc(c.badge)}</span>
+      <span>${c.banner}</span></div>`);
+  if (isHealth) parts.push(`<div class="cons-note cons-health"><span>${esc(HEALTH_NOTE)}</span></div>`);
+  return parts.join("");
+}
+
 function openModal(it) {
   if (!it) return;
   const embedFn = EMBED_URL[it.platform];
@@ -1330,6 +1442,7 @@ function openModal(it) {
       <button class="modal-close" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
+      ${consensusBannerHtml(it)}
       ${body}
       ${chaptersHtml}
       <div class="modal-where">
