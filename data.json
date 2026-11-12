@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共2217条",
+  "generated_note": "判定=合格的候选，共2216条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1162,7 +1162,7 @@
     {
       "id": "ai1",
       "label": "AI 与大模型",
-      "count": 1921
+      "count": 1920
     },
     {
       "id": "fin1",
@@ -1195,7 +1195,7 @@
       "label": "AI 与大模型",
       "short": "AI 这块：不收短剧和「不学就被淘汰」，教程只收讲清方法的。",
       "long": "披着 AI 外壳的剧情娱乐一律不收。无依据夸大风险、制造紧迫感的焦虑话术不收。纯点击演示的教程不收——从头到尾「跟着点这里」、不解释为什么、换个场景就不会了；讲清了可迁移方法的，哪怕边操作边讲，我们收。",
-      "count": 1921
+      "count": 1920
     },
     "finance": {
       "label": "财经",
@@ -42147,52 +42147,6 @@
       "comments": null,
       "summary": "讲解当下AI岗位从基础API调用升级到Agent开发的必要性，给出零基础可落地的四段式学习路线：基础入门、核心进阶、强化提升、实战落地。",
       "reason": "强调只会基础AI应用已跟不上节奏，真正风口是Agent开发。原文：'只会基础AI应用已经跟不上行业节奏'，给出完整四段式学习路线。 | 引用:「只会基础AI应用已经跟不上行业节奏，真正的AI agent能自主思考任务规划，自动调用工具，闭环解决复杂问题」",
-      "consensus": "mainstream",
-      "topic": "方法实操",
-      "node": "大模型开发学习路线与转向评估",
-      "category": "(地图缺口)大模型开发学习路线与转向评估",
-      "domain": "ai1"
-    },
-    {
-      "id": "bilibili:BV1UZui6rE5T",
-      "video_id": "BV1UZui6rE5T",
-      "title": "程序员转AI工程师的三大核心技能",
-      "original_title": "【2026最新】目前B站最全最细的AI Agent开发零基础教程，手把手教你快速打造专属智能体，包含所有干货！七天就能从小白到大神！学完即就业，带你玩转AI !",
-      "author": "Agent开发教程",
-      "platform": "bilibili",
-      "link": "https://www.bilibili.com/video/BV1UZui6rE5T",
-      "cover_url": "https://i1.hdslb.com/bfs/archive/2fa6788fa988ec99ad1d3e1bce870211e799024f.jpg",
-      "published_at": "2026-08-11T10:20:35+00:00",
-      "key_points": [
-        "技能一：大模型底层知识包括Python、神经网络、Transformer等，决定后续职业发展天花板",
-        "技能二：架构开发重点深耕LangChain和LLamaGraph，掌握知识库全流程从文本拆分、Embedding、向量数据库到RAG优化",
-        "技能三：企业级部署涵盖项目、服务部署、模型微调等，真正把技术落地到业务",
-        "三大技能就是大模型岗位入场券，掌握后薪资20K-30K起步"
-      ],
-      "chapters": [
-        {
-          "t": 0,
-          "label": "大模型底层与神经网络"
-        },
-        {
-          "t": 10,
-          "label": "Transformer与主流框架"
-        },
-        {
-          "t": 21,
-          "label": "知识库搭建与RAG优化"
-        },
-        {
-          "t": 31,
-          "label": "企业级部署落地"
-        }
-      ],
-      "duration_s": 128013.0,
-      "likes": null,
-      "collects": null,
-      "comments": null,
-      "summary": "讲解程序员转做AI工程师必须掌握的三大技能：大模型底层知识与神经网络、LangChain和LLamaGraph架构框架、企业级部署和模型微调，掌握后薪资可达20-30K。",
-      "reason": "明确指出转AI工程师需要的三大技能体系。原文：'程序员转做AI工程师，学习顺序可别弄反转，做AI工程师必须知道的三大技能'。 | 引用:「程序员转做AI工程师，学习顺序可别弄反转，做AI工程师必须知道的三大技能：技能一大模型底层知识，技能二架构开发，技能三企业级部署落地」",
       "consensus": "mainstream",
       "topic": "方法实操",
       "node": "大模型开发学习路线与转向评估",
