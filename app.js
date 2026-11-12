@@ -924,12 +924,34 @@ function renderResults() {
        而答案可能就在上面那个确信命中分支里。但也**不能把出口一起扣住**：
        按钮照常给，只把那句"没有内容"换成"正在找"，等分数到了会自己重画（见 fetchSemantic）。 */
     const waiting = Boolean(q) && SEM.pending && SEM.q === q;
-    el.innerHTML = `<div class="empty">${waiting
-      ? `<span class="lane-spin"></span>正在找…`
+    /* 🔴 **已经让我们找过的问题，不许再推销一次「我要这个」**（CY 2026-11-11 22:5x）。
+     * 他从「我要补的」点进一条已经跑完的，看到的是一块全新的空白 + 一颗
+     * 「我要这个 →」，和他从没问过时**一模一样**。他的原话：「点进一个要补的，
+     * 没有看到任何结果，又给我『我要这个』的选项。这整个体验是 break 的。」
+     * 按钮本身没错，错在它假装这是第一次：我们明明记得他问过、也知道结果是什么。
+     * 结论归结论（下面那块 .lane 会说），这里只负责**不装失忆**：
+     * 还在跑就说还在跑，跑完了就**把按钮收掉**。
+     * ⚠️ 刻意**不给「再找一次」**：云端那份缓存活 24 小时，这颗按钮按下去只会原样
+     * 回放同一份结果——一颗假按钮比没有按钮更糟。真要能重试得先给 /rtsearch 加
+     * force 参数（要改 Worker 并部署），那是另一轮的事。 */
+    const a = q ? findAsk(q) : null;
+    const asked = a && !askTerminal(a);        // 这一问我们正在找
+    const askedDone = a && askTerminal(a);     // 找过了，结论在下面那块里
+    /* 🔴 **"结果在下面"必须真的有下面**（tests/site/asked_before.py 第 ② 条抓到的）。
+     * 下面那块 `.lane` 只有 `startLane()` 轮询时才会画，而落到这一屏的路不止一条：
+     * 从清单点进来会 startLane，**刷新/存下来的地址/分享链接进来不会** ⟹ 页面说
+     * "结果在下面"，下面却什么都没有。比原来那句"这里还没有内容"更糟。
+     * 这一跳是**免费的**：云端缓存 24 小时内直接回放，不会再花钱去搜。 */
+    if (a && LANE.q !== q) setTimeout(() => startLane(q), 0);
+    el.innerHTML = `<div class="empty">${
+      asked ? `<span class="lane-spin"></span>正在找「${esc(q)}」…`
+      : askedDone ? `我们找过这个了。`
+      : waiting ? `<span class="lane-spin"></span>正在找…`
       : "这里还没有内容。"}
-      ${q ? `<div class="empty-q">你搜的是「${esc(q)}」</div>` : ""}
+      ${q && !asked && !askedDone ? `<div class="empty-q">你搜的是「${esc(q)}」</div>` : ""}
+      ${askedDone ? `<div class="empty-q">结果在下面。</div>` : ""}
       <div class="empty-acts">
-        ${q ? `<button class="btn-primary" id="want-this">我要这个 →</button>` : ""}
+        ${q && !asked && !askedDone ? `<button class="btn-primary" id="want-this">我要这个 →</button>` : ""}
         <button class="linklike" id="reset-all">回到知识地图</button>
       </div>
       ${SEM.q === q && SEM.top.length && SEM.top[0].score >= SUGGEST_FLOOR
@@ -1589,7 +1611,13 @@ function startLane(q) {
       if (state.q === q) renderLane(d);                // 仍在看这个搜索：和原来一样内联
       renderLaneFloat();                                // 任何视图都刷新悬浮提示
       const over = Date.now() - LANE.t0 > LANE_MAX_MS;
-      if (["done", "skipped", "failed"].includes(d.state) || d.budget_exceeded || over) {
+      // `done` 但还有条目没判完（note 里有 pending）⟹ **别停**：后台核完会补推一次
+      // （pipeline/gap_lane.py 的"收尾补推"），停了就永远停在 0 条。超时闸照旧兜底。
+      const stillWorking = d.state === "done" && !(d.results || []).filter(laneUsable).length
+        && askPending(d);
+      if (over
+          || (!stillWorking
+              && (["done", "skipped", "failed"].includes(d.state) || d.budget_exceeded))) {
         clearInterval(LANE.timer); LANE.timer = null;
       }
     }).catch(() => { /* 一次网络抖动不该把整条车道掐掉，下一轮再问 */ });
@@ -1634,9 +1662,22 @@ function saveAsks() {
   try { localStorage.setItem(ASK_KEY, JSON.stringify(ASKS.slice(0, ASK_MAX))); }
   catch (e) { ASK_WRITABLE = false; }
 }
+/** 这一问**还有几条没有结论**（到点交班的 + 判官没跑成的）。
+ *  后台把它写在 note 里（见 pipeline/gap_lane.py 的 `pending`）。
+ *  🔴 为什么要它：原来只要后台回 `done`，页面就敢说「一条都没过判定」——而那一跑里
+ *  常常有 1–5 条**压根还没判过**（240 秒等待上限到了，交给后台继续）。
+ *  CY 2026-11-11 22:5x 截图里那三条就是这样：两条写着"跑完了，没有一条够格"，
+ *  其中一条的库里此刻正躺着一条已经核好的内容。说"没有一条够格"是**假话**。 */
+function askPending(a) {
+  const m = /还有\s*(\d+)\s*条还没有结论/.exec((a && a.note) || "");
+  return m ? +m[1] : 0;
+}
 function askTerminal(a) {
+  if (a.state === "done" && !a.n && askPending(a)) return false;   // 还有没判完的，不算收尾
   return ["done", "skipped", "failed"].includes(a.state) || a.budget_exceeded;
 }
+/** 这一问我们查过吗？（用于：别再对一个已经问过的问题重新推销「我要这个」） */
+function findAsk(q) { return ASKS.find(a => a.q === q) || null; }
 function askCount() { return ASKS.length; }
 function asksBuilding() { return ASKS.filter(a => !askTerminal(a)).length; }
 
@@ -1674,6 +1715,7 @@ function askStatusText(a) {
   if (a.budget_exceeded) return "今天的补内容额度用完了";
   if (a.state === "failed") return "没找成——是我们这边的问题";
   if (a.state === "skipped") return a.n ? `库里已经有 ${a.n} 条` : "不在我们收的范围里";
+  if (a.state === "done" && !a.n && askPending(a)) return `还在核最后 ${askPending(a)} 条`;
   if (a.state === "done") return a.n ? `补好了，${a.n} 条` : "跑完了，没有一条够格";
   // 非终态：区分"正在跑"和"我们没跟上"——后者不该显示成一个永远转的圈
   if ((Date.now() - a.touched) > ASK_RESUME_MS) return "还没跟完，点一下接着看";
@@ -1693,6 +1735,7 @@ function askStatusText(a) {
  * 颜色只在这一个函数里判，渲染处不再判第二遍。 */
 function askPhase(a) {
   if (a.budget_exceeded || a.state === "failed") return "fail";
+  if (!askTerminal(a)) return "building";           // 含"后台还在核最后几条"
   if (a.state === "skipped" || a.state === "done") return a.n ? "done" : "none";
   return "building";
 }
@@ -1869,25 +1912,34 @@ function renderLane(d) {
      判准：**这一句他拿来干什么**——进度要一眼看出"还在动、到哪了"，结果要一眼看出
      "有没有、几条"。流程怎么跑、为什么慢，是解释，不占版面。 */
   const building = d.state !== "done";
+  /* 🔴 **还没判完就别宣判**（2026-11-11 23:2x）。用户的等待有 240 秒硬上限，到点没判完的
+     条目交给后台继续——可那时页面照样打出"一条都没过判定 / 找到了内容，但没有一条够格"。
+     CY 那三条里，深圳那一问 8 条中有 5 条**根本没判过**就被这句话判了死刑。
+     后台把剩余条数写在 note 里，这里据它说实话。 */
+  const pending = askPending(d);
   const head = building
     ? `<div class="lane-head"><span class="lane-spin"></span>正在建这个知识点</div>
        <div class="lane-sub">${items.length ? `已核完 <b>${items.length}</b> 条。` : `还在核第一条。`}
           ${step ? `${esc(step)}（${secs} 秒）` : ""}</div>`
-    : `<div class="lane-head">${items.length ? "建好了" : "一条都没过判定"}</div>
-       <div class="lane-sub">${items.length
-          ? `${items.length} 条，已核对事实，已进地图。`
-          : `找到了内容，但没有一条够格。不凑数。`}</div>`;
+    : (!items.length && pending)
+      ? `<div class="lane-head"><span class="lane-spin"></span>还在核最后 ${pending} 条</div>
+         <div class="lane-sub">前面几条都没够格。剩下的几分钟内会出现在这里。</div>`
+      : `<div class="lane-head">${items.length ? "建好了" : "一条都没过判定"}</div>
+         <div class="lane-sub">${items.length
+            ? `${items.length} 条，已核对事实，已进地图。${pending ? `还有 ${pending} 条在核。` : ""}`
+            : `找到了内容，但没有一条够格。不凑数。`}</div>`;
   /* 「晚点回来」的入口（CY 2026-11-10 15:2x：「等待页也应该有让用户晚点回来的入口」）。
    * 建一个知识点是分钟级的，**不该要求人守在这一页**——而在此之前关掉页面就等于白等：
    * 地址栏没有这个问题的任何痕迹，回来只能从头搜一遍、还不知道上次跑到哪了。
    * 现在给的是**这一问的专属地址**（带 lane=1）：存下来、几分钟后打开，它会自己接着
    * 显示进度或结果。刻意不做"留邮箱通知你"——这个产品没有账户、不建档案，
    * 一个地址是我们能给的、最轻也最诚实的东西。*/
-  const back = building
+  const live = building || (!items.length && pending);   // 还有结论没出来 = 还在动
+  const back = live
     ? `<div class="lane-back">${shareBtnHtml(null, "复制地址，晚点回来", true)}
          <span class="lane-back-note">不用守着。</span></div>`
     : "";
-  box.innerHTML = `<div class="lane ${building ? "" : "ok"}">${head}
+  box.innerHTML = `<div class="lane ${live ? "" : "ok"}">${head}
     ${items.length ? `<div class="lane-cards grid">${items.map(laneCardHtml).join("")}</div>` : ""}
     ${back}</div>`;
   bindLaneCards(box);
