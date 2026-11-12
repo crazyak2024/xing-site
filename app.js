@@ -23,9 +23,13 @@ const PLATFORM_CN = { douyin: "抖音", wechat_channels: "视频号" };
  * "External Player - 哔哩哔哩嵌入式外链播放器"），2026-11-07 实测响应头
  * **无 X-Frame-Options、无 CSP frame-ancestors** ⟹ 允许被嵌。横屏 16:9，
  * 所以弹窗宽度不能沿用抖音那套 420px 竖屏尺寸。 */
+/* `t=` 是起播秒数——跳到某一秒 ＝ 换 src 重载整个 iframe（没有拖动条/倍速那套命令协议，
+ * 2026-11-11 实测见 notes/xing/嵌入播放器能做到什么…md）。
+ * ⚠️ 原来传的 `high_quality=1` 其实不在 B站 player 认的参数表里（`aid cid bvid seasonId
+ * episodeId poster autoplay muted t p page danmaku kind refer`），一直被静默忽略，删掉。 */
 const EMBED_URL = {
   douyin: (vid) => `https://open.douyin.com/player/video?vid=${vid}&autoplay=1`,
-  bilibili: (vid) => `https://player.bilibili.com/player.html?bvid=${vid}&autoplay=0&high_quality=1&danmaku=0`,
+  bilibili: (vid, t) => `https://player.bilibili.com/player.html?bvid=${vid}&autoplay=0&danmaku=0${t ? `&t=${t}` : ""}`,
 };
 // 嵌入画面的宽高比：抖音竖屏、B站横屏。弹窗按这个选宽度。
 const EMBED_SHAPE = { douyin: "portrait", bilibili: "landscape" };
@@ -1175,6 +1179,38 @@ function renderHomeQuestions() {
 /* 节点名入库时带「07.」这类编号，那是我们的内部排序手段，不该出现在用户眼前 */
 function displayNode(n) { return String(n).replace(/^\d+\./, ""); }
 
+/* ══════════ 「从这里看」：按知识点跳转，不做拖动条（CY 2026-11-11 16:4x）══════════
+ * 他的话：「我觉得我们就不应该做这个进度条，而是用这个字幕，甚至是主题。就是对每一个
+ * 视频，我们按照时间轴列出了几个重要的节点或者是主题，然后用户一点，我们就会跳到那个
+ * 相应的主题上…B站的可以先做嘛，因为它本来就有字幕」。
+ *
+ * 数据来自 pipeline/chapters.py（字幕+时间戳 → LM 切 3-6 个知识点段，带几何/时间校验）。
+ * 只有 B站 有（嵌入播放器认 `t=` 起播秒，点一条＝换 iframe src 重载到那一秒）；
+ * 抖音/视频号这里不出——给了也点不动，比没有更误导。 */
+function chaptersBlockHtml(it) {
+  if (it.platform !== "bilibili" || !it.chapters || !it.chapters.length) return "";
+  const rows = it.chapters.map((c, i) => `
+    <button class="chp-row" data-chp-t="${c.t}" data-chp-i="${i}">
+      <span class="chp-t">${Math.floor(c.t / 60)}:${String(c.t % 60).padStart(2, "0")}</span>
+      <span class="chp-label">${esc(c.label)}</span>
+    </button>`).join("");
+  return `<div class="chapters">
+      <div class="chp-head">从这里看</div>
+      <div class="chp-list">${rows}</div>
+    </div>`;
+}
+
+function bindChapters(root, it) {
+  root.querySelectorAll("[data-chp-t]").forEach(b => b.addEventListener("click", () => {
+    const t = +b.dataset.chpT;
+    const frame = document.getElementById("modal-iframe");
+    if (!frame) return;   // 弹窗已经不是这条了（理论上不会发生，防御一下）
+    frame.src = EMBED_URL.bilibili(it.video_id, t);
+    root.querySelectorAll(".chp-row").forEach(r => r.classList.toggle("on", r === b));
+    emit("chapter_jump", { item: it.id, t });
+  }));
+}
+
 /* ---------- 弹窗 ---------- */
 function openModal(it) {
   if (!it) return;
@@ -1212,8 +1248,9 @@ function openModal(it) {
          <ul>${it.key_points.map(p => `<li>${esc(p)}</li>`).join("")}</ul>
        </div>`
     : `<div class="kp"><div class="kp-note">这条还没出要点（判定流水线还在补），先看摘要或直接看原视频。</div></div>`;
+  const chaptersHtml = chaptersBlockHtml(it);
   const body = embedFn
-    ? `<iframe class="modal-embed" src="${embedFn(it.video_id)}" allow="autoplay; fullscreen" allowfullscreen scrolling="no" frameborder="0"></iframe>`
+    ? `<iframe class="modal-embed" id="modal-iframe" src="${embedFn(it.video_id)}" allow="autoplay; fullscreen" allowfullscreen scrolling="no" frameborder="0"></iframe>`
     : `<div class="modal-cover-wrap">
          ${it.cover_url ? `<img class="modal-cover" src="${esc(modalCover(it.cover_url))}" alt=""
               decoding="async" referrerpolicy="no-referrer"
@@ -1228,6 +1265,7 @@ function openModal(it) {
     </div>
     <div class="modal-body">
       ${body}
+      ${chaptersHtml}
       <div class="modal-where">
         <button class="linklike" data-jump-topic="${esc(it.topic)}" style="color:${topicColor(it.topic)}">${esc(it.topic)}</button>
         <span class="sep">›</span>
@@ -1260,6 +1298,7 @@ function openModal(it) {
   syncUrl(MODAL_ID);
   bindShareButtons(m);
   bindExitButtons(m, it.id);
+  bindChapters(m, it);
   emit("open", { item: it.id, has_points: !!(it.key_points && it.key_points.length) });
   m.querySelector(".modal-close").addEventListener("click", closeModal);
   // 弹窗里也能跳地图——看完一条顺着它所在的位置继续找，是这个产品的主循环
