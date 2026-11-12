@@ -1085,11 +1085,26 @@ function renderResults() {
    * 所以：库里有什么，用**数字 + 入口**表达（四张主题卡的条数、几条真实问题），
    * 要给"可点的证据"（准则 1）就给问题，不给视频。**视频只在用户问过之后出现。**
    */
+  /* 🔴 **但"不铺内容"只针对整个库，不针对用户已经选中的那一块**（2026-11-12 03:0x 修）。
+   * CY 截图实证：他点进「三岁幼儿发展的关键能力 **3**」这个块，页面上**一条视频都没有**，
+   * 只有三张分类卡（概念原理 1 条 / 方法实操 1 条 / 误区纠正 1 条）——
+   * 要看那 3 条视频还得**再点三次**，每次看 1 条。他的原话：
+   *   「这里说有三条，但我什么都没看见」「下面的视频应该直接展示出来，而不是等着我继续点」
+   * 病根：上面那行判断只看 q/topic/node，**没把 `state.domain` 算进来** ⟹ 选中一个块
+   * 仍然被当成"站在首页"。而首页那条规则是为**1951 张卡 = 780 屏**定的，
+   * 把它套到一个只有 3 条的块上，防沉迷就变成了防止用户拿到答案。
+   * 他定的成功标志是「**最少几次点击**就能找到想要的视频」——这里白白多收了三次。
+   * 新规则：**一屏几屏看得完的，直接给**；几百条的才给入口。
+   * 阈值按"大约几屏"定，不按"是不是首页"定。 */
+  const SHOW_ALL_MAX = 60;
   if (!state.q && !state.topic && !state.node) {
-    el.innerHTML = "";
-    document.getElementById("result-count").textContent = "";
-    if (bar) bar.hidden = true;
-    return;
+    const narrowed = state.domain && items.length && items.length <= SHOW_ALL_MAX;
+    if (!narrowed) {
+      el.innerHTML = "";
+      document.getElementById("result-count").textContent = "";
+      if (bar) bar.hidden = true;
+      return;
+    }
   }
 
   /* 坏链接：?node= 指向库里没有的问题。一句话说清，不铺地图（体验审查 §5）。 */
