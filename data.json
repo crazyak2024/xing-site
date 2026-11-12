@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共2221条",
+  "generated_note": "判定=合格的候选，共2224条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1162,7 +1162,7 @@
     {
       "id": "ai1",
       "label": "AI 与大模型",
-      "count": 1916
+      "count": 1920
     },
     {
       "id": "fin1",
@@ -1172,7 +1172,7 @@
     {
       "id": "hea2",
       "label": "慢病指标与营养",
-      "count": 75
+      "count": 74
     },
     {
       "id": "hea1",
@@ -1195,7 +1195,7 @@
       "label": "AI 与大模型",
       "short": "AI 这块：不收短剧和「不学就被淘汰」，教程只收讲清方法的。",
       "long": "披着 AI 外壳的剧情娱乐一律不收。无依据夸大风险、制造紧迫感的焦虑话术不收。纯点击演示的教程不收——从头到尾「跟着点这里」、不解释为什么、换个场景就不会了；讲清了可迁移方法的，哪怕边操作边讲，我们收。",
-      "count": 1916
+      "count": 1920
     },
     "finance": {
       "label": "财经",
@@ -1207,7 +1207,7 @@
       "label": "健康",
       "short": "健康这块：怎么做可以给你；吃什么药、吃多少不行——那是医生的事。",
       "long": "限盐、吃法、运动、体重、睡眠、怎么测准——这些你自己就能做的调整，我们收，并且要求讲清适用边界：谁适用、什么情况得先看医生。给药名配剂量、该不该停药、该换哪种药，一律不收——那只能发生在诊室里，不能发生在视频里。偏方神药、保健品带货、拿截肢失明吓人、把个人经历当普遍规律，以及「一定会」「绝对不会」这类不作限定的绝对句，同样不收。明确偏离主流共识的讲法我们会少量保留并标注出来，明显反科学的不收。身体的事最后要问医生，不要问视频。",
-      "count": 150
+      "count": 149
     }
   },
   "domain_family": {
@@ -86081,34 +86081,6 @@
       "domain": "hea2"
     },
     {
-      "id": "bilibili:BV18M4y1W7MK",
-      "video_id": "BV18M4y1W7MK",
-      "title": "盐如何通过渗透压升高血压",
-      "original_title": "为什么盐会导致血压升高？",
-      "author": "盐究员小爱",
-      "platform": "bilibili",
-      "link": "https://www.bilibili.com/video/BV18M4y1W7MK",
-      "cover_url": "https://i0.hdslb.com/bfs/archive/6aaa71b45630528e2ddbc2bf6526e4ac71bb1058.jpg",
-      "published_at": "2023-07-28T09:42:26+00:00",
-      "key_points": [
-        "高盐摄入导致血浆渗透压升高，根据渗透原理水分从低渗透压流向高渗透压，细胞内水流向细胞外",
-        "组织液增多进入血管扩大血容量，同时下丘脑感受器激活产生口渴感促进抗利尿激素分泌保留水分",
-        "血容量增加导致心输出量增加，根据血压公式（血压=心输出量×外周阻力）血压随之升高"
-      ],
-      "chapters": [],
-      "duration_s": 90.0,
-      "likes": 131,
-      "collects": null,
-      "comments": null,
-      "summary": "从渗透压的物理学原理出发，讲述高盐摄入如何提升血浆渗透压、引发水分滞留、扩大血容量最终导致血压升高。",
-      "reason": "通过渗透压物理学原理和U形试管实验讲解，转写详述'溶质颗粒浓度越高吸引水分子能力越强''水分子向另一侧迁移''液柱升高产生压强就是渗透压'，最后推导血压升高公式。 | 引用:「一克盐大约含有350克钠如果是低钠盐其中钠含量会更低一些影响血压的原因主要有两点」",
-      "consensus": "mainstream",
-      "topic": "概念原理",
-      "node": "血压是怎么升上去的",
-      "category": "61.血压是怎么升上去的",
-      "domain": "hea2"
-    },
-    {
       "id": "bilibili:BV1Yj411h7M7",
       "video_id": "BV1Yj411h7M7",
       "title": "高盐饮食如何引发高血压",
@@ -88655,6 +88627,122 @@
       "topic": "时效选择",
       "node": "AI订阅该不该付费付哪档",
       "category": "18.AI订阅该不该付费付哪档",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1Ad4t6XEtf",
+      "video_id": "BV1Ad4t6XEtf",
+      "title": "构建完整Agent的八大模块架构",
+      "original_title": "如何从零开始打造一个Agent？除了大模型还需要哪些模块？",
+      "author": "涤生大数据",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1Ad4t6XEtf",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/3c5d6a6b057bd2d7911934d915d31e03341c794c.jpg",
+      "published_at": "2026-11-05T12:06:22+00:00",
+      "key_points": [
+        "大模型是推理大脑，harness框架是真实执行系统，两者缺一不可才能完成任务",
+        "上下文模块汇总信息，工具层对接外部资源，loop管理多轮执行流程",
+        "状态、安全层根据复杂度递进添加，处理权限审批和错误管理",
+        "Agent关键在是否有任务推进、工具结果反馈和明确停止条件，不在聊天形式"
+      ],
+      "chapters": [],
+      "duration_s": 1128.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲述完整Agent需要大模型、harness框架、loop、上下文、工具、状态、安全等八个模块分工协作，阐明了Agent与聊天机器人的本质差异在于任务推进、工具反馈和停止条件。",
+      "reason": "原文明确指出大模型虽是核心推理引擎，但实际上还需要整个围绕大模型的运行系统，即harness框架。 | 引用:「大模型确实是核心的推理引擎，但实际上还需要一套整个围绕大模型的运行系统，也就是harness agent」",
+      "consensus": "mainstream",
+      "topic": "概念原理",
+      "node": "AI Agent核心概念与生态系统",
+      "category": "(地图缺口)AI Agent核心概念与生态系统",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1uubW6xERU",
+      "video_id": "BV1uubW6xERU",
+      "title": "Agent应用的常见问题与解决方案",
+      "original_title": "大模型面试真题：使用AI Agent，会遇到哪些问题？",
+      "author": "涤生大数据",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1uubW6xERU",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/8c98a8ae03192df4b4c0146f7368e30d59076eeb.jpg",
+      "published_at": "2026-09-06T14:18:15+00:00",
+      "key_points": [
+        "理解错误源于上下文不完整、业务口径缺失，幻觉源于模型凭记忆编造表字段，需补全元数据和示例",
+        "生产风险意识缺陷导致Agent可能全表扫描，需前置成本和资源意识设计",
+        "链路理解不足使Agent只能解决当前报错，忽视上游字段变更和依赖问题的连锁反应",
+        "通过补全提示词、搭建验证层、人工审批、加入优化意识来逐步缓解这些问题"
+      ],
+      "chapters": [],
+      "duration_s": 355.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "系统分析了使用Agent时的问题，包括理解错误、幻觉编造、SQL优化不足、生产风险意识缺陷、链路理解不足五大类，针对每类给出了补全元数据、验证层、权限防护等具体解决策略。",
+      "reason": "原文明确分类：问题分为三大类包括理解错误、幻觉错误、SQL优化不足，以及生产风险、链路理解不足等。 | 引用:「Agent会出现理解错误、幻觉问题、SQL优化不足，以及生产风险意识缺陷和链路理解不足等问题」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "AI Agent核心概念与生态系统",
+      "category": "(地图缺口)AI Agent核心概念与生态系统",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV19tGG6REzm",
+      "video_id": "BV19tGG6REzm",
+      "title": "大模型生成SQL的七大常见问题与解决方案",
+      "original_title": "校招面试官：在数仓中应用大模型，会有哪些常见问题以及解决方案？",
+      "author": "涤生大数据",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV19tGG6REzm",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/60c108cac787281a8f78efc803d90ed1b1b092d7.jpg",
+      "published_at": "2026-08-01T12:26:14+00:00",
+      "key_points": [
+        "SQL准确率不足需优化元数据覆盖度、补充高质量示例库、搭建多层验证，关键是补全业务口径和分区规则",
+        "幻觉问题通过RAG检索真实表字段、表字段校验和人工审批三层防护来缓解",
+        "术语不一致需建立统一业务术语映射库，同一概念多个名称会导致模型识别失误",
+        "性能成本通过选用参数量适中模型和缓存策略优化，安全权限需前置脱敏敏感字段"
+      ],
+      "chapters": [],
+      "duration_s": 557.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "系统总结了大模型在数仓中生成SQL时的七大问题——准确率不足、幻觉、上下文限制、安全权限、性能成本、术语不一致、版本不稳定，针对每个问题给出元数据优化、RAG、验证层、权限脱敏等实践解决方案。",
+      "reason": "原文逐一列举：生成SQL准确率不足、幻觉问题、上下文限制、安全权限、性能成本、术语不一致、模型版本不稳定这七个核心问题。 | 引用:「生成SQL准确率不足、幻觉问题、上下文限制、安全权限、性能成本、术语不一致、模型版本不稳定这七个核心问题」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "AI工具使用教程",
+      "category": "(地图缺口)AI工具使用教程",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1uj3t6xEZS",
+      "video_id": "BV1uj3t6xEZS",
+      "title": "用AI工具构建自动化个人知识库",
+      "original_title": "AI提效数据研发：LLM-Wiki理论与知识库建设实战",
+      "author": "涤生大数据",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1uj3t6xEZS",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/7e27d678cfffc280ac7a0bbfe081849cb18b0a78.jpg",
+      "published_at": "2026-07-30T07:59:22+00:00",
+      "key_points": [
+        "CoCodeX通过读取知识库文件按规则自动整理资料、生成知识页、更新索引和日志，减轻人工维护负担",
+        "Obsidian采用双向链接和反向链接形成知识图谱，数据存储为本地Markdown且用户拥有完全所有权",
+        "两者结合让Agent长期协助搭建维护个人知识库，支持CLI命令行和客户端两种交互模式",
+        "这套方法论在个人、团队甚至企业层面都适用，可实现知识自动整理和智能查询"
+      ],
+      "chapters": [],
+      "duration_s": 1280.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "介绍了基于大模型微调的个人知识库建设方案，通过CoCodeX自动读取整理和生成知识文件、更新索引，配合Obsidian的双向链接形成知识图谱，两者结合实现知识自动维护和长期积累。",
+      "reason": "原文具体介绍：让CoCodeX直接读取知识库文件夹，根据规则自动整理资料、生成知识页、更新索引和日志。 | 引用:「CoCodeX可直接读取知识库文件夹，根据规则自动整理资料、生成知识页、更新索引和日志」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "AI工具使用教程",
+      "category": "(地图缺口)AI工具使用教程",
       "domain": "ai1"
     }
   ]
