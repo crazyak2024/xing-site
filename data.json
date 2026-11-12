@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共2219条",
+  "generated_note": "判定=合格的候选，共2221条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1162,7 +1162,7 @@
     {
       "id": "ai1",
       "label": "AI 与大模型",
-      "count": 1928
+      "count": 1930
     },
     {
       "id": "fin1",
@@ -1195,7 +1195,7 @@
       "label": "AI 与大模型",
       "short": "AI 这块：不收短剧和「不学就被淘汰」，教程只收讲清方法的。",
       "long": "披着 AI 外壳的剧情娱乐一律不收。无依据夸大风险、制造紧迫感的焦虑话术不收。纯点击演示的教程不收——从头到尾「跟着点这里」、不解释为什么、换个场景就不会了；讲清了可迁移方法的，哪怕边操作边讲，我们收。",
-      "count": 1928
+      "count": 1930
     },
     "finance": {
       "label": "财经",
@@ -88475,6 +88475,66 @@
       "topic": "方法实操",
       "node": "Opus视频创作进阶技巧",
       "category": "(地图缺口)Opus视频创作进阶技巧",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1Z2Ys6XEt4",
+      "video_id": "BV1Z2Ys6XEt4",
+      "title": "豆包工作图表设计工作流全程指南",
+      "original_title": "设计师偷懒神器：不用写代码也能让豆包工作搞定汇报图表｜AIGC智能体",
+      "author": "LeaderAI",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1Z2Ys6XEt4",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/5398427777716a2a4fe0b441bee9c95c8f6d7cbe.jpg",
+      "published_at": "2026-09-09T02:40:53+00:00",
+      "key_points": [
+        "拖入Excel自动生成完整HTML可视化，省去手动数据整理和格式调整",
+        "分阶段设计：初稿→对话理解数据重点→迭代微调→按维度拆分避免信息过载",
+        "拖入参考样式让豆包自动匹配风格，解决AI模板千篇一律问题",
+        "生成后自动测试显示和交互，无需人工二次修改",
+        "每次对话指哪改哪快速迭代，大幅缩短从概念到定稿周期"
+      ],
+      "chapters": [],
+      "duration_s": 383.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "从Excel数据到交互图表的完整工作流：自动化处理→分阶段迭代→参考样式驱动→AI自测试→快速交付，讲清了AI辅助设计的系统方法。",
+      "reason": "讲清了从需求到定稿的系统工作流和迭代策略，超越\"怎么点\"的操作教程，阐述数据理解、信息设计、质量控制的方法论，符合CY纠正：讲清方法论的工具教程可收。 | 引用:「这个阶段的核心呢是通过图表去理解数据，在规划表达的重点，给大家举个例子啊我们看D版图表的时候，发现里面没有学历分布」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "AI内容创作工具工作流",
+      "category": "(地图缺口)AI内容创作工具工作流",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV17sgw6cEwi",
+      "video_id": "BV17sgw6cEwi",
+      "title": "本地AI的远程控制方案与端口映射实战",
+      "original_title": "本地AI的“远程控制台”：手机端+电脑端实测，随时查看、随时调参",
+      "author": "LeaderAI",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV17sgw6cEwi",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/99a4ba25992a81c5ca4f562389fb8834d13f6f8f.jpg",
+      "published_at": "2026-08-19T10:00:00+00:00",
+      "key_points": [
+        "本地AI集中在主力机，备用机性能和系统差异导致无法使用重新配置成本高",
+        "免费工具优于付费：UU远程无费用无阉割，20ms延迟无感适合设计修图",
+        "超级屏合并多屏为单屏显示，避免弹窗卡在第二屏导致软件卡死",
+        "虚拟屏应对多屏需求，命令行模式出差轻量化仅传输文本省流量",
+        "端口映射直接远程访问本地LLM无需远程整个桌面，技术方案清晰易复用"
+      ],
+      "chapters": [],
+      "duration_s": 366.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲用远程控制软件支撑本地AI工作的完整方案：基础配置→多屏管理→命令行轻量化→端口映射，解决设备差异和便携性问题的实践指南。",
+      "reason": "讲述了本地AI工作的实际痛点、工具选择标准、分场景功能应用和技术方案，超越单纯操作教程，具有问题解决和方法论的完整价值。 | 引用:「有时候备用电脑的性能不够，系统不同，跑不动AI，用不了行业软件，那这个问题啊现在基本上都有了一个通用的解法就是远程控制软件」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "AI工具使用教程",
+      "category": "(地图缺口)AI工具使用教程",
       "domain": "ai1"
     }
   ]
