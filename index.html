@@ -143,6 +143,11 @@ button{font-family:inherit}
 .exit-said{font-size:var(--fs-sm);color:var(--ink-3);line-height:1.6;margin:0}
 .exit-said b{color:var(--ok-ink)}
 .exit-said.bad b{color:var(--warn)}
+/* 「再问一个」：按完两颗按钮之后的真出口（qd1，CY 2026-11-11）。
+   不用 .linklike 的裸下划线文字——它要能在手机上一指按到，所以给够内边距（≈40px 高）。 */
+.exit-again{margin-top:10px}
+.exit-again .linklike{display:inline-block;padding:9px 13px;border:1px solid var(--line);border-radius:7px;text-decoration:none;font-weight:600;font-size:var(--fs-sm);background:var(--card)}
+.exit-again .linklike:hover{background:var(--bg);border-color:var(--accent)}
 .exit-ask{display:flex;gap:5px;margin-top:8px}
 .exit-ask input{flex:1;min-width:0;padding:6px 8px;font-size:var(--fs-sm);border:1px solid var(--line);border-radius:6px}
 .exit-ask button{padding:6px 9px;font-size:var(--fs-sm);border:1px solid var(--line);background:var(--card);border-radius:6px;cursor:pointer}

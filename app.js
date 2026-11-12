@@ -1753,11 +1753,32 @@ function exitBlockHtml() {
   </div>`;
 }
 
-function exitSaid(html, cls) {
+function exitSaid(html, cls, withAnother) {
   const el = document.getElementById("exit");
   if (!el) return;
   el.innerHTML = `<p class="exit-said ${cls || ""}">${html}</p>
+     ${withAnother ? `<div class="exit-again"><button class="linklike" id="exit-again">再问一个 →</button></div>` : ""}
      <p class="exit-note">${PRIVACY_NOTE}</p>`;
+  const again = document.getElementById("exit-again");
+  if (again) again.addEventListener("click", askAnother);
+}
+
+/* 「再问一个」：CY 2026-11-11 16:1x 拍定 qd1 时那句话的产品面——
+ *   「『用完即走』是目标，但是用户经常会用完一个，又想到另一个需求，所以未必会走。」
+ * 原来这两颗按钮按下去之后，唯一的收尾话是"有下一个问题再来"——那句话假定他**先离开**、
+ * 以后某天再回来；而他说的恰恰是：下一个问题常常就在此刻。那就别让他自己去找回搜索框
+ * （弹窗要关、旧节点要退、输入框要清，三步都在我们这边）。
+ *
+ * ⚠️ 这不是"再看一个"：没有推荐、没有自动续播、不摆任何我们挑的内容——
+ * 下一个问题由他自己打出来。给的是**同一个搜索框**，不是一条流。
+ * 为什么要清掉 node/topic：留着旧节点，他新打的问题会被当前节点再过滤一遍，
+ * 多半 0 条（§filtered 的老毛病）。新问题要从整张地图问起。 */
+function askAnother() {
+  closeModal();
+  const box = document.getElementById("q");
+  if (box) box.value = "";
+  go({ q: "", node: null, topic: null });
+  if (box) box.focus({ preventScroll: true });
 }
 
 /* itemId：现在这两颗按钮长在某条视频下面，所以要记下是**哪条**让他解决/没解决的。
@@ -1768,7 +1789,10 @@ function bindExitButtons(root, itemId) {
   if (!ok || !no) return;
   ok.addEventListener("click", () => {
     recordExit("found", "", itemId);
-    exitSaid(`<b>记下了。</b><br>这是我们唯一的成功。<br>不用收藏，有下一个问题再来。`);
+    /* 原来这里是「记下了。这是我们唯一的成功。不用收藏，有下一个问题再来。」
+       去掉中间那句：那是**我们的记分牌**，不是对他有用的话（文案铁律，CY 11-10 17:0x）；
+       末句换成一颗真能按的「再问一个」（qd1，CY 11-11 16:1x）。 */
+    exitSaid(`<b>记下了。</b>`, "", true);
   });
   no.addEventListener("click", () => {
     recordExit("not_found", "", itemId);
@@ -1783,7 +1807,8 @@ function bindExitButtons(root, itemId) {
     const input = document.getElementById("exit-want");
     const send = () => {
       recordExit("gap_wish", input.value.trim(), itemId);
-      exitSaid(`<b>收到。</b><br>这句话比一万次点击有用。`, "bad");
+      // 没找到的那条路也给同一个出口：他的问题没解决，但下一个问题照样可能就在此刻
+      exitSaid(`<b>收到。</b><br>这句话比一万次点击有用。`, "bad", true);
     };
     document.getElementById("exit-send").addEventListener("click", send);
     input.addEventListener("keydown", e => { if (e.key === "Enter") send(); });
