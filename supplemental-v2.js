@@ -13,7 +13,7 @@
   const h = value => esc(String(value ?? ''));
   const platformNames = {douyin:'抖音',bilibili:'B站',kuaishou:'快手',wechat_channels:'视频号'};
   const platforms = d => (d?.run?.platforms_searched || d?.platforms_searched || []).map(p => platformNames[p] || p).join('、');
-  const active = d => ['PENDING','RUNNING','EXPORTING'].includes(d?.run?.state);
+  const active = d => !d?.service_paused && ['PENDING','RUNNING','EXPORTING'].includes(d?.run?.state);
   function load() {
     if (loaded) return; loaded = true;
     try {
@@ -26,6 +26,7 @@
   function save() { try { localStorage.setItem(KEY,JSON.stringify(rows)); } catch (_) { writable = false; } }
   function status(d) {
     if (!d) return '正在读取进度';
+    if(d.service_paused) return d.message || '补搜暂时暂停，问题已保存；恢复后继续处理';
     const r = d.run;
     if (d.status === 'locked' || r?.state === 'FAILED') return '补搜遇到问题，正在处理';
     if (r?.state === 'RUNNING') return r.phase === 'judging' ? '更多内容正在路上——我们正在努力抓取和筛选，请耐心等待' : (platforms(d) ? `正在${platforms(d)}上搜` : '正在寻找相关内容');
