@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共2234条",
+  "generated_note": "判定=合格的候选，共2232条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1162,7 +1162,7 @@
     {
       "id": "ai1",
       "label": "AI 与大模型",
-      "count": 1946
+      "count": 1944
     },
     {
       "id": "fin1",
@@ -1195,7 +1195,7 @@
       "label": "AI 与大模型",
       "short": "AI 这块：不收短剧和「不学就被淘汰」，教程只收讲清方法的。",
       "long": "披着 AI 外壳的剧情娱乐一律不收。无依据夸大风险、制造紧迫感的焦虑话术不收。纯点击演示的教程不收——从头到尾「跟着点这里」、不解释为什么、换个场景就不会了；讲清了可迁移方法的，哪怕边操作边讲，我们收。",
-      "count": 1946
+      "count": 1944
     },
     "finance": {
       "label": "财经",
@@ -70262,49 +70262,6 @@
       "domain": "ai1"
     },
     {
-      "id": "bilibili:BV1H5sf6NEZ6",
-      "video_id": "BV1H5sf6NEZ6",
-      "title": "Antigravity隐藏模型Gemini3.8Pro的调用方法",
-      "original_title": "独家揭秘！谷歌Antigravity藏了个Gemini 3.8 Pro，Flash的价格跑顶配模型",
-      "author": "湖森堡AI_hooosberg",
-      "platform": "bilibili",
-      "link": "https://www.bilibili.com/video/BV1H5sf6NEZ6",
-      "cover_url": "https://i2.hdslb.com/bfs/archive/dd69351b19698deeb1f9a30e56d53a672b6aabf0.jpg",
-      "published_at": "2026-10-29T11:43:22+00:00",
-      "key_points": [
-        "Gemini3.8Pro是底层子智能体专用引擎，被隐藏未暴露官方UI",
-        "计价沿用Flash白菜价，实际性能达顶配水平，性价比无与伦比",
-        "两种调用方式：直接对话触发、Boss模式激发自动调配机制",
-        "实测可完成一小时+复杂任务，Flash单独完全无法胜任",
-        "与Codex对标优势显著，性价比和质量均处领先地位"
-      ],
-      "chapters": [
-        {
-          "t": 14,
-          "label": "破解隐藏模型 Gemini 3.8Pro"
-        },
-        {
-          "t": 150,
-          "label": "两种调用方式详解"
-        },
-        {
-          "t": 362,
-          "label": "低模指挥高模的成本优势"
-        }
-      ],
-      "duration_s": 554.0,
-      "likes": null,
-      "collects": null,
-      "comments": null,
-      "summary": "发现并讲解Antigravity隐藏的Gemini3.8Pro顶级模型，计价采用Flash价格但性能对标Codex最高配，通过两种方式激活使用",
-      "reason": "讲者主动深挖发现系统内的隐藏高端模型。转写证据：'为什么界面里没有这个3.8pro模型...pro模型并没有直接暴露在外层...应该是一个bug'（29字） | 引用:「发现隐藏Gemini3.8Pro用Flash价格就能跑顶配性能，性能比Codex最高端还强」",
-      "consensus": "mainstream",
-      "topic": "时效选择",
-      "node": "大模型版本与选型指南",
-      "category": "(地图缺口)大模型版本与选型指南",
-      "domain": "ai1"
-    },
-    {
       "id": "bilibili:BV17ox76EEJF",
       "video_id": "BV17ox76EEJF",
       "title": "WorkBuddy远程桌面：手机操控电脑任务",
@@ -82169,52 +82126,6 @@
       "comments": null,
       "summary": "区分AI演绎和虚假演绎的合规标准，讲清平台规则、版权风险和粉丝信任问题。",
       "reason": "转写明确区分'如果视频标注了AI生成属AI演绎'vs'全程不说明直接说是自己唱的性质就变了'，定义了合规边界。 | 引用:「如果全程不做任何说明，出镜对着AI歌声对口型…这个性质就变了，从平台规则底层逻辑来说，属于虚假演绎诱导用户」",
-      "consensus": "mainstream",
-      "topic": "误区纠正",
-      "node": "AI数据隐私与安全保护",
-      "category": "(地图缺口)AI数据隐私与安全保护",
-      "domain": "ai1"
-    },
-    {
-      "id": "bilibili:BV1jL4H6dEDk",
-      "video_id": "BV1jL4H6dEDk",
-      "title": "AI生成音乐无法获得法律版权保护",
-      "original_title": "定了定了，AI一键生成，就是没有版权",
-      "author": "音乐人-魏歌",
-      "platform": "bilibili",
-      "link": "https://www.bilibili.com/video/BV1jL4H6dEDk",
-      "cover_url": "https://i1.hdslb.com/bfs/archive/a02745f3cc8d79016a839bd0596dd989e11d5a47.jpg",
-      "published_at": "2026-11-07T11:27:24+00:00",
-      "key_points": [
-        "三方统一共识：美国版权局、欧盟AI法案、国内最高法都明确纯AI生成无版权认可资格",
-        "私下小交易风险：虽可交易但无版权证据，被诉后退钱甚至赔偿原作者损失",
-        "平台无法兜底：无法注册版权、上架无法获得长期保护、卖版权和接商演都有诉讼风险",
-        "获得保护办法：在AI生成基础上改词改旋律、添加自己人声和创作标记，增加人类创作投入"
-      ],
-      "chapters": [
-        {
-          "t": 10,
-          "label": "AI生成音乐无法获得版权"
-        },
-        {
-          "t": 33,
-          "label": "国际规则与国内指导意见"
-        },
-        {
-          "t": 54,
-          "label": "私下交易与训练数据风险"
-        },
-        {
-          "t": 86,
-          "label": "如何获得合法版权"
-        }
-      ],
-      "duration_s": 126.0,
-      "likes": null,
-      "collects": null,
-      "comments": null,
-      "summary": "讲清各国版权法新规定：纯AI一键生成内容无版权认可，以及如何规范化获得法律保护。",
-      "reason": "转写直接引用最新政策'2025年美国版权局正式发文纯AI内容不给做版权登记'和'纯AI一键蹦出来的东西没有任何法律兜底'。 | 引用:「2025年美国版权局正式发文，纯没有人类介入的AI生成内容不给做版权登记…纯AI一键蹦出来的东西就是没有法律认可的版权」",
       "consensus": "mainstream",
       "topic": "误区纠正",
       "node": "AI数据隐私与安全保护",
