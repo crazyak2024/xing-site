@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共2232条",
+  "generated_note": "判定=合格的候选，共2233条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1188,6 +1188,11 @@
       "id": "req_3151658e",
       "label": "彩虹为什么是弯的",
       "count": 5
+    },
+    {
+      "id": "req_87032184",
+      "label": "越野跑如何入门",
+      "count": 1
     }
   ],
   "families": {
@@ -1213,7 +1218,7 @@
       "label": "其他",
       "short": "这一类：不收娱乐八卦、伪科学和荐股预测。",
       "long": "短剧、明星私事、猎奇不收。量子疗法、排毒这类无从验证的说法不收。任何「该买什么」「会涨到多少」不收。立场动员与阴谋论叙事不收。只给结论、不讲机制的，我们不上线。",
-      "count": 5
+      "count": 6
     }
   },
   "domain_family": {
@@ -1222,7 +1227,8 @@
     "hea1": "health",
     "hea2": "health",
     "req_7e7b7a6c": "health",
-    "req_3151658e": "other"
+    "req_3151658e": "other",
+    "req_87032184": "other"
   },
   "items": [
     {
@@ -88725,6 +88731,37 @@
       "category": "彩虹为什么是弯的",
       "domain": "req_3151658e",
       "asked_as": "彩虹为什么是弯的"
+    },
+    {
+      "id": "douyin:7549447230374481194",
+      "video_id": "7549447230374481194",
+      "title": "越野跑新手训练与比赛准备",
+      "original_title": "无废话，越野跑新手指南🏃⛰️ 跑了两年越野，自己也经历了脚踝骨裂、膝韧带炎\n无伤越野才能尽情玩耍\n在玩一项运动之前，还是要做好攻略哦\n这一篇我总结了自己的参赛经验，希望帮助到大家\n祝大家都能运动快乐，无伤越野🏃⛰️🥳\n#越野跑 #越野跑鞋  #运动员 #经验分享",
+      "author": "张雨涵-Yuki",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7549447230374481194",
+      "cover_url": "https://p5-ex-gddgtc-sign.douyinpic.com/tos-cn-i-0813c001/oEWMiPAPEPiPw5FA2AGBkRigBRAIWUoADIaEP~noop.webp?lk3s=138a59ce&x-expires=1795780800&x-signature=S7OFxXhxSuUu49Fz6FclkNmDdao%3D&from=327834062_large&s=PackSourceEnum_SEARCH_VID&se=false&sc=cover&biz_tag=aweme_video&l=202611132003307B78C962389B8AF3E8B9",
+      "published_at": "",
+      "key_points": [
+        "每月至少两次实地山路训练，并练长距离爬坡与脚踝稳定性。",
+        "初次参赛从15至20公里赛段起步，先查看路线爬升和下降。",
+        "根据天气准备水盐与防雨衣物，鞋底纹路和背包容量按赛程选。",
+        "下坡缩小步幅、加快脚步，碎石坡避免急刹。",
+        "赛中按节奏补给，别把能量胶当作正餐；安全完赛优先。"
+      ],
+      "chapters": [],
+      "duration_s": 163.885,
+      "likes": 1183,
+      "collects": null,
+      "comments": null,
+      "summary": "从山路训练、短距离选赛讲到路线天气、装备容量、下坡技巧和赛中补给。",
+      "reason": "内容正面回答新手如何循序入门，覆盖训练、选赛、安全、装备与补给；但“亲测这样子能受50%的膝盖压力”缺少依据且表述不清，不能作为可靠结论。原文：“新手从15到20公里的初级赛段开始” | 引用:「新手从15到20公里的初级赛段开始」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "越野跑如何入门",
+      "category": "越野跑如何入门",
+      "domain": "req_87032184",
+      "asked_as": "越野跑如何入门"
     }
   ]
 }
