@@ -93,7 +93,7 @@
     const focusedAction=focus?.dataset?.suppAction;
     const d=selected(), node=d.node;
     if(node&&!snapshots.has(node)&&!errors.has(node)&&!loading.has(node)) void read(node);
-    const lib=node?ALL_DATA.filter(x=>x.node===node):matchedByQuery();
+    const lib=node?ALL_DATA.filter(x=>x.node===node):[];
     const fresh=(retained.get(node)||d.run?.fresh_items||[]).filter(laneUsable);
     const items=[...new Map([...fresh,...lib].map(x=>[x.id,x])).values()];
     const r=d.run, hasStatus=Boolean(r||d.reason||d.message), q=state.q;
@@ -105,7 +105,7 @@
     document.querySelector('.toolbar').hidden=true;
     document.getElementById('result-count').textContent='';
     const el=document.getElementById('results');
-    el.innerHTML=`<article class="supp-node"><header>${mapping}<p class="supp-eyebrow">从问题出发</p><h1>${h(title)}</h1></header>${active(d)?`<div class="supp-summary" aria-label="当前补搜状态"><p>${h(status(d))}</p>${progress(d)}</div>`:''}
+    el.innerHTML=`<article class="supp-node"><p class="supp-notice" role="status">${h(flash)}</p><header>${mapping}<p class="supp-eyebrow">从问题出发</p><h1>${h(title)}</h1></header>${active(d)?`<div class="supp-summary" aria-label="当前补搜状态"><p>${h(status(d))}</p>${progress(d)}</div>`:''}
       <section class="supp-content" aria-label="现有内容"><h2>${items.length?'已经找到的答案':'先看看已有内容'}</h2>${items.length?`<div class="cards grid">${shown.map(laneCardHtml).join('')}</div>${items.length>shownLimit?'<button class="supp-more">显示更多答案</button>':''}`:`<p class="supp-muted">${!DATA_LOADED?'正在载入已有内容…':'这里还没有经过核验的答案。'}</p>`}</section>
       ${active(d)?`<section class="supp-running" aria-label="补搜进度" aria-live="polite"><p>${h(status(d))}</p>${progress(d)}</section>`:''}
       ${!active(d)&&hasStatus?`<section class="supp-decision" aria-label="补搜结论"><p>${h(status(d))}</p>${r?.close_reason==='all_rejected'&&Array.isArray(r.close_detail)?`<details><summary>为什么没有收录</summary><ul>${r.close_detail.map(x=>`<li>${h(typeof x==='string'?x:x.reason||'未满足收录标准')}</li>`).join('')}</ul></details>`:''}</section>`:''}
@@ -123,7 +123,7 @@
     try {
       const d=await api('/semantic',{q}); if(seq!==searchSeq||state.q!==q) return;
       const top=d.top?.[0];
-      current=top&&top.score>=0.75?{q,node:top.name,display_name:top.name,mapping:'confirmed'}:{q};
+      current=d.node&&['confirmed','exact','pending'].includes(d.mapping)?{q,node:d.node,display_name:d.node,mapping:d.mapping}:{q};
       if(current.node) void read(current.node);
     }catch(e){if(seq!==searchSeq)return; current={q};flash='归类暂时不可用，你仍可以提出补搜请求。';}
     paint();
@@ -150,16 +150,24 @@
     }).finally(()=>{verification=null;});return verification;
   }
   async function submit(kind,button) {
-    if(busy)return;const d=selected();if(kind!=='mismap'&&active(d))return;busy=true;flash='';const q=state.q||d.display_name||d.node;
-    const rect=button?.getBoundingClientRect();
+    if(busy)return;const d=selected();if(kind!=='mismap'&&active(d))return;busy=true;flash=kind==='mismap'?'正在解除错误归类…':'正在提交…';const q=state.q||d.display_name||d.node;
+    const rect=button?.getBoundingClientRect();paint();
     try {
       const turnstile_token=await token();
       let session='';try{session=sessionStorage.getItem('xing.ask.session')||'';}catch(_){}
       const result=await api('/ask',{q,node:d.mapping==='suggested'&&kind!=='mismap'?undefined:d.node,kind,turnstile_token,session});
       if(result.session)try{sessionStorage.setItem('xing.ask.session',result.session);}catch(_){}
-      remember(result,d.node);
+      // A correction belongs to this question; never migrate other questions or old cards.
+      remember(result,kind==='mismap'?undefined:d.node);
       if((state.q||state.node)===q||(state.node&&state.node===d.node))current={...result,q};
-      if(kind==='mismap'){mismatch=true;flash='已记录。你可以换一种说法重新搜，我们也会复核这次归类';}
+      if(kind==='mismap'){
+        mismatch=false;current={...result,q};
+        rows=rows.filter(x=>x.q!==q);
+        rows.unshift({node:result.node,q,title:q,last_seen_at:new Date().toISOString(),summary:'已解除错误归类，正在按原问题重新判断'});
+        save();flash='已解除错误归类，正在按原问题重新判断。无需重新输入。';
+        if(state.node)go({node:null,q});
+        window.scrollTo({top:0,behavior:'instant'});
+      }
       else {
         const old=rows.find(x=>x.node===result.node);rows=rows.filter(x=>x.node!==result.node&&x.q!==q);
         rows.unshift({...old,node:result.node,q,title:result.display_name||q,last_seen_at:new Date().toISOString(),summary:status(result)});rows=rows.slice(0,50);save();refreshList();fly(q,rect);flash='已记入「我问过的」';
@@ -170,8 +178,8 @@
   }
   function openRow(row) {
     if(row.node.startsWith('legacy:')){document.getElementById('q').value=row.q;go({asks:false,mine:false,q:row.q,node:null,topic:null});void search(row.q);return;}
-    current={...(snapshots.get(row.node)||{}),node:row.node,q:row.q||'',display_name:row.title};flash='';mismatch=false;row.last_seen_at=new Date().toISOString();save();
-    document.getElementById('q').value=row.q||'';go({asks:false,mine:false,q:row.q||'',node:row.q?null:row.node,topic:null});void read(row.node);
+    current={q:row.q||'',searching:Boolean(row.q)};flash='';mismatch=false;row.last_seen_at=new Date().toISOString();save();
+    document.getElementById('q').value=row.q||'';go({asks:false,mine:false,q:row.q||'',node:row.q?null:row.node,topic:null});if(row.q)void search(row.q);else void read(row.node);
   }
   function rowHtml(row,compact=false) {
     const d=snapshots.get(row.node), newer=row.updated_at&&row.updated_at>row.last_seen_at;
