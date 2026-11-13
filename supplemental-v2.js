@@ -154,7 +154,7 @@
     try {
       const turnstile_token=await token();
       let session='';try{session=sessionStorage.getItem('xing.ask.session')||'';}catch(_){}
-      const result=await api('/ask',{q,node:d.node,kind,turnstile_token,session});
+      const result=await api('/ask',{q,node:d.mapping==='suggested'&&kind!=='mismap'?undefined:d.node,kind,turnstile_token,session});
       if(result.session)try{sessionStorage.setItem('xing.ask.session',result.session);}catch(_){}
       remember(result,d.node);
       if((state.q||state.node)===q||(state.node&&state.node===d.node))current={...result,q};
