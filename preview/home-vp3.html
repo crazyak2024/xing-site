@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>醒 · 首页 vp3</title>
+<!-- preview vp2：方向二「四帧电影字幕」(CSS) + 词云方向二「借用 wordcloud2.js」(MIT, 本地 vendor)。
+     五模块完整首页。四句话逐帧放映，每帧一个极简图形变化，约 2s 一帧、8s 一轮循环。
+     词云数据来自 cloud-data.js（gen_cloud_data.py 从 pages.json 生成，真实节点）。
+     prefers-reduced-motion 时字幕退化为 v8 静态漏斗，词云一次画完不做渐显。 -->
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#eceae4;--paper:#fbfaf7;--ink:#1a1a1a;--blue:#2b6cb0;--amber:#b7791f;
+  --mut:#555;--faint:#8c8c8c;--line:#d8d4cb}
+body{background:var(--paper);color:var(--ink);
+  font:14px/1.6 -apple-system,"PingFang SC",system-ui,sans-serif}
+.page{max-width:560px;margin:0 auto;padding:34px 22px 28px;min-height:100vh;
+  display:flex;flex-direction:column}
+@media(min-width:700px){
+  body{background:var(--bg);padding:40px 0}
+  .page{background:var(--paper);border:1px solid var(--line);border-radius:22px;
+    min-height:0;padding:44px 48px 32px;box-shadow:0 6px 22px rgba(0,0,0,.07)}
+}
+
+/* ① 品牌 / ② subtitle / ③ 搜索 —— 同 vp1 */
+.brand{display:flex;align-items:center;justify-content:center;gap:10px}
+.brand img{width:34px;height:34px;display:block}
+.brand .name{font-size:40px;font-weight:800;letter-spacing:.08em}
+.subtitle{text-align:center;font-size:14px;font-weight:600;margin-top:8px;letter-spacing:.04em}
+.search{margin-top:22px;position:relative}
+.search input{width:100%;padding:14px 14px 14px 40px;font-size:16px;color:var(--ink);
+  background:#fff;border:1.5px solid var(--blue);border-radius:12px;outline:none}
+.search input::placeholder{color:#9a9a9a}
+.search input:focus{box-shadow:0 0 0 3px rgba(43,108,176,.12)}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);pointer-events:none}
+
+/* ④ value proposition：四帧电影字幕 */
+.vp{margin-top:26px}
+.stage{position:relative;height:214px}
+.frame{position:absolute;inset:0;opacity:0;transition:opacity .55s ease;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+.frame.on{opacity:1}
+.frame .pic{height:152px;display:flex;align-items:center;justify-content:center;width:100%}
+.frame .cap{font-size:13.5px;text-align:center;color:var(--ink);padding:0 6px;min-height:44px}
+.frame .cap b{font-weight:700}
+.frame .cap .pf{color:var(--mut);font-weight:600}
+
+/* 帧1：几万条 —— 一片小视频卡渐次亮起 */
+.grid{display:grid;grid-template-columns:repeat(7,22px);gap:7px}
+.grid i{width:22px;height:14px;border:1px solid #c9c4b8;border-radius:3px;background:#faf8f3;
+  position:relative;opacity:0}
+.grid i::after{content:"";position:absolute;left:8px;top:4px;width:0;height:0;
+  border-left:4px solid #c3bdb0;border-top:3px solid transparent;border-bottom:3px solid transparent}
+.frame.on .grid i{animation:pop .5s ease forwards}
+@keyframes pop{to{opacity:1}}
+
+/* 帧2：里面混着什么 —— 多数卡变灰，垃圾词盖上去被划掉 */
+.grid i.junk{border-color:#d6d1c6;background:#f2efe8}
+.grid i.junk::after{border-left-color:#d6d1c6}
+.f2wrap{position:relative}
+.f2wrap .tag{position:absolute;font-size:12px;color:#a09b8f;white-space:nowrap;opacity:0;
+  text-decoration:line-through;text-decoration-color:#c05621;text-decoration-thickness:1.5px;
+  background:rgba(251,250,247,.85);padding:0 3px;border-radius:3px}
+.frame.on .tag{animation:pop .4s ease forwards}
+
+/* 帧3：筛 —— 一道筛线，垃圾往下漏，干净的留在上面 */
+.sieve{position:relative;width:238px;height:130px}
+.sieve .net{position:absolute;left:0;right:0;top:58px;border-top:2px dashed #b8b2a5}
+.sieve i{position:absolute;width:22px;height:14px;border-radius:3px}
+.sieve i.keep{border:1px solid var(--blue);background:#eef3f9;top:34px}
+.sieve i.keep::after{content:"";position:absolute;left:8px;top:4px;width:0;height:0;
+  border-left:4px solid var(--blue);border-top:3px solid transparent;border-bottom:3px solid transparent}
+.sieve i.drop{border:1px solid #d6d1c6;background:#f2efe8;top:66px;opacity:0}
+.frame.on .sieve i.keep{animation:lift 1.2s ease forwards}
+.frame.on .sieve i.drop{animation:sink 1.5s ease forwards}
+@keyframes lift{from{transform:translateY(16px)}to{transform:translateY(0)}}
+@keyframes sink{0%{opacity:.9;transform:translateY(-8px)}100%{opacity:0;transform:translateY(46px)}}
+
+/* 帧4：端给你 —— 几个蓝 ▶ 依次亮起 */
+.serve{display:flex;gap:14px;align-items:center}
+.serve i{width:0;height:0;border-left:16px solid var(--blue);
+  border-top:10px solid transparent;border-bottom:10px solid transparent;opacity:0;
+  transform:scale(.6)}
+.frame.on .serve i{animation:serveIn .45s ease forwards}
+@keyframes serveIn{to{opacity:1;transform:scale(1)}}
+
+/* 放映进度：四个小点（电影的「第几本」），极低调 */
+.reel{display:flex;gap:6px;justify-content:center;margin-top:10px}
+.reel i{width:4px;height:4px;border-radius:50%;background:#d8d4cb}
+.reel i.on{background:#8c8c8c}
+
+/* 退化：静态漏斗（v8） */
+.funnel-static{display:none;margin:4px auto 0;width:272px;padding:13px 10px 10px;
+  text-align:center;background:#f1eee6;clip-path:polygon(0 0,100% 0,62% 100%,38% 100%)}
+.funnel-static .junk{display:flex;flex-wrap:wrap;justify-content:center;gap:3px 12px;padding:0 6px}
+.funnel-static .junk span{font-size:12.5px;color:#a09b8f;text-decoration:line-through;
+  text-decoration-color:#c05621;text-decoration-thickness:1.5px}
+.funnel-static .flabel{margin-top:7px;font-size:11px;color:#8a8577;letter-spacing:.14em}
+.src-static{display:none;text-align:center;font-size:12.5px;color:var(--mut);margin-top:4px}
+.src-static b{color:var(--ink);font-weight:600}
+.tris{display:none;text-align:center;margin-top:10px}
+.tris i{display:inline-block;width:0;height:0;border-left:11px solid var(--blue);
+  border-top:7px solid transparent;border-bottom:7px solid transparent;margin:0 2px}
+.outline-static{display:none;text-align:center;font-size:13.5px;font-weight:700;margin-top:4px}
+@media(prefers-reduced-motion:reduce){
+  .stage,.reel{display:none}
+  .funnel-static,.tris,.outline-static,.src-static{display:block}
+}
+
+/* ⑤ 词云：wordcloud2.js（本地 vendor，MIT） */
+.cloud{margin-top:26px}
+.cloud canvas{display:block;cursor:pointer}
+
+.foot{margin-top:18px;text-align:center;font-size:10.5px;color:#b3ada0}
+/* ?step 截图定格：动画直接跳到终态，验的是布局与叠字 */
+body.still *{animation-duration:0s!important;animation-delay:0s!important;transition:none!important}
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="brand">
+    <img src="../logo.svg" alt="醒 logo">
+    <span class="name">醒</span>
+  </header>
+
+  <p class="subtitle">无广告 · 不上瘾 · 不焦虑 的知识视频</p>
+
+  <form class="search" action="../" method="get">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#9a9a9a" stroke-width="2">
+      <circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
+    <input name="q" placeholder="你想弄明白什么？" autocomplete="off">
+  </form>
+
+    <section class="vp" style="height:auto;min-height:0">
+    <div style="text-align:center;margin-top:26px">
+      <div style="font-size:21px;font-weight:800;line-height:1.5">又刷了一个小时，<br>记住了什么？</div>
+      <div style="margin:18px auto 0;display:flex;justify-content:center;gap:34px;align-items:flex-end">
+        <div style="text-align:center">
+          <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+            <i style="width:58px;height:14px;border-radius:4px;background:#ddd8cc;display:block"></i>
+            <i style="width:58px;height:14px;border-radius:4px;background:#e3dfd4;display:block"></i>
+            <i style="width:58px;height:14px;border-radius:4px;background:#eae6db;display:block"></i>
+            <i style="width:58px;height:14px;border-radius:4px;background:#f1eee5;display:block"></i>
+            <span style="font-size:13px;color:#c9c4b8;line-height:1">⋮</span>
+          </div>
+          <div style="font-size:11px;color:#a09b8f;margin-top:5px">刷不完</div>
+        </div>
+        <div style="text-align:center">
+          <div style="display:flex;flex-direction:column;gap:4px;align-items:center">
+            <i style="width:58px;height:14px;border-radius:4px;border:1.5px solid #2b6cb0;display:block"></i>
+            <i style="width:58px;height:14px;border-radius:4px;border:1.5px solid #2b6cb0;display:block"></i>
+            <i style="width:58px;height:14px;border-radius:4px;border:1.5px solid #2b6cb0;display:block"></i>
+            <span style="font-size:13px;color:#38a169;font-weight:700;line-height:1.2">✓</span>
+          </div>
+          <div style="font-size:11px;color:#555;margin-top:5px;font-weight:600">看得完</div>
+        </div>
+      </div>
+      <div style="margin-top:16px;font-size:13.5px;color:#1a1a1a;line-height:1.7">
+        问一句，看几条讲明白的<b>知识视频</b>，弄明白就走。</div>
+    </div>
+  </section>
+
+  <section class="cloud">
+    <canvas id="wc" width="346" height="500"></canvas>
+  </section>
+
+  <p class="foot">preview vp3 · 痛点直陈 + wordcloud2</p>
+</main>
+
+<script src="cloud-data.js"></script>
+<script src="vendor/wordcloud2.js"></script>
+<script>
+"use strict";
+var REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+/* ?step=N：截图验收用——把字幕直接定格到第 N 秒所在的那一帧 */
+var STEP = (function(){ var m = location.search.match(/[?&]step=([\d.]+)/); return m ? +m[1] : 0; })();
+var JSERR = []; addEventListener("error", function(e){ JSERR.push(e.message); });
+if (STEP) document.body.className = "still";
+
+
+
+/* ================= ⑤ 词云：wordcloud2.js =================
+   词与权重来自真实库（cloud-data.js）：域级大词（蓝，可点进该领域），
+   节点级小词（权重=入选条数，可点进该主题页）。纸面配色、不旋转、渐次铺开。 */
+(function(){
+  var cv = document.getElementById("wc");
+  var data = window.CLOUD_DATA;
+  var W = cv.parentNode.clientWidth, H = Math.max(440, Math.round(W*1.3));
+  var dpr = Math.min(devicePixelRatio || 1, 2);
+  /* 位图尺寸对齐 gridSize 整数倍：ceil 网格的最后一行/列是「幽灵格」，
+     词会被放进去再被位图边缘裁半个字，对齐后彻底消失 */
+  var g = 9 * dpr;
+  var Wb = Math.floor(W*dpr/g)*g, Hb = Math.floor(H*dpr/g)*g;
+  cv.width = Wb; cv.height = Hb;
+  cv.style.width = (Wb/dpr) + "px"; cv.style.height = (Hb/dpr) + "px";
+  cv.style.margin = "0 auto";
+
+  var href = {}, list = [];
+  data.domains.forEach(function(d){
+    list.push([d.label, (19 + Math.min(6, d.n*0.28)) * dpr]);
+    href[d.label] = "../?d=" + encodeURIComponent(d.id);
+  });
+  data.nodes.forEach(function(n){
+    list.push([n.t, (11 + (n.w-3)*0.5) * dpr]);
+    href[n.t] = "../?node=" + encodeURIComponent(n.t);
+  });
+  list.sort(function(a,b){ return b[1]-a[1]; });
+
+  var drawn = 0;
+  cv.addEventListener("wordclouddrawn", function(){ drawn++; });
+  window.__cloudDrawn = function(){ return drawn + "/" + list.length; };
+
+  var isDomain = {};
+  data.domains.forEach(function(d){ isDomain[d.label] = 1; });
+
+  WordCloud(cv, {
+    list: list,
+    gridSize: g,
+    weightFactor: 1,
+    fontFamily: "-apple-system,'PingFang SC',system-ui,sans-serif",
+    fontWeight: "500",
+    color: function(word, weight){
+      if (isDomain[word]) return "#2b6cb0";
+      var w = weight / dpr;
+      return w >= 13.5 ? "#1a1a1a" : w >= 12.2 ? "#555" : "#8c8c8c";
+    },
+    backgroundColor: "transparent",
+    rotateRatio: 0,
+    shuffle: false,
+    shrinkToFit: true,
+    drawOutOfBound: false,
+    shape: "ellipse",
+    wait: REDUCED || STEP ? 0 : 16,          // 渐次铺开；退化/截图时一次画完
+    click: function(item){ if (href[item[0]]) location.href = href[item[0]]; },
+    classes: null
+  });
+})();
+
+/* 验收探针：?check=1 时把横向溢出 + JS 错误 + 词云落字数写进 title */
+if (location.search.indexOf("check") > -1)
+  addEventListener("load", function(){ setTimeout(function(){
+    var sw = document.documentElement.scrollWidth;
+    document.title = "CHK " + sw + "/" + innerWidth + (sw > innerWidth ? " OVERFLOW" : " ok")
+      + " CLOUD " + (window.__cloudDrawn ? window.__cloudDrawn() : "?")
+      + (JSERR.length ? " ERR:" + JSERR.join(";") : "");
+  }, 2500); });
+</script>
+</body>
+</html>
