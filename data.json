@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共2227条",
+  "generated_note": "判定=合格的候选，共2232条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1183,6 +1183,11 @@
       "id": "req_7e7b7a6c",
       "label": "三岁幼儿发展的关键能力",
       "count": 3
+    },
+    {
+      "id": "req_3151658e",
+      "label": "彩虹为什么是弯的",
+      "count": 5
     }
   ],
   "families": {
@@ -1203,6 +1208,12 @@
       "short": "健康这块：怎么做可以给你；吃什么药、吃多少不行——那是医生的事。",
       "long": "限盐、吃法、运动、体重、睡眠、怎么测准——这些你自己就能做的调整，我们收，并且要求讲清适用边界：谁适用、什么情况得先看医生。给药名配剂量、该不该停药、该换哪种药，一律不收——那只能发生在诊室里，不能发生在视频里。偏方神药、保健品带货、拿截肢失明吓人、把个人经历当普遍规律，以及「一定会」「绝对不会」这类不作限定的绝对句，同样不收。明确偏离主流共识的讲法我们会少量保留并标注出来，明显反科学的不收。身体的事最后要问医生，不要问视频。",
       "count": 129
+    },
+    "other": {
+      "label": "其他",
+      "short": "这一类：不收娱乐八卦、伪科学和荐股预测。",
+      "long": "短剧、明星私事、猎奇不收。量子疗法、排毒这类无从验证的说法不收。任何「该买什么」「会涨到多少」不收。立场动员与阴谋论叙事不收。只给结论、不讲机制的，我们不上线。",
+      "count": 5
     }
   },
   "domain_family": {
@@ -1210,7 +1221,8 @@
     "fin1": "finance",
     "hea1": "health",
     "hea2": "health",
-    "req_7e7b7a6c": "health"
+    "req_7e7b7a6c": "health",
+    "req_3151658e": "other"
   },
   "items": [
     {
@@ -88560,6 +88572,159 @@
       "node": "AI真的在思考吗",
       "category": "16.AI真的在思考吗",
       "domain": "ai1"
+    },
+    {
+      "id": "douyin:6999608125724626213",
+      "video_id": "6999608125724626213",
+      "title": "彩虹的形成与弧形原因",
+      "original_title": "彩虹的形成原理#科普",
+      "author": "展小斩",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/6999608125724626213",
+      "cover_url": "https://p11-sign.douyinpic.com/tos-cn-i-0813/5e7dd3ca98b6413a86eadbba68d58ff9~noop.webp?lk3s=138a59ce&x-expires=1795777200&x-signature=u1Cs4MY4zb1MVSikgoQ3NpAEA3I%3D&from=327834062_large&s=PackSourceEnum_SEARCH_VID&se=false&sc=cover&biz_tag=aweme_video&l=20261113193719C6CE9DDEC9771BE31271",
+      "published_at": "",
+      "key_points": [
+        "太阳光进入球形水滴后经历折射、反射和再次折射。",
+        "出射光在特定角度聚集，红光约42度、蓝光约40度。",
+        "许多水滴在对应观察方向形成彩色光带。",
+        "光带在三维空间呈锥形，地平线和地物遮挡使其常显弧形。",
+        "山顶或飞机上可能看到完整圆形彩虹。"
+      ],
+      "chapters": [],
+      "duration_s": 73.851,
+      "likes": 5419,
+      "collects": null,
+      "comments": null,
+      "summary": "用水滴中的折射、反射和出射角度聚集解释彩虹，并说明地面遮挡使圆锥光带呈弧形。",
+      "reason": "内容解释了水滴内的光学过程及观察角度关系，符合公认原理；转写称“光线通过水滴时会同时发生反射和折射”，并说明不同观察方位形成彩色圆弧。 | 引用:「光线通过水滴时会同时发生反射和折射」",
+      "consensus": "mainstream",
+      "topic": "概念原理",
+      "node": "彩虹为什么是弯的",
+      "category": "彩虹为什么是弯的",
+      "domain": "req_3151658e",
+      "asked_as": "彩虹为什么是弯的"
+    },
+    {
+      "id": "douyin:7596980599609511203",
+      "video_id": "7596980599609511203",
+      "title": "彩虹为何呈弧形",
+      "original_title": "为什么彩虹总是弧形的？其实完整彩虹是个圆。 你有没有想过为什么彩虹总是弧形的？为什么不是直线、方形或者其他形状？\n今天我要告诉你一个更震撼的真相你看到的彩虹弧线其实只是冰山一角！完整的彩虹是一个完美的圆环，只是因为地平线挡住了下半部分，我们才只能看到半圆。\n更神奇的是，彩虹的形状由一个魔法数字决定——42度。这个角度是光在水滴中折射和反射的固定角度，决定了彩虹必须是圆形。\n本期带你看懂彩虹为什么是弧形？什么情况下能看到完整的圆形彩虹？为什么彩虹总是红外紫内？双彩虹又是怎么回事？还有一个冷知识彩虹其实不存在——它只存在于你的视角，换个位置就消失了！\n#科普 #涨知识 #冷知识 #自然奇观 #彩虹",
+      "author": "望晨星语",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7596980599609511203",
+      "cover_url": "https://p11-sign.douyinpic.com/tos-cn-i-dy/1119970fdad1487ebf8506922659b243~noop.webp?lk3s=138a59ce&x-expires=1795777200&x-signature=eazlqtpxaBXv3p88V38Z7YM5iFw%3D&from=327834062_large&s=PackSourceEnum_SEARCH_VID&se=false&sc=cover&biz_tag=aweme_video&l=20261113193715E5A63DD0CFFCA9E7EA9D",
+      "published_at": "",
+      "key_points": [
+        "阳光进入水滴后折射，不同颜色偏折程度不同。",
+        "光在水滴内反射，再出射时再次折射并分色。",
+        "出射光与入射太阳光方向夹角约为42度。",
+        "满足角度条件的水滴形成以观察者为顶点的圆锥。",
+        "圆锥与天空相交成圆，地面遮挡使人常见弧形。"
+      ],
+      "chapters": [],
+      "duration_s": 542.304,
+      "likes": 717,
+      "collects": null,
+      "comments": null,
+      "summary": "说明阳光经水滴两次折射、一次反射后，以约42度集中进入视线，形成圆锥与圆形彩虹。",
+      "reason": "内容直接回答彩虹为何呈弧形，按折射、内部反射、出射解释约42度的观察几何，并说明圆弧与地面遮挡和观察位置有关。原文说：“所有满足这个条件的水滴在空间里排起来就形成了一个圆锥形”。 | 引用:「所有满足这个条件的水滴在空间里排起来就形成了一个圆锥形」",
+      "consensus": "mainstream",
+      "topic": "概念原理",
+      "node": "彩虹为什么是弯的",
+      "category": "彩虹为什么是弯的",
+      "domain": "req_3151658e",
+      "asked_as": "彩虹为什么是弯的"
+    },
+    {
+      "id": "bilibili:BV1YaEh64EwJ",
+      "video_id": "BV1YaEh64EwJ",
+      "title": "彩虹的形成与弧形视角",
+      "original_title": "光的反射和折射:彩虹的形成",
+      "author": "矢量物理",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1YaEh64EwJ",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/a48127ff42274642fd496301b7e6597c29f67d1a.jpg",
+      "published_at": "",
+      "key_points": [
+        "阳光进入雨滴时首次折射，白光分解成不同颜色。",
+        "不同颜色折射程度不同，紫光偏折比红光更明显。",
+        "光在雨滴内部反射后，再次折射射出水滴。",
+        "只有特定方向的光进入眼睛，观察者才看到彩虹圆弧。"
+      ],
+      "chapters": [],
+      "duration_s": 158.0,
+      "likes": 5,
+      "collects": null,
+      "comments": null,
+      "summary": "说明阳光经水滴两次折射和一次内反射产生色散，观察者只看到特定角度的光，形成圆弧。",
+      "reason": "回答了彩虹弧形与观察角度的关系，机制符合基础光学原理。原文说：“只有以特定角度进入眼睛的光才被看到，所以彩虹是一个固定在42度左右的圆弧。” | 引用:「只有以特定角度进入眼睛的光才被看到，所以彩虹是一个固定在42度左右的圆弧。」",
+      "consensus": "mainstream",
+      "topic": "概念原理",
+      "node": "彩虹为什么是弯的",
+      "category": "彩虹为什么是弯的",
+      "domain": "req_3151658e",
+      "asked_as": "彩虹为什么是弯的"
+    },
+    {
+      "id": "bilibili:BV1XY411W7yG",
+      "video_id": "BV1XY411W7yG",
+      "title": "彩虹的形成与弧形原因",
+      "original_title": "[番外1] 彩虹是怎么形成的？~光的折射、颜色顺序、形状、圆形彩虹、双彩虹，一次性讲完！",
+      "author": "讲科普的丑豆妈",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1XY411W7yG",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/7668d05f039daeb406da18a49cfbc03300582a3c.jpg",
+      "published_at": "",
+      "key_points": [
+        "阳光进入水滴时折射，不同颜色的光偏折程度不同。",
+        "光在水滴内反射后再折射出射，分成不同颜色。",
+        "观察者在特定角度接收到不同颜色的光，形成彩虹色带。",
+        "水滴与观察者满足相应角度条件时构成圆形光环。",
+        "地面遮去圆环下半部，视野中通常只见弧形。"
+      ],
+      "chapters": [],
+      "duration_s": 580.0,
+      "likes": 196,
+      "collects": null,
+      "comments": null,
+      "summary": "用光在水滴中的折射、反射及观察角度，解释彩虹颜色排列与圆弧形状。",
+      "reason": "回答了彩虹为何呈弧形，并说明圆弧与观察位置相关。转写提到“我们是站在地面上面观察彩虹的地面上面自然是没有漂浮在空气当中的小水滴了所以这个圆形的底我们要去掉一半”。 | 引用:「我们是站在地面上面观察彩虹的地面上面自然是没有漂浮在空气当中的小水滴了所以这个圆形的底我们要去掉一半」",
+      "consensus": "mainstream",
+      "topic": "概念原理",
+      "node": "彩虹为什么是弯的",
+      "category": "彩虹为什么是弯的",
+      "domain": "req_3151658e",
+      "asked_as": "彩虹为什么是弯的"
+    },
+    {
+      "id": "douyin:7641796785685515539",
+      "video_id": "7641796785685515539",
+      "title": "彩虹角的形成原理",
+      "original_title": "彩虹角的形成原理 #彩虹 #科普 #涨知识",
+      "author": "知新悟理",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7641796785685515539",
+      "cover_url": "https://p26-sign.douyinpic.com/tos-cn-i-dy/409047bf6a09462f87090c64456ad61a~noop.webp?lk3s=138a59ce&x-expires=1795777200&x-signature=wmIUggQiYo4LJMalcaDLyJS%2FksE%3D&from=327834062_large&s=PackSourceEnum_SEARCH_VID&se=false&sc=cover&biz_tag=aweme_video&l=20261113193719C6CE9DDEC9771BE31271",
+      "published_at": "",
+      "key_points": [
+        "阳光进入水滴后发生折射，白光分成不同颜色。",
+        "有些光直接透出，因太阳光强而难以观察。",
+        "另一些光在水滴内反射，再折射出射。",
+        "不同颜色出射角不同，红光约42度、紫光约40度。"
+      ],
+      "chapters": [],
+      "duration_s": 80.834,
+      "likes": 159,
+      "collects": null,
+      "comments": null,
+      "summary": "说明阳光经水滴折射、色散、内部反射后，以约40至42度出射，形成可见彩虹。",
+      "reason": "解释了水滴中的折射、色散和反射，也交代背对太阳观察及不同颜色的角度；但未解释圆弧为何与观察者视角有关。引用：“站在地面背对着太阳所以能够看到色散后的彩虹”。 | 引用:「站在地面背对着太阳所以能够看到色散后的彩虹」",
+      "consensus": "mainstream",
+      "topic": "概念原理",
+      "node": "彩虹为什么是弯的",
+      "category": "彩虹为什么是弯的",
+      "domain": "req_3151658e",
+      "asked_as": "彩虹为什么是弯的"
     }
   ]
 }
