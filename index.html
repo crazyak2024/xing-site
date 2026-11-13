@@ -678,8 +678,10 @@ a.src:after{content:" →"}
    "证据"整块废弃）。留着死样式会让下一个人以为那些东西还在。 */
 .ans{border-left:3px solid var(--c)}
 </style>
+<link rel="stylesheet" href="home-experience.css">
+<link rel="stylesheet" href="supplemental-v2.css">
 </head>
-<body>
+<body class="home-mode">
 <div class="layout">
   <aside class="brand-panel">
     <!-- 标识：一条横线被撑开成一道缝 = 睁开的眼（CY 2026-11-10 20:3x 选 ey3）。
@@ -694,6 +696,7 @@ a.src:after{content:" →"}
         </g>
         <circle cx="48" cy="48" r="5" fill="currentColor"/>
       </svg><span>醒</span></h1>
+    <p class="home-subtitle">无广告 · 不上瘾 · 不焦虑 的知识视频</p>
     <p class="tagline">知识视频地图</p>
     <!-- slogan（CY 2026-11-10 16:3x：「整个网站还是缺一句有趣有力的 slogan」）。
          选它的理由：它和标识是**同一句话的两种说法**——标识把无限符号切断，这句把
@@ -742,6 +745,58 @@ a.src:after{content:" →"}
            （文案铁律：不解释操作）。无障碍名字写全，给读屏和长按提示。 -->
       <button id="q-clear" type="button" aria-label="清空搜索，回首页" title="清空搜索，回首页"><i>✕</i></button>
     </div>
+    <section id="home-experience" aria-label="认识醒与探索知识">
+  <section class="vp">
+    <div class="stage" id="stage">
+
+      <div class="frame on" data-f="0">
+        <div class="pic"><div class="grid" id="grid1"></div></div>
+        <p class="cap">又刷了一个小时<br><b>记住了什么？</b></p>
+      </div>
+
+      <div class="frame" data-f="1">
+        <div class="pic"><div class="f2wrap">
+          <div class="grid" id="grid2"></div>
+          <span class="tag" style="left:-6px;top:2px;animation-delay:.15s">广告</span>
+          <span class="tag" style="left:118px;top:-8px;animation-delay:.35s">带货</span>
+          <span class="tag" style="left:48px;top:38px;animation-delay:.55s">标题党</span>
+          <span class="tag" style="left:150px;top:62px;animation-delay:.75s">卖焦虑</span>
+          <span class="tag" style="left:-10px;top:78px;animation-delay:.95s">伪科学</span>
+        </div></div>
+        <p class="cap">广告、带货、标题党<br>越刷越焦虑</p>
+      </div>
+
+      <div class="frame" data-f="2">
+        <div class="pic"><div class="sieve" id="sieve"><div class="net"></div></div></div>
+        <p class="cap">这里只收<b>知识视频</b><br>垃圾进不了门</p>
+      </div>
+
+      <div class="frame" data-f="3">
+        <div class="pic"><div class="serve">
+          <i style="animation-delay:.1s"></i><i style="animation-delay:.45s"></i><i style="animation-delay:.8s"></i>
+        </div></div>
+        <p class="cap">问一句，看几条<br><b>弄明白就走</b></p>
+      </div>
+    </div>
+    <div class="reel" id="reel"><i class="on"></i><i></i><i></i><i></i></div>
+
+    <!-- prefers-reduced-motion：退化为 v8 静态漏斗 -->
+    <p class="src-static"><b>这里只收知识视频</b></p>
+    <div class="funnel-static">
+      <div class="junk"><span>广告</span><span>带货</span><span>标题党</span>
+        <span>卖焦虑</span><span>伪科学</span><span>讲不清的</span></div>
+      <div class="flabel">替 你 筛 掉</div>
+    </div>
+    <div class="tris"><i></i><i></i><i></i></div>
+    <p class="outline-static">只剩讲明白的那几条</p>
+  </section>
+
+  <section class="cloud">
+    <canvas id="wc" width="346" height="300" aria-label="可点击的知识主题"></canvas><div id="sphere-tags"><a href="?node=%E5%A4%A7%E6%A8%A1%E5%9E%8B%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E5%B9%BB%E8%A7%89" title="大模型为什么会幻觉">AI幻觉</a><a href="?node=%E6%80%8E%E4%B9%88%E5%86%99%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%89%8D%E8%83%BD%E5%B0%91%E8%B8%A9%E5%9D%91" title="怎么写提示词才能少踩坑">提示词</a><a href="?node=%E7%8E%B0%E5%9C%A8%E8%AF%A5%E7%94%A8%E5%93%AA%E4%B8%AA%E5%A4%A7%E6%A8%A1%E5%9E%8B" title="现在该用哪个大模型">大模型</a><a href="?node=AI%20Agent%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E4%B8%8E%E7%94%9F%E6%80%81%E7%B3%BB%E7%BB%9F" title="AI Agent核心概念与生态系统">AI智能体</a><a href="?node=%E9%80%9A%E8%B4%A7%E8%86%A8%E8%83%80%E6%98%AF%E6%80%8E%E4%B9%88%E5%8F%91%E7%94%9F%E7%9A%84" title="通货膨胀是怎么发生的">通货膨胀</a><a href="?node=%E7%BE%8E%E8%81%94%E5%82%A8%E5%8A%A0%E6%81%AF%E9%99%8D%E6%81%AF%E5%9C%A8%E8%B0%83%E4%BB%80%E4%B9%88" title="美联储加息降息在调什么">加息降息</a><a href="?node=%E6%B1%87%E7%8E%87%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E6%B3%A2%E5%8A%A8" title="汇率为什么会波动">汇率</a><a href="?node=%E4%B8%80%E4%BB%BD%E8%B4%A2%E6%8A%A5%E8%AF%A5%E7%9C%8B%E5%93%AA%E5%87%A0%E4%B8%AA%E6%95%B0" title="一份财报该看哪几个数">读懂财报</a><a href="?node=%E8%B5%84%E4%BA%A7%E9%85%8D%E7%BD%AE%E7%9A%84%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86" title="资产配置的基本原理">资产配置</a><a href="?node=%E8%A1%80%E7%B3%96%E6%98%AF%E6%80%8E%E4%B9%88%E5%8D%87%E4%B8%8A%E5%8E%BB%E5%8F%88%E9%99%8D%E4%B8%8B%E6%9D%A5%E7%9A%84" title="血糖是怎么升上去又降下来的">血糖</a><a href="?node=%E8%83%B0%E5%B2%9B%E7%B4%A0%E6%8A%B5%E6%8A%97%E5%88%B0%E5%BA%95%E6%98%AF%E6%80%8E%E4%B9%88%E5%9B%9E%E4%BA%8B" title="胰岛素抵抗到底是怎么回事">胰岛素</a><a href="?node=%E5%8D%87%E7%B3%96%E6%8C%87%E6%95%B0%EF%BC%88GI%EF%BC%89%E5%9C%A8%E8%AF%B4%E4%BB%80%E4%B9%88" title="升糖指数（GI）在说什么">升糖指数</a><a href="?node=%E6%8E%A7%E7%B3%96%E4%B8%80%E5%AE%9A%E8%A6%81%E6%88%92%E4%B8%BB%E9%A3%9F%E5%90%97" title="控糖一定要戒主食吗">主食</a><a href="?node=%E8%A1%80%E5%8E%8B%E6%98%AF%E6%80%8E%E4%B9%88%E5%8D%87%E4%B8%8A%E5%8E%BB%E7%9A%84" title="血压是怎么升上去的">血压</a><a href="?node=%E9%AA%A8%E5%A4%B4%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E5%8F%98%E8%84%86" title="骨头为什么会变脆">骨骼</a><a href="?node=%E9%A5%AE%E9%A3%9F%E5%92%8C%E8%BF%90%E5%8A%A8%E6%80%8E%E4%B9%88%E5%BD%B1%E5%93%8D%E8%A1%80%E5%8E%8B" title="饮食和运动怎么影响血压">饮食运动</a></div>
+  </section>
+
+<button class="motion-toggle" type="button" aria-pressed="false">暂停动效</button>
+    </section>
     <div id="scope-hint"></div>
     <div id="crumbs"></div>
     <!-- 「这块我们不收什么」（CY 2026-11-10 16:3x）。只在视线已经收到**一个领域家族**里时出现
@@ -804,7 +859,7 @@ a.src:after{content:" →"}
        四条都为真（BI 是我们自己的 Worker、自己的域，不落 IP/UA/cookie），但封面图和
        播放画面是直连 B站/抖音/腾讯 的——平台那边看得到有人在看。不写出来，用户会把
        这四条读成"看视频也没人知道"，那就是误导。 -->
-  <div class="purity">不要账户 · 不认识你 · 没有第三方脚本 · 没有推荐算法
+  <div class="purity">不要账户 · 没有浏览画像 · 没有推荐算法
     <br>封面和播放来自原平台，平台那边看得到。
     <br>一半多的内容做过第二道事实复核，其余还没逐条查。</div>
   <!-- 版本号与更新记录（CY 2026-11-10 16:2x 要）。放页脚是因为版本号的惯例位置就在这里，
@@ -813,6 +868,10 @@ a.src:after{content:" →"}
        这件事不会发生，号本身就是一条记录（他提的那条顾虑，用编号规则消掉而不是用例外消掉）。
        文案在 releases.json 里，不写死在这——那样改一句话要改三个地方，必然漂移。 -->
 </footer>
+<script src="supplemental-config.js"></script>
+<script src="supplemental-v2.js"></script>
 <script src="app.js"></script>
+<script src="vendor/tagcanvas.min.js"></script>
+<script src="home-experience.js"></script>
 </body>
 </html>

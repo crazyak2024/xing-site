@@ -1,0 +1,111 @@
+/* Homepage approved by CY 2026-11-12: five modules, real topic links. */
+:root{--home-paper:#fbfaf7;--home-background:#eceae4;--blue:var(--accent);--mut:var(--sub)}
+#home-experience{display:none}
+body.home-mode{background:var(--home-paper)}
+body.home-mode .layout{display:block;max-width:560px;padding:34px 22px 28px;min-height:100vh}
+body.home-mode .brand-panel{width:auto;position:static;padding:0;text-align:center}
+body.home-mode .brand-panel h1{display:flex;justify-content:center;font-size:40px;line-height:1.6;letter-spacing:.08em;gap:10px}
+body.home-mode .brand-panel .mark{width:34px;height:34px}
+.home-subtitle{display:none}
+body.home-mode .home-subtitle{display:block;font-size:14px;font-weight:600;margin:8px 0 0;letter-spacing:.04em}
+body.home-mode .brand-panel .tagline,body.home-mode .slogan,body.home-mode .manifesto,
+body.home-mode .manifesto-positive,body.home-mode .libnote,body.home-mode .cut-rule,
+body.home-mode #map,body.home-mode #home-q,body.home-mode #scope-hint,
+body.home-mode #family-rule,body.home-mode .toolbar,body.home-mode #results,
+body.home-mode #answer,body.home-mode #crumbs,body.home-mode #suggest{display:none!important}
+body.home-mode .content-panel{padding:0;border:0}
+body.home-mode .searchbar{margin-top:22px}
+body.home-mode .searchbar input{padding:14px 44px 14px 14px;border:1.5px solid var(--accent);border-radius:12px}
+body.home-mode #home-experience{display:block}
+body.home-mode #verline{position:absolute;top:10px;left:16px;font-size:10px}
+body.home-mode #asks-entry,body.home-mode #mine-entry{text-align:right;font-size:12px}
+body.home-mode footer{max-width:560px;margin:0 auto}
+#home-experience .cloud{margin-top:12px}
+#home-experience canvas{display:none;max-width:100%;cursor:pointer;touch-action:pan-y}
+#home-experience #sphere-tags{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:16px 0}
+#home-experience #sphere-tags a{color:var(--accent);text-decoration:none;min-height:32px;display:inline-flex;align-items:center}
+#home-experience #sphere-tags a:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+#home-experience #sphere-tags.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+#home-experience .motion-toggle{display:block;margin:8px auto 0;border:0;background:none;color:var(--sub);font-size:12px;min-height:32px;cursor:pointer}
+#home-experience .frame:not(.on){visibility:hidden}
+@media(min-width:700px){
+ body.home-mode{background:var(--home-background);padding-top:40px}
+ body.home-mode .layout{background:var(--home-paper);border:1px solid var(--line);border-radius:22px;min-height:0;padding:44px 48px 32px;box-shadow:0 6px 22px rgba(0,0,0,.07)}
+}
+@media(max-width:899px){.layout,.content-panel,.brand-panel{max-width:100%}.manifesto-positive{overflow-wrap:anywhere}}
+/* Approved four-frame story, scoped to the homepage. */
+/* ④ value proposition：四帧电影字幕 */
+#home-experience .vp{margin-top:26px}
+#home-experience .stage{position:relative;height:214px}
+#home-experience .frame{position:absolute;inset:0;opacity:0;transition:opacity .55s ease;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+#home-experience .frame.on{opacity:1}
+#home-experience .frame .pic{height:152px;display:flex;align-items:center;justify-content:center;width:100%}
+#home-experience .frame .cap{font-size:13.5px;text-align:center;color:var(--ink);padding:0 6px;min-height:44px}
+#home-experience .frame .cap b{font-weight:700}
+#home-experience .frame .cap .pf{color:var(--mut);font-weight:600}
+
+/* 帧1：几万条 —— 一片小视频卡渐次亮起 */
+#home-experience .grid{display:grid;grid-template-columns:repeat(7,22px);gap:7px}
+#home-experience .grid i{width:22px;height:14px;border:1px solid #c9c4b8;border-radius:3px;background:#faf8f3;
+  position:relative;opacity:0}
+#home-experience .grid i::after{content:"";position:absolute;left:8px;top:4px;width:0;height:0;
+  border-left:4px solid #c3bdb0;border-top:3px solid transparent;border-bottom:3px solid transparent}
+#home-experience .frame.on .grid i{animation:pop .5s ease forwards}
+@keyframes pop{to{opacity:1}}
+
+/* 帧2：里面混着什么 —— 多数卡变灰，垃圾词盖上去被划掉 */
+#home-experience .grid i.junk{border-color:#d6d1c6;background:#f2efe8}
+#home-experience .grid i.junk::after{border-left-color:#d6d1c6}
+#home-experience .f2wrap{position:relative}
+#home-experience .f2wrap .tag{position:absolute;font-size:12px;color:#a09b8f;white-space:nowrap;opacity:0;
+  text-decoration:line-through;text-decoration-color:#c05621;text-decoration-thickness:1.5px;
+  background:rgba(251,250,247,.85);padding:0 3px;border-radius:3px}
+#home-experience .frame.on .tag{animation:pop .4s ease forwards}
+
+/* 帧3：筛 —— 一道筛线，垃圾往下漏，干净的留在上面 */
+#home-experience .sieve{position:relative;width:238px;height:130px}
+#home-experience .sieve .net{position:absolute;left:0;right:0;top:58px;border-top:2px dashed #b8b2a5}
+#home-experience .sieve i{position:absolute;width:22px;height:14px;border-radius:3px}
+#home-experience .sieve i.keep{border:1px solid var(--blue);background:#eef3f9;top:34px}
+#home-experience .sieve i.keep::after{content:"";position:absolute;left:8px;top:4px;width:0;height:0;
+  border-left:4px solid var(--blue);border-top:3px solid transparent;border-bottom:3px solid transparent}
+#home-experience .sieve i.drop{border:1px solid #d6d1c6;background:#f2efe8;top:66px;opacity:0}
+#home-experience .frame.on .sieve i.keep{animation:lift 1.2s ease forwards}
+#home-experience .frame.on .sieve i.drop{animation:sink 1.5s ease forwards}
+@keyframes lift{from{transform:translateY(16px)}to{transform:translateY(0)}}
+@keyframes sink{0%{opacity:.9;transform:translateY(-8px)}100%{opacity:0;transform:translateY(46px)}}
+
+/* 帧4：端给你 —— 几个蓝 ▶ 依次亮起 */
+#home-experience .serve{display:flex;gap:14px;align-items:center}
+#home-experience .serve i{width:0;height:0;border-left:16px solid var(--blue);
+  border-top:10px solid transparent;border-bottom:10px solid transparent;opacity:0;
+  transform:scale(.6)}
+#home-experience .frame.on .serve i{animation:serveIn .45s ease forwards}
+@keyframes serveIn{to{opacity:1;transform:scale(1)}}
+
+/* 放映进度：四个小点（电影的「第几本」），极低调 */
+#home-experience .reel{display:flex;gap:6px;justify-content:center;margin-top:10px}
+#home-experience .reel i{width:4px;height:4px;border-radius:50%;background:#d8d4cb}
+#home-experience .reel i.on{background:#8c8c8c}
+
+/* 退化：静态漏斗（v8） */
+#home-experience .funnel-static{display:none;margin:4px auto 0;width:272px;padding:13px 10px 10px;
+  text-align:center;background:#f1eee6;clip-path:polygon(0 0,100% 0,62% 100%,38% 100%)}
+#home-experience .funnel-static .junk{display:flex;flex-wrap:wrap;justify-content:center;gap:3px 12px;padding:0 6px}
+#home-experience .funnel-static .junk span{font-size:12.5px;color:#a09b8f;text-decoration:line-through;
+  text-decoration-color:#c05621;text-decoration-thickness:1.5px}
+#home-experience .funnel-static .flabel{margin-top:7px;font-size:11px;color:#8a8577;letter-spacing:.14em}
+#home-experience .src-static{display:none;text-align:center;font-size:12.5px;color:var(--mut);margin-top:4px}
+#home-experience .src-static b{color:var(--ink);font-weight:600}
+#home-experience .tris{display:none;text-align:center;margin-top:10px}
+#home-experience .tris i{display:inline-block;width:0;height:0;border-left:11px solid var(--blue);
+  border-top:7px solid transparent;border-bottom:7px solid transparent;margin:0 2px}
+#home-experience .outline-static{display:none;text-align:center;font-size:13.5px;font-weight:700;margin-top:4px}
+@media(prefers-reduced-motion:reduce){
+  #home-experience .stage,#home-experience .reel{display:none}
+  #home-experience .funnel-static,#home-experience .tris,#home-experience .outline-static,#home-experience .src-static{display:block}
+}
+
+
+#home-experience.motion-paused *{animation-play-state:paused!important}

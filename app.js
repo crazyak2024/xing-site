@@ -707,6 +707,7 @@ const ANSWER_PEEK = 3;      // 默认露几点（CY：「给个3行左右，用�
 let ansExpanded = false;
 
 function renderAnswer() {
+  if (window.XingSupplemental?.enabled() && (state.node || state.q)) { document.getElementById("answer").innerHTML = ""; return; }
   const el = document.getElementById("answer");
   if (!el) return;
   const p = currentPage();
@@ -1035,6 +1036,7 @@ function cardHtml(it, whyNote, covers) {
 }
 
 function renderResults() {
+  if (window.XingSupplemental?.enabled() && window.XingSupplemental.renderResults()) return;
   const el = document.getElementById("results");
   const items = filtered();
   coverSeq = 0;   // 每次重渲染都重新数"前 6 张"，否则翻几次筛选后全部退回 lazy
@@ -1388,6 +1390,7 @@ function render() {
      全站有十几处（面包屑的 ×、点领域、点节点、分享回来、补搜改写搜索词…），
      每处各记一遍必然漏——而它们没有一个不走 render()。 */
   if (typeof syncHasQ === "function") syncHasQ();
+  window.dispatchEvent(new Event("xing:render"));
 }
 
 /* ══════════ 回首页：一个动作，三个入口（CY 2026-11-11 22:1x）══════════
@@ -1801,6 +1804,7 @@ function laneFloatKey() {
 }
 
 function renderLaneFloat() {
+  if (window.XingSupplemental?.enabled()) { document.getElementById("lane-float").innerHTML = ""; return; }
   const host = document.getElementById("lane-float");
   if (!host) return;
   if (!LANE.q || state.q === LANE.q || LANE.floatDismissedFor === laneFloatKey()) {
@@ -1839,6 +1843,7 @@ function renderLaneFloat() {
 }
 
 function startLane(q) {
+  if (window.XingSupplemental?.enabled()) return window.XingSupplemental.openQuestion(q);
   if (!COLLECT_URL || !q) return;
   if (LANE.timer) clearInterval(LANE.timer);
   LANE = { q, timer: null, t0: Date.now(), state: "new", data: null, floatDismissedFor: "" };
@@ -1997,6 +2002,7 @@ function askProgress(a) {
 }
 
 function refreshAsksUI() {
+  if (window.XingSupplemental?.enabled()) return window.XingSupplemental.refreshList();
   const el = document.getElementById("asks-entry");
   if (!el) return;
   const n = askCount();
@@ -2013,6 +2019,7 @@ function refreshAsksUI() {
 }
 
 function renderAsks() {
+  if (window.XingSupplemental?.enabled()) return window.XingSupplemental.renderList();
   const el = document.getElementById("results");
   const bar = document.querySelector(".toolbar");
   if (bar) bar.hidden = true;
@@ -2064,6 +2071,7 @@ function renderAsks() {
 /** 进站时把"刚才还在跑"的那几条接回来。**这是 CY 报的那个 bug 的正解**：
  *  刷新之后入口还在，而且还在动。太老的不自动重发（见 ASK_RESUME_MS 的注释）。 */
 function resumeAsks() {
+  if (window.XingSupplemental?.enabled()) return window.XingSupplemental.resume();
   if (!COLLECT_URL) return;
   const live = ASKS.filter(a => !askTerminal(a) && (Date.now() - a.touched) < ASK_RESUME_MS);
   if (!live.length) return;
@@ -2392,6 +2400,7 @@ function abortSemantic() {
 }
 
 function fetchSemantic(q) {
+  if (window.XingSupplemental?.enabled()) return window.XingSupplemental.search(q);
   abortSemantic();
   if (!q || q.length > 60) { SEM = { q: "", top: [], ms: 0, pending: false, err: "" }; renderSuggest(); return; }
   const seq = ++semSeq;
@@ -2445,6 +2454,7 @@ function nodeInLib(name) {
 }
 
 function renderSuggest() {
+  if (window.XingSupplemental?.enabled()) { document.getElementById("suggest").innerHTML = ""; return; }
   const el = document.getElementById("suggest");
   if (!el) return;
   if (!state.q || SEM.q !== state.q) { el.innerHTML = ""; return; }
