@@ -123,7 +123,7 @@
     try {
       const d=await api('/semantic',{q}); if(seq!==searchSeq||state.q!==q) return;
       const top=d.top?.[0];
-      current=top&&top.score>=0.60?{q,node:top.name,display_name:top.name,mapping:'confirmed'}:{q};
+      current=top&&top.score>=0.75?{q,node:top.name,display_name:top.name,mapping:'confirmed'}:{q};
       if(current.node) void read(current.node);
     }catch(e){if(seq!==searchSeq)return; current={q};flash='归类暂时不可用，你仍可以提出补搜请求。';}
     paint();
