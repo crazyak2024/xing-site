@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共2228条",
+  "generated_note": "判定=合格的候选，共2235条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1162,7 +1162,7 @@
     {
       "id": "ai1",
       "label": "AI 与大模型",
-      "count": 1940
+      "count": 1947
     },
     {
       "id": "fin1",
@@ -1195,7 +1195,7 @@
       "label": "AI 与大模型",
       "short": "AI 这块：不收短剧和「不学就被淘汰」，教程只收讲清方法的。",
       "long": "披着 AI 外壳的剧情娱乐一律不收。无依据夸大风险、制造紧迫感的焦虑话术不收。纯点击演示的教程不收——从头到尾「跟着点这里」、不解释为什么、换个场景就不会了；讲清了可迁移方法的，哪怕边操作边讲，我们收。",
-      "count": 1940
+      "count": 1947
     },
     "finance": {
       "label": "财经",
@@ -40480,60 +40480,6 @@
       "topic": "方法实操",
       "node": "AI工具辅助办公应用",
       "category": "(地图缺口)AI工具辅助办公应用",
-      "domain": "ai1"
-    },
-    {
-      "id": "bilibili:BV1nQckzrECn",
-      "video_id": "BV1nQckzrECn",
-      "title": "OpenClaw交易策略监测系统：自动买卖信号生成",
-      "original_title": "AI龙虾替代人在金融行业炒股交易，如何用“龙虾”监测上百个策略？",
-      "author": "AIGCLINK",
-      "platform": "bilibili",
-      "link": "https://www.bilibili.com/video/BV1nQckzrECn",
-      "cover_url": "https://i2.hdslb.com/bfs/archive/28ab30e00e5233729ae478e3b563a90bd5872325.jpg",
-      "published_at": "2026-03-12T09:55:32+00:00",
-      "key_points": [
-        "金融数据源接入：快速配置实现多源行情数据自动获取与分析",
-        "策略灵活定义：用技术指标组合（MA金叉、RSI范围等）自动构建买卖规则",
-        "定时监测与提醒：每日定点评测价格是否满足条件，支持微信/邮箱多渠道通知",
-        "自动交易升级：从提醒进化为直接下单，实现全自动交易执行"
-      ],
-      "chapters": [
-        {
-          "t": 0,
-          "label": "接入数据源与模型选择"
-        },
-        {
-          "t": 116,
-          "label": "自定义交易信号条件"
-        },
-        {
-          "t": 172,
-          "label": "每日定时监测提醒"
-        },
-        {
-          "t": 249,
-          "label": "AI辅助编写交易脚本"
-        },
-        {
-          "t": 339,
-          "label": "多策略定时扫描提醒"
-        },
-        {
-          "t": 413,
-          "label": "授权自动交易执行"
-        }
-      ],
-      "duration_s": 475.0,
-      "likes": null,
-      "collects": null,
-      "comments": null,
-      "summary": "演示用OpenClaw配置金融数据源、定义技术指标策略、自动分析股票并生成买卖提醒的完整流程，讲清策略定义方法、定时执行机制、多渠道通知和自动交易升级路径。",
-      "reason": "讲者清晰展示了技术指标的实际应用：\"他有些信号啊就是这个金叉就是我就是M5大于这个mi0然后就是说如果你持有什么可以就是如果还买什么的\"，并演示了从手工策略定义到自动监测的工作流程。 | 引用:「帮我设设置一个呃设置一个定时提醒每天早上啊09:30啊提醒我要不要买入…比如说哎呃买入的观测啊这个ma a5上穿啊」",
-      "consensus": "mainstream",
-      "topic": "方法实操",
-      "node": "AI Agent产品功能介绍",
-      "category": "(地图缺口)AI Agent产品功能介绍",
       "domain": "ai1"
     },
     {
@@ -88692,6 +88638,238 @@
       "topic": "方法实操",
       "node": "AI工具使用教程",
       "category": "(地图缺口)AI工具使用教程",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1x3Wu6FEpj",
+      "video_id": "BV1x3Wu6FEpj",
+      "title": "个人AI助理完整使用指南",
+      "original_title": "【全网首发】如何不花钱雇24小时贴身秘书？全网最全的Personal AI保姆级的教程",
+      "author": "GenJi是真想教会你",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1x3Wu6FEpj",
+      "cover_url": "https://i2.hdslb.com/bfs/archive/922b69e89fe6002c1e1791448fc6a6eb4728b6ce.jpg",
+      "published_at": "2026-11-10T11:26:33+00:00",
+      "key_points": [
+        "Personal AI分三层：提醒→执行→管理，逐步深化对用户需求的理解和自主行动能力",
+        "连接系统应用和第三方服务获得访问权限，AI主动监测动态并持续跟进长期任务",
+        "长期任务自动入库'帮我管'模块，无需每次重复交代，AI可跨多个信息源关联理解",
+        "自然语言和MCP工具扩展能力，用户灵活定制而非被限制在预设功能"
+      ],
+      "chapters": [],
+      "duration_s": 974.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解如何配置和使用个人AI助理，通过连接应用、设置监控任务，实现从被动提醒到主动管理生活工作的三层能力升级。",
+      "reason": "核心价值在于讲清Personal AI的三层能力框架逻辑。'从提醒我到帮我办再到帮我管让AI持续了解你去主动发现问题并且代表你去完成更多的事情'直观展现了AI助理的渐进式赋能路径。 | 引用:「从提醒我到帮我办再到帮我管让AI持续了解你去主动发现问题并且代表你去完成更多的事情」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "AI Agent产品功能介绍",
+      "category": "(地图缺口)AI Agent产品功能介绍",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1YDHA6HEVC",
+      "video_id": "BV1YDHA6HEVC",
+      "title": "用AI Agent团队构建模型评测系统",
+      "original_title": "手搓AI模型考场，最强的居然是ta？",
+      "author": "GenJi是真想教会你",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1YDHA6HEVC",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/43820e657984c80deb784495b0dd9da64ad8d983.jpg",
+      "published_at": "2026-10-24T11:33:21+00:00",
+      "key_points": [
+        "复杂任务分配给不同专业背景的Agent（产品、前后端、测试），各自推进形成并行工作流而非串行等待",
+        "Agent自动调用Skill库和知识库，无需每次重复解释需求，体现Agent的记忆和主动推进能力",
+        "模型评测需标准化多维度指标（准确率、耗时、成本），单点评分无法反映真实工程价值",
+        "可视化进度追踪让团队协作透明化，比传统邮件汇报效率高数倍"
+      ],
+      "chapters": [],
+      "duration_s": 360.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "演示如何用Maodao内置的16个专家Agent协作完成复杂AI开发任务，同时介绍模型基准测试的多维度评测体系。",
+      "reason": "重点教'如何用Agent团队高效解决复杂工程问题'的方法论，不只是介绍产品。通过'就开头提到的专业团队其实是马道里的agent team它内置了16个研发专家智能体'这个案例，展现Agent分工协作的核心价值。 | 引用:「就开头提到的专业团队其实是马道里的agent team它内置了16个研发专家智能体有像设计师啊前后端工程师验证工程师等等」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "AI Agent核心概念与生态系统",
+      "category": "(地图缺口)AI Agent核心概念与生态系统",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1BSJQ6bE6q",
+      "video_id": "BV1BSJQ6bE6q",
+      "title": "AI助理文件管理与系统优化完全指南",
+      "original_title": "国产muse和dots来了！个人智能体是怎么抢着帮我干活的？",
+      "author": "GenJi是真想教会你",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1BSJQ6bE6q",
+      "cover_url": "https://i1.hdslb.com/bfs/archive/55bfcce934fe04520e2b17397127b9621fb840e2.jpg",
+      "published_at": "2026-10-16T10:30:00+00:00",
+      "key_points": [
+        "AI知识库自动扫描文件并按内容类型分类，跨多个文档语义检索替代传统搜索，避免遗忘文件名和重复上传",
+        "AI诊断系统性能时根据实际数据给出方案而非建议盲目升级，如'内存运行频率过低'拉高频率就能降延迟30%",
+        "在知识库对话中可同时引用多个历史文档进行对比分析，AI自动关联相关信息做综合判断",
+        "连接系统应用后AI可代理跨应用任务，但关键操作需手动确认，平衡功能完整性和隐私安全性"
+      ],
+      "chapters": [],
+      "duration_s": 407.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解使用MAVS的知识库功能管理本地文件、跨文档检索、系统性能诊断和优化，实现AI对工作环境的全面可视化管理。",
+      "reason": "讲的是'为什么AI能帮你管理文件和优化系统'的核心逻辑，而不仅是'怎么按按钮'。利用AI对文件内容的理解能力转化为生产力工具，这套方法论可迁移到其他AI助理。 | 引用:「马尾依然可以把它和大模型基础相关的这个资料归档在一起果然就是这个提出transformer架构的鼻祖Attention is all you need」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "AI工具辅助办公应用",
+      "category": "(地图缺口)AI工具辅助办公应用",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV183YT69E33",
+      "video_id": "BV183YT69E33",
+      "title": "豆包手机助手多应用协作工作流完全指南",
+      "original_title": "可能是这辈子用过最智能的手机？",
+      "author": "GenJi是真想教会你",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV183YT69E33",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/60e391541ddab7a54f6c274e93ab6e0365f4f509.jpg",
+      "published_at": "2026-09-16T10:00:00+00:00",
+      "key_points": [
+        "连续对话模式让AI持续理解上下文，单次唤醒内可链式完成多个关联任务而无需重复说明",
+        "AI自动调用跨应用接口（日历、飞书、美团等），一句模糊指令触发多系统协作，关键操作保留手动授权",
+        "复杂指令自动拆解为多步骤执行，'先去A地再去B地'AI自动优化路线和时间无需再次调整",
+        "系统权限分层管理至关重要，低风险操作自动执行但交易支付等高风险操作必须手动确认"
+      ],
+      "chapters": [],
+      "duration_s": 547.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "详解豆包手机助手的连续对话、跨应用联动等核心能力，通过五个递进式工作场景教用户如何构建高效的语音指令工作流。",
+      "reason": "教的是'如何用连续对话和上下文理解构建工作流'的方法论，而不仅是产品按钮用法。'连续对话模式...唤醒一次就可以一直聊天'这个思想可迁移到其他AI助理产品应用。 | 引用:「连续对话呢就是唤醒一次就可以一直聊天那唤醒一次就可以一直聊天这不妥妥的智能车机吗」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "AI工具辅助办公应用",
+      "category": "(地图缺口)AI工具辅助办公应用",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1GsY76dEqW",
+      "video_id": "BV1GsY76dEqW",
+      "title": "Agent应用完全指南：从概念到六大实战场景",
+      "original_title": "一口气搞懂Agent到底怎么用！",
+      "author": "GenJi是真想教会你",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1GsY76dEqW",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/5b6edc4cace419846670010b57000564a728ba18.jpg",
+      "published_at": "2026-09-11T11:30:00+00:00",
+      "key_points": [
+        "Agent的核心差异：拥有记忆（理解上下文）和行动能力（调用技能和系统），不只是回答问题的大模型",
+        "系统分三层架构：底层插件库连接外部应用，中层Mode选择工作模式，顶层AI引擎，理解架构才能充分利用",
+        "大多数任务用自然语言表述需求即可，Agent自动拆解为子任务、调用插件、执行和反馈，无需编程",
+        "本地模式保护隐私功能受限，云端模式功能完整需手动审批，选择取决于使用场景和信任度"
+      ],
+      "chapters": [],
+      "duration_s": 556.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "系统讲解Agent与通用大模型的核心差异，用零门槛国产产品通过六个真实应用案例教用户如何使用Agent完成自动化任务。",
+      "reason": "核心不是推荐某款产品，而是讲'如何理解和使用Agent'的转移性方法论。通过对比大模型、讲解架构、演示六个场景，让用户理解Agent的本质差异，这套思维框架对所有Agent产品都适用。 | 引用:「朋友们你敢相信吗全球AI巨头都在这酒有多好用啊但真到了上手你看cloud codex这些又是注册又是命令行」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "AI Agent核心概念与生态系统",
+      "category": "(地图缺口)AI Agent核心概念与生态系统",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV178hF6rEHE",
+      "video_id": "BV178hF6rEHE",
+      "title": "职场AI工具横测：从信息搜集到需求变更的完整工作流",
+      "original_title": "【硬核横测】打工人《鱿鱼游戏》，三款AI搭子谁能让我“活”着下班？",
+      "author": "GenJi是真想教会你",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV178hF6rEHE",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/13bca6baabcf14aed3883aa13d24d9170088da3c.jpg",
+      "published_at": "2026-08-27T10:00:00+00:00",
+      "key_points": [
+        "通用大模型速度快但缺乏工程感，Agent类产品主动补充信息、交叉核验、标注出处分类，更适合长流程项目",
+        "需求变更时需做影响分析，追踪改动如何波及所有交付物形成连锁反应，而非孤立处理单个物料",
+        "工作类AI评估标准不是'单次回复速度'而是'能否推进完整项目闭环'——从需求理解到最终交付",
+        "不同工具差异体现在需求理解深度、信息来源可信度、交付物完整性等多维度，需对比而非单点评分"
+      ],
+      "chapters": [],
+      "duration_s": 663.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "对比测试DeepSeek、Douban等三款AI在信息研究、方案修改、交付管理等工作流中的表现，引入NASA影响分析方法论说明如何追踪复杂需求变更的连锁影响。",
+      "reason": "讲的是'如何正确评估AI工具的职场实用价值'的方法论，引入NASA的影响分析框架。'从需求的理解到这个资料的搜索到信息的判断最后才到交付其他成功串起了一整个工作流'体现了完整工作流的核心价值。 | 引用:「从需求的理解到这个资料的搜索到信息的判断最后才到交付其他成功串起了一整个工作流」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "AI工具辅助办公应用",
+      "category": "(地图缺口)AI工具辅助办公应用",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1o4gP6iEeo",
+      "video_id": "BV1o4gP6iEeo",
+      "title": "DeepSeek Harness安装与四大模式应用",
+      "original_title": "首发！DeepSeek Harness保姆级速通教程，及Codex Kimi 对比测试",
+      "author": "GenJi是真想教会你",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1o4gP6iEeo",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/64e56afadabe419db00be9eb4377c1d20ad08e46.jpg",
+      "published_at": "2026-08-14T12:59:40+00:00",
+      "key_points": [
+        "Harness四大模式针对不同场景：标准模式支持全工作流，PDC模式并联多步骤，基建模式仅编辑命令，创造模式可自建Agent",
+        "安装流程：先装Node.js→GitHub下载Harness→npm安装→获取API密钥配置，整体耗时5-10分钟",
+        "DeepSeek定价远低于闭源模型，输出价6分/百万字，缓存命中仅2.5分，下周涨价后仍有竞争力",
+        "基建模式token消耗最少适合单一编辑任务，标准模式功能最全支持所有工作流和技能调用"
+      ],
+      "chapters": [],
+      "duration_s": 442.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "讲解DeepSeek Harness的安装步骤、API配置、四种模式（标准/PDC/基建/创造）各自的应用场景与定价策略",
+      "reason": "视频讲清了Harness四种模式的功能区分及选择依据，提供完整的安装部署步骤。转写显示'标准模式是完整的编码agent''基建模式就两个功能'等，说明讲解了可迁移的模式论而非纯点击演示，符合CY关于有价值教程的收录标准。 | 引用:「标准模式就是完整的编码agent基本上支持所有的工作流；基建模式就两个功能一个保持命令不关机另一个是文本编辑」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "AI工具使用教程",
+      "category": "(地图缺口)AI工具使用教程",
+      "domain": "ai1"
+    },
+    {
+      "id": "bilibili:BV1qDuJ6GEtd",
+      "video_id": "BV1qDuJ6GEtd",
+      "title": "为什么AI预测不了彩票但能预测别的",
+      "original_title": "【硬核拆解】为什么你的直觉总在骗你？",
+      "author": "GenJi是真想教会你",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1qDuJ6GEtd",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/9a34d3946227f3e3a29b69909d25410e7e3347e8.jpg",
+      "published_at": "2026-08-08T10:06:10+00:00",
+      "key_points": [
+        "频率学派认为概率客观固定不变，贝叶斯学派用历史数据持续更新对未来的概率判断，两派思维方式完全不同",
+        "AI本质是贝叶斯学派的超级实践者，通过样本数据不断优化和调整预测能力",
+        "彩票每个号码永远是1/49的固定概率，遵循频率学派规则，历史无法改变未来，AI预测失败的根本原因",
+        "老虎机虽基于伪随机数生成器理论可预测，但种子变化极快，实际操作难度极高几乎不可行"
+      ],
+      "chapters": [],
+      "duration_s": 736.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "通过硬币、彩票、老虎机等例子对比频率学派与贝叶斯学派的世界观差异，解释AI用贝叶斯思维预测频率学派的彩票必然失败的根本原因",
+      "reason": "视频清晰对比了两大统计学派的本质差异，进而解释了AI预测能力的根本原因与限制。转写原文'用贝叶斯的大脑去预测一个频率学派的世界'说明讲清了AI的思维本质不是真的思考而是概率推理。 | 引用:「用贝叶斯的大脑去预测一个频率学派的世界，这就是AI预测彩票失败的根本原因」",
+      "consensus": "mainstream",
+      "topic": "误区纠正",
+      "node": "AI真的在思考吗",
+      "category": "16.AI真的在思考吗",
       "domain": "ai1"
     }
   ]
