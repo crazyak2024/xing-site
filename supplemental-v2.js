@@ -4,6 +4,7 @@
   'use strict';
   const KEY = 'xing_asked';
   const snapshots = new Map(), retained = new Map(), errors = new Map(), loading = new Set();
+  const expandedCandidates = new Set();
   let rows = [], writable = true, loaded = false, searchSeq = 0, timer = null, current = null;
   let shownKey = "", shownLimit = 6;
   let verification = null, busy = false, flash = '', mismatch = false;
@@ -32,13 +33,25 @@
     if (r?.state === 'RUNNING') return r.phase === 'judging' ? '更多内容正在路上——我们正在努力抓取和筛选，请耐心等待' : (platforms(d) ? `正在${platforms(d)}上搜` : '正在寻找相关内容');
     if (r?.state === 'EXPORTING') return '收尾中：在把内容发布上站';
     if (r?.state === 'PENDING') return d.queue_position ? `排在第 ${d.queue_position} 位 · 已记入「我问过的」` : '已收到，正在排队补搜';
-    if (!active(d) && d.reason && d.message) return d.message;
+    if (!active(d) && d.reason && d.message && !(r?.state==='CLOSED' && d.reason==='need_independent_demand')) return d.message;
     if (r?.state === 'CLOSED') {
       if (r.close_reason === 'no_supply') return platforms(d) ? `在${platforms(d)}上没搜到正面讲这个的口播内容` : '暂时没搜到正面讲这个的口播内容';
-      if (r.close_reason === 'all_rejected') return '找到的内容都没过质量关';
+      if (r.close_reason === 'all_rejected') return '这一轮补搜已结束，暂时没有通过筛选的内容。';
       return platforms(d) ? `这是我们从${platforms(d)}上筛选出的最好内容` : '这一轮补搜已结束';
     }
     return d.message || '已收到，正在判断要不要补搜';
+  }
+  function candidateDetails(r) {
+    if (!Array.isArray(r?.close_detail)) return '';
+    const seen=new Set();
+    const candidates=r.close_detail.filter(x=>x && typeof x==='object' && x.id && x.reason!=='qualified' && !seen.has(x.id) && seen.add(x.id));
+    if(!candidates.length) return '';
+    const key=String(r.run_id||'');
+    return `<details data-candidate-run="${h(key)}" ${expandedCandidates.has(key)?'open':''}><summary>我还是想看看</summary><p>以下视频未通过收录筛选。筛选意见供参考，可前往原平台查看。</p><ul>${candidates.map(x=>{
+      let url='';try { const u=new URL(x.url);if(['https:','http:'].includes(u.protocol))url=u.href; } catch(_) {}
+      const reason=x.reason && !['暂缓','拒收','insufficient_transcript'].includes(x.reason)?x.reason:'具体筛选意见暂未提供';
+      return `<li><p><strong>${h(x.title||'候选视频')}</strong>${x.platform?' · '+h(platformNames[x.platform]||x.platform):''}</p><p>筛选意见：${h(reason)}</p>${url?`<a href="${h(url)}" target="_blank" rel="noopener noreferrer">去原平台看看</a>`:'<p>原视频链接暂未提供</p>'}</li>`;
+    }).join('')}</ul></details>`;
   }
   function progress(d) {
     if (!active(d)) return '';
@@ -99,7 +112,7 @@
     const r=d.run, hasStatus=Boolean(r||d.reason||d.message), q=state.q;
     const key=node||q;if(shownKey!==key){shownKey=key;shownLimit=6;}
     const shown=items.slice(0,shownLimit);
-    const mapping=q&&node&&!node.startsWith('q:') ? `<div class="supp-mapping">你问的是“${h(q)}”，${d.mapping_overdue?'归类待人工确认':d.mapping==='suggested'?'可能对应':d.mapping==='pending'?'已归入，待确认':'已归入'}“${h(d.display_name||node)}”<button class="linklike" data-supp-action="mismap">这不是我问的问题</button></div>` : '';
+    const mapping=q&&node&&!node.startsWith('q:')&&q.trim()!==(d.display_name||node).trim() ? `<div class="supp-mapping">你问的是“${h(q)}”，${d.mapping_overdue?'归类待人工确认':d.mapping==='suggested'?'可能对应':d.mapping==='pending'?'已归入，待确认':'已归入'}“${h(d.display_name||node)}”<button class="linklike" data-supp-action="mismap">这不是我问的问题</button></div>` : '';
     const title=node&&!node.startsWith('q:')?d.display_name||node:q||'新问题（评估中）';
     const errs=errors.get(node)||'';
     document.querySelector('.toolbar').hidden=true;
@@ -108,9 +121,11 @@
     el.innerHTML=`<article class="supp-node"><p class="supp-notice" role="status">${h(flash)}</p><header>${mapping}<p class="supp-eyebrow">从问题出发</p><h1>${h(title)}</h1></header>${active(d)?`<div class="supp-summary" aria-label="当前补搜状态"><p>${h(status(d))}</p>${progress(d)}</div>`:''}
       <section class="supp-content" aria-label="现有内容"><h2>${items.length?'已经找到的答案':'先看看已有内容'}</h2>${items.length?`<div class="cards grid">${shown.map(laneCardHtml).join('')}</div>${items.length>shownLimit?'<button class="supp-more">显示更多答案</button>':''}`:`<p class="supp-muted">${!DATA_LOADED?'正在载入已有内容…':'这里还没有经过核验的答案。'}</p>`}</section>
       ${active(d)?`<section class="supp-running" aria-label="补搜进度" aria-live="polite"><p>${h(status(d))}</p>${progress(d)}</section>`:''}
-      ${!active(d)&&hasStatus?`<section class="supp-decision" aria-label="补搜结论"><p>${h(status(d))}</p>${r?.close_reason==='all_rejected'&&Array.isArray(r.close_detail)?`<details><summary>为什么没有收录</summary><ul>${r.close_detail.map(x=>`<li>${h(typeof x==='string'?x:x.reason||'未满足收录标准')}</li>`).join('')}</ul></details>`:''}</section>`:''}
+      ${!active(d)&&hasStatus?`<section class="supp-decision" aria-label="补搜结论"><p>${h(status(d))}</p>${candidateDetails(r)}</section>`:''}
       <section class="supp-actions" aria-label="补搜操作"><button class="btn-primary" ${active(d)||busy?'disabled':''} data-supp-action="${items.length?'not_answered':'want_this'}">${busy?'正在提交…':active(d)?'正在补搜':items.length?'这些没回答我的问题':'我要这个'}</button><p class="supp-feedback" role="status">${h(flash||errs||(!node&&current?.q===q&&current?.searching?'正在理解你的问题…':''))}</p>${errs?'<button class="linklike" data-supp-retry>重新读取进度</button>':''}${mismatch?`<form class="supp-rephrase"><label for="supp-rephrase">换一种说法再搜</label><div><input id="supp-rephrase" value="${h(q)}" maxlength="60"><button type="submit">重新搜索</button></div></form>`:''}</section></article>`;
     el.querySelector('.supp-more')?.addEventListener('click',()=>{shownLimit+=6;renderResults();});
+    const candidatePanel=el.querySelector('[data-candidate-run]');
+    candidatePanel?.addEventListener('toggle',()=>{if(!candidatePanel.isConnected)return;const k=candidatePanel.dataset.candidateRun;candidatePanel.open?expandedCandidates.add(k):expandedCandidates.delete(k);});
     bindLaneCards(el); el.querySelectorAll('[data-supp-action]').forEach(b=>b.addEventListener('click',()=>submit(b.dataset.suppAction,b)));
     el.querySelector('[data-supp-retry]')?.addEventListener('click',()=>{errors.delete(node);void read(node);});
     el.querySelector('form')?.addEventListener('submit',e=>{e.preventDefault();const v=el.querySelector('input').value.trim();document.getElementById('q').value=v;go({q:v,node:null});void search(v);});
