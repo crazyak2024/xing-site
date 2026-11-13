@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>醒 · 无广告 不上瘾 不焦虑 的知识视频</title>
+<!-- preview vp1：方向一「筛选雨」(canvas) + 词云方向一「知识星图」(canvas)。
+     五模块完整首页：品牌 / subtitle / 搜索 / value proposition / 词云。
+     词云数据来自 cloud-data.js（gen_cloud_data.py 从 pages.json 生成，真实节点）。
+     prefers-reduced-motion 时两处动效都退化为静态（漏斗 / 静帧星图）。 -->
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#eceae4;--paper:#fbfaf7;--ink:#1a1a1a;--blue:#2b6cb0;--amber:#b7791f;
+  --mut:#555;--faint:#8c8c8c;--line:#d8d4cb}
+body{background:var(--paper);color:var(--ink);
+  font:14px/1.6 -apple-system,"PingFang SC",system-ui,sans-serif}
+.page{max-width:560px;margin:0 auto;padding:34px 22px 28px;min-height:100vh;
+  display:flex;flex-direction:column}
+@media(min-width:700px){
+  body{background:var(--bg);padding:40px 0}
+  .page{background:var(--paper);border:1px solid var(--line);border-radius:22px;
+    min-height:0;padding:44px 48px 32px;box-shadow:0 6px 22px rgba(0,0,0,.07)}
+}
+
+/* ① 品牌 */
+.brand{display:flex;align-items:center;justify-content:center;gap:10px}
+.brand img{width:34px;height:34px;display:block}
+.brand .name{font-size:40px;font-weight:800;letter-spacing:.08em}
+/* ② subtitle */
+.subtitle{text-align:center;font-size:14px;font-weight:600;margin-top:8px;letter-spacing:.04em}
+/* ③ 搜索（唯一主角） */
+.search{margin-top:22px;position:relative}
+.search input{width:100%;padding:14px 14px 14px 40px;font-size:16px;color:var(--ink);
+  background:#fff;border:1.5px solid var(--blue);border-radius:12px;outline:none}
+.search input::placeholder{color:#9a9a9a}
+.search input:focus{box-shadow:0 0 0 3px rgba(43,108,176,.12)}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);pointer-events:none}
+
+/* ④ value proposition：筛选雨 */
+.vp{margin-top:24px}
+.vp .src{text-align:center;font-size:12.5px;color:var(--mut);letter-spacing:.03em}
+.vp .src b{color:var(--ink);font-weight:600}
+.vp canvas{display:block;width:100%;height:232px;margin-top:2px}
+.vp .outline{text-align:center;font-size:13.5px;font-weight:700;margin-top:4px}
+/* 退化用的静态漏斗（v8） */
+.funnel-static{display:none;margin:10px auto 0;width:272px;padding:13px 10px 10px;
+  text-align:center;background:#f1eee6;clip-path:polygon(0 0,100% 0,62% 100%,38% 100%)}
+.funnel-static .junk{display:flex;flex-wrap:wrap;justify-content:center;gap:3px 12px;padding:0 6px}
+.funnel-static .junk span{font-size:12.5px;color:#a09b8f;text-decoration:line-through;
+  text-decoration-color:#c05621;text-decoration-thickness:1.5px}
+.funnel-static .flabel{margin-top:7px;font-size:11px;color:#8a8577;letter-spacing:.14em}
+.tris{display:none;text-align:center;margin-top:10px}
+.tris i{display:inline-block;width:0;height:0;border-left:11px solid var(--blue);
+  border-top:7px solid transparent;border-bottom:7px solid transparent;margin:0 2px}
+@media(prefers-reduced-motion:reduce){
+  .vp canvas{display:none}
+  .funnel-static,.tris{display:block}
+}
+
+/* ⑤ 词云：知识星图 */
+.sky{margin-top:26px}
+.sky canvas{display:block;width:100%;cursor:pointer}
+
+.foot{margin-top:18px;text-align:center;font-size:10.5px;color:#b3ada0}
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="brand">
+    <img src="../logo.svg" alt="醒 logo">
+    <span class="name">醒</span>
+  </header>
+
+  <p class="subtitle">无广告 · 不上瘾 · 不焦虑 的知识视频</p>
+
+  <form class="search" action="../" method="get">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#9a9a9a" stroke-width="2">
+      <circle cx="7" cy="7" r="5"/><path d="M11 11l3.5 3.5"/></svg>
+    <input name="q" placeholder="你想弄明白什么？" autocomplete="off">
+  </form>
+
+  <section class="vp">
+    <p class="src"><b>抖音 · B站 · 快手</b>　全网几万条</p>
+    <canvas id="rain"></canvas>
+    <div class="funnel-static">
+      <div class="junk"><span>广告</span><span>带货</span><span>标题党</span>
+        <span>卖焦虑</span><span>伪科学</span><span>讲不清的</span></div>
+      <div class="flabel">替 你 筛 掉</div>
+    </div>
+    <div class="tris"><i></i><i></i><i></i></div>
+    <p class="outline">只剩讲明白的那几条</p>
+  </section>
+
+  <section class="sky">
+    <canvas id="sky"></canvas>
+  </section>
+
+  <p class="foot">preview vp1 · 筛选雨 + 知识星图</p>
+</main>
+
+<script src="cloud-data.js"></script>
+<script>
+"use strict";
+var REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+/* ?step=N：截图验收用——加载时同步把动效世界快进到第 N 秒，不影响真实用户 */
+var STEP = (function(){ var m = location.search.match(/[?&]step=([\d.]+)/); return m ? +m[1] : 0; })();
+var JSERR = []; addEventListener("error", function(e){ JSERR.push(e.message); });
+
+/* 种子随机：布局可复现，截图验收 = 真实用户所见 */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;
+  var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;
+  return((t^t>>>14)>>>0)/4294967296;}}
+
+/* ================= ④ 筛选雨 =================
+   卡片=视频。大多数（带广告/带货/标题党小标）中途变灰、划掉、坠落消失；
+   少数变蓝穿过闸口细线，落进底部一行 ▶▶▶。集满 5 条停一拍，淡出，循环（一轮约 8s）。 */
+(function(){
+  var cv = document.getElementById("rain");
+  if (REDUCED) return;
+  var ctx = cv.getContext("2d");
+  var W = 0, H = 232, dpr = Math.min(devicePixelRatio || 1, 2);
+  var JUNK = ["广告","带货","标题党","卖焦虑","伪科学","讲不清"];
+  var GATE = 0.74;               // 闸口线（相对高度）
+  var DOCK_N = 5;                // 一轮端上来几条（库里真实中位数就是 5）
+  var cards = [], docked = [], rnd = mulberry32(7);
+  var bag = [], spawnAt = 0, phase = "run", phaseAt = 0; // run | hold | fade
+  var nextSlot = 0;              // 本轮下一个坞位
+
+  function size(){
+    W = cv.parentNode.clientWidth;
+    cv.width = W * dpr; cv.height = H * dpr;
+    cv.style.height = H + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  size(); addEventListener("resize", size);
+
+  /* 出牌袋：每 4 张 1 张是「讲明白的」，其余带垃圾小标 —— 比例稳定，顺序打散 */
+  function refill(){
+    bag = [ {good:true}, {junk:JUNK[(rnd()*6)|0]}, {junk:JUNK[(rnd()*6)|0]}, {junk:JUNK[(rnd()*6)|0]} ];
+    for (var i = bag.length - 1; i > 0; i--){
+      var j = (rnd()*(i+1))|0, t = bag[i]; bag[i] = bag[j]; bag[j] = t;
+    }
+  }
+
+  function spawn(){
+    if (!bag.length) refill();
+    var c = bag.pop();
+    cards.push({
+      x: W/2 + (rnd()-0.5)*Math.min(W-100, 260),
+      y: -16, vy: 46 + rnd()*14,
+      good: !!c.good, label: c.junk || null,
+      doomY: H*(0.3 + rnd()*0.34),   // 垃圾卡在这个高度被判掉
+      dead: 0,                        // 变灰坠落的进度 0→1
+      passed: false, dockI: -1
+    });
+  }
+
+  function drawCard(c, alpha, color, fill){
+    var w = 46, h = 26, r = 4, x = c.x - w/2, y = c.y - h/2;
+    ctx.globalAlpha = alpha;
+    ctx.beginPath();
+    ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath();
+    ctx.fillStyle = fill; ctx.fill();
+    ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.stroke();
+    if (c.label){
+      ctx.fillStyle = color; ctx.font = "10px -apple-system,'PingFang SC',sans-serif";
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText(c.label, c.x, c.y + 0.5);
+      if (c.dead > 0){                      // 划掉
+        ctx.strokeStyle = "#c05621"; ctx.lineWidth = 1.2;
+        var lw = Math.min(1, c.dead*2.5) * (c.label.length*10/2 + 3);
+        ctx.beginPath(); ctx.moveTo(c.x-lw, c.y); ctx.lineTo(c.x+lw, c.y); ctx.stroke();
+      }
+    } else {                                 // 讲明白的：小 ▶
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.moveTo(c.x-3,c.y-5); ctx.lineTo(c.x+5,c.y); ctx.lineTo(c.x-3,c.y+5);
+      ctx.closePath(); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  var last = 0, simT = 0;   // 仿真钟（秒）
+  function step(dt){
+    simT += dt;
+    var gateY = H*GATE, dockY = H - 20;
+    ctx.clearRect(0, 0, W, H);
+
+    /* 闸口：一道细线，中间留一个口 */
+    ctx.strokeStyle = "#d8d4cb"; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(W*0.08, gateY); ctx.lineTo(W/2-13, gateY);
+    ctx.moveTo(W/2+13, gateY); ctx.lineTo(W*0.92, gateY); ctx.stroke();
+
+    if (phase === "run" && simT > spawnAt){ spawn(); spawnAt = simT + 0.26; }
+
+    for (var i = cards.length-1; i >= 0; i--){
+      var c = cards[i];
+      if (!c.good && c.y >= c.doomY) c.dead = Math.min(1, c.dead + dt/0.8);
+      if (c.dead > 0){                       // 变灰 → 失速 → 坠落消失
+        c.y += c.vy * (1 - c.dead*0.4) * dt;
+        if (c.dead >= 1){ cards.splice(i,1); continue; }
+        drawCard(c, 1 - c.dead, "#b3ada0", "#f4f1ea");
+        continue;
+      }
+      if (c.good && !c.passed && c.y > gateY - 13 && phase === "run" && nextSlot < DOCK_N){
+        c.passed = true; c.x0 = c.x; c.t = 0;     // 过闸：吸到闸口中央再放行
+        c.dockI = nextSlot++;
+      }
+      if (c.passed){
+        c.t = Math.min(1, c.t + dt/0.9);
+        var slotX = W/2 + (c.dockI - (DOCK_N-1)/2) * 26;
+        var e = c.t*c.t*(3-2*c.t);           // smoothstep
+        c.x = c.x0 + (c.t < 0.35 ? (W/2 - c.x0)*(c.t/0.35) : (W/2 - c.x0) + (slotX - W/2)*((c.t-0.35)/0.65));
+        c.y = gateY - 13 + (dockY - (gateY-13))*e;
+        if (c.t >= 1){ docked.push({x:slotX, at:simT}); cards.splice(i,1); continue; }
+        drawCard(c, 1, "#2b6cb0", "#eef3f9");
+        continue;
+      }
+      c.y += c.vy * dt;
+      if (c.y > H + 20){ cards.splice(i,1); continue; }
+      drawCard(c, 1, c.good ? "#8aa8c6" : "#c9c4b8", c.good ? "#f4f8fc" : "#faf8f3");
+    }
+
+    /* 底部已端上来的 ▶ */
+    var fadeK = 1;
+    if (phase === "fade") fadeK = Math.max(0, 1 - (simT-phaseAt)/0.5);
+    for (var d = 0; d < docked.length; d++){
+      var k = docked[d], pop = Math.min(1, (simT-k.at)/0.22);
+      var s = 1 + 0.25*(1-pop);
+      ctx.globalAlpha = fadeK * pop;
+      ctx.fillStyle = "#2b6cb0";
+      ctx.beginPath();
+      ctx.moveTo(k.x-5*s, dockY-7*s); ctx.lineTo(k.x+7*s, dockY); ctx.lineTo(k.x-5*s, dockY+7*s);
+      ctx.closePath(); ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    /* 节拍：集满 5 条 → 停一拍 → 淡出 → 下一轮 */
+    if (phase === "run" && docked.length >= DOCK_N){ phase = "hold"; phaseAt = simT; }
+    if (phase === "hold" && simT - phaseAt > 1.2){ phase = "fade"; phaseAt = simT; }
+    if (phase === "fade" && simT - phaseAt > 0.5){ docked = []; nextSlot = 0; phase = "run"; }
+  }
+  function tick(now){
+    if (!last) last = now;
+    step(Math.min((now-last)/1000, 0.05)); last = now;
+    requestAnimationFrame(tick);
+  }
+  /* 预热 3.5s：首帧就有卡在落，稳态一轮（集满5条→停一拍→淡出）约 7s */
+  for (var fi = 0, fn = Math.round((3.5 + STEP)*60); fi < fn; fi++) step(1/60);
+  requestAnimationFrame(tick);
+})();
+
+/* ================= ⑤ 知识星图 =================
+   词=星：域级大词 + 节点级小词（真实库，权重=入选条数）。
+   同域的词之间有极淡连线（就近成链，像星座）；缓慢漂移、呼吸。
+   点一个词：亮起它的邻域，然后跳转该主题页。 */
+(function(){
+  var cv = document.getElementById("sky");
+  var ctx = cv.getContext("2d");
+  var data = window.CLOUD_DATA, rnd = mulberry32(42);
+  var dpr = Math.min(devicePixelRatio || 1, 2);
+  var words = [], links = [], dots = [], W = 0, H = 0, hiDomain = null, hiAt = 0;
+
+  /* 域锚点（相对坐标）：ai 节点最多给上半场，其余三域在下方展开 */
+  var ANCHOR = { ai1:[0.50,0.20], fin1:[0.50,0.58], hea1:[0.28,0.80], hea2:[0.73,0.84] };
+
+  function font(w){ return (w.big ? "700 " : "400 ") + w.size + "px -apple-system,'PingFang SC',sans-serif"; }
+
+  function collide(r, rects){
+    for (var i = 0; i < rects.length; i++){
+      var o = rects[i];
+      if (r.x < o.x+o.w+9 && r.x+r.w+9 > o.x && r.y < o.y+o.h+6 && r.y+r.h+6 > o.y) return true;
+    }
+    return false;
+  }
+
+  function layout(){
+    W = cv.parentNode.clientWidth;
+    words = []; links = []; dots = [];
+    var rects = [], list = [];
+    data.domains.forEach(function(d){
+      list.push({ text:d.label, big:true, domain:d.id, size: Math.round(15 + Math.min(7, d.n*0.3)),
+                  href: "../?d=" + encodeURIComponent(d.id) });
+    });
+    data.nodes.forEach(function(n){
+      list.push({ text:n.t, big:false, domain:n.d, size: 10.5 + (n.w-3)*0.45,
+                  href: "../?node=" + encodeURIComponent(n.t) });
+    });
+
+    /* 画布高度随词的总面积走：窄屏给够竖向空间，词不丢、不挤 */
+    var area = 0;
+    list.forEach(function(w){
+      ctx.font = font(w);
+      area += (ctx.measureText(w.text).width + 16) * (w.size*1.15 + 10);
+    });
+    var budgetH = Math.max(540, Math.round(area * 1.55 / W));
+
+    list.forEach(function(w){
+      ctx.font = font(w);
+      var tw = ctx.measureText(w.text).width, th = w.size * 1.15;
+      var a = ANCHOR[w.domain] || [0.5,0.5];
+      var ax = a[0]*W, ay = a[1]*budgetH, placed = false;
+      for (var s = 0; s < 420 && !placed; s++){
+        var ang = s * 2.39996, rad = 2 + s * (w.big ? 1.1 : 1.9);
+        var x = ax + Math.cos(ang)*rad - tw/2, y = ay + Math.sin(ang)*rad*0.62 - th/2;
+        if (x < 4 || x+tw > W-4 || y < 8 || y+th > budgetH-8) continue;
+        var r = {x:x, y:y, w:tw, h:th};
+        if (collide(r, rects)) continue;
+        rects.push(r); placed = true;
+        var word = { text:w.text, big:w.big, domain:w.domain, size:w.size, href:w.href,
+                     hx:x+tw/2, hy:y+th/2, tw:tw, th:th,
+                     ph: rnd()*6.28, sp: 0.18 + rnd()*0.16, x:0, y:0 };
+        /* 星座链：连到同域最近的已放下的词 */
+        var best = null, bd = 1e9;
+        for (var k = 0; k < words.length; k++){
+          if (words[k].domain !== w.domain) continue;
+          var dx = words[k].hx-word.hx, dy = words[k].hy-word.hy, dd = dx*dx+dy*dy;
+          if (dd < bd){ bd = dd; best = k; }
+        }
+        if (best !== null) links.push([best, words.length]);
+        words.push(word);
+      }
+      if (!placed && typeof console !== "undefined") console.warn("词放不下:", w.text);
+    });
+
+    var maxY = 0;
+    rects.forEach(function(r){ maxY = Math.max(maxY, r.y + r.h); });
+    H = Math.ceil(maxY + 18);
+    for (var i = 0; i < 26; i++)                    // 极淡的背景星点
+      dots.push({x: rnd()*W, y: rnd()*H, ph: rnd()*6.28});
+    cv.width = W*dpr; cv.height = H*dpr;
+    cv.style.height = H + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function draw(t){
+    ctx.clearRect(0, 0, W, H);
+    var hi = hiDomain && (performance.now() - hiAt < 600) ? hiDomain : null;
+    words.forEach(function(w){
+      w.x = w.hx + Math.sin(t*w.sp + w.ph) * 3;
+      w.y = w.hy + Math.cos(t*w.sp*0.8 + w.ph) * 2.2;
+    });
+    dots.forEach(function(d){
+      ctx.globalAlpha = 0.10 + 0.07*Math.sin(t*0.5 + d.ph);
+      ctx.fillStyle = "#8c8c8c";
+      ctx.fillRect(d.x, d.y, 1.4, 1.4);
+    });
+    links.forEach(function(l){
+      var a = words[l[0]], b = words[l[1]];
+      var on = hi && a.domain === hi;
+      ctx.globalAlpha = on ? 0.34 : 0.10;
+      ctx.strokeStyle = "#2b6cb0"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    });
+    words.forEach(function(w){
+      var breathe = 0.84 + 0.16*Math.sin(t*0.4 + w.ph);
+      var a = hi ? (w.domain === hi ? 1 : 0.22) : breathe;
+      ctx.globalAlpha = a;
+      ctx.font = font(w);
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillStyle = w.big ? "#2b6cb0" : (w.size >= 12.2 ? "#333" : "#6b6b6b");
+      ctx.fillText(w.text, w.x, w.y);
+    });
+    ctx.globalAlpha = 1;
+  }
+
+  function loop(now){ draw(STEP + now/1000); requestAnimationFrame(loop); }
+
+  layout();
+  if (REDUCED) draw(1.7); else { if (STEP) draw(STEP); requestAnimationFrame(loop); }
+
+  var resizeT = null;
+  addEventListener("resize", function(){
+    clearTimeout(resizeT);
+    resizeT = setTimeout(function(){ layout(); if (REDUCED) draw(1.7); }, 150);
+  });
+
+  cv.addEventListener("click", function(ev){
+    var b = cv.getBoundingClientRect();
+    var mx = ev.clientX - b.left, my = ev.clientY - b.top, hit = null;
+    words.forEach(function(w){
+      if (Math.abs(mx - w.x) < w.tw/2 + 8 && Math.abs(my - w.y) < w.th/2 + 8) hit = w;
+    });
+    if (!hit) return;
+    hiDomain = hit.domain; hiAt = performance.now();
+    if (REDUCED) draw(1.7);
+    setTimeout(function(){ location.href = hit.href; }, 430);
+  });
+})();
+
+/* 验收探针：?check=1 时把横向溢出 + JS 错误写进 title，headless 抓取用 */
+if (location.search.indexOf("check") > -1)
+  addEventListener("load", function(){ setTimeout(function(){
+    var sw = document.documentElement.scrollWidth;
+    document.title = "CHK " + sw + "/" + innerWidth + (sw > innerWidth ? " OVERFLOW" : " ok")
+      + (JSERR.length ? " ERR:" + JSERR.join(";") : "");
+  }, 1800); });
+</script>
+</body>
+</html>
