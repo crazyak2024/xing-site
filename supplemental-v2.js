@@ -67,7 +67,7 @@
   function progress(d) {
     if (!active(d)) return '';
     const r=d.run, n=Number(r.n_candidates), done=Number(r.n_done);
-    const determinate=r.state==='RUNNING' && n>0 && Number.isFinite(done);
+    const determinate=(r.state==='RUNNING'||r.phase==='waiting_model_capacity') && n>0 && Number.isFinite(done);
     const pct=determinate ? Math.max(0,Math.min(100,done/n*100)) : 0;
     return `<div class="supp-progress${determinate?'':' indeterminate'}" role="progressbar" aria-label="补搜进度"${determinate?` aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct)}"`:''}><i${determinate?` style="width:${pct}%"`:''}></i></div>`;
   }
@@ -131,9 +131,9 @@
     const el=document.getElementById('results');
     el.innerHTML=`<article class="supp-node"><p class="supp-notice" role="status">${h(flash)}</p><header>${mapping}<p class="supp-eyebrow">从问题出发</p><h1>${h(title)}</h1></header>${active(d)?`<div class="supp-summary" aria-label="当前补搜状态"><p>${h(status(d))}</p>${progress(d)}</div>`:''}
       <section class="supp-content" aria-label="现有内容"><h2>${items.length?'已经找到的答案':'先看看已有内容'}</h2>${items.length?`<div class="cards grid">${shown.map(laneCardHtml).join('')}</div>${items.length>shownLimit?'<button class="supp-more">显示更多答案</button>':''}`:`<p class="supp-muted">${!DATA_LOADED?'正在载入已有内容…':'这里还没有经过核验的答案。'}</p>`}</section>
-      ${active(d)?`<section class="supp-running" aria-label="补搜进度" aria-live="polite"><p>${h(status(d))}</p>${progress(d)}</section>`:''}
+      ${active(d)&&r?.phase!=='waiting_model_capacity'?`<section class="supp-running" aria-label="补搜进度" aria-live="polite"><p>${h(status(d))}</p>${progress(d)}</section>`:''}
       ${!active(d)&&hasStatus?`<section class="supp-decision" aria-label="补搜结论"><p>${h(status(d))}</p>${candidateDetails(r)}</section>`:''}
-      <section class="supp-actions" aria-label="补搜操作"><button class="btn-primary" ${active(d)||busy?'disabled':''} data-supp-action="${items.length?'not_answered':'want_this'}">${busy?'正在提交…':active(d)?'正在补搜':items.length?'这些没回答我的问题':'我要这个'}</button><p class="supp-feedback" role="status">${h(flash||errs||(!node&&current?.q===q&&current?.searching?'正在理解你的问题…':''))}</p>${errs?'<button class="linklike" data-supp-retry>重新读取进度</button>':''}${mismatch?`<form class="supp-rephrase"><label for="supp-rephrase">换一种说法再搜</label><div><input id="supp-rephrase" value="${h(q)}" maxlength="60"><button type="submit">重新搜索</button></div></form>`:''}</section></article>`;
+      <section class="supp-actions" aria-label="补搜操作"><button class="btn-primary" ${active(d)||busy?'disabled':''} data-supp-action="${items.length?'not_answered':'want_this'}">${busy?'正在提交…':active(d)?(r?.phase==='waiting_model_capacity'?'等待续跑':'正在补搜'):items.length?'这些没回答我的问题':'我要这个'}</button><p class="supp-feedback" role="status">${h(flash||errs||(!node&&current?.q===q&&current?.searching?'正在理解你的问题…':''))}</p>${errs?'<button class="linklike" data-supp-retry>重新读取进度</button>':''}${mismatch?`<form class="supp-rephrase"><label for="supp-rephrase">换一种说法再搜</label><div><input id="supp-rephrase" value="${h(q)}" maxlength="60"><button type="submit">重新搜索</button></div></form>`:''}</section></article>`;
     el.querySelector('.supp-more')?.addEventListener('click',()=>{shownLimit+=6;renderResults();});
     const candidatePanel=el.querySelector('[data-candidate-run]');
     candidatePanel?.addEventListener('toggle',()=>{if(!candidatePanel.isConnected)return;const k=candidatePanel.dataset.candidateRun;candidatePanel.open?expandedCandidates.add(k):expandedCandidates.delete(k);});
