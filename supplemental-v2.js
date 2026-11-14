@@ -32,9 +32,11 @@
     if (d.status === 'locked' || r?.state === 'FAILED') return '补搜遇到问题，正在处理';
     if (r?.state === 'RUNNING') return r.phase === 'judging' ? '更多内容正在路上——我们正在努力抓取和筛选，请耐心等待' : (platforms(d) ? `正在${platforms(d)}上搜` : '正在寻找相关内容');
     if (r?.state === 'EXPORTING') return '收尾中：在把内容发布上站';
+    if (r?.state === 'PENDING' && r.phase === 'waiting_model_capacity') return '已保存筛选进度，等待处理额度恢复后继续';
     if (r?.state === 'PENDING') return d.queue_position ? `排在第 ${d.queue_position} 位 · 已记入「我问过的」` : '已收到，正在排队补搜';
     if (!active(d) && d.reason && d.message && !(r?.state==='CLOSED' && ['need_independent_demand','已记下，等待更多独立的补充需求'].includes(d.reason))) return d.message;
     if (r?.state === 'CLOSED') {
+      if (r.close_reason === 'incomplete') return '这一轮已结束，部分视频暂时无法读取，尚未完成筛选。';
       if (r.close_reason === 'no_supply') return platforms(d) ? `在${platforms(d)}上没搜到正面讲这个的口播内容` : '暂时没搜到正面讲这个的口播内容';
       if (r.close_reason === 'all_rejected') return '这一轮补搜已结束，暂时没有通过筛选的内容。';
       return platforms(d) ? `这是我们从${platforms(d)}上筛选出的最好内容` : '这一轮补搜已结束';
