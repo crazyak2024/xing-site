@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共2233条",
+  "generated_note": "判定=合格的候选，共2234条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1193,6 +1193,11 @@
       "id": "req_87032184",
       "label": "越野跑如何入门",
       "count": 1
+    },
+    {
+      "id": "req_314c3f04",
+      "label": "三岁孩子成长要注意什么",
+      "count": 1
     }
   ],
   "families": {
@@ -1212,7 +1217,7 @@
       "label": "健康",
       "short": "健康这块：怎么做可以给你；吃什么药、吃多少不行——那是医生的事。",
       "long": "限盐、吃法、运动、体重、睡眠、怎么测准——这些你自己就能做的调整，我们收，并且要求讲清适用边界：谁适用、什么情况得先看医生。给药名配剂量、该不该停药、该换哪种药，一律不收——那只能发生在诊室里，不能发生在视频里。偏方神药、保健品带货、拿截肢失明吓人、把个人经历当普遍规律，以及「一定会」「绝对不会」这类不作限定的绝对句，同样不收。明确偏离主流共识的讲法我们会少量保留并标注出来，明显反科学的不收。身体的事最后要问医生，不要问视频。",
-      "count": 129
+      "count": 130
     },
     "other": {
       "label": "其他",
@@ -1228,7 +1233,8 @@
     "hea2": "health",
     "req_7e7b7a6c": "health",
     "req_3151658e": "other",
-    "req_87032184": "other"
+    "req_87032184": "other",
+    "req_314c3f04": "health"
   },
   "items": [
     {
@@ -88762,6 +88768,37 @@
       "category": "越野跑如何入门",
       "domain": "req_87032184",
       "asked_as": "越野跑如何入门"
+    },
+    {
+      "id": "douyin:7195910524998044931",
+      "video_id": "7195910524998044931",
+      "title": "三至四岁儿童的情绪与社交引导",
+      "original_title": "在生活中我们该如何帮助3-4岁的孩子提高情绪管理和社交能力呢？#幼儿园 #育儿 #开学季 #幼儿园招生进行中",
+      "author": "北京赫斯顿幼儿园",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7195910524998044931",
+      "cover_url": "https://p26-sign.douyinpic.com/tos-cn-p-0015/o8mjkynaI8AJQfB3oEDDuBAiA6Q8b9G6jeQGgB~noop.webp?lk3s=138a59ce&x-expires=1795824000&x-signature=HsTB%2FUILMEeBXjKR%2F4HOR1zsauM%3D&from=327834062_large&s=PackSourceEnum_SEARCH_VID&se=false&sc=cover&biz_tag=aweme_video&l=20261114085637A0FD9279D313A0309DC2",
+      "published_at": "",
+      "key_points": [
+        "情绪词汇尚少，可结合当下感受教孩子命名",
+        "生气时练深呼吸或绘画，难过时可倾诉",
+        "共读情绪与交往绘本，讨论角色的感受",
+        "让孩子主导假装游戏，避免用怪物恐吓",
+        "鼓励自主吃饭脱衣，提供不超过三项选择"
+      ],
+      "chapters": [],
+      "duration_s": 99.706,
+      "likes": 44,
+      "collects": null,
+      "comments": null,
+      "summary": "通过情绪命名、绘本讨论、假装游戏和有限选择，帮助三至四岁孩子发展情绪表达、共情与独立性。",
+      "reason": "原文“我们先教孩子用语言来表达自己的感受和需求”，并提供情绪命名、绘本讨论等具体方法，符合幼儿发展特点，口播自足，无诊断或处方越界。 | 引用:「我们先教孩子用语言来表达自己的感受和需求」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "三岁孩子成长要注意什么",
+      "category": "三岁孩子成长要注意什么",
+      "domain": "req_314c3f04",
+      "asked_as": "三岁孩子成长要注意什么"
     }
   ]
 }
