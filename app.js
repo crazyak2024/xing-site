@@ -17,7 +17,7 @@
  * 为什么只画有内容的节点：空目录是雅虎之死。节点条数为 0 就不画。
  */
 
-const PLATFORM_CN = { douyin: "抖音", wechat_channels: "视频号" };
+const PLATFORM_CN = { bilibili: "B站", kuaishou: "快手", douyin: "抖音", wechat_channels: "视频号" };
 /* 可嵌入的平台。视频号官方嵌入只存在于微信小程序里，网页做不到（平台限制，不是我们技术不行）。
  * B站：`player.bilibili.com/player.html` 是**官方外链播放器**（页面 title 自称
  * "External Player - 哔哩哔哩嵌入式外链播放器"），2026-11-07 实测响应头
@@ -1031,6 +1031,7 @@ function cardHtml(it, whyNote, covers) {
       ? `<div class="pts" title="它讲到了答案的第 ${covers.map(i => i + 1).join("、")} 点">${
         covers.map(i => `<i class="pt">${i + 1}</i>`).join("")}</div>` : ""}
         ${body}
+        ${it.not_recommended_reason ? `<p class="candidate-reason">不推荐理由：${esc(it.not_recommended_reason)}</p>` : ""}
       </div>
     </div>`;
 }
@@ -1527,7 +1528,7 @@ function consensusBannerHtml(it) {
 
 function openModal(it) {
   if (!it) return;
-  const embedFn = EMBED_URL[it.platform];
+  const embedFn = it.video_id ? EMBED_URL[it.platform] : null;
   const m = document.getElementById("modal-content");
   const shape = EMBED_SHAPE[it.platform] || "portrait";
   m.className = embedFn ? `modal embed-mode embed-${shape}` : "modal nolink-mode";
@@ -1577,7 +1578,7 @@ function openModal(it) {
       <button class="modal-close" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
-      ${consensusBannerHtml(it)}
+      ${it.not_recommended_reason ? `<p class="candidate-reason">不推荐理由：${esc(it.not_recommended_reason)}</p>` : consensusBannerHtml(it)}
       ${body}
       ${chaptersHtml}
       <div class="modal-where">
@@ -1597,7 +1598,7 @@ function openModal(it) {
       <!-- 有要点时不再出 summary：两者讲的是同一件事（实测重复），要点扫得更快。
            没有要点的那几条才退回摘要。 -->
       ${hasPoints ? "" : `<div class="modal-summary">${esc(it.summary || "")}</div>`}
-      ${points}
+      ${it.not_recommended_reason && !hasPoints ? "" : points}
       <a class="src" href="${it.link}" target="_blank" rel="noopener">在原平台看原作者的完整内容</a>
       ${edgeBlockHtml(it)}
       <!-- 所有视频站在这个位置放"相关推荐"，我们什么都不放——**没有那颗按钮本身**

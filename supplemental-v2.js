@@ -47,12 +47,21 @@
     const candidates=r.close_detail.filter(x=>x && typeof x==='object' && x.id && x.reason!=='qualified' && !seen.has(x.id) && seen.add(x.id));
     if(!candidates.length) return '';
     const key=String(r.run_id||'');
-    return `<details data-candidate-run="${h(key)}" ${expandedCandidates.has(key)?'open':''}><summary>我还是想看看</summary><p>以下视频未通过收录筛选。筛选意见供参考，可前往原平台查看。</p><ul>${candidates.map(x=>{
+    return `<details data-candidate-run="${h(key)}" ${expandedCandidates.has(key)?'open':''}><summary>我还是想看看</summary><div class="grid">${candidates.map(x=>{
       let url='';try { const u=new URL(x.url);if(['https:','http:'].includes(u.protocol))url=u.href; } catch(_) {}
       const reason=x.reason && !['暂缓','拒收','insufficient_transcript'].includes(x.reason)?x.reason:'具体筛选意见暂未提供';
-      return `<li><p><strong>${h(x.title||'候选视频')}</strong>${x.platform?' · '+h(platformNames[x.platform]||x.platform):''}</p><p>筛选意见：${h(reason)}</p>${url?`<a href="${h(url)}" target="_blank" rel="noopener noreferrer">去原平台看看</a>`:'<p>原视频链接暂未提供</p>'}</li>`;
-    }).join('')}</ul></details>`;
+      const id=String(x.id), platform=String(x.platform||id.split(':')[0]);
+      const videoId=id.split(':').slice(1).join(':');
+      // Reuse the normal card and modal, without admitting candidates to the answer library.
+      return laneCardHtml({id,title:String(x.title||'候选视频'),platform,
+        video_id:/^[a-zA-Z0-9_-]+$/.test(videoId)?videoId:'',link:url,
+        topic:'',node:selected().node||'',key_points:[],summary:'',
+        cover_url:/^https?:\/\//i.test(String(x.cover_url||''))?String(x.cover_url):'',
+        author:String(x.author||''),duration_s:Number(x.duration_s)||0,published_at:x.published_at||'',
+        not_recommended_reason:reason});
+    }).join('')}</div></details>`;
   }
+
   function progress(d) {
     if (!active(d)) return '';
     const r=d.run, n=Number(r.n_candidates), done=Number(r.n_done);
