@@ -1421,7 +1421,7 @@ function goHome() {
        正好在键盘遮住的那半屏里。宽屏不 blur——那里没有键盘，留着焦点他能直接重打。 */
     if (window.innerWidth < 900) box.blur();
   }
-  cancelPendingSearch();          // 别让已经作废的那次输入在 400ms 后又发一次请求
+  cancelPendingSearch();          // 使旧的搜索请求失效
   go({ q: "", node: null, topic: null, mine: false, asks: false });
   syncHasQ();
 }
@@ -1433,7 +1433,7 @@ document.getElementById("q-clear")?.addEventListener("click", goHome);
 
 /* 输入框里有没有字——决定 ✕ 出不出。挂在 body 上而不是直接改按钮 display，
    是为了让"有搜索词"这件事在 CSS 里可寻址（以后别处要用同一个条件不必再写一遍 JS）。
-   ⚠️ 读的是**输入框的实际内容**，不是 state.q：两者在打字的那 160ms 里不同步，
+   ⚠️ 读的是**输入框的实际内容**，不是 state.q：输入草稿与已提交问题可以不同，
    而 ✕ 要跟着他眼睛看到的字走，不是跟着我们的状态走。 */
 function syncHasQ() {
   const box = document.getElementById("q");
@@ -2544,49 +2544,28 @@ document.addEventListener("keydown", e => {
   if (!atHome()) goHome();
 });
 
-/* ══════════ 两个节拍，不是一个（CY 2026-11-11 22:1x「浪费算力」那半句）══════════
- * 原来一个 160ms 的 timer 同时管三件事：本地过滤、BI 事件、**语义搜索的网络请求**。
- * 后者在 Cloudflare Workers AI 上真跑一次 bge-m3 向量化（isolate 冷的时候还要先把
- * 105 条索引文本全量向量化一遍）⟹ 按退格键删 8 个字 = 最多 8 次向量化 + 8 条
- * 「他搜了什么」的 BI 事件，而那 8 个前缀（"如何控制血"、"如何控制"、"如何控"…）
- * **没有一个是他真正想问的问题**。缺口清单被前缀污染，比多花的那点算力更贵。
- *
- * 拆成两档：
- *   · 本地过滤（纯内存 filter，零成本）→ 还是 160ms，手感不变；
- *   · 网络 + BI → 等一个**真正的停顿**；而且**删字时等更久**，因为变短的输入永远是
- *     过路状态，不是目的地（没人把一句话删掉一半当成自己要问的问题）。 */
-const Q_RENDER_MS = 160;
-const Q_NET_MS = 420;         // 打字停下
-const Q_NET_DEL_MS = 700;     // 正在删字：再等久一点，大概率他还要继续删
-let qTimer = null, qNetTimer = null, qPrev = "";
-
+/* Only an explicit submission commits a question; editing is a draft. */
 function cancelPendingSearch() {
-  clearTimeout(qTimer); clearTimeout(qNetTimer);
-  qPrev = "";
-  abortSemantic();            // 在飞的那次请求直接掐掉，别让 Worker 白算完
+  abortSemantic();
+  semSeq++;
 }
-
-document.getElementById("q").addEventListener("input", e => {
-  clearTimeout(qTimer); clearTimeout(qNetTimer);
-  const v = e.target.value.trim().toLowerCase();
-  const deleting = v.length < qPrev.length;
-  qPrev = v;
-  syncHasQ();                 // ✕ 跟着字走，不等 debounce
-  qTimer = setTimeout(() => {
-    state.q = v;
-    mapExpanded = false;   // 换了搜索词就把折起的地图收回去（和 go() 同一个规矩）
-    render();
-  }, Q_RENDER_MS);
-  // 清空到空串：本地那一跳照走（回到首页的列表），但没有任何可问的东西 ⟹ 不发请求、不记事件。
-  if (!v) { abortSemantic(); SEM = { q: "", top: [], ms: 0, pending: false, err: "" }; return; }
-  qNetTimer = setTimeout(() => {
-    // 只在停下打字后记一次（不是每个按键）。**搜了什么 + 命中几条**是这个产品
-    // 最该看的 BI：命中 0 的词就是内容缺口清单。
-    emit("search");
-    // 语义搜索：关键词命中与否都要问一次——它不只是兜底，还负责把
-    // "地图认为他问的是哪个节点"记进事件表（自动升级闸要吃这个）。
-    fetchSemantic(v);
-  }, deleting ? Q_NET_DEL_MS : Q_NET_MS);
+function submitQuestion() {
+  const q = document.getElementById("q").value.trim().toLowerCase();
+  cancelPendingSearch();
+  SEM = { q: "", top: [], ms: 0, pending: false, err: "" };
+  // A new question must never inherit a previous node or domain restriction.
+  state.domain = null;
+  applyDomain();
+  go({ q, node: null, topic: null, domain: null });
+  if (q) { emit("search"); fetchSemantic(q); }
+}
+document.getElementById("q").addEventListener("input", syncHasQ);
+document.getElementById("search-form").addEventListener("submit", e => {
+  e.preventDefault();
+  submitQuestion();
+});
+document.getElementById("q").addEventListener("keydown", e => {
+  if (e.key === "Enter" && e.isComposing) e.preventDefault();
 });
 
 

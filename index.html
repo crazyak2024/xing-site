@@ -274,8 +274,10 @@ body.focused .card .summary{display:none}
 
 /* 搜索框是内容区唯一的"大件"：地图是浏览入口，它是提问入口，两者都该一眼看到 */
 .searchbar{position:relative}
+#q-submit{position:absolute;right:5px;top:5px;bottom:5px;width:62px;border:0;border-radius:7px;background:var(--accent);color:var(--ink-inv);font:inherit;cursor:pointer}
+.searchbar input::-webkit-search-cancel-button{display:none}
 /* 右边留出 ✕ 的位置：不留的话长搜索词会钻到按钮底下，看起来像被截断了 */
-.searchbar input{width:100%;padding:12px 46px 12px 14px;font-size:16px;border:1px solid #d6d3cc;border-radius:10px;background:var(--card);color:var(--ink)}
+.searchbar input{width:100%;padding:12px 112px 12px 14px;font-size:16px;border:1px solid #d6d3cc;border-radius:10px;background:var(--card);color:var(--ink)}
 .searchbar input::placeholder{color:#b4b0a8}
 .searchbar input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(43,108,176,.1)}
 /* 「退出搜索」的 ✕（CY 2026-11-11 22:1x：「想退到首页，现在只能通过把搜索栏里的文字一个一个
@@ -286,7 +288,7 @@ body.focused .card .summary{display:none}
    ② **可点区 44×44**（苹果 HIG 的拇指下限），而圆圈只画 22px：看着轻、点着准。
       为什么要写死：`.lane-toast` 的教训——只验 DOM 不验几何，上线即无 CSS。
    ③ **只在框里真有字时出现**。空框上摆一颗 ✕ 是噪音，而且会让人以为还有东西可清。 */
-#q-clear{position:absolute;top:50%;right:1px;transform:translateY(-50%);
+#q-clear{position:absolute;top:50%;right:67px;transform:translateY(-50%);
   width:44px;height:44px;display:none;align-items:center;justify-content:center;
   border:0;background:none;padding:0;cursor:pointer;color:var(--sub);
   -webkit-tap-highlight-color:transparent}
@@ -740,12 +742,13 @@ a.src:after{content:" →"}
   </aside>
 
   <div class="content-panel">
-    <div class="searchbar">
-      <input id="q" type="text" placeholder="你想弄明白什么？">
+    <form class="searchbar" id="search-form" role="search">
+      <input id="q" enterkeyhint="search" aria-label="搜索问题" type="search" placeholder="你想弄明白什么？">
       <!-- 退出搜索、回首页。标签只写 ✕：按钮在输入框里、框里有字，它指什么是自明的
            （文案铁律：不解释操作）。无障碍名字写全，给读屏和长按提示。 -->
       <button id="q-clear" type="button" aria-label="清空搜索，回首页" title="清空搜索，回首页"><i>✕</i></button>
-    </div>
+      <button id="q-submit" type="submit">搜索</button>
+    </form>
     <section id="home-experience" aria-label="认识醒与探索知识">
   <section class="vp">
     <div class="stage" id="stage">
@@ -870,8 +873,8 @@ a.src:after{content:" →"}
        文案在 releases.json 里，不写死在这——那样改一句话要改三个地方，必然漂移。 -->
 </footer>
 <script src="supplemental-config.js"></script>
-<script src="supplemental-v2.js?v=candidate-cards-20261113"></script>
-<script src="app.js?v=candidate-cards-20261113"></script>
+<script src="supplemental-v2.js?v=explicit-search-20261113"></script>
+<script src="app.js?v=explicit-search-20261113"></script>
 <script src="vendor/tagcanvas.min.js"></script>
 <script src="home-experience.js"></script>
 </body>
