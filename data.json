@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共2234条",
+  "generated_note": "判定=合格的候选，共2235条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1195,6 +1195,11 @@
       "count": 1
     },
     {
+      "id": "req_52e94b6a",
+      "label": "如何控制血糖",
+      "count": 1
+    },
+    {
       "id": "req_314c3f04",
       "label": "三岁孩子成长要注意什么",
       "count": 1
@@ -1217,7 +1222,7 @@
       "label": "健康",
       "short": "健康这块：怎么做可以给你；吃什么药、吃多少不行——那是医生的事。",
       "long": "限盐、吃法、运动、体重、睡眠、怎么测准——这些你自己就能做的调整，我们收，并且要求讲清适用边界：谁适用、什么情况得先看医生。给药名配剂量、该不该停药、该换哪种药，一律不收——那只能发生在诊室里，不能发生在视频里。偏方神药、保健品带货、拿截肢失明吓人、把个人经历当普遍规律，以及「一定会」「绝对不会」这类不作限定的绝对句，同样不收。明确偏离主流共识的讲法我们会少量保留并标注出来，明显反科学的不收。身体的事最后要问医生，不要问视频。",
-      "count": 130
+      "count": 131
     },
     "other": {
       "label": "其他",
@@ -1234,6 +1239,7 @@
     "req_7e7b7a6c": "health",
     "req_3151658e": "other",
     "req_87032184": "other",
+    "req_52e94b6a": "health",
     "req_314c3f04": "health"
   },
   "items": [
@@ -88768,6 +88774,37 @@
       "category": "越野跑如何入门",
       "domain": "req_87032184",
       "asked_as": "越野跑如何入门"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxOquCCtTfRXKk8zT4DCKjmQ3L7GfxjjDxlBgBrKurA",
+      "video_id": "export/UzFfBgAAxOquCCtTfRXKk8zT4DCKjmQ3L7GfxjjDxlBgBrKurA",
+      "title": "坐姿提踵辅助控糖的做法与边界",
+      "original_title": "小腿上有降糖开关，帮你轻松降糖#糖尿病#降糖#高血糖#科普一下",
+      "author": "鹏哥谈健康",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/AUAPhfznyq",
+      "cover_url": "https://findermp.video.qq.com/251/20304/stodownload?encfilekey=KGDRibp2wkicI71kSpfquLXfwxmrBT0bN2ouBBibXYZg0mrRf0uNictgnap4MbsticTa7JSgyO0g9M94ROTsMk32ZEg&hy=SZ&idx=1&m=&scene=2&uzid=1&wxampicformat=503&picformat=200&token=ic1n0xDG6awicJT1W0ic4vxsfVTmVfHsKos3ojBHgceSYsAQoib1TUCT4ea5wVCeH6ia3xnUEtiaMuggIRJCVZe2VT8pAHx4hAxD27S0zXpByic7ic64lBZF31iciaA7qgfzhiaRDz2hPIE95RUOLsybjGjHNJFvtpKlxGRuDTIFwibmZfQzUJxrqDaXbd97O50JPESEqJGfo4hhpaGYGj9dxjEvVp2q2w",
+      "published_at": "",
+      "key_points": [
+        "研究中的血糖改善来自连续数小时的规范动作",
+        "坐稳、膝约90度，前掌着地缓慢抬落脚跟",
+        "建议餐后半小时开始，按身体感受量力进行",
+        "日常简化版不能套用实验中的52%效果",
+        "不能替代饮食、运动及药物；严重并发症先咨询医生"
+      ],
+      "chapters": [],
+      "duration_s": 118.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "介绍小腿肌肉活动辅助耗糖，说明坐姿提踵做法及实验降糖数据的适用限制。",
+      "reason": "“这52%是在实验室的条件下持续收缩数个小时才拿到的数据”明确限定实验结果；日常简化动作的降糖幅度仍证据有限。内容交代动作、适用边界及不可替代正规治疗，可作为辅助活动建议。 | 引用:「这52%是在实验室的条件下持续收缩数个小时才拿到的数据」",
+      "consensus": "limited",
+      "topic": "方法实操",
+      "node": "如何控制血糖",
+      "category": "如何控制血糖",
+      "domain": "req_52e94b6a",
+      "asked_as": "如何控制血糖"
     },
     {
       "id": "douyin:7195910524998044931",
