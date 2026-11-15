@@ -36,7 +36,7 @@
     if (r?.state === 'PENDING') return d.queue_position ? `排在第 ${d.queue_position} 位 · 已记入「我问过的」` : '已收到，正在排队补搜';
     if (!active(d) && d.reason && d.message && !(r?.state==='CLOSED' && ['need_independent_demand','已记下，等待更多独立的补充需求'].includes(d.reason))) return d.message;
     if (r?.state === 'CLOSED') {
-      if (r.close_reason === 'incomplete') return '这一轮已结束，部分视频暂时无法读取，尚未完成筛选。';
+      if (r.close_reason === 'incomplete') return '这一轮已结束，部分视频尚未完成核验。';
       if (r.close_reason === 'no_supply') return platforms(d) ? `在${platforms(d)}上没搜到正面讲这个的口播内容` : '暂时没搜到正面讲这个的口播内容';
       if (r.close_reason === 'all_rejected') return '这一轮补搜已结束，暂时没有通过筛选的内容。';
       return platforms(d) ? `这是我们从${platforms(d)}上筛选出的最好内容` : '这一轮补搜已结束';
@@ -60,7 +60,7 @@
         topic:'',node:selected().node||'',key_points:[],summary:'',
         cover_url:/^https?:\/\//i.test(String(x.cover_url||''))?String(x.cover_url):'',
         author:String(x.author||''),duration_s:Number(x.duration_s)||0,published_at:x.published_at||'',
-        not_recommended_reason:reason});
+        screening_pending:Boolean(x.technical_failure || x.partial_coverage), not_recommended_reason:reason});
     }).join('')}</div></details>`;
   }
 

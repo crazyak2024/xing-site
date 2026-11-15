@@ -1031,7 +1031,7 @@ function cardHtml(it, whyNote, covers) {
       ? `<div class="pts" title="它讲到了答案的第 ${covers.map(i => i + 1).join("、")} 点">${
         covers.map(i => `<i class="pt">${i + 1}</i>`).join("")}</div>` : ""}
         ${body}
-        ${it.not_recommended_reason ? `<p class="candidate-reason">不推荐理由：${esc(it.not_recommended_reason)}</p>` : ""}
+        ${it.not_recommended_reason ? `<p class="candidate-reason">${it.screening_pending ? '尚未完成核验' : '不推荐理由'}：${esc(it.not_recommended_reason)}</p>` : ""}
       </div>
     </div>`;
 }
@@ -1486,8 +1486,14 @@ function displayNode(n) { return String(n).replace(/^\d+\./, ""); }
  * 只有 B站 有（嵌入播放器认 `t=` 起播秒，点一条＝换 iframe src 重载到那一秒）；
  * 抖音/视频号这里不出——给了也点不动，比没有更误导。 */
 function chaptersBlockHtml(it) {
-  if (it.platform !== "bilibili" || !it.chapters || !it.chapters.length) return "";
-  const rows = it.chapters.map((c, i) => `
+  if (!it.chapters || !it.chapters.length) return "";
+  const chapters = it.chapters.filter(c => Number.isFinite(c.t) && c.t >= 0);
+  if (it.platform !== "bilibili") {
+    let url; try { url = new URL(it.link); } catch (_) { return ""; }
+    if (!["https:", "http:"].includes(url.protocol)) return "";
+    return `<div class="chapters"><div class="chp-head">原片时间参考（在原平台定位）</div><div class="chp-list">${chapters.map(c => `<a class="chp-row" href="${esc(url.href)}" target="_blank" rel="noopener noreferrer"><span class="chp-t">${Math.floor(c.t / 60)}:${String(Math.floor(c.t % 60)).padStart(2, "0")}</span><span class="chp-label">${esc(c.label)}</span></a>`).join("")}</div></div>`;
+  }
+  const rows = chapters.map((c, i) => `
     <button class="chp-row" data-chp-t="${c.t}" data-chp-i="${i}">
       <span class="chp-t">${Math.floor(c.t / 60)}:${String(c.t % 60).padStart(2, "0")}</span>
       <span class="chp-label">${esc(c.label)}</span>
@@ -1578,7 +1584,7 @@ function openModal(it) {
       <button class="modal-close" aria-label="关闭">&times;</button>
     </div>
     <div class="modal-body">
-      ${it.not_recommended_reason ? `<p class="candidate-reason">不推荐理由：${esc(it.not_recommended_reason)}</p>` : consensusBannerHtml(it)}
+      ${it.not_recommended_reason ? `<p class="candidate-reason">${it.screening_pending ? '尚未完成核验' : '不推荐理由'}：${esc(it.not_recommended_reason)}</p>` : consensusBannerHtml(it)}
       ${body}
       ${chaptersHtml}
       <div class="modal-where">
