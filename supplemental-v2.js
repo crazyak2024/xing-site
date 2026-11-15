@@ -197,6 +197,7 @@
       if(result.session)try{sessionStorage.setItem('xing.ask.session',result.session);}catch(_){}
       // A correction belongs to this question; never migrate other questions or old cards.
       remember(result,kind==='mismap'?undefined:d.node);
+      nextPoll.delete(result.node);if(d.node)nextPoll.delete(d.node);
       if((state.q||state.node)===q||(state.node&&state.node===d.node))current={...result,q};
       if(kind==='mismap'){
         mismatch=false;current={...result,q};
