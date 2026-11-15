@@ -4,7 +4,7 @@
   'use strict';
   const KEY = 'xing_asked';
   const snapshots = new Map(), retained = new Map(), errors = new Map(), loading = new Set();
-  const expandedCandidates = new Set();
+  const expandedCandidates = new Set(), itemOrders = new Map(), nextPoll = new Map(), pollFailures = new Map();
   let rows = [], writable = true, loaded = false, searchSeq = 0, timer = null, current = null;
   let shownKey = "", shownLimit = 6;
   let verification = null, busy = false, flash = '', mismatch = false;
@@ -65,12 +65,13 @@
   }
 
   function progress(d) {
-    if (!active(d)) return '';
-    const r=d.run, n=Number(r.n_candidates), done=Number(r.n_done);
-    const determinate=(r.state==='RUNNING'||r.phase==='waiting_model_capacity') && n>0 && Number.isFinite(done);
-    const pct=determinate ? Math.max(0,Math.min(100,done/n*100)) : 0;
-    return `<div class="supp-progress${determinate?'':' indeterminate'}" role="progressbar" aria-label="补搜进度"${determinate?` aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct)}"`:''}><i${determinate?` style="width:${pct}%"`:''}></i></div>`;
+    if (!active(d) || d?.run?.phase==='waiting_model_capacity') return '';
+    return `<div class="supp-progress indeterminate" role="progressbar" aria-label="补搜正在进行"><i></i></div>`;
   }
+  function progressCard(d,shown){
+    return window.XingSearchProgress?.render(d,shown.map(x=>String(x.id))) ?? `<p>${h(status(d))}</p>${progress(d)}`;
+  }
+
   async function api(path,body) {
     const controller=new AbortController(), timeout=setTimeout(()=>controller.abort(),15000);
     try {
@@ -83,6 +84,8 @@
   }
   function remember(d, oldNode) {
     if (!d.node) return;
+    const priorSnapshot=snapshots.get(d.node);
+    if(priorSnapshot?.run?.run_id===d.run?.run_id && Number(d.run?.progress?.revision)<Number(priorSnapshot?.run?.progress?.revision))return;
     snapshots.set(d.node,d); errors.delete(d.node); if(oldNode) {snapshots.set(oldNode,d); errors.delete(oldNode);}
     const prior=retained.get(oldNode||d.node)||[];
     retained.set(d.node,[...new Map([...prior,...(d.run?.fresh_items||[])].filter(laneUsable).map(x=>[x.id,x])).values()]);
@@ -99,8 +102,8 @@
         // Preserve already seen fresh cards while the immutable library catches up.
         fetch('data.json',{cache:'no-cache'}).then(r=>r.ok?r.json():Promise.reject()).then(x=>{if(Array.isArray(x.items)){ALL_DATA=x.items;applyDomain();paint();}}).catch(()=>{});
       }
-    } catch(e) {errors.set(node,e.message);}
-    finally {loading.delete(node);paint();}
+    } catch(e) {errors.set(node,e.message);pollFailures.set(node,(pollFailures.get(node)||0)+1);}
+    finally {if(!errors.has(node))pollFailures.delete(node);nextPoll.set(node,Date.now()+(errors.has(node)?Math.min(30000,2000*2**(pollFailures.get(node)||1)):active(snapshots.get(node))?2000:30000));loading.delete(node);paint();}
   }
   function paint() {
     refreshList(); if(state.asks) renderList(); else if(state.node||state.q) renderResults();
@@ -120,24 +123,33 @@
     const lib=node?ALL_DATA.filter(x=>x.node===node):[];
     const fresh=(retained.get(node)||d.run?.fresh_items||[]).filter(laneUsable);
     const items=[...new Map([...fresh,...lib].map(x=>[x.id,x])).values()];
+    const order=itemOrders.get(node||state.q)||[];
+    items.forEach(x=>{if(!order.includes(x.id))order.push(x.id);});itemOrders.set(node||state.q,order);
+    items.sort((a,b)=>order.indexOf(a.id)-order.indexOf(b.id));
     const r=d.run, hasStatus=Boolean(r||d.reason||d.message), q=state.q;
     const key=node||q;if(shownKey!==key){shownKey=key;shownLimit=6;}
-    const shown=items.slice(0,shownLimit);
+    const freshIds=new Set(fresh.map(x=>x.id));
+    const shown=items.filter((x,i)=>i<shownLimit||freshIds.has(x.id));
     const mapping=q&&node&&!node.startsWith('q:')&&q.trim()!==(d.display_name||node).trim() ? `<div class="supp-mapping">你问的是“${h(q)}”，${d.mapping_overdue?'归类待人工确认':d.mapping==='suggested'?'可能对应':d.mapping==='pending'?'已归入，待确认':'已归入'}“${h(d.display_name||node)}”<button class="linklike" data-supp-action="mismap">这不是我问的问题</button></div>` : '';
     const title=node&&!node.startsWith('q:')?d.display_name||node:q||'新问题（评估中）';
     const errs=errors.get(node)||'';
     document.querySelector('.toolbar').hidden=true;
     document.getElementById('result-count').textContent='';
     const el=document.getElementById('results');
-    el.innerHTML=`<article class="supp-node"><p class="supp-notice" role="status">${h(flash)}</p><header>${mapping}<p class="supp-eyebrow">从问题出发</p><h1>${h(title)}</h1></header>${active(d)?`<div class="supp-summary" aria-label="当前补搜状态"><p>${h(status(d))}</p>${progress(d)}</div>`:''}
+    const oldCards=new Map([...el.querySelectorAll('.supp-content .card')].map(c=>[c.dataset.id,c]));
+    const hadFocus=document.activeElement;
+    el.innerHTML=`<article class="supp-node"><p class="supp-notice" role="status">${h(flash)}</p><header>${mapping}<p class="supp-eyebrow">从问题出发</p><h1>${h(title)}</h1></header>${hasStatus?`<div class="supp-summary" aria-label="当前补搜状态">${progressCard(d,shown)}</div>`:''}
       <section class="supp-content" aria-label="现有内容"><h2>${items.length?'已经找到的答案':'先看看已有内容'}</h2>${items.length?`<div class="cards grid">${shown.map(laneCardHtml).join('')}</div>${items.length>shownLimit?'<button class="supp-more">显示更多答案</button>':''}`:`<p class="supp-muted">${!DATA_LOADED?'正在载入已有内容…':'这里还没有经过核验的答案。'}</p>`}</section>
-      ${active(d)&&r?.phase!=='waiting_model_capacity'?`<section class="supp-running" aria-label="补搜进度" aria-live="polite"><p>${h(status(d))}</p>${progress(d)}</section>`:''}
-      ${!active(d)&&hasStatus?`<section class="supp-decision" aria-label="补搜结论"><p>${h(status(d))}</p>${candidateDetails(r)}</section>`:''}
+      
+      ${!active(d)&&hasStatus?`<section class="supp-decision" aria-label="补搜结论">${candidateDetails(r)}</section>`:''}
       <section class="supp-actions" aria-label="补搜操作"><button class="btn-primary" ${active(d)||busy?'disabled':''} data-supp-action="${items.length?'not_answered':'want_this'}">${busy?'正在提交…':active(d)?(r?.phase==='waiting_model_capacity'?'等待续跑':'正在补搜'):items.length?'这些没回答我的问题':'我要这个'}</button><p class="supp-feedback" role="status">${h(flash||errs||(!node&&current?.q===q&&current?.searching?'正在理解你的问题…':''))}</p>${errs?'<button class="linklike" data-supp-retry>重新读取进度</button>':''}${mismatch?`<form class="supp-rephrase"><label for="supp-rephrase">换一种说法再搜</label><div><input id="supp-rephrase" value="${h(q)}" maxlength="60"><button type="submit">重新搜索</button></div></form>`:''}</section></article>`;
     el.querySelector('.supp-more')?.addEventListener('click',()=>{shownLimit+=6;renderResults();});
     const candidatePanel=el.querySelector('[data-candidate-run]');
     candidatePanel?.addEventListener('toggle',()=>{if(!candidatePanel.isConnected)return;const k=candidatePanel.dataset.candidateRun;candidatePanel.open?expandedCandidates.add(k):expandedCandidates.delete(k);});
-    bindLaneCards(el); el.querySelectorAll('[data-supp-action]').forEach(b=>b.addEventListener('click',()=>submit(b.dataset.suppAction,b)));
+    const newCards=[];el.querySelectorAll('.supp-content .card').forEach(c=>{const old=oldCards.get(c.dataset.id),signature=JSON.stringify(LANE_ITEMS.get(String(c.dataset.id)));if(old && old._xingSignature===signature){c.replaceWith(old);}else{c._xingSignature=signature;newCards.push(c);}});
+    newCards.forEach(c=>c.addEventListener('click',()=>openModal(LANE_ITEMS.get(String(c.dataset.id)))));
+    const panel=el.querySelector('[data-candidate-run]');if(panel)bindLaneCards(panel);
+    if(hadFocus?.isConnected)hadFocus.focus({preventScroll:true}); el.querySelectorAll('[data-supp-action]').forEach(b=>b.addEventListener('click',()=>submit(b.dataset.suppAction,b)));
     el.querySelector('[data-supp-retry]')?.addEventListener('click',()=>{errors.delete(node);void read(node);});
     el.querySelector('form')?.addEventListener('submit',e=>{e.preventDefault();const v=el.querySelector('input').value.trim();document.getElementById('q').value=v;go({q:v,node:null});void search(v);});
     if(editing){const input=el.querySelector('#supp-rephrase');if(input){input.value=editing.value;input.focus({preventScroll:true});input.setSelectionRange(editing.start,editing.end);}}
@@ -235,10 +247,10 @@
   }
   function schedule() {
     clearTimeout(timer);timer=setTimeout(async()=>{
-      if(!document.hidden){const nodes=new Set(rows.map(r=>r.node));if(current?.node)nodes.add(current.node);if(state.node)nodes.add(state.node);await Promise.all([...nodes].map(n=>read(n)));}schedule();
-    },5000);
+      if(!document.hidden){const nodes=new Set(rows.map(r=>r.node));if(current?.node)nodes.add(current.node);if(state.node)nodes.add(state.node);await Promise.all([...nodes].filter(n=>Date.now()>=(nextPoll.get(n)||0)).map(n=>read(n)));}schedule();
+    },document.hidden?15000:2000);
   }
-  function resume(){load();rows.forEach(r=>void read(r.node));schedule();}
+  function resume(){load();const nodes=new Set(rows.map(r=>r.node));if(current?.node)nodes.add(current.node);if(state.node)nodes.add(state.node);nodes.forEach(n=>{nextPoll.delete(n);void read(n);});schedule();}
   function openQuestion(q){load();const row=rows.find(r=>r.q===q);if(row)openRow(row);else void search(q);}
   document.addEventListener('visibilitychange',()=>{if(enabled()&&!document.hidden)resume();});
   window.XingSupplemental={enabled,renderResults,refreshList,renderList,search,resume,openQuestion,status,progress};
