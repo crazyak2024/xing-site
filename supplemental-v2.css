@@ -11,3 +11,12 @@ body.supp-v2.decided #suggest,body.supp-v2.decided #scope-hint,body.supp-v2.deci
 .supp-value{font-size:1.12rem;font-weight:650;margin:0 0 8px}.supp-work{font-size:.88rem;color:#536454;margin:0 0 12px}
 .supp-activities{display:flex;flex-wrap:wrap;gap:8px;min-height:24px}.supp-activities span{font-size:.8rem;padding:4px 9px;background:#e6ecdf;color:#3e5541;border-radius:20px}
 @media(prefers-reduced-motion:reduce){.supp-progress i{animation:none!important}}
+
+/* Question flow: feedback remains above the results at every stage. */
+.supp-actions{border:1px solid var(--line);border-radius:12px;padding:16px;margin:0 0 24px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;background:var(--card)}
+.supp-actions label{width:100%;font-size:13px;color:var(--sub);margin-top:4px}
+.supp-actions input{flex:1;min-width:160px;border:1px solid var(--line-2);background:transparent;color:inherit;border-radius:7px;padding:10px;font:inherit;font-size:14px}
+.supp-actions>.supp-feedback,.supp-actions>p,.supp-actions>nav{flex-basis:100%;margin:0;line-height:1.7;font-size:14px}
+.supp-actions>.supp-feedback:empty{display:none}
+.supp-actions>.linklike{min-height:40px}
+.supp-content .cards>div{min-width:0}.supp-content .cards>div>.linklike{font-size:12px;margin:7px 0 12px}

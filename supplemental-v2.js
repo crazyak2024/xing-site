@@ -5,6 +5,8 @@
   const KEY = 'xing_asked';
   const snapshots = new Map(), retained = new Map(), errors = new Map(), loading = new Set();
   const expandedCandidates = new Set(), itemOrders = new Map(), nextPoll = new Map(), pollFailures = new Map();
+  const relatedLibrary = new Map(), stoppedQuestions = new Set(), autoAsked = new Set();
+  let feedbackText = '';
   let rows = [], writable = true, loaded = false, searchSeq = 0, timer = null, current = null;
   let shownKey = "", shownLimit = 6;
   let verification = null, busy = false, flash = '', mismatch = false;
@@ -36,6 +38,9 @@
     if (r?.state === 'PENDING') return d.queue_position ? `排在第 ${d.queue_position} 位 · 已记入「我问过的」` : '已收到，正在排队补搜';
     if (!active(d) && d.reason && d.message && !(r?.state==='CLOSED' && ['need_independent_demand','已记下，等待更多独立的补充需求'].includes(d.reason))) return d.message;
     if (r?.state === 'CLOSED') {
+      if(r.close_reason==='sufficient')return '已找到能回答这个问题的视频。';
+      if(r.close_reason==='user_satisfied')return '已找到答案，本轮搜索结束。';
+      if(['time_limit','budget_limit','page_limit','exhausted'].includes(r.close_reason))return '这次搜索已结束；已有内容可以先看，还缺的部分列在下方。';
       if (r.close_reason === 'incomplete') return '这一轮已结束，部分视频尚未完成核验。';
       if (r.close_reason === 'no_supply') return platforms(d) ? `在${platforms(d)}上没搜到正面讲这个的口播内容` : '暂时没搜到正面讲这个的口播内容';
       if (r.close_reason === 'all_rejected') return '这一轮补搜已结束，暂时没有通过筛选的内容。';
@@ -60,7 +65,7 @@
         topic:'',node:selected().node||'',key_points:[],summary:'',
         cover_url:/^https?:\/\//i.test(String(x.cover_url||''))?String(x.cover_url):'',
         author:String(x.author||''),duration_s:Number(x.duration_s)||0,published_at:x.published_at||'',
-        screening_pending:Boolean(x.technical_failure || x.partial_coverage), not_recommended_reason:reason});
+        screening_pending:Boolean(x.technical_failure || x.partial_coverage), not_recommended_reason:reason})+`<button class="linklike" data-supp-action="wrong_filter" data-video-id="${h(id)}">这条被误筛了</button>`;
     }).join('')}</div></details>`;
   }
 
@@ -116,13 +121,16 @@
   function renderResults() {
     if(!state.node&&!state.q) return false;
     load(); const focus=document.activeElement;
-    const editing=focus?.id==='supp-rephrase'?{value:focus.value,start:focus.selectionStart,end:focus.selectionEnd}:null;
+    const editing=['supp-rephrase','supp-feedback-text'].includes(focus?.id)?{id:focus.id,value:focus.value,start:focus.selectionStart,end:focus.selectionEnd}:null;
     const focusedAction=focus?.dataset?.suppAction;
     const d=selected(), node=d.node;
     if(node&&!snapshots.has(node)&&!errors.has(node)&&!loading.has(node)) void read(node);
-    const lib=node?ALL_DATA.filter(x=>x.node===node):[];
-    const fresh=(retained.get(node)||d.run?.fresh_items||[]).filter(laneUsable);
-    const items=[...new Map([...fresh,...lib].map(x=>[x.id,x])).values()];
+    const check=d.run?.answer_check;
+    const allowed=check?new Set(check.relevant_ids):null;
+    const lib=ALL_DATA.filter(x=>(x.node===node||(relatedLibrary.get(state.q)||[]).includes(x.node))&&(!allowed||allowed.has(String(x.id))));
+    const withdrawn=new Set(d.run?.withdrawn_ids||[]);
+    const fresh=(retained.get(node)||d.run?.fresh_items||[]).filter(x=>laneUsable(x)&&!withdrawn.has(String(x.id)));
+    const items=[...new Map([...fresh,...lib.filter(x=>!withdrawn.has(String(x.id)))].map(x=>[x.id,x])).values()];
     const order=itemOrders.get(node||state.q)||[];
     items.forEach(x=>{if(!order.includes(x.id))order.push(x.id);});itemOrders.set(node||state.q,order);
     items.sort((a,b)=>order.indexOf(a.id)-order.indexOf(b.id));
@@ -130,8 +138,8 @@
     const key=node||q;if(shownKey!==key){shownKey=key;shownLimit=6;}
     const freshIds=new Set(fresh.map(x=>x.id));
     const shown=items.filter((x,i)=>i<shownLimit||freshIds.has(x.id));
-    const mapping=q&&node&&!node.startsWith('q:')&&q.trim()!==(d.display_name||node).trim() ? `<div class="supp-mapping">你问的是“${h(q)}”，${d.mapping_overdue?'归类待人工确认':d.mapping==='suggested'?'可能对应':d.mapping==='pending'?'已归入，待确认':'已归入'}“${h(d.display_name||node)}”<button class="linklike" data-supp-action="mismap">这不是我问的问题</button></div>` : '';
-    const title=node&&!node.startsWith('q:')?d.display_name||node:q||'新问题（评估中）';
+    const mapping=q&&node&&!node.startsWith('q:')&&q.trim()!==(d.display_name||node).trim() ? `<div class="supp-mapping"><button class="linklike" data-supp-action="mismap">这些不是我要找的内容</button></div>` : '';
+    const title=q||d.display_name||node||'你的问题';
     const errs=errors.get(node)||'';
     document.querySelector('.toolbar').hidden=true;
     document.getElementById('result-count').textContent='';
@@ -139,10 +147,24 @@
     const oldCards=new Map([...el.querySelectorAll('.supp-content .card')].map(c=>[c.dataset.id,c]));
     const hadFocus=document.activeElement;
     el.innerHTML=`<article class="supp-node"><p class="supp-notice" role="status">${h(flash)}</p><header>${mapping}<p class="supp-eyebrow">从问题出发</p><h1>${h(title)}</h1></header>${hasStatus?`<div class="supp-summary" aria-label="当前补搜状态">${progressCard(d,shown)}</div>`:''}
-      <section class="supp-content" aria-label="现有内容"><h2>${items.length?'已经找到的答案':'先看看已有内容'}</h2>${items.length?`<div class="cards grid">${shown.map(laneCardHtml).join('')}</div>${items.length>shownLimit?'<button class="supp-more">显示更多答案</button>':''}`:`<p class="supp-muted">${!DATA_LOADED?'正在载入已有内容…':'这里还没有经过核验的答案。'}</p>`}</section>
+      <section class="supp-content" aria-label="现有内容"><h2>${items.length?(check?'已经找到的答案':'可能回答你问题的视频'):'先看看已有内容'}</h2>${items.length?`<div class="cards grid">${shown.map(x=>`<div>${laneCardHtml(x)}<button class="linklike" data-supp-action="quality_issue" data-video-id="${h(x.id)}">这条内容有问题</button></div>`).join('')}</div>${items.length>shownLimit?'<button class="supp-more">显示更多答案</button>':''}`:`<p class="supp-muted">${!DATA_LOADED?'正在载入已有内容…':'这里还没有经过核验的答案。'}</p>`}</section>
       
-      ${!active(d)&&hasStatus?`<section class="supp-decision" aria-label="补搜结论">${candidateDetails(r)}</section>`:''}
-      <section class="supp-actions" aria-label="补搜操作"><button class="btn-primary" ${active(d)||busy?'disabled':''} data-supp-action="${items.length?'not_answered':'want_this'}">${busy?'正在提交…':active(d)?(r?.phase==='waiting_model_capacity'?'等待续跑':'正在补搜'):items.length?'这些没回答我的问题':'我要这个'}</button><p class="supp-feedback" role="status">${h(flash||errs||(!node&&current?.q===q&&current?.searching?'正在理解你的问题…':''))}</p>${errs?'<button class="linklike" data-supp-retry>重新读取进度</button>':''}${mismatch?`<form class="supp-rephrase"><label for="supp-rephrase">换一种说法再搜</label><div><input id="supp-rephrase" value="${h(q)}" maxlength="60"><button type="submit">重新搜索</button></div></form>`:''}</section></article>`;
+      ${hasStatus?`<section class="supp-decision" aria-label="补搜结论">${candidateDetails(r)}</section>`:''}
+      <section class="supp-actions" aria-label="回答反馈">
+        <button class="btn-primary" ${busy?'disabled':''} data-supp-action="not_answered">这些没回答我的问题</button>
+        <button class="linklike" ${busy?'disabled':''} data-supp-action="enough">够了，已找到答案</button>
+        <label for="supp-feedback-text">还缺什么，或哪里不对？（选填）</label>
+        <input id="supp-feedback-text" value="${h(feedbackText)}" maxlength="500" placeholder="例如：我想看从头读一份财报的演示">
+        <button class="linklike" ${busy?'disabled':''} data-supp-action="missing">补充需求</button>
+        <p class="supp-feedback" role="status">${h(flash||errs||(!node&&current?.q===q&&current?.searching?'正在寻找相关视频…':''))}</p>
+        ${check?.missing?.length?`<p>还没找到：${check.missing.map(h).join('；')}</p>`:''}
+        ${check?.related_questions?.length?`<nav aria-label="相关问题">${check.related_questions.map(x=>`<button class="linklike" data-related-question="${h(x)}">${h(x)}</button>`).join('')}</nav>`:''}
+        ${errs?'<button class="linklike" data-supp-retry>重新读取进度</button>':''}
+      </section></article>`;
+    const actions=el.querySelector('.supp-actions');
+    el.querySelector('.supp-content').before(actions);
+    el.querySelector('#supp-feedback-text')?.addEventListener('input',e=>{feedbackText=e.target.value;});
+    el.querySelectorAll('[data-related-question]').forEach(b=>b.onclick=()=>{const q=b.dataset.relatedQuestion;document.getElementById('q').value=q;go({q,node:null});void search(q);});
     el.querySelector('.supp-more')?.addEventListener('click',()=>{shownLimit+=6;renderResults();});
     const candidatePanel=el.querySelector('[data-candidate-run]');
     candidatePanel?.addEventListener('toggle',()=>{if(!candidatePanel.isConnected)return;const k=candidatePanel.dataset.candidateRun;candidatePanel.open?expandedCandidates.add(k):expandedCandidates.delete(k);});
@@ -152,19 +174,23 @@
     if(hadFocus?.isConnected)hadFocus.focus({preventScroll:true}); el.querySelectorAll('[data-supp-action]').forEach(b=>b.addEventListener('click',()=>submit(b.dataset.suppAction,b)));
     el.querySelector('[data-supp-retry]')?.addEventListener('click',()=>{errors.delete(node);void read(node);});
     el.querySelector('form')?.addEventListener('submit',e=>{e.preventDefault();const v=el.querySelector('input').value.trim();document.getElementById('q').value=v;go({q:v,node:null});void search(v);});
-    if(editing){const input=el.querySelector('#supp-rephrase');if(input){input.value=editing.value;input.focus({preventScroll:true});input.setSelectionRange(editing.start,editing.end);}}
+    if(editing){const input=el.querySelector('#'+editing.id);if(input){input.value=editing.value;input.focus({preventScroll:true});input.setSelectionRange(editing.start,editing.end);}}
     else if(focusedAction)el.querySelector(`[data-supp-action="${focusedAction}"]`)?.focus({preventScroll:true});
     return true;
   }
   async function search(q) {
-    if(!q) return; const seq=++searchSeq;flash='';mismatch=false;current={q,searching:true};paint();
+    if(!q) return; const seq=++searchSeq;flash='';feedbackText='';mismatch=false;current={q,searching:true};paint();
     try {
       const d=await api('/semantic',{q}); if(seq!==searchSeq||state.q!==q) return;
-      const top=d.top?.[0];
+      relatedLibrary.set(q,(d.top||[]).filter(x=>x.score>=.60).map(x=>x.name||x.id));
       current=d.node&&['confirmed','exact','pending'].includes(d.mapping)?{q,node:d.node,display_name:d.node,mapping:d.mapping}:{q};
       if(current.node) void read(current.node);
     }catch(e){if(seq!==searchSeq)return; current={q};flash='归类暂时不可用，你仍可以提出补搜请求。';}
     paint();
+    while(busy&&seq===searchSeq)await new Promise(resolve=>setTimeout(resolve,100));
+    if(seq===searchSeq&&state.q===q&&!autoAsked.has(q)&&!stoppedQuestions.has(q)&&!rows.some(x=>x.q===q)) {
+      autoAsked.add(q);await submit('asked');
+    }
   }
   function token() {
     // Internal alpha: CY deferred anti-abuse until wider testing (2026-11-12).
@@ -188,18 +214,23 @@
     }).finally(()=>{verification=null;});return verification;
   }
   async function submit(kind,button) {
-    if(busy)return;const d=selected();if(kind!=='mismap'&&active(d))return;busy=true;flash=kind==='mismap'?'正在解除错误归类…':'正在提交…';const q=state.q||d.display_name||d.node;
+    if(busy)return;
+    if(['quality_issue','wrong_filter'].includes(kind)&&!button?.dataset?.videoId){
+      flash=kind==='quality_issue'?'请点击具体视频下方的「这条内容有问题」。':'请展开「我还是想看看」，指出哪条视频被误筛。';paint();return;
+    }
+    const d=selected();busy=true;flash=kind==='mismap'?'正在解除错误归类…':'正在提交…';const q=state.q||d.display_name||d.node;
     const rect=button?.getBoundingClientRect();paint();
     try {
       const turnstile_token=await token();
       let session='';try{session=sessionStorage.getItem('xing.ask.session')||'';}catch(_){}
-      const result=await api('/ask',{q,node:d.mapping==='suggested'&&kind!=='mismap'?undefined:d.node,kind,turnstile_token,session});
+      const result=await api('/ask',{q,node:d.mapping==='suggested'&&kind!=='mismap'?undefined:d.node,kind,item:feedbackText,target:button?.dataset?.videoId,turnstile_token,session});
       if(result.session)try{sessionStorage.setItem('xing.ask.session',result.session);}catch(_){}
       // A correction belongs to this question; never migrate other questions or old cards.
       remember(result,kind==='mismap'?undefined:d.node);
       nextPoll.delete(result.node);if(d.node)nextPoll.delete(d.node);
       if((state.q||state.node)===q||(state.node&&state.node===d.node))current={...result,q};
-      if(kind==='mismap'){
+      if(kind==='enough'){stoppedQuestions.add(q);flash='已记下：你已找到答案。';}
+      else if(kind==='mismap'){
         mismatch=false;current={...result,q};
         rows=rows.filter(x=>x.q!==q);
         rows.unshift({node:result.node,q,title:q,last_seen_at:new Date().toISOString(),summary:'已解除错误归类，正在按原问题重新判断'});
@@ -209,10 +240,10 @@
       }
       else {
         const old=rows.find(x=>x.node===result.node);rows=rows.filter(x=>x.node!==result.node&&x.q!==q);
-        rows.unshift({...old,node:result.node,q,title:result.display_name||q,last_seen_at:new Date().toISOString(),summary:status(result)});rows=rows.slice(0,50);save();refreshList();fly(q,rect);flash='已记入「我问过的」';
+        rows.unshift({...old,node:result.node,q,title:result.display_name||q,last_seen_at:new Date().toISOString(),summary:status(result)});rows=rows.slice(0,50);save();refreshList();if(kind==='asked')fly(q,rect);stoppedQuestions.delete(q);flash=kind==='asked'?'正在帮你找答案':'已收到，后续筛选会参考你的反馈。';
       }
-      schedule();
-    }catch(e){flash=e.message||'提交失败，请稍后重试';}
+      feedbackText='';schedule();
+    }catch(e){if(kind==='asked')autoAsked.delete(q);flash=e.message||'提交失败，请稍后重试';}
     finally{busy=false;paint();}
   }
   function openRow(row) {

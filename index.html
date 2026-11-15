@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>醒 · 知识视频地图</title>
+<title>醒 · 知识视频搜索</title>
 <!-- 封面图分布在 5 个第三方 CDN 上（B站 3 个轮询域名 + 抖音 + 视频号）。每个域名第一次用都要
      DNS + TCP + TLS 三次往返，而这三次发生在 data.json 下载完、第一张 <img> 插进 DOM 之后
      ——即**串在关键路径上**。preconnect 把它提前到解析 <head> 的那一刻并行做掉。
@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://i2.hdslb.com" crossorigin>
 <link rel="dns-prefetch" href="https://p3-sign.douyinpic.com">
 <link rel="dns-prefetch" href="https://wxapp.tc.qq.com">
-<meta name="description" content="一张可点击的中文知识视频地图：按问题组织，经过质量筛选，找到就走。">
+<meta name="description" content="输入问题，跨平台寻找经过质量筛选的知识视频，也能继续探索相关问题。">
 <!-- 图标与分享卡（2026-11-10 Alpha 前评估补）。原来 /favicon.ico 是 404 ⟹ 标签页一张白纸；
      没有 og:* ⟹ 转到微信/飞书只显示一行裸链接，朋友点开之前不知道这是什么。
      og:image 用 Playwright 截的 1200×630 卡（site/og.png），不是手画的。 -->
@@ -21,12 +21,12 @@
 <link rel="apple-touch-icon" href="favicon.svg">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="醒">
-<meta property="og:title" content="醒 · 知识视频地图">
+<meta property="og:title" content="醒 · 知识视频搜索">
 <meta property="og:description" content="无广告 · 不上瘾 · 不焦虑。按问题组织的中文知识视频索引：你问，我们答，你走。">
 <meta property="og:url" content="https://crazyak2024.github.io/xing-site/">
 <meta property="og:image" content="https://crazyak2024.github.io/xing-site/og.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="醒 · 知识视频地图">
+<meta name="twitter:title" content="醒 · 知识视频搜索">
 <meta name="twitter:description" content="无广告 · 不上瘾 · 不焦虑。按问题组织的中文知识视频索引。">
 <meta name="twitter:image" content="https://crazyak2024.github.io/xing-site/og.png">
 <style>
@@ -682,7 +682,7 @@ a.src:after{content:" →"}
 .card .candidate-reason{font-size:13px;color:var(--muted);line-height:1.6;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
 </style>
 <link rel="stylesheet" href="home-experience.css">
-<link rel="stylesheet" href="supplemental-v2.css">
+<link rel="stylesheet" href="supplemental-v2.css?v=0.3.0-rc.1">
 </head>
 <body class="home-mode">
 <div class="layout">
@@ -700,7 +700,7 @@ a.src:after{content:" →"}
         <circle cx="48" cy="48" r="5" fill="currentColor"/>
       </svg><span>醒</span></h1>
     <p class="home-subtitle">无广告 · 不上瘾 · 不焦虑 的知识视频</p>
-    <p class="tagline">知识视频地图</p>
+    <p class="tagline">知识视频搜索</p>
     <!-- slogan（CY 2026-11-10 16:3x：「整个网站还是缺一句有趣有力的 slogan」）。
          选它的理由：它和标识是**同一句话的两种说法**——标识把无限符号切断，这句把
          "没完没了"点名。像一句药品广告，这正是它有趣的地方：我们治的是那个症状。
@@ -873,8 +873,8 @@ a.src:after{content:" →"}
        文案在 releases.json 里，不写死在这——那样改一句话要改三个地方，必然漂移。 -->
 </footer>
 <script src="supplemental-config.js"></script>
-<script src="search-progress.js?v=0.2.0-rc.1"></script>
-<script src="supplemental-v2.js?v=failure-recovery-wait-20261113"></script>
+<script src="search-progress.js?v=0.3.0-rc.1"></script>
+<script src="supplemental-v2.js?v=0.3.0-rc.1"></script>
 <script src="app.js?v=explicit-search-20261113"></script>
 <script src="vendor/tagcanvas.min.js"></script>
 <script src="home-experience.js"></script>
