@@ -12,7 +12,7 @@
   const enabled = () => config().enabled === true;
   const base = () => String(config().apiBase || COLLECT_URL).replace(/\/$/, '');
   const h = value => esc(String(value ?? ''));
-  const platformNames = {douyin:'抖音',bilibili:'B站',kuaishou:'快手',wechat_channels:'视频号'};
+  const platformNames = {douyin:'抖音',bilibili:'B站',kuaishou:'快手',wechat_channels:'视频号',channels:'视频号'};
   const platforms = d => (d?.run?.platforms_searched || d?.platforms_searched || []).map(p => platformNames[p] || p).join('、');
   const active = d => !d?.service_paused && ['PENDING','RUNNING','EXPORTING'].includes(d?.run?.state);
   function load() {
