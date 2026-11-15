@@ -240,7 +240,7 @@
       }
       else {
         const old=rows.find(x=>x.node===result.node);rows=rows.filter(x=>x.node!==result.node&&x.q!==q);
-        rows.unshift({...old,node:result.node,q,title:result.display_name||q,last_seen_at:new Date().toISOString(),summary:status(result)});rows=rows.slice(0,50);save();refreshList();if(kind==='asked')fly(q,rect);stoppedQuestions.delete(q);flash=kind==='asked'?'正在帮你找答案':'已收到，后续筛选会参考你的反馈。';
+        rows.unshift({...old,node:result.node,q,title:result.display_name||q,last_seen_at:new Date().toISOString(),summary:status(result)});rows=rows.slice(0,50);save();refreshList();if(kind==='asked')fly(q,rect);stoppedQuestions.delete(q);flash=kind==='asked'?status(result):'已收到，后续筛选会参考你的反馈。';
       }
       feedbackText='';schedule();
     }catch(e){if(kind==='asked')autoAsked.delete(q);flash=e.message||'提交失败，请稍后重试';}
