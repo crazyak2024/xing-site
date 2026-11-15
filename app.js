@@ -50,6 +50,8 @@ const TOPIC_HINT = {
 };
 
 let DATA = [];          // 当前领域内的内容（下面所有渲染都只看这个）
+let DATA_ERROR = '';
+let DATA_LOADING = false;
 let DATA_LOADED = false; // data.json 到底回来没有——用来分辨"还没到"和"真没有"
 let ALL_DATA = [];      // 全部内容（跨领域）
 let DATA_EDGES = {};    // 知识地图的边：{节点名: [{type,dst,why}]}，详情页用
@@ -2808,9 +2810,14 @@ function loadShell(attempt = 1) {
    一个数量级，但这个兜底留着——"200 + 残缺 body"是这台机器上反复出现的形状，
    不该靠文件小来避免它。 */
 function loadData(attempt = 1) {
-  fetch("data.json", { cache: "no-cache" })
+  if (DATA_LOADING) return;
+  DATA_LOADING = true; DATA_ERROR = "";
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  fetch("data.json", { cache: "no-cache", signal: controller.signal })
     .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
     .then(d => {
+      DATA_ERROR = "";
       ALL_DATA = d.items || [];
       DATA_EDGES = d.edges || {};
       DATA_LOADED = true;
@@ -2838,15 +2845,12 @@ function loadData(attempt = 1) {
     })
     .catch(err => {
       if (attempt < 3) return setTimeout(() => loadData(attempt + 1), 800 * attempt);
-      DATA_LOADED = true;   // 别卡在"加载中"——失败要说失败
-      /* 数据没取到**不代表**用户那几条请求该失联：它们是两件独立的事
-         （清单来自本机 localStorage，进度来自我们的 Worker）。 */
+      DATA_ERROR = err.name === 'AbortError' ? '已有内容加载超时，请重试。' : '已有内容未能加载，请重试。';
       refreshAsksUI(); resumeAsks();
-      document.getElementById("results").innerHTML =
-        `<div class="empty">内容没加载出来（${esc(String(err.message || err))}）。<br>
-         <button class="linklike" onclick="location.reload()">重新加载</button>
-         <div class="empty-note">多半是网络半途断了。内容本身没事，刷一下就好。</div></div>`;
-    });
+      if (window.XingSupplemental?.enabled() && (state.q || state.node)) render();
+      else document.getElementById("results").innerHTML =
+        `<div class="empty">${esc(DATA_ERROR)}<br><button class="linklike" onclick="loadData()">重新加载已有内容</button></div>`;
+    }).finally(() => { clearTimeout(timeout); DATA_LOADING = false; });
 }
 
 /* 主题页数据。**失败是非致命的**：拿不到就退回原来的列表视图，不弹错、不挡内容——

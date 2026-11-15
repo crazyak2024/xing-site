@@ -147,7 +147,7 @@
     const oldCards=new Map([...el.querySelectorAll('.supp-content .card')].map(c=>[c.dataset.id,c]));
     const hadFocus=document.activeElement;
     el.innerHTML=`<article class="supp-node"><p class="supp-notice" role="status">${h(flash)}</p><header>${mapping}<p class="supp-eyebrow">从问题出发</p><h1>${h(title)}</h1></header>${hasStatus?`<div class="supp-summary" aria-label="当前补搜状态">${progressCard(d,shown)}</div>`:''}
-      <section class="supp-content" aria-label="现有内容"><h2>${items.length?(check?'已经找到的答案':'可能回答你问题的视频'):'先看看已有内容'}</h2>${items.length?`<div class="cards grid">${shown.map(x=>`<div>${laneCardHtml(x)}<button class="linklike" data-supp-action="quality_issue" data-video-id="${h(x.id)}">这条内容有问题</button></div>`).join('')}</div>${items.length>shownLimit?'<button class="supp-more">显示更多答案</button>':''}`:`<p class="supp-muted">${!DATA_LOADED?'正在载入已有内容…':'这里还没有经过核验的答案。'}</p>`}</section>
+      <section class="supp-content" aria-label="现有内容"><h2>${items.length?(check?'已经找到的答案':'可能回答你问题的视频'):'先看看已有内容'}</h2>${items.length?`<div class="cards grid">${shown.map(x=>`<div>${laneCardHtml(x)}<button class="linklike" data-supp-action="quality_issue" data-video-id="${h(x.id)}">这条内容有问题</button></div>`).join('')}</div>${items.length>shownLimit?'<button class="supp-more">显示更多答案</button>':''}`:`<p class="supp-muted">${typeof DATA_ERROR!=='undefined'&&DATA_ERROR?h(DATA_ERROR):!DATA_LOADED?'正在载入已有内容…':'这里还没有经过核验的答案。'}${typeof DATA_ERROR!=='undefined'&&DATA_ERROR?'<button class="linklike" data-library-retry>重新加载已有内容</button>':''}</p>`}</section>
       
       ${hasStatus?`<section class="supp-decision" aria-label="补搜结论">${candidateDetails(r)}</section>`:''}
       <section class="supp-actions" aria-label="回答反馈">
@@ -161,6 +161,7 @@
         ${check?.related_questions?.length?`<nav aria-label="相关问题">${check.related_questions.map(x=>`<button class="linklike" data-related-question="${h(x)}">${h(x)}</button>`).join('')}</nav>`:''}
         ${errs?'<button class="linklike" data-supp-retry>重新读取进度</button>':''}
       </section></article>`;
+    el.querySelector('[data-library-retry]')?.addEventListener('click',()=>{loadData();paint();});
     const actions=el.querySelector('.supp-actions');
     el.querySelector('.supp-content').before(actions);
     el.querySelector('#supp-feedback-text')?.addEventListener('input',e=>{feedbackText=e.target.value;});
@@ -240,7 +241,7 @@
       }
       else {
         const old=rows.find(x=>x.node===result.node);rows=rows.filter(x=>x.node!==result.node&&x.q!==q);
-        rows.unshift({...old,node:result.node,q,title:result.display_name||q,last_seen_at:new Date().toISOString(),summary:status(result)});rows=rows.slice(0,50);save();refreshList();if(kind==='asked')fly(q,rect);stoppedQuestions.delete(q);flash=kind==='asked'?status(result):'已收到，后续筛选会参考你的反馈。';
+        rows.unshift({...old,node:result.node,q,title:result.display_name||q,last_seen_at:new Date().toISOString(),summary:status(result)});rows=rows.slice(0,50);save();refreshList();if(kind==='asked')fly(q,rect);stoppedQuestions.delete(q);flash=kind==='asked'?'':'已收到，后续筛选会参考你的反馈。';
       }
       feedbackText='';schedule();
     }catch(e){if(kind==='asked')autoAsked.delete(q);flash=e.message||'提交失败，请稍后重试';}
