@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共2235条",
+  "generated_note": "判定=合格的候选，共2238条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1203,6 +1203,11 @@
       "id": "req_314c3f04",
       "label": "三岁孩子成长要注意什么",
       "count": 1
+    },
+    {
+      "id": "req_b1f87975",
+      "label": "如何读懂财报",
+      "count": 3
     }
   ],
   "families": {
@@ -1216,7 +1221,7 @@
       "label": "财经",
       "short": "财经这块：不收荐股喊单、涨跌预测和「财富自由」那一套。",
       "long": "落点是「你该买什么」而不是「这件事的机制是什么」的，讲得再专业、数据再足也不收。暴富、躺赚、稳赚不亏、「穷人思维富人思维」，以及反过来的恐吓，一样不收。只播报昨天发生了什么、却不讲机制的要闻复述，这一期也不收。",
-      "count": 155
+      "count": 158
     },
     "health": {
       "label": "健康",
@@ -1240,7 +1245,8 @@
     "req_3151658e": "other",
     "req_87032184": "other",
     "req_52e94b6a": "health",
-    "req_314c3f04": "health"
+    "req_314c3f04": "health",
+    "req_b1f87975": "finance"
   },
   "items": [
     {
@@ -88836,6 +88842,98 @@
       "category": "三岁孩子成长要注意什么",
       "domain": "req_314c3f04",
       "asked_as": "三岁孩子成长要注意什么"
+    },
+    {
+      "id": "bilibili:BV1Dj411674S",
+      "video_id": "BV1Dj411674S",
+      "title": "合同资产、应收账款与合同负债",
+      "original_title": "【新专题来啦】合同资产vs应收账款/合同负债vs预收账款/新收入准则/中级会计实务/注会CPA会计",
+      "author": "邵邵讲财会",
+      "platform": "bilibili",
+      "link": "https://www.bilibili.com/video/BV1Dj411674S",
+      "cover_url": "https://i0.hdslb.com/bfs/archive/52c4c79cbdbdc0fbb43e0442ff67066770fc6572.jpg",
+      "published_at": "",
+      "key_points": [
+        "收款只需等待时间，可确认为应收账款",
+        "交付A后仍须交B才能收款，先列合同资产",
+        "折扣例按150元列应收、125元计收入",
+        "提前收款但尚未履约，确认为合同负债",
+        "预付款未到账时，须判断是否已有收款权"
+      ],
+      "chapters": [],
+      "duration_s": 586.0,
+      "likes": 270,
+      "collects": null,
+      "comments": null,
+      "summary": "用分批交货、数量折扣和预收款案例，解释收款权、收入确认与合同负债的区别。",
+      "reason": "原文“应收款项呢是企业获得对价的无条件的权利”点明区分依据，并用具体金额和履约条件演示报表项目的确认，可靠回答了财报阅读的一个关键方面，口播自足。 | 引用:「应收款项呢是企业获得对价的无条件的权利」",
+      "consensus": "mainstream",
+      "topic": "概念原理",
+      "node": "如何读懂财报",
+      "category": "如何读懂财报",
+      "domain": "req_b1f87975",
+      "asked_as": "如何读懂财报"
+    },
+    {
+      "id": "douyin:7680852572206644977",
+      "video_id": "7680852572206644977",
+      "title": "少数股东权益与损益的三年推演",
+      "original_title": "合并报系列（二）课本没教的少数股东抵销逻辑📚 【合并抵消系列 02】少数股东权益极简底层逻辑\n很多做财务的朋友处理合并报表，大多只会死套模板，根本搞不懂少数股东权益到底是怎么来的。\n我整理了一套逐年推演的极简案例，给大家演示Excel手工底稿的实操思路。\n这套思路和教材里的权益法转换思路不一样，能同时兼顾CPA备考和日常做账的需求。\n\n✅实操思路\n每年直接复制初始长投抵消分录，子公司所有者权益发生变动时，按少数股东持股比例拆分结转就可以，资本公积、其他权益工具也按同样规则处理。\n我之后还会持续拆解合并报表的底层原理，欢迎关注。#财务人 #合并报表 #财务实操 #注会cpa #中级",
+      "author": "财务工程师",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7680852572206644977",
+      "cover_url": "https://p11-sign.douyinpic.com/tos-cn-i-0813c000-ce/osAu5MPf9qiqCeEcELBXyQifABSlwA1EGk6AIA~noop.webp?lk3s=138a59ce&x-expires=1795932000&x-signature=deI%2BOenSTI3SBwNXniNBnaBmDcE%3D&from=327834062_large&s=PackSourceEnum_SEARCH_VID&se=false&sc=cover&biz_tag=aweme_video&l=20261115141220943B1B65EC533F82367A",
+      "published_at": "",
+      "key_points": [
+        "母公司90万元长投与子公司对应资本抵销",
+        "外部股东投入的10万元列入少数股东权益",
+        "第二年盈利20万元，少数股东权益增加2万元",
+        "以前年度的少数股东损益通过年初未分配利润滚存",
+        "第三年盈利70万元，少数股东权益累计19万元"
+      ],
+      "chapters": [],
+      "duration_s": 478.028,
+      "likes": 117,
+      "collects": null,
+      "comments": null,
+      "summary": "用持股90%的新设子公司案例，解释少数股东出资、当期损益与累计权益的关联。",
+      "reason": "在持股比例固定、利润留存的极简案例中，数字推演清楚，口播自足。原文：“少数股东损一是利润表上的项目少数股东权一是资产负债表上的项目”，具体说明了两表项目的关联。 | 引用:「少数股东损一是利润表上的项目少数股东权一是资产负债表上的项目」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "如何读懂财报",
+      "category": "如何读懂财报",
+      "domain": "req_b1f87975",
+      "asked_as": "如何读懂财报"
+    },
+    {
+      "id": "douyin:7215178997284506935",
+      "video_id": "7215178997284506935",
+      "title": "逆流交易对少数股东损益与权益的影响",
+      "original_title": "逆流交易合并报表为什么要抵消少数股东损益和少数股东权益？#注会cpa #注册会计师 #合并报表",
+      "author": "陶老师财税",
+      "platform": "douyin",
+      "link": "https://www.douyin.com/video/7215178997284506935",
+      "cover_url": "https://p26-sign.douyinpic.com/tos-cn-i-0813c001/e3e5f7e53d7e4c64ae066204e5ddeac2~noop.webp?lk3s=138a59ce&x-expires=1795932000&x-signature=UNrr%2FbyMMOYN%2F7yzYoQfd6YB0ik%3D&from=327834062_large&s=PackSourceEnum_SEARCH_VID&se=false&sc=cover&biz_tag=aweme_video&l=20261115141220943B1B65EC533F82367A",
+      "published_at": "",
+      "key_points": [
+        "逆流交易的未实现损益记在子公司报表中",
+        "抵消内部收入与成本会调减子公司利润",
+        "子公司利润调减，少数股东损益与权益随之减少",
+        "顺流交易抵消影响母公司，无须调整少数股东份额"
+      ],
+      "chapters": [],
+      "duration_s": 35.834,
+      "likes": 123,
+      "collects": null,
+      "comments": null,
+      "summary": "解释逆流交易抵消未实现内部利润时，如何影响少数股东损益与权益，并对比顺流交易。",
+      "reason": "原文“逆流交易产生的未实现内部交易损益体现在子公司的个别报表上”，据此说明抵消对子公司利润及少数股东份额的影响，可靠回答了理解合并报表的一个具体方面，口播自足。 | 引用:「逆流交易产生的未实现内部交易损益体现在子公司的个别报表上」",
+      "consensus": "mainstream",
+      "topic": "概念原理",
+      "node": "如何读懂财报",
+      "category": "如何读懂财报",
+      "domain": "req_b1f87975",
+      "asked_as": "如何读懂财报"
     }
   ]
 }
