@@ -1,5 +1,5 @@
 {
-  "generated_note": "判定=合格的候选，共2238条",
+  "generated_note": "判定=合格的候选，共2240条",
   "edges": {
     "01.大模型为什么会幻觉": [
       {
@@ -1172,7 +1172,7 @@
     {
       "id": "hea2",
       "label": "慢病指标与营养",
-      "count": 61
+      "count": 59
     },
     {
       "id": "hea1",
@@ -1208,6 +1208,11 @@
       "id": "req_b1f87975",
       "label": "如何读懂财报",
       "count": 3
+    },
+    {
+      "id": "req_aa8ae248",
+      "label": "如何控制血脂",
+      "count": 4
     }
   ],
   "families": {
@@ -1227,7 +1232,7 @@
       "label": "健康",
       "short": "健康这块：怎么做可以给你；吃什么药、吃多少不行——那是医生的事。",
       "long": "限盐、吃法、运动、体重、睡眠、怎么测准——这些你自己就能做的调整，我们收，并且要求讲清适用边界：谁适用、什么情况得先看医生。给药名配剂量、该不该停药、该换哪种药，一律不收——那只能发生在诊室里，不能发生在视频里。偏方神药、保健品带货、拿截肢失明吓人、把个人经历当普遍规律，以及「一定会」「绝对不会」这类不作限定的绝对句，同样不收。明确偏离主流共识的讲法我们会少量保留并标注出来，明显反科学的不收。身体的事最后要问医生，不要问视频。",
-      "count": 131
+      "count": 133
     },
     "other": {
       "label": "其他",
@@ -1246,7 +1251,8 @@
     "req_87032184": "other",
     "req_52e94b6a": "health",
     "req_314c3f04": "health",
-    "req_b1f87975": "finance"
+    "req_b1f87975": "finance",
+    "req_aa8ae248": "health"
   },
   "items": [
     {
@@ -85719,64 +85725,6 @@
       "domain": "hea2"
     },
     {
-      "id": "bilibili:BV1tP4y1u7zX",
-      "video_id": "BV1tP4y1u7zX",
-      "title": "血压升高的7个诱因与机制",
-      "original_title": "什么情况下血压会升高？医生：不要做7件事，会让血压迅速升高的",
-      "author": "杏林赤子梁发俊",
-      "platform": "bilibili",
-      "link": "https://www.bilibili.com/video/BV1tP4y1u7zX",
-      "cover_url": "",
-      "published_at": "",
-      "key_points": [
-        "血压由心脏放血能力、大动脉弹性、血液容量三因素决定",
-        "全身用力时收缩压可升高50-100毫米汞柱，停止用力后迅速恢复",
-        "暴怒/恐惧/精神紧张导致收缩压升高20-80毫米汞柱，情绪平复后恢复较慢",
-        "排便、咳嗽、讲话等日常行为也会短期升高血压",
-        "酗酒引起血压短暂升高，是诱发脑血管疾病的主要原因"
-      ],
-      "chapters": [],
-      "duration_s": 308.0,
-      "likes": 37,
-      "collects": null,
-      "comments": null,
-      "summary": "讲解血压形成的三因素和调节机制，阐述7个导致血压短期升高的情况（用力、情绪激动、排便、咳嗽、讲话、饮酒），并给出各情况下的收缩压升幅。",
-      "reason": "讲述血压形成的三个条件与调节机制，明确阐述7个升压诱因的具体数值变化范围，每项都有明确触发条件和数据支撑（如收缩压升高幅度），属于纯机制科普，未涉及治疗建议或用药指导。 | 引用:「全身使足了劲来扛抬背挑重的时候血压会急剧的增加输缩压可升高50至100毫米公柱」",
-      "consensus": "mainstream",
-      "topic": "概念原理",
-      "node": "血压是怎么升上去的",
-      "category": "61.血压是怎么升上去的",
-      "domain": "hea2"
-    },
-    {
-      "id": "bilibili:BV1py4y137LM",
-      "video_id": "BV1py4y137LM",
-      "title": "血压140/90的控制方法：限盐与运动",
-      "original_title": "血压140/90mmhg，如何控制和降低血压？医生：做好两件事",
-      "author": "影像科刘医生",
-      "platform": "bilibili",
-      "link": "https://www.bilibili.com/video/BV1py4y137LM",
-      "cover_url": "",
-      "published_at": "",
-      "key_points": [
-        "盐摄入过多是高血压主因，需限制在5克/天以内（含所有食物中的盐，非仅炒菜盐）",
-        "有氧运动通过改善循环、降低外周血管阻力、减轻体重来降压，需长期坚持见效",
-        "科学运动需避免过度、选择适宜时间（下午四点）和做好热身防护"
-      ],
-      "chapters": [],
-      "duration_s": 269.0,
-      "likes": 194,
-      "collects": null,
-      "comments": null,
-      "summary": "讲解处于正常高值的血压人群通过控制盐摄入和坚持有氧运动来有效降压的具体做法",
-      "reason": "\"盐摄入过多呢是导致高血腰的坠魁祸首...每天对于盐的摄入量...大家尽量控制在五克以内\" + \"运动呢是可以起到一定的降压作用...有氧运动...是非常重要的一项降血压的措施\" —— 机制清晰、做法具体 | 引用:「限盐5克/天、有氧运动通过改善循环降低外周阻力来降压」",
-      "consensus": "mainstream",
-      "topic": "方法实操",
-      "node": "饮食和运动怎么影响血压",
-      "category": "66.饮食和运动怎么影响血压",
-      "domain": "hea2"
-    },
-    {
       "id": "douyin:7551045832728907035",
       "video_id": "7551045832728907035",
       "title": "3岁幼儿园小班的关键发展能力",
@@ -88934,6 +88882,130 @@
       "category": "如何读懂财报",
       "domain": "req_b1f87975",
       "asked_as": "如何读懂财报"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxJaAKApmKA_3k8zT4DCKt1XJB42JywdADZWrzF1jUQ",
+      "video_id": "export/UzFfBgAAxJaAKApmKA_3k8zT4DCKt1XJB42JywdADZWrzF1jUQ",
+      "title": "降低低密度脂蛋白的饮食原则",
+      "original_title": "...#低密度脂蛋白胆固醇 #健康饮食 #降血脂 #饮食习惯 #胆固醇高#薄世宁#医学科普#命悬一线我不放手",
+      "author": "薄世宁医生",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/Axc9APdNNl",
+      "cover_url": "https://findermp.video.qq.com/251/20304/stodownload?encfilekey=KGDRibp2wkicKfkW89pUZ3xbjXKJcjWOAOViasrkGojqshA8suNoLHEIotJcMJLRvdXkGApPVVgiazwLn0fOGbf54w&hy=SH&idx=1&m=&scene=2&uzid=1&wxampicformat=503&picformat=200&token=ic1n0xDG6awibkicUQ7mdakKEmt12iaebSyEDOXEy5kmRXRsHXU2q5ybrvzlic7ngUKuOX8hU6hYFqdyVkibYibyFo6z1iciauau7tG2ibH8MlUg2l0BofrWOaIeSDlz2iaeTiaanLfDXpTtQBfKt0WicngJ1F2GkdOjoHNkhYo5npBI6BEfOSF9Oia0FjzYCiaPwJWeCtoLpEDMUiccVmLnic2giaNhWu4bgqVw",
+      "published_at": "",
+      "key_points": [
+        "严格控食研究中，低密度脂蛋白最高降约35%",
+        "以豆制品等植物蛋白替换部分肥肉和加工肉",
+        "用不饱和脂肪替换饱和脂肪，避免额外加油",
+        "可溶性纤维促胆汁酸排出，植物甾醇减少胆固醇吸收",
+        "饮食不能代替药物，正在用药者勿自行停药"
+      ],
+      "chapters": [],
+      "duration_s": 307.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "通过植物蛋白、脂肪替换和可溶性纤维降低低密度脂蛋白，并说明严格研究条件与用药边界。",
+      "reason": "饮食替换与降脂机制总体符合共识，口播自足，有具体食物示例。原文“咱们平时吃饭也很难完全达到研究当中那么严格的标准”限定了最高降幅的适用条件；同时明确饮食不能替代药物、不可自行停药，无个体化处方。 | 引用:「咱们平时吃饭也很难完全达到研究当中那么严格的标准」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "如何控制血脂",
+      "category": "如何控制血脂",
+      "domain": "req_aa8ae248",
+      "asked_as": "如何控制血脂"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxO2jKDcLKAWWk8zT4DCKjU3ObgreTo9v87oNWAywyg",
+      "video_id": "export/UzFfBgAAxO2jKDcLKAWWk8zT4DCKjU3ObgreTo9v87oNWAywyg",
+      "title": "按血脂指标调整饮食",
+      "original_title": "血脂高到底该怎么吃？一个视频教你如何控制“坏胆固醇”#医学科普#高脂血症#涨知识#吃",
+      "author": "田医生讲科普",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/A8ZxISoWzN",
+      "cover_url": "https://findermp.video.qq.com/251/20304/stodownload?encfilekey=2fG3V4WwQPnbrDS2TiboZVSx4Tltyokx9ycAJiaTeYcAhfsia07hTKk72Zf3E1XiaEocJD0yicF16222wZ9aAx6gJmAkEjM7K0pIr9gMPPlcUZicI&hy=SH&idx=1&m=ac5bdbe6230d595f53843987a67ff3bf&uzid=1&wxampicformat=503&picformat=200&token=AxricY7RBHdU4ktf0JuzZCUu0CKLWhic3tMcXicZv3515HMxWjRjrtQVUsvlg3kI1UYZNG172FF0FSIxdZyy4JmicZcia5FK81Qn4I8qYscHPpKeJTcx0ciacemicLILwclrZDKTNf4MxBrhS4tAR5kSQuArVY0L8U6JGsffhianErfQiczhz5jG3Hiadj77ppKry5Ja7aOQ0iajU3LaUoibK0F9jXz9Tw",
+      "published_at": "",
+      "key_points": [
+        "甘油三酯偏高应停酒、减糖，避免主食过量",
+        "坚果每天20至25克，并相应减少烹调油",
+        "降低坏胆固醇可用鱼、豆类替换部分肥肉",
+        "可先把一餐三分之一主食换成燕麦杂豆",
+        "甘油三酯超过5.6应就医评估，不能仅靠节食"
+      ],
+      "chapters": [],
+      "duration_s": 254.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "区分甘油三酯与低密度脂蛋白胆固醇，给出控酒糖油、替换脂肪和增加纤维的方法及就医边界。",
+      "reason": "按指标提供具体饮食措施，并说明高值就医及医生评估用药的边界，未给个体化处方。原文“鱼和坚果里的脂肪相对更合适但也不能不限量”明确了摄入限制。 | 引用:「鱼和坚果里的脂肪相对更合适但也不能不限量」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "如何控制血脂",
+      "category": "如何控制血脂",
+      "domain": "req_aa8ae248",
+      "asked_as": "如何控制血脂"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxPupCEIabiKKk8zT4DCKWf8br4FAf7GWww6TBz143A",
+      "video_id": "export/UzFfBgAAxPupCEIabiKKk8zT4DCKWf8br4FAf7GWww6TBz143A",
+      "title": "降低甘油三酯的生活方式干预",
+      "original_title": "想要降低甘油三酯，记住这3个关键方式！#血脂#高血脂#甘油三酯#饮食#运动#长海医院脑血管病中心左乔医生#降血脂",
+      "author": "长海医院脑血管病中心左乔医生",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/AzChjcVYDl",
+      "cover_url": "https://findermp.video.qq.com/251/20304/stodownload?encfilekey=KGDRibp2wkicLaaldde8bpTHOGYTEa938jmcZjLFbbQ0mDcXKIqpibpwn2hAiaeQGeibe6Kq2d59j6BSA0tKVstn5Tg&hy=SH&idx=1&m=&scene=2&uzid=1&wxampicformat=503&picformat=200&token=ic1n0xDG6awicQT3YsnicQlic4gcyvj4n6vPwibBYkGpTp8sr8iaueEsQ0YrmXwgzb7d2sVNyt9iaz4me8GdsQ38yaCfmbPYy5VYYUVj7cyOa4FWHibg33d5I2cXmNKB1OX1oiaNRIEicXNNmdOPpia5XbBjtBLrW0YHZPrUT6shiaKRdPpIIicvxoRicFBJLrQLIlibfhdOeuxOtFeVpZibAwgMFn2icGr41ZQ",
+      "published_at": "",
+      "key_points": [
+        "轻中度甘油三酯升高以生活干预为基础",
+        "减少甜食甜饮，优先吃完整水果",
+        "甘油三酯明显升高者应戒酒后复查",
+        "每周吃鱼两次；鱼油需医生指导且不能替代治疗",
+        "每周至少做150分钟中等强度有氧运动"
+      ],
+      "chapters": [],
+      "duration_s": 153.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "针对轻中度甘油三酯升高，介绍控糖、戒酒、脂肪选择和运动，并交代补充剂与就医边界。",
+      "reason": "明确适用人群：“对绝大多数轻中度钢油三指升高的人改善生活方式是治疗的基础”。提供具体饮食及运动建议，强调鱼油不能替代规范治疗、中重度升高需医生评估，无具体药物处方。 | 引用:「对绝大多数轻中度钢油三指升高的人改善生活方式是治疗的基础」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "如何控制血脂",
+      "category": "如何控制血脂",
+      "domain": "req_aa8ae248",
+      "asked_as": "如何控制血脂"
+    },
+    {
+      "id": "wechat_channels:export/UzFfBgAAxMSIbGomdg-Wk8zT4DCKhNqGakXdrBpqqySLUtVaTg",
+      "video_id": "export/UzFfBgAAxMSIbGomdg-Wk8zT4DCKhNqGakXdrBpqqySLUtVaTg",
+      "title": "血脂偏高时的肉类选择与吃法",
+      "original_title": "高血脂调理，不是戒美食，是换吃法。\n好好吃饭、科学吃肉，血脂一样能稳下来\n #高血脂 #健康科普 #血脂高怎么吃 #饮食养生",
+      "author": "威尔康健康体检中心",
+      "platform": "wechat_channels",
+      "link": "https://weixin.qq.com/sph/ACRqx6tuwi",
+      "cover_url": "https://findermp.video.qq.com/251/20304/stodownload?encfilekey=KGDRibp2wkicJOWOyWrzQj43cOlnXHm9HWuJSI7kyphkQY8PRiaTlY3obj34U1sI0EQVOCLvkBAWZlCsDvXBRg5ibg&hy=SZ&idx=1&m=&scene=2&uzid=1&wxampicformat=503&picformat=200&token=ic1n0xDG6awibzNpSHaRiaaKBJEjGCMNWdDYgIfnfD7cp8QCMbnoVtM9r4P2slTqNqbw8kKxPCyh5BBqhtoibzIJLZCib89iblttjkdAicgZIx6ibHrFetBBPXFC2TdcQrKr8HhD40iaQEHTre9X6QXaYT0L8qGn1J83ygTK2SLkGeh8WIR85MIEdOUp8cTVdGDvEZB0UQp3JyHkJYrQFibiaE1aGiarPA",
+      "published_at": "",
+      "key_points": [
+        "甘油三酯偏高应控制总热量，减少糖和酒",
+        "坏胆固醇偏高应减少饱和脂肪摄入",
+        "优先鱼、去皮禽肉和瘦肉，少吃加工肉",
+        "一般成人鱼禽肉蛋每日共120—200克，按生重计",
+        "少用动物油，增加可溶性纤维；饮食不能替代药物"
+      ],
+      "chapters": [],
+      "duration_s": 174.0,
+      "likes": null,
+      "collects": null,
+      "comments": null,
+      "summary": "区分甘油三酯与低密度脂蛋白胆固醇升高，说明肉类选择、每日分量及烹调方法。",
+      "reason": "区分两类指标的饮食干预重点，给出一般成年人的摄入量与替换方法，符合主流建议；明确“饮食调整是基础,但不能替代医生要求的药物治疗”，未越过处方边界。 | 引用:「饮食调整是基础,但不能替代医生要求的药物治疗」",
+      "consensus": "mainstream",
+      "topic": "方法实操",
+      "node": "如何控制血脂",
+      "category": "如何控制血脂",
+      "domain": "req_aa8ae248",
+      "asked_as": "如何控制血脂"
     }
   ]
 }
