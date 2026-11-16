@@ -17,6 +17,32 @@
   const platformNames = {douyin:'抖音',bilibili:'B站',kuaishou:'快手',wechat_channels:'视频号',channels:'视频号'};
   const platforms = d => (d?.run?.platforms_searched || d?.platforms_searched || []).map(p => platformNames[p] || p).join('、');
   const active = d => !d?.service_paused && ['PENDING','RUNNING','EXPORTING'].includes(d?.run?.state);
+  let libraryIndex=null;
+  const nodeLibrary=new Map(), nodeLibraryLoading=new Set(), nodeLibraryRetry=new Map();
+  async function libraryJson(url) {
+    const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);
+    try { const r=await fetch(url,{cache:'no-cache',signal:controller.signal});if(!r.ok)throw new Error('library HTTP '+r.status);return await r.json(); }
+    finally { clearTimeout(timer); }
+  }
+  async function loadNodeLibrary(names) {
+    const wanted=[...new Set(names.filter(Boolean))].filter(n=>!nodeLibrary.has(n)&&!nodeLibraryLoading.has(n)&&Date.now()>(nodeLibraryRetry.get(n)||0));
+    if(!wanted.length)return;
+    wanted.forEach(n=>nodeLibraryLoading.add(n));
+    try {
+      if(!libraryIndex)libraryIndex=libraryJson('library-index.json').catch(e=>{libraryIndex=null;throw e;});
+      const index=await libraryIndex;
+      await Promise.all(wanted.map(async n=>{
+        try {
+          const url=index.nodes?.[n];
+          if(!url){nodeLibrary.set(n,[]);return;}
+          if(!/^library\/[a-f0-9]{64}\.json$/.test(url))throw new Error('invalid library bundle');
+          const d=await libraryJson(url);if(!Array.isArray(d.items))throw new Error('invalid library data');
+          nodeLibrary.set(n,d.items);
+        }catch(e){nodeLibraryRetry.set(n,Date.now()+30000);}
+      }));
+    }catch(e){wanted.forEach(n=>nodeLibraryRetry.set(n,Date.now()+30000));}
+    finally {wanted.forEach(n=>nodeLibraryLoading.delete(n));paint();}
+  }
   function load() {
     if (loaded) return; loaded = true;
     try {
@@ -34,6 +60,8 @@
     if (d.status === 'locked' || r?.state === 'FAILED') return '补搜遇到问题，正在处理';
     if (r?.state === 'RUNNING') return r.phase === 'judging' ? '更多内容正在路上——我们正在努力抓取和筛选，请耐心等待' : (platforms(d) ? `正在${platforms(d)}上搜` : '正在寻找相关内容');
     if (r?.state === 'EXPORTING') return '收尾中：在把内容发布上站';
+    if (r?.state === 'PENDING' && r.phase === 'continuing_search') return '已有内容可以先看，正在继续筛选其余视频。';
+    if (r?.state === 'PENDING' && r.phase === 'waiting_budget_reconciliation') return '处理暂时中断，正在核对任务状态；你的问题已保留。';
     if (r?.state === 'PENDING' && r.phase === 'waiting_model_capacity') return '已保存筛选进度，等待处理额度恢复后继续';
     if (r?.state === 'PENDING') return d.queue_position ? `排在第 ${d.queue_position} 位 · 已记入「我问过的」` : '已收到，正在排队补搜';
     if (!active(d) && d.reason && d.message && !(r?.state==='CLOSED' && ['need_independent_demand','已记下，等待更多独立的补充需求'].includes(d.reason))) return d.message;
@@ -105,7 +133,7 @@
       if(current?.node===node) current={...current,...d,q:current.q,mapping:current.mapping==='suggested'?'suggested':d.mapping||current.mapping};
       if(d.run?.state==='CLOSED' && old?.run?.state!=='CLOSED') {
         // Preserve already seen fresh cards while the immutable library catches up.
-        fetch('data.json',{cache:'no-cache'}).then(r=>r.ok?r.json():Promise.reject()).then(x=>{if(Array.isArray(x.items)){ALL_DATA=x.items;applyDomain();paint();}}).catch(()=>{});
+        loadData();
       }
     } catch(e) {errors.set(node,e.message);pollFailures.set(node,(pollFailures.get(node)||0)+1);}
     finally {if(!errors.has(node))pollFailures.delete(node);nextPoll.set(node,Date.now()+(errors.has(node)?Math.min(30000,2000*2**(pollFailures.get(node)||1)):active(snapshots.get(node))?2000:30000));loading.delete(node);paint();}
@@ -127,7 +155,11 @@
     if(node&&!snapshots.has(node)&&!errors.has(node)&&!loading.has(node)) void read(node);
     const check=d.run?.answer_check;
     const allowed=check?new Set(check.relevant_ids):null;
-    const lib=ALL_DATA.filter(x=>(x.node===node||(relatedLibrary.get(state.q)||[]).includes(x.node))&&(!allowed||allowed.has(String(x.id))));
+    const libraryNodes=[...new Set([node,...(relatedLibrary.get(state.q)||[])].filter(Boolean))];
+    if(!DATA_LOADED)void loadNodeLibrary(libraryNodes);
+    const libraryReady=DATA_LOADED||(!current?.searching&&libraryNodes.length>0&&libraryNodes.every(n=>nodeLibrary.has(n)));
+    const libraryRows=[...ALL_DATA,...libraryNodes.flatMap(n=>nodeLibrary.get(n)||[])];
+    const lib=libraryRows.filter(x=>libraryNodes.includes(x.node)&&(!allowed||allowed.has(String(x.id))));
     const withdrawn=new Set(d.run?.withdrawn_ids||[]);
     const fresh=(retained.get(node)||d.run?.fresh_items||[]).filter(x=>laneUsable(x)&&!withdrawn.has(String(x.id)));
     const items=[...new Map([...fresh,...lib.filter(x=>!withdrawn.has(String(x.id)))].map(x=>[x.id,x])).values()];
@@ -147,21 +179,21 @@
     const oldCards=new Map([...el.querySelectorAll('.supp-content .card')].map(c=>[c.dataset.id,c]));
     const hadFocus=document.activeElement;
     el.innerHTML=`<article class="supp-node"><p class="supp-notice" role="status">${h(flash)}</p><header>${mapping}<p class="supp-eyebrow">从问题出发</p><h1>${h(title)}</h1></header>${hasStatus?`<div class="supp-summary" aria-label="当前补搜状态">${progressCard(d,shown)}</div>`:''}
-      <section class="supp-content" aria-label="现有内容"><h2>${items.length?(check?'已经找到的答案':'可能回答你问题的视频'):'先看看已有内容'}</h2>${items.length?`<div class="cards grid">${shown.map(x=>`<div>${laneCardHtml(x)}<button class="linklike" data-supp-action="quality_issue" data-video-id="${h(x.id)}">这条内容有问题</button></div>`).join('')}</div>${items.length>shownLimit?'<button class="supp-more">显示更多答案</button>':''}`:`<p class="supp-muted">${typeof DATA_ERROR!=='undefined'&&DATA_ERROR?h(DATA_ERROR):!DATA_LOADED?'正在载入已有内容…':'这里还没有经过核验的答案。'}${typeof DATA_ERROR!=='undefined'&&DATA_ERROR?'<button class="linklike" data-library-retry>重新加载已有内容</button>':''}</p>`}</section>
+      <section class="supp-content" aria-label="现有内容"><h2>${items.length?(check?'已经找到的答案':'可能回答你问题的视频'):'先看看已有内容'}</h2>${items.length?`<div class="cards grid">${shown.map(x=>`<div>${laneCardHtml(x)}<button class="linklike" data-supp-action="quality_issue" data-video-id="${h(x.id)}">这条内容有问题</button></div>`).join('')}</div>${items.length>shownLimit?'<button class="supp-more">显示更多答案</button>':''}`:`<p class="supp-muted">${!libraryReady&&typeof DATA_ERROR!=='undefined'&&DATA_ERROR?h(DATA_ERROR):!libraryReady?'正在载入已有内容…':'这里还没有经过核验的答案。'}${!libraryReady&&typeof DATA_ERROR!=='undefined'&&DATA_ERROR?'<button class="linklike" data-library-retry>重新加载已有内容</button>':''}</p>`}</section>
       
       ${hasStatus?`<section class="supp-decision" aria-label="补搜结论">${candidateDetails(r)}</section>`:''}
       <section class="supp-actions" aria-label="回答反馈">
         <button class="btn-primary" ${busy?'disabled':''} data-supp-action="not_answered">这些没回答我的问题</button>
         <button class="linklike" ${busy?'disabled':''} data-supp-action="enough">够了，已找到答案</button>
         <label for="supp-feedback-text">还缺什么，或哪里不对？（选填）</label>
-        <input id="supp-feedback-text" value="${h(feedbackText)}" maxlength="500" placeholder="例如：我想看从头读一份财报的演示">
+        <input id="supp-feedback-text" value="${h(feedbackText)}" maxlength="500" placeholder="例如：还缺少具体做法，或这条没有回答我的问题">
         <button class="linklike" ${busy?'disabled':''} data-supp-action="missing">补充需求</button>
         <p class="supp-feedback" role="status">${h(flash||errs||(!node&&current?.q===q&&current?.searching?'正在寻找相关视频…':''))}</p>
         ${check?.missing?.length?`<p>还没找到：${check.missing.map(h).join('；')}</p>`:''}
         ${check?.related_questions?.length?`<nav aria-label="相关问题">${check.related_questions.map(x=>`<button class="linklike" data-related-question="${h(x)}">${h(x)}</button>`).join('')}</nav>`:''}
         ${errs?'<button class="linklike" data-supp-retry>重新读取进度</button>':''}
       </section></article>`;
-    el.querySelector('[data-library-retry]')?.addEventListener('click',()=>{loadData();paint();});
+    el.querySelector('[data-library-retry]')?.addEventListener('click',()=>{nodeLibraryRetry.clear();void loadNodeLibrary(libraryNodes);loadData();paint();});
     const actions=el.querySelector('.supp-actions');
     el.querySelector('.supp-content').before(actions);
     el.querySelector('#supp-feedback-text')?.addEventListener('input',e=>{feedbackText=e.target.value;});
